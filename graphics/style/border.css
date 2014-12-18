@@ -1,0 +1,93 @@
+
+/*
+	Autores:
+		- Gonzalo Saavedra Postigo
+		- David Mariscal Martínez
+		- Aris Burgos Pintos
+	Organización: ITelligent Information Technologies, S.L.
+	Licencia: gpl-3.0
+*/
+
+
+/*.dialog a { color: white; text-decoration: none;}
+.dialog a:hover { border-bottom: 1px dashed #fff;}*/
+.dialog {
+ margin:0px;
+ display: inline;
+}
+
+.dialog .hd,
+.dialog .ft{
+    font: 1px;
+    height: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+	padding: 0px;
+}
+
+.dialog .hd .l,
+.dialog .ft .l{
+    font: 1px;
+    height: 12px;
+    min-height: 12px;
+    margin-left: -12px;
+    float: left;
+}
+
+.dialog .hd .r,
+.dialog .ft .r{
+    font: 1px;
+    height: 12px;
+    min-height: 12px;
+    float: right;
+    margin-right: -12px;
+}
+.dialog .ft .l,
+.dialog .ft .r,
+.dialog .hd .l,
+.dialog .hd .r{
+    width: 12px;
+    min-width: 12px;
+}
+
+.dialog .bd .c .s {
+ margin: 0px 12px 0px 12px;
+ padding: 12px;
+}
+
+/* -----------------------------------------------------------
+   ---------------------- shadow -----------------------------
+   ----------------------------------------------------------- */
+
+.dialog .hd .l {
+ background:transparent url(borders/tl.png) no-repeat left 0px;
+}
+.dialog .hd .r {
+ background:transparent url(borders/tr.png) no-repeat right 0px;
+}
+.dialog .hd{
+ background:transparent url(borders/t.png) repeat-x 12px 0px;
+}
+
+.dialog .bd {
+ background:transparent url(borders/l.png) repeat-y 0px 0px;
+}
+
+.dialog .bd .c {
+ background:transparent url(borders/r.png) repeat-y right 0px;
+}
+
+.dialog .bd .c .s {
+ background-color: white;
+}
+
+.dialog .ft .r {
+ background:transparent url(borders/br.png) no-repeat right 0px;
+}
+.dialog .ft .l {
+ background:transparent url(borders/bl.png) no-repeat left 0px;
+}
+.dialog .ft{
+ background:transparent url(borders/b.png) repeat-x 12px 0px;
+}
+

@@ -1,0 +1,45 @@
+
+/*
+	Autores:
+		- Gonzalo Saavedra Postigo
+		- David Mariscal Martínez
+		- Aris Burgos Pintos
+	Organización: ITelligent Information Technologies, S.L.
+	Licencia: gpl-3.0
+*/
+
+body{
+    padding: 0px;
+	font: 14px/17px Arial,Verdana,Geneva,sans-serif;
+}
+div#filtros {    
+    /*border: dashed 1px gray;
+    background-color: #ddf8f8;*/
+    margin: 0px;
+    padding: 10px;
+	display: block;
+}
+div#grafica{
+	min-height: 250px;
+	text-align: center;
+}
+div.filter{
+	float: left;
+	display: block;
+}
+
+.contentChart{
+	margin: 0px;
+	padding: 0px;
+}
+.contentChart > *{
+	margin-top: 20px;
+}
+
+.pestania{
+display: inline; list-style: none; padding: 5px; margin: 5px; border: solid 1px #C0C0C0; border-bottom: none; background-color: #F5F5F5;
+}
+
+.pestania_activa{
+display: inline; list-style: none; padding: 5px; margin: 5px; border: solid 1px #C0C0C0; border-bottom: none; background-color: #A3A3A3;
+}
