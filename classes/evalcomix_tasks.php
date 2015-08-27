@@ -3,7 +3,7 @@
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ * @author     Daniel Cabeza Sï¿½nchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernï¿½ndez <juanantonio.caballero@uca.es>
  */
  
 //defined('MOODLE_INTERNAL') || die();
@@ -163,7 +163,9 @@ include_once('evalcomix_object.php');
 			$params = array('instanceid' => $value->id);
 			$task = evalcomix_tasks::fetch($params);
 			if ($task){
-				$tasks[] = $task;
+				//$tasks[] = $task;
+				$cmid = $value->id;
+				$tasks[$cmid] = $task;
 			}
 		}
 		return $tasks; 
@@ -184,7 +186,7 @@ include_once('evalcomix_object.php');
 			}
 		}
 		return $result;
-	}*/ //Desactivada porque parece la misma función que la anterior
+	}*/ //Desactivada porque parece la misma funciï¿½n que la anterior
 	
 	/**
 	* @param int $courseid

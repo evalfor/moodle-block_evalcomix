@@ -3,7 +3,7 @@
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ * @author     Daniel Cabeza Sï¿½nchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernï¿½ndez <juanantonio.caballero@uca.es>
  */
  
 	require_once('../../../config.php');	
@@ -34,7 +34,7 @@
 		$userid = $datapost['stu'];
 		$cmid = $datapost['cma'];
 		$report_evalcomix->process_data($datapost);
-		//Obtains course´s users
+		//Obtains courseï¿½s users
 		$users = $report_evalcomix->load_users();
 		
 		$coursegroups = $report_evalcomix->load_groups();
@@ -46,7 +46,7 @@
 		
 		$showdetails = true;
 		$configured = $report_evalcomix->configured_activity($cmid);
-		//Only show the user´s grade or all grades if the USER is a teacher or admin
+		//Only show the userï¿½s grade or all grades if the USER is a teacher or admin
 		//if ((has_capability('block/evalcomix:edit',$context, $USER->id) || $userid == $USER->id) && isset($finalgrades[$cmid][$userid])){
 		if ((has_capability('moodle/grade:viewhidden',$context, $USER->id) || $userid == $USER->id) && isset($finalgrades[$cmid][$userid])){
 			if ($finalgrades[$cmid][$userid] != -1){
@@ -96,12 +96,12 @@
 				$details = '';
 			}
 						
-			//Show user´s works
+			//Show userï¿½s works
 			$title = get_string('studentwork1','block_evalcomix').get_string('studentwork2','block_evalcomix'). $cmid;
 			echo ' <input type="image" value="'.$title.'" style="background-color:transparent;width:13px" title="'.$title.'" src="../images/task.png" 
 						 onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/assessment/user_activity.php?id='.$userid.'&course='.$courseid.'&mod='.$cmid.'\');"/>';						
 						 
-			//If the $USER isn´t a teacher or admin evaluate if it should show Evaluate and Details buttons
+			//If the $USER isnï¿½t a teacher or admin evaluate if it should show Evaluate and Details buttons
 			if($mode == 'self' || $mode == 'peer'){
 				//Obtains the groupmode of the activity
 				//$groupmode = $report_evalcomix->get_groupmode($cmid);
@@ -110,7 +110,10 @@
 				//$gid_user = $report_evalcomix->get_groupid($userid);
 				$cm = $DB->get_record('course_modules', array('id' => $cmid));
 				$groupmode = $cm->groupmode;
-				$groupmembersonly = $cm->groupmembersonly;
+				$groupmembersonly = 0;
+				if(isset($cm->groupmembersonly)){
+					$groupmembersonly = $cm->groupmembersonly;
+				}
 				$groupingid = $cm->groupingid;
 				$same_grouping = false;
 				$same_group = $report_evalcomix->same_group($assessorid, $userid);

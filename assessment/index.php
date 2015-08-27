@@ -3,15 +3,15 @@
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
- 
+
 //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// Archivos a incluir /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 	
 	require_once('../../../config.php');	
-	require_once('lib.php');
+	require_once($CFG->dirroot .'/blocks/evalcomix/assessment/lib.php');
 	require_once($CFG->dirroot . '/grade/report/grader/lib.php');
 	require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
 	require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
@@ -138,9 +138,26 @@
 	// prints paging bar at top for large pages
 	$studentsperpage = $report_evalcomix->studentsperpage;
 	$numusers = $report_evalcomix->get_numusers();
+	include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
+	$tasks = evalcomix_tasks::get_tasks_by_courseid($courseid);
 	
 	//if (has_capability('block/evalcomix:edit',$context, $USER->id) && ($grd == 1 || $grd == 2 || $grd == 3)){
 	if (has_capability('moodle/block:edit',$context, $USER->id) && ($grd == 1 || $grd == 2 || $grd == 3)){
+		$blockdb = $DB->get_records('modules', array());
+		$cmdb = $DB->get_records('course_modules', array('course' => $courseid));
+		foreach($blockdb as $b){
+			$mod = $b->id;
+			$blocks[$mod] = $b->name;
+		}
+		foreach($cmdb as $cm){
+			$mod = $cm->module;
+			$module = $blocks[$mod];
+			$instance = $cm->instance;
+			$cms[$module][$instance] = $cm->id;
+		}
+		
+		include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
+		$finalgrades = evalcomix_grades::get_grades($courseid);
 		//$users = $report_evalcomix->load_users();
 		//$finalgrades = $report_evalcomix->get_grades();
 		$numpages = (int)($numusers / $studentsperpage);
@@ -244,16 +261,15 @@ if($toollist = evalcomix_tool::fetch_all(array('evxid' => $environment->id))){
 	$newgrades = webservice_evalcomix_client::get_assessments_modified(array('tools' => $toollist));
 	if(!empty($newgrades)){
 		include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-		include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 		include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
-		$tasks = evalcomix_tasks::get_tasks_by_courseid($courseid);
+	
 		$toolids = array();
 		foreach($tasks as $task){
 			if($assessments = evalcomix_assessments::fetch_all(array('taskid' => $task->id))){
 				foreach($assessments as $assessment){
 					$activity = $task->instanceid;
 					$module = evalcomix_tasks::get_type_task($activity);				
-					$mode = grade_report_evalcomix::get_type_evaluation($assessment->studentid, $courseid);
+					$mode = grade_report_evalcomix::get_type_evaluation($assessment->studentid, $courseid, $assessment->assessorid);
 					$str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid . '_' . $assessment->assessorid . '_' . $mode . '_' . MOODLE_NAME;
 					$assessmentid = md5($str);
 					if(isset($newgrades[$assessmentid])){

@@ -66,8 +66,8 @@ if(isset($datas['weighingEI'])){
 }
 $disabledEI = '';
 $anonymousEI = 0;
-if(isset($datas['anonymousEI']['anonymous'])){
-	$anonymousEI = $datas['anonymousEI']['anonymous'];
+if(isset($datas['anonymousEI'])){
+	$anonymousEI = $datas['anonymousEI'];
 }
 
 $alwaysvisibleEI = 0;

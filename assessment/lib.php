@@ -1005,7 +1005,11 @@
 							//$groupmode = $this->get_groupmode($this->activities['id'][$i]);
 							$groupmode = $groupmodes[$cmid];
 							
-							$groupmembersonly = $this->cm[$cmid]->groupmembersonly;
+							$groupmembersonly = 0;
+							if(isset($this->cm[$cmid]->groupmembersonly)){
+								$groupmembersonly = $this->cm[$cmid]->groupmembersonly;
+							}
+							
 							$groupingid = $this->cm[$cmid]->groupingid;
 							$same_grouping = false;							
 							$same_group = $this->same_group($USER->id, $user->id);
@@ -1417,19 +1421,27 @@
 		/**
 		 * Return teacher, self or peer, according to the user id received
 		 * @param $userid
+		 * @param $courseid 
+		 * @param $assessorid
 		 * @return string $mode
 		 */
-		public static function get_type_evaluation($userid, $courseid) {
+		public static function get_type_evaluation($userid, $courseid, $assessorid = '0') {
 			global $USER;	
 			
 			$context = context_course::instance($courseid);
+			if($assessorid != '0'){
+			    $evaluatorid = $assessorid;
+			}
+			else{
+			    $evaluatorid = $USER->id;
+			}
 			
-			if ($USER->id == $userid){
+			if ($evaluatorid == $userid){
 				$mode = 'self';
 			}
 			else{
 				//if (has_capability('block/evalcomix:edit',$context, $USER->id)){
-				if (has_capability('moodle/grade:viewhidden',$context, $USER->id)){
+				if (has_capability('moodle/grade:viewhidden',$context, $evaluatorid)){
 					$mode = 'teacher';
 				}
 				else{
@@ -1446,6 +1458,9 @@
 		 */
 		public function get_headers() {
 			global $USER, $DB;
+			if (!$course = $DB->get_record('course', array('id' => $this->courseid))) {
+				print_error('nocourseid');
+			}
 			$total = '';
 			//To print  Lastname / Firstname
 			$arrows = $this->get_sort_arrows();
@@ -1477,20 +1492,51 @@
 								if(!$this->canviewhidden && !$this->activities_configured[$cmid]){
 									continue;
 								}
-								if(!$this->canviewhidden && $cm->groupmembersonly){
-									$groupingid = $cm->groupingid;
-									$intersect1 = array();
-									$groups = $this->get_groupids($USER->id);
-									if(isset($this->coursegroupings[$groupingid]) && is_array($groups)){
-										$grouping_groups = $this->coursegroupings[$groupingid];
-										$intersect1 = array_intersect($groups, $grouping_groups);
-									}					
-									
-									if($cm->groupingid && empty($intersect1)){
+								
+								if(property_exists($cm, 'availability')){
+									$grey = false;
+									$hide = false;
+									global $USER;
+									$this->modinfo = new course_modinfo($course, $USER->id);
+									$instances = $this->modinfo->get_instances_of($element['object']->itemmodule);
+									if (!empty($instances[$element['object']->iteminstance])) {
+										$cm_info = $instances[$element['object']->iteminstance];
+										if (!$cm_info->uservisible) {
+											// If there is 'availableinfo' text then it is only greyed
+											// out and not entirely hidden.
+											if (!$cm_info->availableinfo) {
+												$hide = true;
+											}
+											$grey = true;
+										}
+									}
+								}
+								
+								if(!$this->canviewhidden){
+									if(!empty($hide) || !empty($grey)){
 										continue;
 									}
-									elseif(!$cm->groupingid && $groups == -1){
-										continue;
+									
+									$gm = true;
+									if(property_exists($cm, 'groupmembersonly') && !$cm->groupmembersonly){
+										$gm = false;
+									}
+									
+									if($gm){
+										$groupingid = $cm->groupingid;
+										$intersect1 = array();
+										$groups = $this->get_groupids($USER->id);
+										if(isset($this->coursegroupings[$groupingid]) && is_array($groups)){
+											$grouping_groups = $this->coursegroupings[$groupingid];
+											$intersect1 = array_intersect($groups, $grouping_groups);
+										}
+										
+										if($cm->groupingid && empty($intersect1)){
+											continue;
+										}
+										/*elseif(!$cm->groupingid && $groups == -1){
+											continue;
+										}*/								
 									}
 								}
 								if($cm->visible == 0 && !$this->canviewhidden){
@@ -1541,7 +1587,11 @@
 			$itemtype     = $element['object']->itemtype;
 			$itemmodule   = $element['object']->itemmodule;
 			$iteminstance = $element['object']->iteminstance;
-
+			
+			global $DB;
+			if (!$course = $DB->get_record('course', array('id' => $this->courseid))) {
+				print_error('nocourseid');
+			}
 			if ($withlink and $itemtype=='mod' and $iteminstance and $itemmodule) {
 				if ($cm = get_coursemodule_from_instance($itemmodule, $iteminstance, $this->courseid)) {
 
@@ -1563,9 +1613,27 @@
 					} else {
 						$url = $CFG->wwwroot.'/mod/'.$itemmodule.'/view.php?id='.$cm->id;
 					}
-
+					
+					$grey = false;
+					if(property_exists($cm, 'availability')){
+						global $USER;
+						$this->modinfo = new course_modinfo($course, $USER->id);
+						$instances = $this->modinfo->get_instances_of($element['object']->itemmodule);
+						if (!empty($instances[$element['object']->iteminstance])) {
+							$cm_info = $instances[$element['object']->iteminstance];
+							if (!$cm_info->uservisible) {
+								// If there is 'availableinfo' text then it is only greyed
+								// out and not entirely hidden.
+								/*if (!$cm_info->availableinfo) {
+									$hide = true;
+								}*/
+								$grey = true;
+							}
+						}
+					}
+					
 					$style = '';
-					if($cm->visible == 0){
+					if($cm->visible == 0 || $grey == true){
 						$style = 'color:#737373';
 					}
 					

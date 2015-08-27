@@ -26,6 +26,7 @@ class Curly {
         curl_setopt($this->curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($this->curl, CURLOPT_ENCODING, 'gzip,deflate');
         curl_setopt($this->curl, CURLOPT_AUTOREFERER, true);
+	$this->setSsl();
         
         if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')){
             curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);

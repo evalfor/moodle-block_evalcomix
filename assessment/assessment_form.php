@@ -114,12 +114,19 @@ else{
 }
 
 if($viewtemplate == 0){
+	
 	echo "<script>
 	
 	window.opener.onunload=function(){
 		doWork('evalcomixtablegrade', 'servidor.php?id=".$courseid."&eva=".$USER->id."', 'courseid=".$courseid."&page=&stu=".$studentid."&cma=".$cmid."');
-		close();
+		setTimeout(close, 1000);
+		
 	};
+	
+	/*window.opener.onbeforeunload(){
+		doWork('evalcomixtablegrade', 'servidor.php?id=".$courseid."&eva=".$USER->id."', 'courseid=".$courseid."&page=&stu=".$studentid."&cma=".$cmid."');
+		close();
+	};*/
 	
 	/*function testParent() {
 		if (window.opener != null && !window.opener.closed){

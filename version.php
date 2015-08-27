@@ -5,6 +5,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
-	$plugin->version = 2014121800;
+	$plugin->version = 2015082400;
 
 ?>
