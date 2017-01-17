@@ -181,4 +181,6 @@ For more information you can consult the <a href="../manual.pdf">Manual</a>';
 	$string['activities'] = 'Activities';
 	$string['edition'] = 'Edition';
 	$string['settings_description'] = 'In this section will be configured the assessment table';
+	
+	$string['crontask'] = 'Task for updating scores in EvalCOMIX gradebook';
 ?>

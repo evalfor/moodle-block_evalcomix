@@ -8,7 +8,7 @@
 	
 	require_once($CFG->dirroot . '/grade/report/lib.php');
 	
-	require_once('../configeval.php');
+	require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
 	include_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
 	include_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_expert_db_block.php');
 	include_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
@@ -2332,3 +2332,25 @@
 		return $elements;
 	}
 	
+    function block_evalcomix_recalculate_grades() {
+		//Recalculamos en cualquier caso las notas
+		global $CFG, $DB;
+		include_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
+		if($grades = evalcomix_grades::fetch_all(array())){
+			foreach($grades as $grade){
+				$userid = $grade->userid;
+				$cmid = $grade->cmid;
+				$courseid = $grade->courseid;
+				
+				if ($cm = $DB->get_record('course_modules', array('id' => $cmid))){
+					$params = array('cmid' => $cmid, 'userid' => $userid, 'courseid' => $courseid);
+					$finalgrade = evalcomix_grades::get_finalgrade_user_task($params);
+					if($finalgrade !== null && (int)$finalgrade > -1 && (int)$finalgrade !== (int)$grade->finalgrade){
+						$grade->finalgrade = $finalgrade;
+						$grade->update();
+					}
+				}
+			}
+		}
+        return true;
+	}

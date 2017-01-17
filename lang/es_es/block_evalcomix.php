@@ -181,4 +181,6 @@ Para una mayor información se puede consultar el <a href="../manual.pdf">Manual
 	$string['activities'] = 'Actividades';
 	$string['edition'] = 'Edición';
 	$string['settings_description'] = 'Desde este apartado se puede configurar aspectos relacionados con la tabla de evaluaciones de EvalCOMIX';
+	
+	$string['crontask'] = 'Tarea para la actualización de calificaciones del libro de EvaLCOMIX';
 ?>
