@@ -105,7 +105,8 @@ $vars = explode('?', $url_instrument);
 include_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 		
 $curl = new Curly();
-$response = $curl->post($vars[0], $vars[1]);
+//$response = $curl->post($vars[0], $vars[1]);
+$response = $curl->get($vars[0], $vars[1]);
 if ($response && $curl->getHttpCode()>=200 && $curl->getHttpCode()<400){
 	echo $response;
 }
