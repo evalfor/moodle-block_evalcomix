@@ -1,16 +1,12 @@
-
 /*
-	Autores:
-		- Gonzalo Saavedra Postigo
-		- David Mariscal Martínez
-		- Aris Burgos Pintos
-	Organización: ITelligent Information Technologies, S.L.
-	Licencia: gpl-3.0
+    Autores:
+        - Gonzalo Saavedra Postigo
+        - David Mariscal Martínez
+        - Aris Burgos Pintos
+    Organización: ITelligent Information Technologies, S.L.
+    Licencia: gpl-3.0
 */
 
-
-/*.dialog a { color: white; text-decoration: none;}
-.dialog a:hover { border-bottom: 1px dashed #fff;}*/
 .dialog {
  margin:0px;
  display: inline;
@@ -22,7 +18,7 @@
     height: 12px;
     margin-left: 12px;
     margin-right: 12px;
-	padding: 0px;
+    padding: 0px;
 }
 
 .dialog .hd .l,
@@ -90,4 +86,3 @@
 .dialog .ft{
  background:transparent url(borders/b.png) repeat-x 12px 0px;
 }
-

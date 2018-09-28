@@ -21,5 +21,3 @@ As a Teacher, add EvalCOMIX block in a course.
 FURTHER INFORMATION:
 
 Please visit http://evalcomix.uca.es/index.php/handbook.html to get the handbook of EvalCOMIX block.
-
-

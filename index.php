@@ -14,16 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
+require_once('../../config.php');
+require_login();
 
-/*
- * @package    block_evalcomix
- * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
- */
-$plugin->version = 2018092500;
-$plugin->component = 'block_evalcomix';
-$plugin->requires = 2013111801; // Moodle 2.6.1 is required.
-$plugin->maturity = MATURITY_STABLE; // This is considered as ready for production sites.
-$plugin->release = 'v4.3.0';
+$courseid      = required_param('id', PARAM_INT);
+
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    print_error('nocourseid');
+}
+
+header('Location: assessment/index.php?id='.$courseid);

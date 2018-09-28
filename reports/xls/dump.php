@@ -1,29 +1,18 @@
 <?php
-//print_r($_POST);
-/*require_once '../../../../config.php';
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-print_r($_POST);
-$courseid = required_param('courseid', PARAM_INT);
-$student_ids = required_param('student_ids', PARAM_RAW);
-$student_names = required_param('student_names', PARAM_RAW); 
-$task = required_param('task', PARAM_INT);
-$mode = required_param('mode', PARAM_ALPHA);
-
-
-global $CFG;
-
-include_once($CFG->dirroot . '/blocks/evalcomix/reports/xls/export_xls.php');
-
-$report = new export_xls(array('courseid' => $courseid, 'mode' => $mode));
-
-$params['courseid'] = $courseid;
-$params['student_ids'] = $student_ids;
-$params['student_names'] = $student_names;
-$params['task'] = $task;
-$params['mode'] = $mode;
-print_r($params);
-$report->send_export($params);
-*/
-echo "<div>holaaaa</div>";
-
-?>
+require_once('../../../config.php');
+require_login();
