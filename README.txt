@@ -1,4 +1,4 @@
-Block of integration of EvalCOMIX web service in Moodle 2.5 onwards.
+Block of integration of EvalCOMIX web service in Moodle 3.3 onwards.
 
 EvalCOMIX is a web service designed to create and implement assessment tools. With EvalCOMIX is possible to:
 1) Design and manage versatile assessment tools such as checklists, rating scales and
@@ -12,7 +12,9 @@ INSTALLATION:
 
 1) Copy the EvalCOMIX folder into the moodle blocks directory
 2) Access the Notifications page as administrator and install the EvalCOMIX block.
-3) Configure the URL of the EvalCOMIX web service.
+3) Configure the URL of the EvalCOMIX web service. Access:
+Site Administration > Plugins > Blocks > EvalCOMIX 
+and edit "EvalCOMIX server URL" field, ie: http://localhost/evalcomix
 
 USE:
 
