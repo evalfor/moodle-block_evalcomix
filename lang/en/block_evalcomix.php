@@ -198,3 +198,17 @@ $string['edition'] = 'Edition';
 $string['settings_description'] = 'In this section will be configured the assessment table';
 
 $string['crontask'] = 'Task for updating scores in EvalCOMIX gradebook';
+
+// Privacy.
+$string['privacy:metadata:block_evalcomix_allowedusers'] = 'Information about the Specific Students option in the Peer Evaluation mode. It stores what student is the evaluator and which is the evaluated.';
+$string['privacy:metadata:block_evalcomix_allowedusers:assessorid'] = 'The ID of the evaluating user.';
+$string['privacy:metadata:block_evalcomix_allowedusers:studentid'] = 'The ID of the user evaluated.';
+$string['privacy:metadata:block_evalcomix_assessments'] = 'Information about the grade of each student in each evaluation modality.';
+$string['privacy:metadata:block_evalcomix_assessments:assessorid'] = 'The ID of the evaluating user.';
+$string['privacy:metadata:block_evalcomix_assessments:studentid'] = 'The ID of the student evaluated.';
+$string['privacy:metadata:block_evalcomix_assessments:grade'] = 'Grade.';
+$string['privacy:metadata:block_evalcomix_assessments:timemodified'] = 'Time at which the grade was made.';
+$string['privacy:metadata:block_evalcomix_grades'] = 'Information about the average of all the ratings given to a user in each evaluation modality';
+$string['privacy:metadata:block_evalcomix_grades:userid'] = 'The Id of the user evaluated';
+$string['privacy:metadata:block_evalcomix_grades:finalgrade'] = 'Average of all the ratings given to a user in each evaluation modality';
+$string['privacy:metadata:block_evalcomix:tableexplanation'] = 'EvalCOMIX block information is stored here.';
