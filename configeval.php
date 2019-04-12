@@ -34,14 +34,15 @@ if (!defined('MOODLE_NAME')) {
     define('MOODLE_NAME', $CFG->dbname);
 }
 
-if (isset($CFG->evalcomix_serverurl)) {
+$config = get_config('block_evalcomix');
+if (isset($config->serverurl)) {
     // URL base of EvalCOMIX application.
     if (!defined('DIREVALCOMIX')) {
-        define('DIREVALCOMIX', $CFG->evalcomix_serverurl);
+        define('DIREVALCOMIX', $config->serverurl);
     }
 
     if (!defined('DIREVALCOMIXS')) {
-        define('DIREVALCOMIXS', $CFG->evalcomix_serverurl);
+        define('DIREVALCOMIXS', $config->serverurl);
     }
 
     // EvalCOMIX API.

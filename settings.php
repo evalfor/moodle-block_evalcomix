@@ -28,7 +28,7 @@ if ($ADMIN->fulltree) {
                        get_string('admindescription', 'block_evalcomix')));
 
     // Server URL.
-    $settings->add(new admin_setting_configtext('evalcomix_serverurl', get_string('serverurl', 'block_evalcomix'),
+    $settings->add(new admin_setting_configtext('block_evalcomix/serverurl', get_string('serverurl', 'block_evalcomix'),
                        get_string('serverurlinfo', 'block_evalcomix'), ''));
 
      // Validation button.

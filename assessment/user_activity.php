@@ -22,6 +22,7 @@
  */
 
 require('../../../config.php');
+require_login();
 if (file_exists($CFG->dirroot.'/report/outline/locallib.php')) {
     require_once($CFG->dirroot.'/report/outline/locallib.php');
 }
@@ -33,10 +34,10 @@ $modid     = required_param('mod', PARAM_INT);
 
 $user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-require_login($course->id);
 $url = new moodle_url('/blocks/evalcomix/assessment/user_activity.php', array('userid' => $userid, 'courseid' => $courseid));
+$contextcourse = context_course::instance($course->id);
 $PAGE->set_url($url);
-
+$PAGE->set_context($contextcourse);
 $PAGE->set_pagelayout('popup');
 
 // Catch the mods.

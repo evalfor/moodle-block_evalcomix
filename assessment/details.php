@@ -24,8 +24,7 @@
  */
 
 require_once('../../../config.php');
-require_once('../configeval.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+require_login();
 
 $contextid  = required_param('cid', PARAM_INT);
 $itemid     = required_param('itemid', PARAM_INT);
@@ -34,7 +33,10 @@ $popup      = optional_param('popup', 0, PARAM_INT);
 $assid      = optional_param('assid', 0, PARAM_INT);
 
 list($context, $course) = get_context_info_array($contextid);
-require_login($course->id);
+require_capability('block/evalcomix:view', $context, $userid);
+
+require_once('../configeval.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 
 $url = new moodle_url('/blocks/evalcomix/assessment/details.php', array('contextid' => $contextid, 'itemid' => $itemid));
 $PAGE->set_url($url);
@@ -57,7 +59,6 @@ require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
 global $DB, $USER;
 
 /*GETTING DATAS----------------------------------------------------------------------------------------*/
-require_capability('block/evalcomix:view', $context, $userid);
 $user = $DB->get_record('user', array('id' => $userid), '*');
 if (!$task = evalcomix_tasks::fetch(array('id' => $itemid))) {
     print_error('Wrong parameters');
@@ -164,7 +165,7 @@ echo '
                     <td>';
 
 
-if (!empty($teacherassessments) && $tool = get_evalcomix_modality_tool($course->id, $task->id, 'teacher')) {
+if (!empty($teacherassessments) && $tool = block_evalcomix_get_modality_tool($course->id, $task->id, 'teacher')) {
     foreach ($teacherassessments as $teachergrade) {
         $urlteacher = 'assessment_form.php?id='.$course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.
             '&s='.$user->id.'&as='.$teachergrade->assessorid.'&mode=view';
@@ -208,7 +209,7 @@ echo '
             <tr style="border:1px solid #e3e3e3">
                     <td>'. get_string('selfmodality', 'block_evalcomix').'</td>
                     <td>';
-if ($selfassessment != null && $tool = get_evalcomix_modality_tool($course->id, $task->id, 'self')) {
+if ($selfassessment != null && $tool = block_evalcomix_get_modality_tool($course->id, $task->id, 'self')) {
     $urlself = 'assessment_form.php?id='.$course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.
     '&s='.$user->id.'&as='.$selfassessment->assessorid.'&mode=view';
     echo
@@ -251,7 +252,7 @@ echo '
                     <td>'. get_string('peermodality', 'block_evalcomix').'</td>
                     <td>';
 $now = time();
-if (!empty($peerassessments) && $tool = get_evalcomix_modality_tool($course->id, $task->id, 'peer')) {
+if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($course->id, $task->id, 'peer')) {
     $now = time();
     if (has_capability('moodle/grade:viewhidden', $context) || ($modeeitime &&
         $now > $modeeitime->timedue) || $modesextra->visible == 1) {
@@ -296,7 +297,7 @@ title="Consultar" alt="Consultar" width="15"/>
                 echo '<input type="image" style="border:0; width:16px" src="'.
                 $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
                 get_string('delete', 'block_evalcomix').'" alt="'. get_string('delete', 'block_evalcomix').'"
-                width="16" value="'.$peergrade->assessorid.'" 
+                width="16" value="'.$peergrade->assessorid.'"
 onclick="if (confirm(\'¿Está seguro que desea eliminar el instrumento?\'))
 location.href=\'details.php?cid='.$contextid.'&itemid='.$itemid.'&userid='.$userid.'&popup=1&assid='.$peergrade->id.'\';
 window.opener.change_recarga();">';

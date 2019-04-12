@@ -22,12 +22,14 @@
  */
 
 require_once('../../../config.php');
+require_login();
+
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/grade_report.php');
 
 $courseid      = required_param('id', PARAM_INT);        // Course id.
 $toolid = required_param('t', PARAM_ALPHANUM);
@@ -35,10 +37,7 @@ $perspective = required_param('mode', PARAM_ALPHA);
 // It indicates what will be showed: ['1'] only the template tool or ['0'] tool filled with assessment.
 $viewtemplate = optional_param('vt', '0', PARAM_INT);
 
-require_login($courseid);
-
 $context = context_course::instance($courseid);
-
 
 $url = new moodle_url('/blocks/evalcomix/assessment/assessment_form.php',
 array('courseid' => $courseid, 't' => $toolid));
@@ -76,7 +75,7 @@ if ($viewtemplate == '0') {
 
     $urlinstrument = '';
     if ($perspective == 'assess') {
-        $mode = grade_report_evalcomix::get_type_evaluation($studentid, $courseid);
+        $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
         if ($task = evalcomix_tasks::fetch(array('instanceid' => $cmid))) {
             if (!$modefetch = evalcomix_modes::fetch(array('taskid' => $task->id, 'modality' => $mode))) {
                 print_error('EvalCOMIX: No permissions');

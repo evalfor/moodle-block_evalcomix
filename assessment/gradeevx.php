@@ -27,7 +27,6 @@ require_once($CFG->dirroot."/blocks/evalcomix/classes/evalcomix_assessments.php"
 require_once($CFG->dirroot."/blocks/evalcomix/classes/evalcomix_modes.php");
 global $DB;
 
-
 if (isset($grade->grade_item)) {
     $module = $grade->grade_item->itemmodule;
     $inst = $grade->grade_item->iteminstance;

@@ -22,17 +22,17 @@
  */
 
 require_once('../../../config.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-global $CFG;
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 require_login();
+require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 
 $id = required_param('a', PARAM_INT);
 $courseid = required_param('id', PARAM_INT);
 $assessorid = required_param('u', PARAM_INT);
 
 $context = context_course::instance($courseid);
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 
 echo '<select style="width:20em" size="20">';

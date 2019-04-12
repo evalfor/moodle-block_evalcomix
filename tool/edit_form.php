@@ -22,17 +22,16 @@
  */
 
 require_once('../../../config.php');
+require_login();
+$courseid      = required_param('id', PARAM_INT);
+$toolid = required_param('t', PARAM_ALPHANUM);
+$context = context_course::instance($courseid);
+require_capability('moodle/block:edit', $context, $USER->id);
+
 require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-
-$courseid      = required_param('id', PARAM_INT);
-$toolid = required_param('t', PARAM_ALPHANUM);
-
-require_login($courseid);
-
-$context = context_course::instance($course->id);
 
 $url = new moodle_url('/blocks/evalcomix/tool/edit_form.php', array('courseid' => $courseid, 't' => $toolid));
 $PAGE->set_url($url);
@@ -41,9 +40,6 @@ $PAGE->set_pagelayout('popup');
 if (!$tool = evalcomix_tool::fetch(array('idtool' => $toolid))) {
     print_error('EvalCOMIX: No tool enabled');
 }
-
-global $USER, $DB;
-require_capability('moodle/block:edit', $context, $USER->id);
 
 $lang = current_language();
 $lms = MOODLE_NAME;

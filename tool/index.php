@@ -22,9 +22,7 @@
  */
 
 require_once('../../../config.php');
-require_once('../configeval.php');
-require_once('../lib.php');
-require_once($CFG->dirroot . '/lib/accesslib.php');
+require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 $tid       = optional_param('tool', 0, PARAM_INT);
@@ -35,21 +33,28 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
 
+$context = context_course::instance($course->id);
+require_capability('moodle/grade:viewhidden', $context);
+
+require_once('../configeval.php');
+require_once('../lib.php');
+require_once($CFG->dirroot . '/lib/accesslib.php');
+
 global $OUTPUT, $USER;
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/index.php', array('id' => $courseid)));
 $PAGE->set_pagelayout('incourse');
 // Print the header.
+$PAGE->set_context($context);
+$PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
+$PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
+$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
+$PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
 $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->set_pagelayout('report');
 
+echo $OUTPUT->header();
 $buttons = null;
-
-require_login($course);
-$context = context_course::instance($course->id);
-
-require_capability('moodle/grade:viewhidden', $context);
-
-print_grade_page_head($course->id, 'report', 'grader', null, false, $buttons, false);
 
 if (ob_get_level() == 0) {
     ob_start();
@@ -141,11 +146,11 @@ if ($tools) {
 }
 
 if ($sorttool == 'title') {
-    usort($toollist, 'cmp_type_tool');
-    usort($toollist, 'cmp_title_tool');
+    usort($toollist, 'block_evalcomix_cmp_type_tool');
+    usort($toollist, 'block_evalcomix_cmp_title_tool');
 } else if ($sorttool == 'type') {
-    usort($toollist, 'cmp_title_tool');
-    usort($toollist, 'cmp_type_tool');
+    usort($toollist, 'block_evalcomix_cmp_title_tool');
+    usort($toollist, 'block_evalcomix_cmp_type_tool');
 }
 
 $lang = current_language();
@@ -224,6 +229,7 @@ if (!empty($newgrades)) {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
     $tasks = evalcomix_tasks::get_tasks_by_courseid($courseid);
     $toolids = array();
     foreach ($tasks as $task) {
@@ -231,7 +237,7 @@ if (!empty($newgrades)) {
             foreach ($assessments as $assessment) {
                 $activity = $task->instanceid;
                 $module = evalcomix_tasks::get_type_task($activity);
-                $mode = grade_report_evalcomix::get_type_evaluation($assessment->studentid,
+                $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid,
                     $courseid, $assessment->assessorid);
                 $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
                 '_' . $assessment->assessorid . '_' . $mode . '_' . MOODLE_NAME;

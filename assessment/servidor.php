@@ -24,26 +24,25 @@
 require_once('../../../config.php');
 require_login();
 
-if (function_exists('clean_param_array')) {
-    $datapost = clean_param_array($_POST, PARAM_ALPHANUM);
-    $dataget = clean_param_array($_GET, PARAM_ALPHANUM);
-} else if (function_exists('clean_param')) {
-    $datapost = clean_param($_POST, PARAM_ALPHANUM);
-    $dataget = clean_param($_GET, PARAM_ALPHANUM);
-} else {
-    $datapost = $_POST;
-    $dataget = $_GET;
-}
+$datapost = array();
+$datapost['stu'] = optional_param('stu', null, PARAM_ALPHANUM);
+$datapost['cma'] = optional_param('cma', null, PARAM_ALPHANUM);
+$datapost['page'] = optional_param('page', null, PARAM_ALPHANUM);
+
+$dataget = array();
+$dataget['id'] = optional_param('id', null, PARAM_ALPHANUM);
+$dataget['eva'] = optional_param('eva', null, PARAM_ALPHANUM);
 
 if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) && isset($dataget['eva'])) {
     require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
     $courseid = $dataget['id'];
     $assessorid = $dataget['eva'];
 
     $page = $datapost['page'];
     $context = context_course::instance($courseid);
-    $reportevalcomix = new grade_report_evalcomix($courseid, null, $context, $page);
+    $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context, $page);
     $userid = $datapost['stu'];
     $cmid = $datapost['cma'];
     $reportevalcomix->process_data($datapost);
@@ -82,11 +81,11 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 
-        $mode = grade_report_evalcomix::get_type_evaluation($userid, $courseid);
+        $mode = block_evalcomix_grade_report::get_type_evaluation($userid, $courseid);
         // Obtains required parameters to create details and evaluate links.
         $typeinstrument = evalcomix_tasks::get_type_task($cmid);
         $task = evalcomix_tasks::fetch(array('instanceid' => $cmid));
-        $tool = get_evalcomix_modality_tool($courseid, $task->id, $mode);
+        $tool = block_evalcomix_get_modality_tool($courseid, $task->id, $mode);
 
         $urlinstrument = 'assessment_form.php?id='.$courseid.'&a='.$cmid.'&t='.$tool->idtool.'&s='.$userid.'&mode=assess';
         $task = evalcomix_tasks::fetch(array('instanceid' => $cmid));

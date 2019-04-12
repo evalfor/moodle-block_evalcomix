@@ -22,7 +22,7 @@
  */
 
 require_once('../../../config.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
@@ -32,36 +32,29 @@ $remove = optional_param('remove', 0, PARAM_INT);
 $potentialuser = optional_param_array('pu', array(), PARAM_RAW);
 $allowed = optional_param_array('au', array(), PARAM_RAW);
 
-require_login($courseid);
-
-if ($id) {
-    $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    print_error('nocourseid');
 }
+$context = context_course::instance($course->id);
+require_capability('moodle/block:edit', $context);
+
+$cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
 
 global $OUTPUT, $CFG;
+require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
-
-require_login($course);
-$context = context_course::instance($course->id);
-
-require_capability('moodle/block:edit', $context);
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/users_form.php', array('id' => $courseid, 'a' => $cm->id)));
 $PAGE->set_pagelayout('popup');
 $PAGE->set_context($context);
-
 $PAGE->set_title('EvalCOMIX');
 echo $OUTPUT->header();
 
-$context = context_course::instance($courseid);
-
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 
-$activity = get_activity_data($cm);
+$activity = block_evalcomix_get_activity_data($cm);
 echo '<div style="font-weight:bold; font-size:16px">'.$activity->name .'</div>';
 echo '<div style="font-weight:bold; font-size:14px;color:#00f">'.fullname($users[$assessorid]).'</div>';
 

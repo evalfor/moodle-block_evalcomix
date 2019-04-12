@@ -22,21 +22,25 @@
  */
 
 require_once('../../../config.php');
-require_once($CFG->dirroot . '/grade/report/grader/lib.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+require_login();
 
 $courseid      = required_param('id', PARAM_INT);        // Course id.
 $page          = optional_param('page', 0, PARAM_INT);   // Active page.
 $hide          = optional_param('hide', 0, PARAM_INT);
 $show          = optional_param('show', 0, PARAM_INT);
-global $OUTPUT, $DB;
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+$context = context_course::instance($courseid);
+require_capability('moodle/block:edit', $context);
+
+require_once($CFG->dirroot . '/grade/report/grader/lib.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 if (!empty($hide)) {
     if ($taskhide = evalcomix_tasks::fetch(array('id' => $hide))) {
@@ -56,13 +60,9 @@ if (!empty($hide)) {
     }
 }
 
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/index.php', array('id' => $courseid)));
 $buttons = false;
-
-require_login($course);
-$context = context_course::instance($courseid);
-require_capability('moodle/block:edit', $context);
-
 $PAGE->set_pagelayout('incourse');
 
 $strplural = 'evalcomix';
@@ -80,7 +80,7 @@ onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/index.p
 </center>
 ';
 
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context, $page);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context, $page);
 $levels = $reportevalcomix->gtree->get_levels();
 
 

@@ -22,25 +22,20 @@
  */
 
 require_once('../../../config.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/lib.php');
+require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
 $assessorid = optional_param('as', 0, PARAM_INT);
-require_login($courseid);
 
-if ($id) {
-    $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    print_error('nocourseid');
 }
-
-global $OUTPUT, $CFG;
-
 $context = context_course::instance($course->id);
-
 require_capability('moodle/block:edit', $context);
+$cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
+
+require_once($CFG->dirroot .'/blocks/evalcomix/lib.php');
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/users_form.php', array('id' => $courseid, 'a' => $cm->id)));
 $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
@@ -50,7 +45,7 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('ratingsforitem', 'block_evalcomix'));
 echo $OUTPUT->header();
 
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 $boldusers = array();
 $options = '';
@@ -58,8 +53,9 @@ $options = '';
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
-$activity = get_activity_data($cm);
+$activity = block_evalcomix_get_activity_data($cm);
 
 if ($allowedusers = evalcomix_allowedusers::fetch_all(array('cmid' => $id))) {
     foreach ($allowedusers as $alloweduser) {

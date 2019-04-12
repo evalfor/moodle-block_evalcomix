@@ -166,3 +166,16 @@ $string['nostudentselfassessed'] = 'There is not assessed student';
 
 $string['alwaysvisible_EI_help'] = 'Si está desmarcado, los estudiantes sólo podrán ver las evaluaciones de sus compañeros una vez que finalice la Fecha Límite. Si está marcado, los estudiantes podrán consultar en todo momento las evaluaciones de sus compañeros';
 $string['alwaysvisible_EI'] = 'Siempre visible';
+
+// Graphics.
+$string['taskgraphic'] = 'Jarduera-grafikoa';
+$string['studentgraphic'] = 'Ikasle grafikoa';
+$string['activity'] = 'Jarduera';
+$string['selectactivity'] = 'Aukeratu jarduera bat';
+$string['selectstudent'] = 'Aukeratu ikasle bat';
+$string['selectgroup'] = 'Talde bat aukeratu';
+$string['studentmod'] = 'Ikaslea';
+$string['groupmod'] = 'Taldea';
+$string['classmod'] = 'Klase';
+$string['nostudents'] = 'Ez da jarduerarako daturik';
+$string['nostudentsgroup'] = 'Ez da datuak hautatutako taldean';

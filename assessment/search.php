@@ -22,15 +22,17 @@
  */
 
 require_once('../../../config.php');
+require_login();
+
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $search = required_param('search', PARAM_RAW);
 $courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
 $type = optional_param('t', 0, PARAM_INT);
 $assessorid = optional_param('as', 0, PARAM_INT);
-require_login($courseid);
 
 if ($id) {
     $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
@@ -41,7 +43,7 @@ if ($id) {
 
 $context = context_course::instance($courseid);
 
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 $allowedusershash = array();
 

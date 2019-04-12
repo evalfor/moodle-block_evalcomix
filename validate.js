@@ -10,12 +10,12 @@ function validate(){
     var errstr = "";
     var num = -1;
     var fields = new Array(3);
-    fields[0] = "id_s__evalcomix_serverurl";
+    fields[0] = "id_s_block_evalcomix_serverurl";
 
-    if(trim(document.getElementById("id_s__evalcomix_serverurl").value).length == 0){
+    if(trim(document.getElementById("id_s_block_evalcomix_serverurl").value).length == 0){
         errstr += "* server_url is empty";
         num = 0;
-    }else if (trim(document.getElementById("id_s__evalcomix_serverurl").value).search(/(http:|https:)\/\//i) == -1){
+    }else if (trim(document.getElementById("id_s_block_evalcomix_serverurl").value).search(/(http:|https:)\/\//i) == -1){
         errstr += "* server_url not valid";
         num = 0;
     }
@@ -31,7 +31,7 @@ function validate(){
 
 function createQuery(){
     var pairs = new Array();
-    pairs.push("u=" + encodeURIComponent(document.getElementById("id_s__evalcomix_serverurl").value));
+    pairs.push("u=" + encodeURIComponent(document.getElementById("id_s_block_evalcomix_serverurl").value));
     return pairs.join("&");
 }
 

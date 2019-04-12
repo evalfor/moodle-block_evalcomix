@@ -1,0 +1,31 @@
+.block_evalcomix_graphic_tab {
+    padding: 0.1em 1rem;
+    border-top: 1px solid #c0c0c0;
+    border-left: 1px solid #c0c0c0;
+    border-right: 1px solid #c0c0c0;
+}
+
+.block_evalcomix_tab_selected {
+    background-color: #c0c0c0;
+}
+
+.block_evalcomix_table_filter {
+    width: 20%;
+    border: 1px solid #c0c0c0;
+}
+
+.block_evalcomix_table_graphic {
+    width: 80%;
+    background-color: #fff;
+}
+
+.block_evalcomix_filter_block {
+    padding: 1em 0.5em;
+    background-color: #fefefe;
+    border: 1px solid #c0c0c0;
+}
+
+.clickable {
+    cursor: pointer;
+    color: #0070a8;
+}

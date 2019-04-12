@@ -26,24 +26,26 @@
  */
 
 require_once('../../../config.php');
+require_login();
+
+$courseid      = required_param('id', PARAM_INT);        // Course id.
+$id = required_param('a', PARAM_INT);
+
+$cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    print_error('nocourseid');
+}
+
+$context = context_course::instance($course->id);
+require_capability('moodle/block:edit', $context);
+
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 
-$courseid      = required_param('id', PARAM_INT);        // Course id.
-$id = required_param('a', PARAM_INT);
-require_login($courseid);
-
-if ($id) {
-    $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
-}
-
 $tools = evalcomix_tool::get_tools($courseid);
-$activity = get_activity_data($cm);
-$datas = get_evalcomix_activity_data($courseid, $cm);
+$activity = block_evalcomix_get_activity_data($cm);
+$datas = block_evalcomix_get_evalcomix_activity_data($courseid, $cm);
 
 $toolep = 0;
 if (isset($datas['toolEP'])) {
@@ -121,14 +123,16 @@ if (!isset($toolei) || !$toolei) {
 global $OUTPUT;
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', array('id' => $courseid)));
+$PAGE->set_context($context);
+$PAGE->set_pagetype('course');
+$PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
+$PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
+$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
+$PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
 $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->set_pagelayout('report');
 
-$context = context_course::instance($course->id);
-
-require_capability('moodle/block:edit', $context);
-
-print_grade_page_head($COURSE->id, 'report', 'grader', null, false, '', false);
-
+echo $OUTPUT->header();
 echo '
         <center>
             <div><img src="'. $CFG->wwwroot . EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
@@ -284,7 +288,7 @@ echo '
                                 <td>
 ';
 $extraep = $disabledep . ' onchange="javascript:check_weighing(this);"';
-echo add_select_range('pon_EP', 0, 100, $weighingep, $extraep);
+echo block_evalcomix_add_select_range('pon_EP', 0, 100, $weighingep, $extraep);
 
 echo '
 
@@ -330,7 +334,7 @@ echo '
 ';
 
 $extraae = $disabledae . ' onchange="javascript:check_weighing(this);"';
-echo add_select_range('pon_AE', 0, 100, $weighingae, $extraae);
+echo block_evalcomix_add_select_range('pon_AE', 0, 100, $weighingae, $extraae);
 
 echo '
 
@@ -343,7 +347,7 @@ echo '
                                 <td>
 ';
 
-echo add_date_time_selector('available_AE', $availableae, $disabledae) . '<br>';
+echo block_evalcomix_add_date_time_selector('available_AE', $availableae, $disabledae) . '<br>';
 
 echo '
                                 </td>
@@ -355,7 +359,7 @@ echo '
                                 <td>
 ';
 
-echo add_date_time_selector('timedue_AE', $timedueae, $disabledae) . '<br>';
+echo block_evalcomix_add_date_time_selector('timedue_AE', $timedueae, $disabledae) . '<br>';
 
 echo '
                                 </td>
@@ -405,7 +409,7 @@ echo '
 ';
 
 $extraei = $disabledei . ' onchange="javascript:check_weighing(this);"';
-echo add_select_range('pon_EI', 0, 100, $weighingei, $extraei);
+echo block_evalcomix_add_select_range('pon_EI', 0, 100, $weighingei, $extraei);
 
 echo '
 
@@ -435,7 +439,7 @@ echo '
                                 <td>
 ';
 
-echo add_date_time_selector('available_EI', $availableei, $disabledei) . '<br>';
+echo block_evalcomix_add_date_time_selector('available_EI', $availableei, $disabledei) . '<br>';
 
 echo '
                                 </td>
@@ -447,7 +451,7 @@ echo '
                                 <td>
 ';
 
-echo add_date_time_selector('timedue_EI', $timedueei, $disabledei) . '<br>';
+echo block_evalcomix_add_date_time_selector('timedue_EI', $timedueei, $disabledei) . '<br>';
 
 echo '
                                 </td>

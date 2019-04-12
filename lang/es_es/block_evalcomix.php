@@ -198,3 +198,16 @@ $string['edition'] = 'Edición';
 $string['settings_description'] = 'Desde este apartado se puede configurar aspectos relacionados con la tabla de evaluaciones de EvalCOMIX';
 
 $string['crontask'] = 'Tarea para la actualización de calificaciones del libro de EvaLCOMIX';
+
+// Graphics.
+$string['taskgraphic'] = 'Gráfica Tarea';
+$string['studentgraphic'] = 'Gráfica Alumnado';
+$string['activity'] = 'Actividad';
+$string['selectactivity'] = 'Seleccione una actividad';
+$string['selectstudent'] = 'Seleccione un alumno/a';
+$string['selectgroup'] = 'Seleccione un grupo';
+$string['studentmod'] = 'Alumno/a';
+$string['groupmod'] = 'Grupo';
+$string['classmod'] = 'Clase';
+$string['nostudents'] = 'No hay datos para esta actividad';
+$string['nostudentsgroup'] = 'No hay datos en el grupo seleccionado';

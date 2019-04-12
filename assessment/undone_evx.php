@@ -22,43 +22,43 @@
  */
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/lib/dmllib.php');
-// Comprobar si existe el evalcomixAdd para el usuario e item correspondiente.
+// Check if the evalcomixAdd exists for the corresponding user and item.
 global $DB;
 if ($rst = $DB->get_records('grade_grades_history',
     array('userid' => $userid, 'itemid' => $grade->grade_item->id, 'source' => 'evalcomixAdd'))) {
-    $sql2 = "SELECT id, finalgrade FROM " . $CFG->prefix . "grade_grades_history
-                WHERE userid=$userid AND itemid=".$grade->grade_item->id." AND source like 'mod/%'
+    $sql2 = "SELECT id, finalgrade FROM {grade_grades_history}
+                WHERE userid=? AND itemid=? AND source like 'mod/%'
                 ORDER BY id DESC";
-    $gradeevalcomix2 = $DB->get_records_sql($sql2);
-    if ($gradeevalcomix2) {// Si existe reestablecemos el valor.
+    $gradeevalcomix2 = $DB->get_records_sql($sql2, array($userid, $grade->grade_item->id));
+    if ($gradeevalcomix2) {// If there is a reestablished value.
         foreach ($gradeevalcomix2 as $greval) {
             $gradeval = $greval->finalgrade;
             break;
         }
     } else {
-        // Si existe, comprobar si existe una tupla con source=evalcomixDelete para ese usuario e item.
+        // If it exists, check if there is a tuple with source = evalcomixDelete for that user and item.
         $sql = "SELECT id, finalgrade
-            FROM " . $CFG->prefix . "grade_grades_history
+            FROM {grade_grades_history}
             WHERE id IN
                     (SELECT MAX(id)
                     FROM
                         (SELECT id, finalgrade
-                        FROM " . $CFG->prefix . "grade_grades_history
+                        FROM {grade_grades_history}
                         WHERE action = 2 AND source='evalcomixDelete'
-                              AND userid=$userid AND itemid=".$grade->grade_item->id.") AS t)";
+                              AND userid=? AND itemid=?) AS t)";
 
-        $gradeevalcomix = $DB->get_records_sql($sql);
+        $gradeevalcomix = $DB->get_records_sql($sql, array($userid, $grade->grade_item->id));
         if ($gradeevalcomix) {
-            // Si existe reestablecemos el valor.
+            // If it exists, we reestablish the value.
             foreach ($gradeevalcomix as $greval) {
                 $gradeval = $greval->finalgrade;
             }
-        } else {// Si no existe, obtener el valor anterior a EvalcomixAdd.
-            $sql = "SELECT source, finalgrade FROM " . $CFG->prefix . "grade_grades_history
-                WHERE userid=$userid AND itemid=".$grade->grade_item->id."
+        } else {// If it does not exist, get the value before EvalcomixAdd.
+            $sql = "SELECT source, finalgrade FROM {grade_grades_history}
+                WHERE userid=? AND itemid=?
                 ORDER BY id ASC";
-            $gradeevalcomix = $DB->get_records_sql($sql);
-            if ($gradeevalcomix) {// Si existe reestablecemos el valor.
+            $gradeevalcomix = $DB->get_records_sql($sql, array($userid, $grade->grade_item->id));
+            if ($gradeevalcomix) {// If it exists, we reestablish the value.
                 foreach ($gradeevalcomix as $greval) {
                     if ($greval->source == 'evalcomixAdd') {
                         $gradeval = null;
@@ -72,7 +72,7 @@ if ($rst = $DB->get_records('grade_grades_history',
     }// Else.
 }// If (rst = get_record).
 
-// Comprobamos que el item actual no es un "resultado".
+// We check that the current item is not a "result".
 if ($grade->grade_item->itemnumber == 0) {
     $modulo = $grade->grade_item->itemmodule;
     $instancia = $grade->grade_item->iteminstance;

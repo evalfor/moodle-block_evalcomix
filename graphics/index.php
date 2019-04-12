@@ -14,99 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ */
+
 require_once('../../../config.php');
-global $CFG;
-require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+require_login();
 
+$mode = optional_param('mode', 1, PARAM_INT);
 $courseid      = required_param('id', PARAM_INT);
-$mode = optional_param('mode', '', PARAM_INT);
-
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
-
-global $OUTPUT;
-
-$PAGE->set_url(new moodle_url('/blocks/evalcomix/graphics/index.php', array('id' => $courseid)));
-$PAGE->set_pagelayout('incourse');
-// Print the header.
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
-
-$buttons = null;
-
-require_login($course);
-
 $context = context_course::instance($course->id);
+require_capability('moodle/grade:viewhidden', $context);
+$PAGE->set_url(new moodle_url('/blocks/evalcomix/graphics/index.php', array('id' => $courseid)));
+$PAGE->set_pagetype('home');
+$PAGE->set_context($context);
+$PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
+$PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
 
-print_grade_page_head($course->id, 'report', 'grader', null, false, $buttons, false);
+// Print the header.
+$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
+$PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
+$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->set_pagelayout('standard');
+$PAGE->requires->jquery();
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/blocks/evalcomix/ajax.js'));
+$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/evalcomix/style/styles.css'));
+require_once($CFG->dirroot . '/blocks/evalcomix/graphics/graphicsrenderer.php');
+$renderer = new block_evalcomix_graphic_renderer();
+echo $OUTPUT->header();
 
 echo '
     <center>
-        <div><img src="'. $CFG->wwwroot . EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
+        <div><img src="'. $CFG->wwwroot . '/blocks/evalcomix/images/logoevalcomix.png" width="230" alt="EvalCOMIX"/></div><br>
         <div><input type="button" style="color:#333333" value="'.
         get_string('assesssection', 'block_evalcomix').'" onclick="location.href=\''.
         $CFG->wwwroot .'/blocks/evalcomix/assessment/index.php?id='.$courseid .'\'"/></div><br>
     </center>
-
-    <div>
-        <ul style="margin:5px">
-            <li class="pestania" id="pstPT"><a href="?mode=1"><a class="enlacetitulografica"
-            href="?mode=1&id='.$courseid.'">Gráfica Tarea</a></li>
-            <li class="pestania" id="pstPA"><a class="enlacetitulografica"
-            href="?mode=2&id='.$courseid.'">Gráfica Alumnado</a></li>
-            <li class="pestania" id="pstPAtr" style="display:none;"><a class="enlacetitulografica"
-            href="?mode=3">Gráfica Perfil Atributos</a></li>
-            <li class="pestania" id="pstPAleat" style="display:none;"><a class="enlacetitulografica"
-            href="?mode=33">Modo Aleatorio</a></li>
-        </ul>
-    </div>
-
-    <div style="float: left; width: 100%; padding-top: 15px; border: solid 1px #C0C0C0">
 ';
 
-$graphic = 'graphic';
-require_once('graphic_google.php');
-
-$idcurso = $courseid;
-switch ($mode){
-    case '1': {
-        $graphic::draw_perfil_tarea($idcurso);
-    } break;
-
-    case '2': {
-        $graphic::draw_perfil_alumnado($idcurso);
-    } break;
-
-    case '3': {
-        $graphic::draw_perfil_atributos($idcurso);
-    } break;
-
-    default:
-        $minvalor = 0;
-        $maxvalor = 100;
-        $arraydata = array(
-            array("profesor", 75 , 80, 65),
-            array("autoevaluacion", 55 , 25, 76),
-            array("entre iguales", 67 , 65, 43)
-        );
-
-        $blnincluirlimites = true;
-        $blnincluirdispersion = true;
-
-        $titulo = get_string('titlegraficbegin', 'block_evalcomix');
-        $valorlimites = 2;
-
-        $graphic::draw_perfil_tarea_sola($titulo,
-                                         $minvalor,
-                                         $maxvalor,
-                                         $arraydata,
-                                         $blnincluirlimites,
-                                         $blnincluirdispersion,
-                                         $valorlimites);
-}
-echo '
-
-    </div>';
+echo $renderer->display_graphics($course->id, $mode);
 
 echo $OUTPUT->footer();

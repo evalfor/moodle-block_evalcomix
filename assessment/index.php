@@ -21,35 +21,59 @@
  */
 
 require_once('../../../config.php');
+require_login();
+
 require_once($CFG->dirroot .'/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/grade/report/grader/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $courseid      = required_param('id', PARAM_INT);        // Course id.
 $page          = optional_param('page', 0, PARAM_INT);   // Active page.
 $perpageurl    = optional_param('perpage', 0, PARAM_INT);
 $sortitemid    = optional_param('sortitemid', 0, PARAM_ALPHANUM); // Sort by which grade item.
-$stu           = optional_param('stu', 0, PARAM_INT);   // Evaluated student id.
-$cma           = optional_param('cma', 0, PARAM_INT);   // Cm id of evaluated activity.
 $grd           = optional_param('grd', 0, PARAM_INT);   // 1 if the system must pass grades to Moodle´s Grades Report.
-
-if (function_exists('clean_param_array')) {
-    $data = clean_param_array($_POST, PARAM_ALPHANUM);
-} else if (function_exists('clean_param')) {
-    $data = clean_param($_POST, PARAM_ALPHANUM);
-} else {
-    $data = $_POST;
-}
-
-if ($stu) {
-    $data['stu'] = $stu;
-}
-if ($cma) {
+$cma = optional_param('cma', 0, PARAM_INT);   // Cm id of evaluated activity.
+if (!empty($cma)) {
     $data['cma'] = $cma;
 }
 
+$data = array();
+$data['cmid'] = optional_param('cmid', 0, PARAM_INT);   // Evaluated student id.
+$data['stu'] = optional_param('stu', 0, PARAM_INT);   // Evaluated student id.
+$data['toolEP'] = optional_param('toolEP', '', PARAM_ALPHANUM);
+$data['toolEI'] = optional_param('toolEI', '', PARAM_ALPHANUM);
+$data['toolAE'] = optional_param('toolAE', '', PARAM_ALPHANUM);
+$data['pon_EP'] = optional_param('pon_EP', '', PARAM_ALPHANUM);
+$data['pon_AE'] = optional_param('pon_AE', '', PARAM_ALPHANUM);
+$data['pon_EI'] = optional_param('pon_EI', '', PARAM_ALPHANUM);
+$data['hour_available_AE'] = optional_param('hour_available_AE', '', PARAM_ALPHANUM);
+$data['minute_available_AE'] = optional_param('minute_available_AE', '', PARAM_ALPHANUM);
+$data['month_available_AE'] = optional_param('month_available_AE', '', PARAM_ALPHANUM);
+$data['day_available_AE'] = optional_param('day_available_AE', '', PARAM_ALPHANUM);
+$data['year_available_AE'] = optional_param('year_available_AE', '', PARAM_ALPHANUM);
+$data['hour_timedue_AE'] = optional_param('hour_timedue_AE', '', PARAM_ALPHANUM);
+$data['minute_timedue_AE'] = optional_param('minute_timedue_AE', '', PARAM_ALPHANUM);
+$data['month_timedue_AE'] = optional_param('month_timedue_AE', '', PARAM_ALPHANUM);
+$data['day_timedue_AE'] = optional_param('day_timedue_AE', '', PARAM_ALPHANUM);
+$data['year_timedue_AE'] = optional_param('year_timedue_AE', '', PARAM_ALPHANUM);
+$data['hour_available_EI'] = optional_param('hour_available_EI', '', PARAM_ALPHANUM);
+$data['minute_available_EI'] = optional_param('minute_available_EI', '', PARAM_ALPHANUM);
+$data['month_available_EI'] = optional_param('month_available_EI', '', PARAM_ALPHANUM);
+$data['day_available_EI'] = optional_param('day_available_EI', '', PARAM_ALPHANUM);
+$data['year_available_EI'] = optional_param('year_available_EI', '', PARAM_ALPHANUM);
+$data['hour_timedue_EI'] = optional_param('hour_timedue_EI', '', PARAM_ALPHANUM);
+$data['minute_timedue_EI'] = optional_param('minute_timedue_EI', '', PARAM_ALPHANUM);
+$data['month_timedue_EI'] = optional_param('month_timedue_EI', '', PARAM_ALPHANUM);
+$data['day_timedue_EI'] = optional_param('day_timedue_EI', '', PARAM_ALPHANUM);
+$data['year_timedue_EI'] = optional_param('year_timedue_EI', '', PARAM_ALPHANUM);
+$data['save'] = optional_param('save', '', PARAM_ALPHANUM);
+$data['maxgrade'] = optional_param('maxgrade', '', PARAM_ALPHANUM);
+$data['anonymousEI'] = optional_param('anonymousEI', '', PARAM_ALPHANUM);
+$data['alwaysvisibleEI'] = optional_param('alwaysvisibleEI', '', PARAM_ALPHANUM);
+$data['whoassessesEI'] = optional_param('whoassessesEI', '', PARAM_ALPHANUM);
 
 global $OUTPUT, $DB;
 
@@ -60,17 +84,18 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/index.php', array('id' => $courseid)));
 $buttons = false;
 
-require_login($course);
 $context = context_course::instance($courseid);
 
 $PAGE->set_pagelayout('incourse');
 
 // Print the header.
 $strplural = 'evalcomix';
+$PAGE->set_context($context);
 $PAGE->navbar->add($strplural);
 $PAGE->set_title($strplural);
 $PAGE->set_pagelayout('report');
 $PAGE->set_heading($course->fullname);
+$PAGE->requires->jquery();
 echo $OUTPUT->header();
 
 // It is verified that the course is not newly restored, in which case it updates the instruments.
@@ -80,12 +105,12 @@ if (isset($environment->id) && $webtools = evalcomix_tool::fetch_all(array('evxi
     // Before $webtools = webservice_evalcomix_client::get_ws_list_tool($courseid, MOODLE_NAME);.
     $tools = array();
     if (!empty($webtools) && $environment) {
-        update_tool_list($environment->id, $webtools);
+        block_evalcomix_update_tool_list($environment->id, $webtools);
     }
 }
 
 // Initialise the evalcomix report object that produces the table.
-$reportevalcomix = new grade_report_evalcomix($courseid, null, $context, $page, $sortitemid);
+$reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context, $page, $sortitemid);
 if (!empty($data)) {
     $reportevalcomix->process_data($data);
 }
@@ -217,7 +242,8 @@ if ($toollist = evalcomix_tool::fetch_all(array('evxid' => $environment->id))) {
                 foreach ($assessments as $assessment) {
                     $activity = $task->instanceid;
                     $module = evalcomix_tasks::get_type_task($activity);
-                    $mode = grade_report_evalcomix::get_type_evaluation($assessment->studentid, $courseid, $assessment->assessorid);
+                    $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $courseid,
+                        $assessment->assessorid);
                     $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
                         '_' . $assessment->assessorid . '_' . $mode . '_' . MOODLE_NAME;
                     $assessmentid = md5($str);
@@ -253,9 +279,10 @@ echo '
 // If $USER has editing permits.
 if (is_siteadmin($USER) || has_capability('moodle/grade:viewhidden', $context)) {
     echo '<div><input type="button" style="color:#333333" value="'.get_string('designsection', 'block_evalcomix').'"
-    onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>';
+        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>';
     echo '<div><input type="button" style="color:#333333" value="'.get_string('graphics', 'block_evalcomix').'"
-    onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/graphics/index.php?mode=1&id='.$courseid .'\'"/></div>';
+        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/graphics/index.php?mode=1&id='.$courseid .'\'"/></div>';
+
     if (has_capability('moodle/block:edit', $context)) {
         echo '<div><input type="button" style="color:#333333" value="'.get_string('settings', 'block_evalcomix').'"
         onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/configuration.php?id='.$courseid .'\'"/></div>';

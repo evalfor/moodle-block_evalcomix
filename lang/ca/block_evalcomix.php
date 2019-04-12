@@ -167,3 +167,16 @@ $string['nostudentselfassessed'] = 'No hi ha estudiants autoevaluados';
 
 $string['alwaysvisible_EI_help'] = 'Si está desmarcado, los estudiantes sólo podrán ver las evaluaciones de sus compañeros una vez que finalice la Fecha Límite. Si está marcado, los estudiantes podrán consultar en todo momento las evaluaciones de sus compañeros';
 $string['alwaysvisible_EI'] = 'Siempre visible';
+
+// Graphics.
+$string['taskgraphic'] = 'Gràfica Activitat';
+$string['studentgraphic'] = 'Gràfica Alumnat';
+$string['activity'] = 'Activitat';
+$string['selectactivity'] = 'Seleccioneu una activitat';
+$string['selectstudent'] = 'Seleccioneu un alumne / a';
+$string['selectgroup'] = 'Seleccioneu un grup';
+$string['studentmod'] = 'Alumne';
+$string['groupmod'] = 'Grup';
+$string['classmod'] = 'Classe';
+$string['nostudents'] = 'No hi ha dades per a aquesta activitat';
+$string['nostudentsgroup'] = 'No hi ha dades en el grup seleccionat';

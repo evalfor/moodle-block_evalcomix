@@ -212,3 +212,16 @@ $string['privacy:metadata:block_evalcomix_grades'] = 'Information about the aver
 $string['privacy:metadata:block_evalcomix_grades:userid'] = 'The Id of the user evaluated';
 $string['privacy:metadata:block_evalcomix_grades:finalgrade'] = 'Average of all the ratings given to a user in each evaluation modality';
 $string['privacy:metadata:block_evalcomix:tableexplanation'] = 'EvalCOMIX block information is stored here.';
+
+// Graphics.
+$string['taskgraphic'] = 'Task Graphic';
+$string['studentgraphic'] = 'Student Graphic';
+$string['activity'] = 'Activity';
+$string['selectactivity'] = 'Select an activity';
+$string['selectstudent'] = 'Select a student';
+$string['selectgroup'] = 'Select a group';
+$string['studentmod'] = 'Student';
+$string['groupmod'] = 'Group';
+$string['classmod'] = 'Class';
+$string['nostudents'] = 'No students with datas';
+$string['nostudentsgroup'] = 'No students with datas in group';
