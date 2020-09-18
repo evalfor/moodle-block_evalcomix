@@ -35,27 +35,27 @@
 }
 
 .block_evalcomix_invisible {
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .block_evalcomix_w_20 {
-	width:20em;
+    width: 20em;
 }
 
 .block_evalcomix_w_16 {
-    width:16px;
+    width: 16px;
 }
 
 .block_evalcomix_w_17 {
-    width:17px;
+    width: 17px;
 }
 
 .block_evalcomix_w_25 {
-    width:25px;
+    width: 25px;
 }
 
 .block_evalcomix_font_size_08 {
-    font-size:0.8em;	
+    font-size: 0.8em;
 }
 
 .background-color-tr {
@@ -63,35 +63,34 @@
 }
 
 .block_evalcomix-border {
-    border:1px solid #146C84;
+    border: 1px solid #146C84;
 }
 
 .block_evalcomix_usertopic {
-    width:35px;
-    padding:3px;
+    width: 35px;
+    padding: 3px;
 }
  .wrapper1, .wrapper2{
     width: 100%;
     border: none 0px RED;
-    overflow-x: scroll; overflow-y:hidden;
+    overflow-x: scroll;
+    overflow-y:hidden;
 }
 
 .wrapper1{
     height: 20px;
 }
 
-.wrapper2{}
-
 #div1 {
-    width:500px;
+    width: 500px;
     height: 10px;
 }
 
 #div2 {
-    width:500px;
+    width: 500px;
     overflow: auto;
 }
 
 #div {
-    width:100%
+    width: 100%;
 }
