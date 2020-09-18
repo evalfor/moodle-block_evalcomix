@@ -209,26 +209,26 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
                 echo 'Finalgrades asociados: <br>';
                 if ($cm = $DB->get_record('course_modules', array('id' => $task->instanceid))) {
                     $courseid = $cm->course;
-                    if ($assessments = evalcomix_assessments::fetch_all(array('taskid' => $task->id))) {
+                    if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
                         foreach ($assessments as $assessment) {
                             $params = array();
 
                             $params['cmid'] = $task->instanceid;
                             $params['userid'] = $assessment->studentid;
                             $params['courseid'] = $courseid;
-                            $finalgrade = evalcomix_grades::get_finalgrade_user_task($params);
+                            $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
                             echo "finalgrade: $finalgrade <br>";
                             if ($finalgrade !== null) {
-                                if ($gradeobject = evalcomix_grades::fetch($params)) {
+                                if ($gradeobject = block_evalcomix_grades::fetch($params)) {
                                     $gradeobject->finalgrade = $finalgrade;
                                     $gradeobject->update();
                                 } else {
                                     $params['finalgrade'] = $finalgrade;
-                                    $gradeobject = new evalcomix_grades($params);
+                                    $gradeobject = new block_evalcomix_grades($params);
                                     $gradeobject->insert();
                                 }
                             } else {
-                                if ($gradeobject = evalcomix_grades::fetch($params)) {
+                                if ($gradeobject = block_evalcomix_grades::fetch($params)) {
                                     $gradeobject->delete();
                                 }
                             }

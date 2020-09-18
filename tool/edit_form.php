@@ -22,10 +22,12 @@
  */
 
 require_once('../../../config.php');
-require_login();
+
 $courseid      = required_param('id', PARAM_INT);
 $toolid = required_param('t', PARAM_ALPHANUM);
 $context = context_course::instance($courseid);
+require_course_login($courseid);
+
 require_capability('moodle/block:edit', $context, $USER->id);
 
 require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
@@ -37,18 +39,18 @@ $url = new moodle_url('/blocks/evalcomix/tool/edit_form.php', array('courseid' =
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
-if (!$tool = evalcomix_tool::fetch(array('idtool' => $toolid))) {
+if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
     print_error('EvalCOMIX: No tool enabled');
 }
 
 $lang = current_language();
-$lms = MOODLE_NAME;
-$url = webservice_evalcomix_client::get_ws_createtool($toolid, $lms, $courseid, $lang.'_utf8', 'open');
+$lms = BLOCK_EVALCOMIX_MOODLE_NAME;
+$url = block_evalcomix_webservice_client::get_ws_createtool($toolid, $lms, $courseid, $lang.'_utf8', 'open');
 
 $vars = explode('?', $url);
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
-$curl = new Curly();
+$curl = new block_evalcomix_curl();
 $response = $curl->post($vars[0], $vars[1]);
 if ($response && $curl->getHttpCode() >= 200 && $curl->getHttpCode() < 400) {
     echo $response;

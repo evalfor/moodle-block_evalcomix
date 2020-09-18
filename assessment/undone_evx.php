@@ -54,7 +54,7 @@ if ($rst = $DB->get_records('grade_grades_history',
                 $gradeval = $greval->finalgrade;
             }
         } else {// If it does not exist, get the value before EvalcomixAdd.
-            $sql = "SELECT source, finalgrade FROM {grade_grades_history}
+            $sql = "SELECT id, source, finalgrade FROM {grade_grades_history}
                 WHERE userid=? AND itemid=?
                 ORDER BY id ASC";
             $gradeevalcomix = $DB->get_records_sql($sql, array($userid, $grade->grade_item->id));

@@ -87,11 +87,12 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-        $evalcomixenvironment->set_source_array(array((object)array('courseid' => $COURSE->id, 'moodlename' => MOODLE_NAME)));
+        $evalcomixenvironment->set_source_array(array((object)array('courseid' => $COURSE->id,
+            'moodlename' => BLOCK_EVALCOMIX_MOODLE_NAME)));
 
         try {
             $arrayxmltool = array();
-            $xml = webservice_evalcomix_client::get_ws_xml_tools2(array('courseid' => $courseid));
+            $xml = block_evalcomix_webservice_client::get_ws_xml_tools2(array('courseid' => $courseid));
             foreach ($xml as $toolxml) {
                 $id = (string)$toolxml['id'];
                 foreach ($toolxml as $txml) {

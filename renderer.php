@@ -56,7 +56,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= $this->logoheader();
         $output .= html_writer::start_tag('div');
         $output .= html_writer::empty_tag('input', array('type' => 'button',
-        'style' => 'color:#333333', 'value' => get_string('assesssection', 'block_evalcomix'),
+        'class' => 'text-secondary', 'value' => get_string('assesssection', 'block_evalcomix'),
         'onclick' => "location.href='". $CFG->wwwroot ."/blocks/evalcomix/assessment/index.php?id=".$courseid ."'"));
         $output .= html_writer::end_tag('div');
         $output .= html_writer::start_tag('h1');
@@ -65,9 +65,8 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('form', array('action' => 'download_preview.php?id='.
         $courseid.'&mode=selftask', 'method' => 'post', 'class' => 'selftaskform'));
-        $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid #c3c3c3;
-        width:35%; padding:0.3em'));
-        $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+        $output .= html_writer::start_tag('fieldset', array());
+        $output .= html_writer::start_tag('legend', array());
         $output .= get_string('selfitemincluded', 'block_evalcomix');
         $output .= html_writer::end_tag('legend');
 
@@ -75,7 +74,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::start_tag('table');
         foreach ($elements as $key => $element) {
             $output .= html_writer::start_tag('tr');
-            $output .= html_writer::start_tag('td', array('style' => 'margin:0;padding:0'));
+            $output .= html_writer::start_tag('td', array());
             $checked = '0';
             $atrib = array('type' => 'radio', 'name' => 'task', 'value' => $key,
             'onclick' => "doWork('users', '". $CFG->wwwroot."/blocks/evalcomix/reports/userajax.php?
@@ -83,7 +82,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
             $output .= html_writer::empty_tag('input', $atrib);
             $output .= html_writer::end_tag('td');
-            $output .= html_writer::start_tag('td', array('style' => 'padding:0;margin:0'));
+            $output .= html_writer::start_tag('td', array());
 
             $output .= html_writer::start_tag('label', array('for' => $key));
             $output .= $element['object']->get_name();
@@ -98,15 +97,14 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('fieldset');
 
         if (empty($elements)) {
-            $output .= html_writer::start_tag('div', array('style' => 'font-style:italic'));
+            $output .= html_writer::start_tag('div', array('class' => 'font-italic'));
             $output .= get_string('notaskconfigured', 'block_evalcomix').': ' .
             get_string($modality.'mod', 'block_evalcomix');
             $output .= html_writer::end_tag('div');
         } else {
 
-            $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid
-            #c3c3c3; width:35%; padding:0.3em'));
-            $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+            $output .= html_writer::start_tag('fieldset', array());
+            $output .= html_writer::start_tag('legend', array('class' => 'font-weight-bold;text-left'));
             $output .= get_string('studendtincluded', 'block_evalcomix');
             $output .= html_writer::end_tag('legend');
             $output .= html_writer::start_tag('div', array('id' => 'users'));
@@ -114,8 +112,8 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('fieldset');
 
-        $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid #c3c3c3; width:35%; padding:0.3em'));
-        $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+        $output .= html_writer::start_tag('fieldset', array());
+        $output .= html_writer::start_tag('legend', array('class' => 'font-weight-bold;text-left'));
         $output .= get_string('format', 'block_evalcomix');
         $output .= html_writer::end_tag('legend');
 
@@ -171,7 +169,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= $this->logoheader();
         $output .= html_writer::start_tag('div');
         $output .= html_writer::empty_tag('input', array('type' => 'button',
-        'style' => 'color:#333333', 'value' => get_string('assesssection', 'block_evalcomix'),
+        'class' => 'text-secondary', 'value' => get_string('assesssection', 'block_evalcomix'),
         'onclick' => "location.href='". $CFG->wwwroot ."/blocks/evalcomix/assessment/index.php?id=".$courseid ."'"));
         $output .= html_writer::end_tag('div');
         $output .= html_writer::start_tag('h1');
@@ -180,9 +178,8 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('form', array('action' => 'download_preview.php?
         id='.$courseid.'&mode=teachertask', 'method' => 'post', 'class' => 'teachertaskform'));
-        $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid #c3c3c3;
-        width:35%; padding:0.3em'));
-        $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+        $output .= html_writer::start_tag('fieldset', array());
+        $output .= html_writer::start_tag('legend', array());
         $output .= get_string('teacheritemincluded', 'block_evalcomix');
         $output .= html_writer::end_tag('legend');
 
@@ -190,7 +187,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $numactivities = 0;
         foreach ($elements as $key => $element) {
             $output .= html_writer::start_tag('tr');
-            $output .= html_writer::start_tag('td', array('style' => 'margin:0;padding:0'));
+            $output .= html_writer::start_tag('td', array());
             $checked = '0';
 
             $atrib = array('type' => 'radio', 'name' => 'task', 'value' => $key,
@@ -200,7 +197,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
             $output .= html_writer::empty_tag('input', $atrib);
             $output .= html_writer::end_tag('td');
-            $output .= html_writer::start_tag('td', array('style' => 'padding:0;margin:0'));
+            $output .= html_writer::start_tag('td', array());
             $output .= html_writer::start_tag('label', array('for' => $key));
             $output .= $element['object']->get_name();
             $output .= html_writer::end_tag('label');
@@ -213,23 +210,21 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('fieldset');
 
         if (empty($elements)) {
-            $output .= html_writer::start_tag('div', array('style' => 'font-style:italic'));
+            $output .= html_writer::start_tag('div', array());
             $output .= get_string('notaskconfigured', 'block_evalcomix').': ' .
             get_string($modality.'mod', 'block_evalcomix');
             $output .= html_writer::end_tag('div');
         } else {
-            $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid
-            #c3c3c3; width:35%; padding:0.3em'));
-            $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+            $output .= html_writer::start_tag('fieldset', array());
+            $output .= html_writer::start_tag('legend', array());
             $output .= get_string('teacherincluded', 'block_evalcomix');
             $output .= html_writer::end_tag('legend');
             $output .= html_writer::start_tag('div', array('id' => 'assessors'));
             $output .= html_writer::end_tag('div');
             $output .= html_writer::end_tag('fieldset');
 
-            $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid #c3c3c3;
-            width:35%; padding:0.3em'));
-            $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+            $output .= html_writer::start_tag('fieldset', array());
+            $output .= html_writer::start_tag('legend', array());
             $output .= get_string('studendtincluded', 'block_evalcomix');
             $output .= html_writer::end_tag('legend');
             $output .= html_writer::start_tag('div', array('id' => 'users'));
@@ -237,9 +232,8 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('fieldset');
 
-        $output .= html_writer::start_tag('fieldset', array('style' => 'border:1px solid #c3c3c3;
-        width:35%; padding:0.3em'));
-        $output .= html_writer::start_tag('legend', array('style' => 'font-weight:bold;text-align:left'));
+        $output .= html_writer::start_tag('fieldset', array());
+        $output .= html_writer::start_tag('legend', array());
         $output .= get_string('format', 'block_evalcomix');
         $output .= html_writer::end_tag('legend');
 
@@ -273,7 +267,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         include_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         $output = html_writer::start_tag('center');
         $output .= html_writer::start_tag('div');
-        $output .= html_writer::empty_tag('img', array('src' => $CFG->wwwroot . EVXLOGOROOT,
+        $output .= html_writer::empty_tag('img', array('src' => $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT,
         'width' => '230', 'alt' => 'EvalCOMIX'));
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('center');

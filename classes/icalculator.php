@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Interface of class calcultator
  */
-interface icalculator{
+interface block_evalcomix_icalculator{
     /**
      * It applies a mathematical operation to $elements1 and $elements2
      * $activities and $users to travel the element arrays

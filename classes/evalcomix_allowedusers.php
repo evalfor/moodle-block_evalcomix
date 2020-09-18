@@ -24,7 +24,7 @@ require_once('evalcomix_object.php');
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-class evalcomix_allowedusers extends evalcomix_object{
+class block_evalcomix_allowedusers extends block_evalcomix_object{
     public $table = 'block_evalcomix_allowedusers';
 
      /**
@@ -91,7 +91,7 @@ class evalcomix_allowedusers extends evalcomix_object{
      * @return object grade_item instance or false if none found.
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix_allowedusers', 'evalcomix_allowedusers', $params);
+        return block_evalcomix_object::fetch_helper('block_evalcomix_allowedusers', 'evalcomix_allowedusers', $params);
     }
 
     /**

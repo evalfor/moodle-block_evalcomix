@@ -22,7 +22,6 @@
  */
 
 require_once('../../../config.php');
-require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
@@ -31,6 +30,8 @@ $assessorid = optional_param('as', 0, PARAM_INT);
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+require_course_login($course);
+
 $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
 $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
@@ -43,6 +44,7 @@ $PAGE->set_pagelayout('popup');
 $PAGE->set_context($context);
 
 $PAGE->set_title(get_string('ratingsforitem', 'block_evalcomix'));
+$PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 echo $OUTPUT->header();
 
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
@@ -57,7 +59,7 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $activity = block_evalcomix_get_activity_data($cm);
 
-if ($allowedusers = evalcomix_allowedusers::fetch_all(array('cmid' => $id))) {
+if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', array('cmid' => $id))) {
     foreach ($allowedusers as $alloweduser) {
         $studentid = $alloweduser->studentid;
         $assessorid = $alloweduser->assessorid;
@@ -78,13 +80,13 @@ echo '
     <form id="assignform" method="post" action="assigning_users_form.php?id='.$courseid.'&a='.$cm->id.'"><div>
         <input type="hidden" name="sesskey" value="'.sesskey().'" />
 
-        <table style="text-align:center" summary="" class="roleassigntable generaltable generalbox boxaligncenter" cellspacing="0">
+        <table summary="" class="text-center roleassigntable generaltable generalbox boxaligncenter" cellspacing="0">
             <tr>
             <td id="existingcell">
-                <p><label for="removeselect" style="font-weight:bold">'.
+                <p><label for="removeselect" class="font-weight-bold">'.
                 get_string('assess_students', 'block_evalcomix').': </label></p>
                 <div id="assessors">
-                <select id="assessorid" name="assessorid" style="width:20em" size="20"
+                <select id="assessorid" name="assessorid" class="block_evalcomix_w_20" size="20"
                 onclick="document.getElementById(\'submit\').disabled = false;doWork(\'targetstudents\', \'targetstudents.php\',
                 \'u=\'+this.value+\'&id='.$courseid.'&a='.$cm->id.'\');">
 ';
@@ -97,7 +99,7 @@ foreach ($users as $user) {
     $userid = $user->id;
     $style = '';
     if (isset($boldusers[$userid])) {
-        $style = 'style="color:#00f; font-weight:bold;"';
+        $style = 'class="text-danger font-weight-bold"';
     }
     echo '<option '.$style.' '.$selected.' value="'.$user->id.'">'.fullname($user).'</option>';
 }
@@ -105,7 +107,7 @@ foreach ($users as $user) {
 echo '
                 </select>
                 </div>
-                <div style="text-align:left;margin-top:3px">
+                <div class="text-left mt-1">
                     <label>'.get_string('search', 'block_evalcomix').'</label><input type="text" size="15" id="buscarid"
                      onkeyup="document.getElementById(\'submit\').disabled=true;doWork(\'assessors\', \'search.php\',
                      \'a='.$cm->id.'&id='.$courseid.'&search=\'+this.value)">
@@ -115,9 +117,9 @@ echo '
 
             </td>
             <td id="potentialcell">
-               <p><label for="addselect" style="font-weight:bold">'.get_string('studentstoassess', 'block_evalcomix').':</label></p>
+               <p><label for="addselect" class="font-weight-bold">'.get_string('studentstoassess', 'block_evalcomix').':</label></p>
                 <div id="targetstudents">
-                    <select size="20" style="width:20em">
+                    <select size="20" class="block_evalcomix_w_20">
                     '.$options.'
                     </select>
                 </div>

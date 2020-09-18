@@ -213,3 +213,10 @@ $string['groupmod'] = 'Grupo';
 $string['classmod'] = 'Clase';
 $string['nostudents'] = 'No hay datos para esta actividad';
 $string['nostudentsgroup'] = 'No hay datos en el grupo seleccionado';
+
+$string['toolmanagerviewed'] = 'Gestor de instrumentos visto';
+$string['activityassessorviewed'] = 'Evaluador de actividades visto';
+$string['tooldeleted'] = 'Instrumento de evaluación borrado';
+$string['studentassessed'] = 'Estudiante evaluado';
+$string['graphicsviewed'] = 'Gráficos visto';
+$string['configurationviewed'] = 'Ajustes visto';

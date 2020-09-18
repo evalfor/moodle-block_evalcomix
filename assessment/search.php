@@ -22,14 +22,14 @@
  */
 
 require_once('../../../config.php');
-require_login();
+$courseid      = required_param('id', PARAM_INT);
+require_course_login($courseid);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $search = required_param('search', PARAM_RAW);
-$courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
 $type = optional_param('t', 0, PARAM_INT);
 $assessorid = optional_param('as', 0, PARAM_INT);
@@ -41,25 +41,28 @@ if ($id) {
     }
 }
 
+if (!empty($assesorid) && !$assessor = $DB->get_record('user', array('id' => $assessorid))) {
+    print_error('Wrong user');
+}
+
 $context = context_course::instance($courseid);
 
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 $allowedusershash = array();
 
-
-$output = '<select id="assessorid" name="assessorid" style="width:20em" size="20"
+$output = '<select id="assessorid" name="assessorid" class="block_evalcomix_w_20" size="20"
 onclick="document.getElementById(\'submit\').disabled =
 false;doWork(\'targetstudents\', \'targetstudents.php\', \'u=\'+this.value+\'&id='.$courseid.'&a='.$cm->id.'\');">';
 if ($type == 'potential' && $assessorid > 0) {
     $allowedusershash[$assessorid] = true;
-    if ($allowedusers = evalcomix_allowedusers::fetch_all(array('cmid' => $id, 'assessorid' => $assessorid))) {
+    if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', array('cmid' => $id, 'assessorid' => $assessorid))) {
         foreach ($allowedusers as $alloweduser) {
             $userid = $alloweduser->studentid;
             $allowedusershash[$userid] = true;
         }
     }
-    $output = '<select multiple name="pu[]" style="width:20em" size="20"
+    $output = '<select multiple name="pu[]" class="block_evalcomix_w_20" size="20"
     onchange="document.getElementById(\'add\').disabled=false">';
 }
 foreach ($users as $user) {

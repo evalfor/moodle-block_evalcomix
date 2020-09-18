@@ -25,7 +25,7 @@ require_once('evalcomix_modes.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
-class evalcomix_modes_extra extends evalcomix_modes{
+class block_evalcomix_modes_extra extends block_evalcomix_modes{
     public $table = 'block_evalcomix_modes_extra';
 
     /**
@@ -91,7 +91,7 @@ class evalcomix_modes_extra extends evalcomix_modes{
      * @return object grade_item instance or false if none found.
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix_modes_extra', 'evalcomix_modes_extra', $params);
+        return block_evalcomix_object::fetch_helper('block_evalcomix_modes_extra', 'block_evalcomix_modes_extra', $params);
     }
 
     /**
@@ -101,7 +101,7 @@ class evalcomix_modes_extra extends evalcomix_modes{
      * @return array array of evalcomix_tool instances or false if none found.
      */
     public static function fetch_all($params) {
-        return evalcomix_tool::fetch_all_helper('block_evalcomix_modes_extra', 'evalcomix_modes_extra', $params);
+        return block_evalcomix_object::fetch_all_helper('block_evalcomix_modes_extra', 'block_evalcomix_modes_extra', $params);
     }
 
     /**

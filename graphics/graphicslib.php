@@ -35,7 +35,7 @@ function get_group_members_evaluated($groupid, $activityid) {
 
     $students = array();
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
-    if ($users = evalcomix_assessments::get_students_assessed($activityid)) {
+    if ($users = block_evalcomix_assessments::get_students_assessed($activityid)) {
         if ($groupsmember = $DB->get_records('groups_members', array('groupid' => $groupid))) {
             $membersids = array();
             foreach ($groupsmember as $member) {

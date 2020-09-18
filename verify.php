@@ -26,7 +26,7 @@ require_login();
 require_once($CFG->dirroot.'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 $u = required_param('u', PARAM_URL);
 
-$result = webservice_evalcomix_client::verify($u);
+$result = block_evalcomix_webservice_client::verify($u);
 if ($result == 1) {
     echo get_string('valid_conection', 'block_evalcomix');
 } else {

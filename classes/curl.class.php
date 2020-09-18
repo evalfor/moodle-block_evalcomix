@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class Curly {
+class block_evalcomix_curl {
 
     public $curl;
     public $options;

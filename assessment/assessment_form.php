@@ -22,7 +22,8 @@
  */
 
 require_once('../../../config.php');
-require_login();
+$courseid      = required_param('id', PARAM_INT);        // Course id.
+require_course_login($courseid);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
@@ -31,7 +32,6 @@ require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/grade_report.php');
 
-$courseid      = required_param('id', PARAM_INT);        // Course id.
 $toolid = required_param('t', PARAM_ALPHANUM);
 $perspective = required_param('mode', PARAM_ALPHA);
 // It indicates what will be showed: ['1'] only the template tool or ['0'] tool filled with assessment.
@@ -44,7 +44,7 @@ array('courseid' => $courseid, 't' => $toolid));
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
-if (!$tool = evalcomix_tool::fetch(array('idtool' => $toolid))) {
+if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
     print_error('EvalCOMIX: No tool enabled');
 }
 
@@ -52,7 +52,6 @@ if ($perspective != 'assess' && $perspective != 'view') {
     print_error('EvalCOMIX: the mode param is wrong');
 }
 
-global $USER, $DB;
 $lang = current_language();
 
 // To show tool used in a assessment.
@@ -61,9 +60,9 @@ if ($viewtemplate == '0') {
     $studentid = required_param('s', PARAM_INT);
     require_capability('block/evalcomix:assessed', $context, $studentid);
 
-    $lms = MOODLE_NAME;
+    $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
 
-    $module = evalcomix_tasks::get_type_task($cmid);
+    $module = block_evalcomix_tasks::get_type_task($cmid);
 
     $user = $DB->get_record('user', array('id' => $studentid));
     if ($user) {
@@ -76,15 +75,15 @@ if ($viewtemplate == '0') {
     $urlinstrument = '';
     if ($perspective == 'assess') {
         $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
-        if ($task = evalcomix_tasks::fetch(array('instanceid' => $cmid))) {
-            if (!$modefetch = evalcomix_modes::fetch(array('taskid' => $task->id, 'modality' => $mode))) {
+        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
+            if (!$modefetch = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $mode))) {
                 print_error('EvalCOMIX: No permissions');
             }
         } else {
             print_error('EvalCOMIX: The activity is not configured with EvalCOMIX');
         }
         $assessor = $USER->id;
-        $urlinstrument = webservice_evalcomix_client::get_ws_assessment_form($toolid, $lang.'_utf8',
+        $urlinstrument = block_evalcomix_webservice_client::get_ws_assessment_form($toolid, $lang.'_utf8',
         $courseid, $module, $cmid, $studentid, $assessor, $mode, $lms, 'assess', $title);
     } else if ($perspective == 'view') {
         $assessorid = required_param('as', PARAM_INT);
@@ -101,18 +100,18 @@ if ($viewtemplate == '0') {
             }
         }
 
-        $urlinstrument = webservice_evalcomix_client::get_ws_viewtool($toolid, $lang.'_utf8', $courseid,
+        $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool($toolid, $lang.'_utf8', $courseid,
         $module, $cmid, $studentid, $assessorid, $mode, $lms, $title);
     }
 } else if ($viewtemplate == '1') {
     require_capability('moodle/grade:viewhidden', $context, $USER->id);
-    $urlinstrument = webservice_evalcomix_client::get_ws_viewtool($toolid, $lang.'_utf8');
+    $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool($toolid, $lang.'_utf8');
 }
 
 $vars = explode('?', $urlinstrument);
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
-$curl = new Curly();
+$curl = new block_evalcomix_curl();
 $response = $curl->post($vars[0], $vars[1]);
 if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
     echo $response;

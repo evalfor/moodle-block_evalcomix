@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class E5CR{
+class block_evalcomix_E5CR{
 
     public $s = array();
     public $i = 0;

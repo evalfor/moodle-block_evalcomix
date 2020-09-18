@@ -22,22 +22,28 @@
  */
 
 require_once('../../../config.php');
-require_login();
+$courseid = required_param('id', PARAM_INT);
+require_course_login($courseid);
+
+$context = context_course::instance($courseid);
+require_capability('moodle/block:edit', $context);
+
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 
 $id = required_param('a', PARAM_INT);
-$courseid = required_param('id', PARAM_INT);
 $assessorid = required_param('u', PARAM_INT);
+if (!$user = $DB->get_record('user', array('id' => $assessorid))) {
+    print_error('Wrong user');
+}
 
-$context = context_course::instance($courseid);
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
 
-echo '<select style="width:20em" size="20">';
+echo '<select class="block_evalcomix_w_20" size="20">';
 
-if ($allowedusers = evalcomix_allowedusers::fetch_all(array('cmid' => $id, 'assessorid' => $assessorid))) {
+if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', array('cmid' => $id, 'assessorid' => $assessorid))) {
     foreach ($allowedusers as $alloweduser) {
         $userid = $alloweduser->studentid;
         echo '<option>'.fullname($users[$userid]).'</option>';

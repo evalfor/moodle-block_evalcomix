@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Interface of class grade_expert
  */
-interface igrade_expert{
+interface block_evalcomix_igrade_expert{
     /**
      * It gets grades of $users in $courseid of $platform
      * @param array $platform Moodle instance

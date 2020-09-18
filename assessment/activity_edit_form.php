@@ -26,15 +26,14 @@
  */
 
 require_once('../../../config.php');
-require_login();
-
 $courseid      = required_param('id', PARAM_INT);        // Course id.
-$id = required_param('a', PARAM_INT);
-
-$cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+require_course_login($course);
+
+$id = required_param('a', PARAM_INT);
+$cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
 
 $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
@@ -43,7 +42,7 @@ require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 
-$tools = evalcomix_tool::get_tools($courseid);
+$tools = block_evalcomix_tool::get_tools($courseid);
 $activity = block_evalcomix_get_activity_data($cm);
 $datas = block_evalcomix_get_evalcomix_activity_data($courseid, $cm);
 
@@ -131,12 +130,13 @@ $PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
 $PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
 $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->set_pagelayout('report');
+$PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
 echo $OUTPUT->header();
 echo '
         <center>
-            <div><img src="'. $CFG->wwwroot . EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
-            <div><input type="button" style="color:#333333" value="'.get_string('designsection', 'block_evalcomix').'"
+            <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
+            <div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
 			onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>
         </center>
 ';
@@ -227,24 +227,25 @@ echo '
             }
 
         </script>
-        <div style="text-align:center">
-            <h1>'. $activity->name .'</h1>
+        <div>
+            <h1 class="text-center">'. $activity->name .'</h1>
             <form method="post" action="index.php?id='.$courseid.'">
                 <input type="hidden" id="cmid" name="cmid" value='.$cm->id.'>
                 <input type="hidden" id="maxgrade" name="maxgrade" value="100">
-                <fieldset class="clearfix" id="Instrument" style="text-align:left; width:100%;
-				border: 1px solid #d3d3d3; padding: 0em">
-                <legend class="ftoggler" style="font-weight:bold">'.
+                <input type="hidden" id="sesskey" name="sesskey" value="'.sesskey().'">
+                <fieldset class="clearfix border border-secondary" id="Instrument">
+                <legend class="ftoggler font-weight-bold">'.
                 get_string('selinstrument', 'block_evalcomix'). $OUTPUT->help_icon('selinstrument', 'block_evalcomix').'</legend>
-                    <div style="padding: 1em">
-                        <table style="width:90%; background-color:inherit">';
+                    <div class="p-3">
+                        <table class="w-100">';
 if (empty($tools)) {
     echo '
                         <tr>
-                            <td colspan=2 style="text-align:center;color:#00658a">
+                            <td colspan=2 class="text-center text-primary">
                                 '. get_string('alertnotools', 'block_evalcomix').'
-                                <br><a style="color:#00658a; font-weight:bold"
-                                 href="'.$CFG->wwwroot.'/blocks/evalcomix/tool/index.php?id='.$courseid.'">'.
+                                <br><a class="text-primary font-weight-bold" href="'.$CFG->wwwroot.
+                                '/blocks/evalcomix/tool/index.php?id='.
+                                $courseid.'">'.
                                  get_string('designsection', 'block_evalcomix').'</a>";
                                 </td>
                             </tr>';
@@ -256,10 +257,10 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
 
                             <tr>
-                                <td style="text-align:right">' . get_string('teachermodality', 'block_evalcomix').
+                                <td class="text-right">' . get_string('teachermodality', 'block_evalcomix').
                                 $OUTPUT->help_icon('teachermodality', 'block_evalcomix') . '</td>
                                 <td>
-                                    <select style="width:100%" name="toolEP" id="id_toolEP"
+                                    <select class="form-control" name="toolEP" id="id_toolEP"
                                     onchange="javascript:disabling(this, \'pon_EP\');">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
     ';
@@ -283,7 +284,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('pon_EP', 'block_evalcomix').
+                                <td class="text-right">' . get_string('pon_EP', 'block_evalcomix').
                                 $OUTPUT->help_icon('pon_EP', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -300,10 +301,10 @@ echo '
 <!--SELF-ASSESSMENT----------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
                             <tr>
-                                <td style="text-align:right">' . get_string('selfmodality', 'block_evalcomix').
+                                <td class="text-right">' . get_string('selfmodality', 'block_evalcomix').
                                  $OUTPUT->help_icon('selfmodality', 'block_evalcomix') . '</td>
-                                <td>
-                                    <select style="width:100%" name="toolAE" id="id_toolAE"
+                                <td><hr>
+                                    <select class="form-control" name="toolAE" id="id_toolAE"
                                     onchange="javascript:disabling(this, \'pon_AE\');
 									disabling_group(this, \'available_AE\');disabling_group(this, \'timedue_AE\');">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
@@ -328,7 +329,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('pon_AE', 'block_evalcomix').
+                                <td class="text-right">' . get_string('pon_AE', 'block_evalcomix').
                                 $OUTPUT->help_icon('pon_AE', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -342,7 +343,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('availabledate_AE', 'block_evalcomix').
+                                <td class="text-right">' . get_string('availabledate_AE', 'block_evalcomix').
                                 $OUTPUT->help_icon('availabledate_AE', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -354,7 +355,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('timedue_AE', 'block_evalcomix').
+                                <td class="text-right">' . get_string('timedue_AE', 'block_evalcomix').
                                 $OUTPUT->help_icon('timedue_AE', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -372,10 +373,10 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
 
                             <tr>
-                                <td style="text-align:right">' . get_string('peermodality', 'block_evalcomix').
+                                <td class="text-right">' . get_string('peermodality', 'block_evalcomix').
                                 $OUTPUT->help_icon('peermodality', 'block_evalcomix') . '</td>
-                                <td>
-                                    <select style="width:100%" name="toolEI" id="toolEI"
+                                <td><hr>
+                                    <select class="form-control" name="toolEI" id="toolEI"
                                     onchange="javascript:disabling(this, \'pon_EI\');
                                     disabling(this,\'anonymousEI\');disabling_group(this, \'available_EI\');
                                     disabling_group(this,\'timedue_EI\');disabling(this, \'alwaysvisibleEI\');
@@ -403,7 +404,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('pon_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('pon_EI', 'block_evalcomix').
                                 $OUTPUT->help_icon('pon_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -417,7 +418,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('anonymous_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('anonymous_EI', 'block_evalcomix').
                                 $OUTPUT->help_icon('anonymous_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -434,7 +435,7 @@ echo '
 
 
                             <tr>
-                                <td style="text-align:right">' . get_string('availabledate_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('availabledate_EI', 'block_evalcomix').
                                 $OUTPUT->help_icon('availabledate_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -446,7 +447,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('timedue_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('timedue_EI', 'block_evalcomix').
                                 $OUTPUT->help_icon('timedue_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -458,7 +459,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right">' . get_string('alwaysvisible_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('alwaysvisible_EI', 'block_evalcomix').
                                 $OUTPUT->help_icon('alwaysvisible_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -473,7 +474,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td style="text-align:right; vertical-align:top;">'
+                                <td class="text-right align-top">'
                                .get_string('whoassesses_EI', 'block_evalcomix') .
                                $OUTPUT->help_icon('whoassesses_EI', 'block_evalcomix') . '</td>
                                 <td>
@@ -492,37 +493,38 @@ switch ($whoassessesei) {
     break;
 }
 echo '
-                                    <div><input type="radio" '.$checked0.' id="anystudent_EI" '. $disabledei .'
-                                    name="whoassessesEI" value="0"
-                                    onclick="document.getElementById(\'assignstudents\').disabled = true;">'.
-                                    get_string('anystudent_EI', 'block_evalcomix').'</div>
-                                    <div><input type="radio" '.$checked1.' id="groups_EI" '. $disabledei .'
-                                    name="whoassessesEI" value="1"
-                                    onclick="document.getElementById(\'assignstudents\').disabled = true;">'.
-                                    get_string('groups_EI', 'block_evalcomix').'</div>
-                                    <div><input type="radio" '.$checked2.' id="specificstudents_EI" '. $disabledei .'
-                                    name="whoassessesEI" value="2"
-                                    onclick="document.getElementById(\'assignstudents\').disabled = false;">'
-                                    .get_string('specificstudents_EI', 'block_evalcomix').'</div>
-                                    <div><input type="button" '.$disabled2.' id="assignstudents"
-                                    onclick="window.open(\'users_form.php?id='.$courseid.'&a='.$cm->id.'\', \'popup\',
-                                    \'scrollbars,resizable,width=780,height=500\'); return false;"
-                                    value="' . get_string('assignstudents_EI', 'block_evalcomix') .'"></div>
-                                </td>
-                            </tr>
+                        <div><input type="radio" '.$checked0.' id="anystudent_EI" '. $disabledei .'
+                        name="whoassessesEI" value="0"
+                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="anystudent_EI">'.
+                        get_string('anystudent_EI', 'block_evalcomix').'</label>
+                        </div>
+                        <div><input type="radio" '.$checked1.' id="groups_EI" '. $disabledei .'
+                        name="whoassessesEI" value="1"
+                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="groups_EI">'.
+                        get_string('groups_EI', 'block_evalcomix').'</label></div>
+                        <div><input type="radio" '.$checked2.' id="specificstudents_EI" '. $disabledei .'
+                        name="whoassessesEI" value="2"
+                        onclick="document.getElementById(\'assignstudents\').disabled = false;"> <label for="specificstudents_EI">'.
+                        get_string('specificstudents_EI', 'block_evalcomix').'</label></div>
+                        <div><input type="button" '.$disabled2.' id="assignstudents"
+                        onclick="window.open(\'users_form.php?id='.$courseid.'&a='.$cm->id.'\', \'popup\',
+                        \'scrollbars,resizable,width=780,height=500\'); return false;"
+                        value="' . get_string('assignstudents_EI', 'block_evalcomix') .'"></div>
+                         </td>
+                        </tr>
 
                         </table>
                     </div>
-                    <div id="error_weighing" style="text-align:center;color:#ff0000;">
-                        <div id="error_weighing_less" style="visibility:hidden; border:1px solid #ff0000;height:0">
+                    <div id="error_weighing" class="text-center text-danger">
+                        <div id="error_weighing_less" class="border border-danger block_evalcomix_invisible">
                         El porcentaje total es MENOR que 100%. La suma de porcentajes debe ser 100%</div>
-                        <div id="error_weighing_greater" style="visibility:hidden; border:1px solid #ff0000;height:0">
+                        <div id="error_weighing_greater" class="border border-danger block_evalcomix_invisible">
                         El porcentaje total es MAYOR que 100%. La suma de porcentajes debe ser 100%</div>
                     </div>
                     <br>
-                    <div style="text-align:center">
-                        <input type="submit" id="save" name="save" value="'. get_string('save', 'block_evalcomix') .'
-                        " onclick="return check_weighing();">
+                    <div class="text-center">
+                        <input type="submit" id="save" name="save" value="'. get_string('save', 'block_evalcomix') .'"
+                        onclick="return check_weighing();">
                         <input type="submit" id="cancel" name="cancel" value="'. get_string('cancel', 'block_evalcomix') .'">
                     </div>
                 </fieldset>

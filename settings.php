@@ -35,7 +35,7 @@ if ($ADMIN->fulltree) {
 
     $html = html_writer::script('', $CFG->wwwroot.'/blocks/evalcomix/validate.js');
     $html .= html_writer::tag('p', get_string('validationinfo', 'block_evalcomix'));
-    $html .= html_writer::start_tag('div', array('style' => 'text-align:center;padding-top: 15px; padding-bottom:5px;'));
+    $html .= html_writer::start_tag('div', array('class' => 'text-center pb-5'));
     $html .= html_writer::start_tag('span', array('id' => 'validatebutton', 'class' => 'yui-button yui-link-button'));
     $html .= html_writer::tag('a', get_string('validationbutton', 'block_evalcomix'),
         array('id' => 'validatebtn',

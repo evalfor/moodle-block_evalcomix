@@ -23,7 +23,7 @@ defined('MOODLE_INTERNAL') || die();
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-class evalcomix_object {
+class block_evalcomix_object {
     public $table;
 
     /**

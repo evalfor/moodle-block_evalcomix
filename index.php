@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../../config.php');
-require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+require_course_login($course);
 
 header('Location: assessment/index.php?id='.$courseid);

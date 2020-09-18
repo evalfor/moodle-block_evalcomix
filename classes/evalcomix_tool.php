@@ -32,7 +32,7 @@ require_once('webservice_evalcomix_client.php');
  * @package    block-evalcomix
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  */
-class evalcomix_tool extends evalcomix_object{
+class block_evalcomix_tool extends block_evalcomix_object{
     public $table = 'block_evalcomix_tools';
 
     /**
@@ -103,7 +103,7 @@ class evalcomix_tool extends evalcomix_object{
             if ($idtool != '0') {
                 $this->idtool = $idtool;
             } else {
-                $this->idtool = webservice_evalcomix_client::generate_token();
+                $this->idtool = block_evalcomix_webservice_client::generate_token();
             }
             $this->timecreated = 0;
             $this->timemodified = 0;
@@ -162,7 +162,7 @@ class evalcomix_tool extends evalcomix_object{
 
         $this->timemodified = time();
 
-        $tool = self::fetch(array('id' => $this->id));
+        $tool = $DB->get_record('block_evalcomix_tools', array('id' => $this->id));
         $this->timecreated = $tool->timecreated;
 
         $data = $this->get_record_data();
@@ -180,7 +180,7 @@ class evalcomix_tool extends evalcomix_object{
      * @return array array of evalcomix_tool instances or false if none found.
      */
     public static function fetch_all($params) {
-        return evalcomix_object::fetch_all_helper('block_evalcomix_tools', 'evalcomix_tool', $params);
+        return block_evalcomix_object::fetch_all_helper('block_evalcomix_tools', 'block_evalcomix_tool', $params);
     }
 
     /**
@@ -191,7 +191,7 @@ class evalcomix_tool extends evalcomix_object{
      * @return object grade_item instance or false if none found.
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix_tools', 'evalcomix_tool', $params);
+        return block_evalcomix_object::fetch_helper('block_evalcomix_tools', 'block_evalcomix_tool', $params);
     }
 
     /**
@@ -209,19 +209,19 @@ class evalcomix_tool extends evalcomix_object{
      * @return array of tools. Key of array is 'id' and value of array is 'title' tool
      */
     public static function get_tools($courseid) {
-        global $CFG;
+        global $CFG, $DB;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
         $result = array();
 
         $params = array('courseid' => $courseid);
-        if (!$environment = evalcomix::fetch($params)) {
+        if (!$environment = $DB->get_record('block_evalcomix', $params)) {
             return $result;
         }
 
         $evxid = $environment->id;
         $params = array('evxid' => $evxid);
-        $tools = self::fetch_all($params);
+        $tools = $DB->get_records('block_evalcomix_tools', $params);
         if (!is_array($tools)) {
             $tools = array();
         }

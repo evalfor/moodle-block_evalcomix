@@ -24,15 +24,16 @@
  */
 
 require_once('../../../config.php');
-require_login();
 
 $contextid  = required_param('cid', PARAM_INT);
+list($context, $course) = get_context_info_array($contextid);
+require_course_login($course);
+
 $itemid     = required_param('itemid', PARAM_INT);
 $userid     = required_param('userid', PARAM_INT);
 $popup      = optional_param('popup', 0, PARAM_INT);
 $assid      = optional_param('assid', 0, PARAM_INT);
 
-list($context, $course) = get_context_info_array($contextid);
 require_capability('block/evalcomix:view', $context, $userid);
 
 require_once('../configeval.php');
@@ -59,14 +60,14 @@ require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
 global $DB, $USER;
 
 /*GETTING DATAS----------------------------------------------------------------------------------------*/
-$user = $DB->get_record('user', array('id' => $userid), '*');
-if (!$task = evalcomix_tasks::fetch(array('id' => $itemid))) {
+$user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
+if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $itemid))) {
     print_error('Wrong parameters');
 }
 
-if ($modeei = evalcomix_modes::fetch(array('taskid' => $task->id, 'modality' => 'peer'))) {
-    $modeeitime = evalcomix_modes_time::fetch(array('modeid' => $modeei->id));
-    $modesextra = evalcomix_modes_extra::fetch(array('modeid' => $modeei->id));
+if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => 'peer'))) {
+    $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modeei->id));
+    $modesextra = $DB->get_record('block_evalcomix_modes_extra', array('modeid' => $modeei->id));
 } else {
     $modeeitime = '';
 }
@@ -75,35 +76,35 @@ $module = $DB->get_record('modules', array('id' => $cm->module), '*');
 $maxgrade = $task->maxgrade;
 $dataactivity = $DB->get_record($module->name, array('id' => $cm->instance));
 
-
 // If a teacher has done click on Delete button.
 if ($assid && has_capability('moodle/block:edit', $context)) {
-    $assessdelete = evalcomix_assessments::fetch(array('id' => $assid));
+    $assessdelete = $DB->get_record('block_evalcomix_assessments', array('id' => $assid));
     if ($assessdelete) {
         $stringmode = 'peer';
         if ($assessdelete->assessorid == $assessdelete->studentid) {
             $stringmode = 'self';
         }
-        $response = webservice_evalcomix_client::delete_ws_assessment($course->id, $module->name,
-            $task->instanceid, $user->id, $assessdelete->assessorid, $stringmode, MOODLE_NAME);
-        $assessdelete->delete();
+        $response = block_evalcomix_webservice_client::delete_ws_assessment($course->id, $module->name,
+            $task->instanceid, $user->id, $assessdelete->assessorid, $stringmode, BLOCK_EVALCOMIX_MOODLE_NAME);
+        $DB->delete_records('block_evalcomix_assessments', array('id' => $assessdelete->id));
 
         $params = array('cmid' => $task->instanceid, 'userid' => $user->id, 'courseid' => $course->id);
-        $finalgrade = evalcomix_grades::get_finalgrade_user_task($params);
+        $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
         if ($finalgrade !== null) {
-            if ($gradeobject = evalcomix_grades::fetch($params)) {
-                $gradeobject->finalgrade = $finalgrade;
-                $gradeobject->update();
+            if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
+                $params['id'] = $gradeobject->id;
+                $params['finalgrade'] = $finalgrade;
+                $DB->update_record('block_evalcomix_grades', $params);
             }
         } else {
-            if ($gradeobject = evalcomix_grades::fetch($params)) {
-                $gradeobject->delete();
+            if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
+                $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
             }
         }
     }
 }
 
-$assessments = evalcomix_assessments::fetch_all(array('studentid' => $user->id, 'taskid' => $itemid));
+$assessments = $DB->get_records('block_evalcomix_assessments', array('studentid' => $user->id, 'taskid' => $itemid));
 
 $selfassessment = null;
 $teacherassessments = array();
@@ -114,19 +115,19 @@ $totalteachergrade = 0;
 $numteachergrades = 0;
 
 // Get Weighings.
-$modality = evalcomix_modes::fetch(array('taskid' => $itemid, 'modality' => 'teacher'));
+$modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'teacher'));
 if ($modality != null) {
     $weighingteacher = $modality->weighing;
 } else {
     $weighingteacher = null;
 }
-$modality = evalcomix_modes::fetch(array('taskid' => $itemid, 'modality' => 'self'));
+$modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'self'));
 if ($modality != null) {
     $weighingself = $modality->weighing;
 } else {
     $weighingself = null;
 }
-$modality = evalcomix_modes::fetch(array('taskid' => $itemid, 'modality' => 'peer'));
+$modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'peer'));
 if ($modality != null) {
     $weighingpeer = $modality->weighing;
 } else {
@@ -149,18 +150,21 @@ if ($assessments) {
 echo '
             <h1>'. get_string('ratingsforitem', 'block_evalcomix') .': '. $dataactivity->name .'</h1>
             <h2>' . $user->firstname . ' ' . $user->lastname . '</h2>
-            <table style="border:1px solid #e3e3e3; width:100%; text-align:center">
-                <tr style="color:#00f; height:29px;background-image:url(\'../images/th.png\');">
-                    <th>'. get_string('modality', 'block_evalcomix').'</th>
-                    <th>'. get_string('grade', 'block_evalcomix').'</th>
-                    <th>'. get_string('weighingfinalgrade', 'block_evalcomix').'</th>
-                </tr>';
+            <table class="generaltable text-center">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>'. get_string('modality', 'block_evalcomix').'</th>
+                        <th>'. get_string('grade', 'block_evalcomix').'</th>
+                        <th>'. get_string('weighingfinalgrade', 'block_evalcomix').'</th>
+                    </tr>
+                </thead>
+                <tbody>';
 
 /*-------------------------------------------------------------------------------------------
  TEACHER_ASSESSMENT-------------------------------------------------------------------------
  -------------------------------------------------------------------------------------------*/
 echo '
-                <tr style="border:1px solid #e3e3e3">
+                <tr>
                     <td>'. get_string('teachermodality', 'block_evalcomix').'</td>
                     <td>';
 
@@ -179,11 +183,11 @@ if (!empty($teacherassessments) && $tool = block_evalcomix_get_modality_tool($co
         echo '<a href="'.$assessorview.'" target="popup" title="'.$name.'"
 onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\');
 return false;">'. round($teachergrade->grade, 2) .'/'. round($maxgrade, 2) .' </a>';
-        echo '<input type="image" style="border:0; width:15px" src="../images/lupa.png"
+        echo '<input type="image" src="../images/lupa.png"
 onClick="window.open(\''.$urlteacher.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
 return false;" title="'.get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'"
 width="15"/>
-                <!-- <input type="image" style="border:0; width:15px"
+                <!-- <input type="image"
 src=http://lince.uca.es/evalfor/moodle21A/blocks/evalcomix/images/delete.png
 title="Eliminar" alt="Eliminar" width="15"/>-->
             ';
@@ -206,7 +210,7 @@ if ($weighingteacher != null) {
 SELF_ASSESSMENT-------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------*/
 echo '
-            <tr style="border:1px solid #e3e3e3">
+            <tr>
                     <td>'. get_string('selfmodality', 'block_evalcomix').'</td>
                     <td>';
 if ($selfassessment != null && $tool = block_evalcomix_get_modality_tool($course->id, $task->id, 'self')) {
@@ -214,13 +218,13 @@ if ($selfassessment != null && $tool = block_evalcomix_get_modality_tool($course
     '&s='.$user->id.'&as='.$selfassessment->assessorid.'&mode=view';
     echo
             round($selfassessment->grade, 2) .' / '. round($maxgrade, 2) .'
-            <input type="image" style="border:0; width:15px" src="../images/lupa.png" onClick="window.open(\''.
+            <input type="image" src="../images/lupa.png" onClick="window.open(\''.
     $urlself.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\'); return false;" title="'.
     get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'" width="15"/>';
         // Teachers can delete grades.
 
     if (has_capability('moodle/block:edit', $context)) {
-        echo '<input type="image" style="border:0; width:16px" src="'.
+        echo '<input type="image" src="'.
         $CFG->wwwroot.'/blocks/evalcomix/images/delete.png"
 title="'. get_string('delete', 'block_evalcomix').'" alt="'. get_string('delete', 'block_evalcomix').'"
 width="16" value="'.$user->id.'"
@@ -248,7 +252,7 @@ if ($weighingself != null) {
 PEER_ASSESSMENT----------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------*/
 echo '
-                <tr style="border:1px solid #e3e3e3">
+                <tr>
                     <td>'. get_string('peermodality', 'block_evalcomix').'</td>
                     <td>';
 $now = time();
@@ -284,17 +288,17 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
 onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\'); return false;">'.
                 round($peergrade->grade, 2) .'/'. round($maxgrade, 2) .' </a>';
             }
-            echo '<input type="image" style="border:0; width:15px" src="../images/lupa.png"
+            echo '<input type="image" src="../images/lupa.png"
 onClick="window.open(\''.$urlpeer.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');return false;"
 title="Consultar" alt="Consultar" width="15"/>
-                        <!-- <input type="image" style="border:0"
+                        <!-- <input type="image"
                         src=http://lince.uca.es/evalfor/moodle21A/blocks/evalcomix/images/delete.png
                         title="Eliminar" alt="Eliminar" width="15"/>-->
             ';
 
             /*Teachers can delete grades*/
             if (has_capability('moodle/block:edit', $context)) {
-                echo '<input type="image" style="border:0; width:16px" src="'.
+                echo '<input type="image" width:16px" src="'.
                 $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
                 get_string('delete', 'block_evalcomix').'" alt="'. get_string('delete', 'block_evalcomix').'"
                 width="16" value="'.$peergrade->assessorid.'"
@@ -316,15 +320,17 @@ if ($weighingpeer != null) {
                     </td>
                     <td>'. $weighingpeer .'%</td>
                 </tr>
-            </table>
-            <br>';
+            </tbody>
+        </table>
+        <br>';
 } else {
     echo '
                     </td>
                     <td></td>
                 </tr>
-            </table>
-            <br>';
+            </tbody>
+        </table>
+        <br>';
 }
 
 
@@ -396,7 +402,7 @@ if ($evalcomixgrade == -1 && $moodlegrade == -1) { // No moodle or evalcomix gra
 }
 
 if ($evalcomixgrade > -1) {
-    echo '<div style="text-align:right; font-weight:bold">'. $OUTPUT->help_icon('evalcomixgrade', 'block_evalcomix') .
+    echo '<div class="text-right font-weight-bold">'. $OUTPUT->help_icon('evalcomixgrade', 'block_evalcomix') .
     get_string('evalcomixgrade', 'block_evalcomix') .': '.
     format_float($evalcomixgrade, 2) .' / '. round($maxgrade, 2) .'</div>';
 }

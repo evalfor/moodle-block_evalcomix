@@ -202,10 +202,10 @@ class block_evalcomix_graphic_renderer {
                 <span class="block_evalcomix_graphic_tab '.$studentselected.'">
                 <a href="'.$studenturl.'">'.get_string('studentgraphic', 'block_evalcomix').'</a></span>
             </div>
-            <div style="border:1px solid #c0c0c0;width:100%;">
-                <table style="width:100%" cellpadding="5">
+            <div class="w-100 border border-secondary">
+                <table class="w-100" cellpadding="5">
                     <tr>
-                        <td class="block_evalcomix_table_filter" style="vertical-align:top">
+                        <td class="block_evalcomix_table_filter align-top">
                             <div id="block_evalcomix_filters">
                         '. $this->display_graphics_filters($courseid, $mode).'
                             </div>
@@ -237,7 +237,7 @@ class block_evalcomix_graphic_renderer {
                     </tr>
                 </table>
             </div>
-            <div style="clear:both"></div>
+            <div class="clearfix"></div>
         </div>
         ';
 
@@ -253,7 +253,7 @@ class block_evalcomix_graphic_renderer {
     public function display_graphics_filters($courseid, $mode) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-        $tasks = evalcomix_tasks::get_moodle_course_tasks($courseid);
+        $tasks = block_evalcomix_tasks::get_moodle_course_tasks($courseid);
         $output = '
             <div class="block_evalcomix_filter_block">
                 <label for="selectactivity">'.get_string('activity', 'block_evalcomix').'</label>
@@ -339,7 +339,7 @@ class block_evalcomix_graphic_renderer {
         $studentchecked = $groupchecked = $classchecked = '';
 
         $output .= '
-        <div id="block_evalcomix_filter_task_modality" style="display:none">
+        <div id="block_evalcomix_filter_task_modality" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
                 <div>
                     <input type="radio" name="modality" id="studentmod" value="student" '.$studentchecked.'
@@ -384,7 +384,7 @@ class block_evalcomix_graphic_renderer {
             </div>
         </div>
 
-        <div id="block_evalcomix_filter_task_students" style="display:none">
+        <div id="block_evalcomix_filter_task_students" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
                 <label for="selectstudent">'.get_string('studentmod', 'block_evalcomix').'</label>
                 <div>
@@ -394,7 +394,7 @@ class block_evalcomix_graphic_renderer {
                 </div>
             </div>
         </div>
-        <div id="block_evalcomix_filter_task_group" style="display:none">
+        <div id="block_evalcomix_filter_task_group" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
                 <label for="selectstudent">'.get_string('groupmod', 'block_evalcomix').'</label>
                 <div>
@@ -429,7 +429,7 @@ class block_evalcomix_graphic_renderer {
                 </div>
             </div>
             <div class="block_evalcomix_filter_block" >
-                <div id="block_evalcomix_checks" style="display:none"></div>
+                <div id="block_evalcomix_checks" class="block_evalcomix_display_none"></div>
             </div>
         ';
 
@@ -449,7 +449,7 @@ class block_evalcomix_graphic_renderer {
         $peerchecked = '';
 
         $output = '
-            <div id="block_evalcomix_filter_student_modality" style="display:none">
+            <div id="block_evalcomix_filter_student_modality" class="block_evalcomix_display_none">
                 <div class="block_evalcomix_filter_block">
                     <div>
                         <input type="radio" name="modality" id="teachermod" value="teacher" '.$teacherchecked.'
@@ -476,7 +476,7 @@ class block_evalcomix_graphic_renderer {
                 </div>
             </div>
             <div class="block_evalcomix_filter_block">
-                <div id="block_evalcomix_filter_student_select" style="display:none">
+                <div id="block_evalcomix_filter_student_select" class="block_evalcomix_display_none">
                     <label for="selectstudent">'.get_string('studentmod', 'block_evalcomix').'</label>
                     <div>
                         <select id="selectstudent" name="selectstudent">

@@ -22,9 +22,10 @@
  */
 
 require_once('../../../config.php');
-require_login();
 
 $courseid      = required_param('id', PARAM_INT);        // Course id.
+require_course_login($courseid);
+
 $page          = optional_param('page', 0, PARAM_INT);   // Active page.
 $hide          = optional_param('hide', 0, PARAM_INT);
 $show          = optional_param('show', 0, PARAM_INT);
@@ -43,18 +44,20 @@ require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_clie
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 if (!empty($hide)) {
-    if ($taskhide = evalcomix_tasks::fetch(array('id' => $hide))) {
+    if ($taskhide = $DB->get_record('block_evalcomix_tasks', array('id' => $hide))) {
         $cm = $DB->get_record('course_modules', array('id' => $taskhide->instanceid, 'course' => $courseid), '*', MUST_EXIST);
-        $taskhide->visible = 0;
-        $taskhide->update();
+        $paramtask = array('id' => $taskhide->id, 'instanceid' => $taskhide->instanceid, 'maxgrade' => $taskhide->maxgrade,
+            'weighing' => $taskhide->weighing, 'timemodified' => time(), 'visible' => 0);
+        $DB->update_record('block_evalcomix_tasks', $paramtask);
     } else {
         print_error('Parameter "Hide" is wrong');
     }
 } else if (!empty($show)) {
-    if ($taskshow = evalcomix_tasks::fetch(array('id' => $show))) {
+    if ($taskshow = $DB->get_record('block_evalcomix_tasks', array('id' => $show))) {
         $cm = $DB->get_record('course_modules', array('id' => $taskshow->instanceid, 'course' => $courseid), '*', MUST_EXIST);
-        $taskshow->visible = 1;
-        $taskshow->update();
+        $paramtask = array('id' => $taskshow->id, 'instanceid' => $taskshow->instanceid, 'maxgrade' => $taskshow->maxgrade,
+            'weighing' => $taskshow->weighing, 'timemodified' => time(), 'visible' => 1);
+        $DB->update_record('block_evalcomix_tasks', $paramtask);
     } else {
         print_error('Parameter "Show" is wrong');
     }
@@ -64,17 +67,24 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/index.php', array('id' => $courseid)));
 $buttons = false;
 $PAGE->set_pagelayout('incourse');
-
 $strplural = 'evalcomix';
-$PAGE->navbar->add($strplural, new moodle_url('../assessment/configuration.php?id='.$courseid));
+$PAGE->navbar->add(get_string('courses'), new moodle_url('/course/index.php'));
+$PAGE->navbar->add($course->shortname, new moodle_url("/course/view.php", array('id' => $courseid)));
+$PAGE->navbar->add($strplural, new moodle_url('../assessment/index.php', array('id' => $courseid)));
+$PAGE->navbar->add(get_string('configuration'));
 $PAGE->set_title($strplural);
 $PAGE->set_heading($course->fullname);
+
+$event = \block_evalcomix\event\configuration_viewed::create(array('courseid' => $course->id, 'context' => $context,
+    'relateduserid' => $USER->id));
+$event->trigger();
+
 echo $OUTPUT->header();
 
 echo '
 <center>
-<div><img src="'. $CFG->wwwroot . EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
-<div><input type="button" style="color:#333333" value="'. get_string('back', 'block_evalcomix').'"
+<div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
+<div><input type="button" value="'. get_string('back', 'block_evalcomix').'"
 onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/index.php?id='.$courseid .'\'"/>
 </div><br>
 </center>
@@ -103,9 +113,10 @@ foreach ($levels as $row) {
                     $element['object']->iteminstance, $courseid)) {
                     $cmid = $cm->id;
 
-                    if (!$task = evalcomix_tasks::fetch(array('instanceid' => $cmid))) {
-                        $task = new evalcomix_tasks('', $cmid, 100, 50, time(), '1');
-                        $task->insert();
+                    if (!$task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
+                        $pbet = array('instanceid' => $cmid, 'maxgrade' => 100, 'weighing' => 50, 'timemodified' => time(),
+                            'visible' => '1');
+                        $DB->insert_record('block_evalcomix_tasks', $pbet);
                     }
                     $taskid = $task->id;
                     $tasks[$taskid] = $task;
@@ -137,7 +148,7 @@ foreach ($tasks as $task) {
     }
 
     echo '<tr><td>'.$icontask[$taskid] . $activities[$taskid].'</td><td>
-    <div id="icon" style="text-align:center">'.$icon.'</div></td></tr>';
+    <div id="icon" class="text-center">'.$icon.'</div></td></tr>';
 }
 
 

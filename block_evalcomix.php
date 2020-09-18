@@ -38,7 +38,7 @@ class block_evalcomix extends block_base {
 
         $this->content = new stdClass;
         $this->content->text = '';
-        $this->content->footer = '<div style="text-align:center"><span style="color:#E67300;
+        $this->content->footer = '<div class="text-center"><span style="color:#E67300;
         font-size:8pt">'.get_string('poweredby', 'block_evalcomix').'</span></div>';
 
         global $USER;
@@ -59,22 +59,23 @@ class block_evalcomix extends block_base {
 
         $this->content->text   .= "<STYLE type='text/css'>";
         $this->content->text   .= " LI.eps_li {list-style-type:none; background:url('') no-repeat
-        scroll 0px -893px transparent; margin:0 0 3px; padding:0 0 0 9px; }  </STYLE>";
+        scroll 0px -893px transparent; margin:0 0 3px; padding:0 0 0 9px; }
+		#block_evalcomix_ul_block {padding: 0px; margin-left: 21%;color:#00648C;
+        font-weight:bold;}		</STYLE>";
 
-        $this->content->text   .= "<img src='".$CFG->wwwroot . EVXLOGOROOT ."' alt='' align='absmiddle'
+        $this->content->text   .= "<img src='".$CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT ."' alt='' align='absmiddle'
         width='100%'>";
-        $this->content->text   .= "<ul style='padding: 0px; margin-left: 21%;color:#00648C;
-        font-weight:bold;' ><li class='eps_li'>";
+        $this->content->text   .= "<ul id='block_evalcomix_ul_block'><li class='eps_li'>";
 
         if ($autorizado == true) {
-            $this->content->text   .= "<li style='margin-bottom:0.5em;'><a title='Instruments'
+            $this->content->text   .= "<li class='mb-2'><a title='Instruments'
             href='".$CFG->wwwroot ."/blocks/evalcomix/tool/index.php?id=".$COURSE->id."' name='clickinst'
-            style=\"padding: 0px;\">".get_string('instruments', 'block_evalcomix')."</a></li>";
+            class='p-0' >".get_string('instruments', 'block_evalcomix')."</a></li>";
         }
 
         $this->content->text   .= "<li><a title='Evaluation'
         href='".$CFG->wwwroot ."/blocks/evalcomix/assessment/index.php?id=".$COURSE->id."' name='clickeval'
-        style=\"padding: 0px;\">".get_string('evaluation', 'block_evalcomix')."</a></li>";
+        class='p-0'>".get_string('evaluation', 'block_evalcomix')."</a></li>";
         $this->content->text   .= "</li></ul>";
 
         return $this->content;

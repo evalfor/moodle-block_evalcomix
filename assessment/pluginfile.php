@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
@@ -22,10 +23,42 @@
  */
 
 require_once('../../../config.php');
-require_login();
 $relativepath = get_file_argument();
-$fs = get_file_storage();
-if (!$file = $fs->get_file_by_hash(sha1($relativepath)) or $file->is_directory()) {
-    return false;
+$args = explode('/', ltrim($relativepath, '/'));
+
+if (count($args) < 3) { // Always at least context, component and filearea.
+    print_error('invalidarguments');
 }
-send_stored_file($file, 0, 0, true); // Download MUST be forced - security!.
+
+$contextid = (int)array_shift($args);
+$component = clean_param(array_shift($args), PARAM_COMPONENT);
+list($context, $course, $cm) = get_context_info_array($contextid);
+
+require_course_login($course);
+require_capability('block/evalcomix:view', $context);
+
+$mode = block_evalcomix_grade_report::get_type_evaluation($USER->id, $course->id);
+if ($mode == 'teacher' || (($mode == 'self' || $mode == 'peer'))) {
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+    $gradereport = new block_evalcomix_grade_report($course->id, null, $context);
+    $canseeactivity = $gradereport->student_can_assess($USER, $cm);
+    if ($canseeactivity) {
+        $fs = get_file_storage();
+        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
+            if ($component == 'assignsubmission_file' || $component == 'workshop') {
+                $dir = core_component::get_component_directory($component);
+                if (!file_exists("$dir/lib.php")) {
+                    send_file_not_found();
+                }
+                if (!$file = $fs->get_file_by_hash(sha1($relativepath)) or $file->is_directory()) {
+                    send_file_not_found();
+                }
+                send_stored_file($file, 0, 0, true);
+            } else {
+                send_file_not_found();
+            }
+        }
+    } else {
+        print_error('You cannot access this file');
+    }
+}

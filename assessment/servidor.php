@@ -23,11 +23,12 @@
 
 require_once('../../../config.php');
 require_login();
+$PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
 $datapost = array();
 $datapost['stu'] = optional_param('stu', null, PARAM_ALPHANUM);
 $datapost['cma'] = optional_param('cma', null, PARAM_ALPHANUM);
-$datapost['page'] = optional_param('page', null, PARAM_ALPHANUM);
+$datapost['page'] = optional_param('page', 0, PARAM_INT);
 
 $dataget = array();
 $dataget['id'] = optional_param('id', null, PARAM_ALPHANUM);
@@ -46,17 +47,22 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
     $userid = $datapost['stu'];
     $cmid = $datapost['cma'];
     $reportevalcomix->process_data($datapost);
+
+    $event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
+        'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $userid));
+    $event->trigger();
+
     // Obtains course's users.
     $users = $reportevalcomix->load_users();
 
     $coursegroups = $reportevalcomix->load_groups();
     $coursegroupings = $reportevalcomix->load_groupings();
 
-    $finalgrades = evalcomix_grades::get_grades($courseid);
+    $finalgrades = block_evalcomix_grades::get_grades($courseid);
 
     $showdetails = true;
     $configured = $reportevalcomix->configured_activity($cmid);
-    // Only show the user�s grade or all grades if the USER is a teacher or admin.
+    // Only show the grade of users or all grades if the USER is a teacher or admin.
     if ((has_capability('moodle/grade:viewhidden', $context, $USER->id)
         || $userid == $USER->id) && isset($finalgrades[$cmid][$userid])) {
         if ($finalgrades[$cmid][$userid] != -1) {
@@ -68,7 +74,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         if ($configured) {
             echo '-';
         } else {
-            echo '<span style="font-style:italic;color:#f54927">'.get_string('noconfigured', 'block_evalcomix').'</span>';
+            echo '<span class="text-danger font-italic">'.get_string('noconfigured', 'block_evalcomix').'</span>';
         }
         $showdetails = false;
     }
@@ -83,31 +89,31 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
 
         $mode = block_evalcomix_grade_report::get_type_evaluation($userid, $courseid);
         // Obtains required parameters to create details and evaluate links.
-        $typeinstrument = evalcomix_tasks::get_type_task($cmid);
-        $task = evalcomix_tasks::fetch(array('instanceid' => $cmid));
+        $typeinstrument = block_evalcomix_tasks::get_type_task($cmid);
+        $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid));
         $tool = block_evalcomix_get_modality_tool($courseid, $task->id, $mode);
 
         $urlinstrument = 'assessment_form.php?id='.$courseid.'&a='.$cmid.'&t='.$tool->idtool.'&s='.$userid.'&mode=assess';
-        $task = evalcomix_tasks::fetch(array('instanceid' => $cmid));
+        $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid));
 
         // Evaluate, Delete and Details buttons.
         $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'"
             title="'.get_string('evaluate', 'block_evalcomix').'"
-            style="width:16px;" src="../images/evaluar.png" onclick="javascript:url(\'' . $urlinstrument . '\',\''.
+            class="block_evalcomix_w_16" src="../images/evaluar.png" onclick="javascript:url(\'' . $urlinstrument . '\',\''.
         $userid . '\',\'' . $cmid . '\',\'' .
         $page . '\',\'' . $courseid . '\');"/>';
-        if ($assessmentgrade = evalcomix_assessments::fetch(array('taskid' => $task->id,
+        if ($assessmentgrade = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
             'assessorid' => $assessorid, 'studentid' => $userid))) {
 
             $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'"
                 title="'.get_string('evaluate', 'block_evalcomix').'"
-                style="width:16px;" src="../images/evaluar2.png" onclick="javascript:url(\'' .
+                class="block_evalcomix_w_16" src="../images/evaluar2.png" onclick="javascript:url(\'' .
                 $urlinstrument . '\',\'' . $userid . '\',\'' .
                 $cmid . '\', \'' . $page . '\',\'' . $courseid . '\');"/>';
         }
         if ($showdetails) {
             $details = '<input type="image" value="'.get_string('details', 'block_evalcomix').'"
-            style="width:16px" title='.
+            class="block_evalcomix_w_16" title='.
             get_string('details', 'block_evalcomix').' src="../images/lupa.png"
             onclick="javascript:urlDetalles(\''. $CFG->wwwroot.
             '/blocks/evalcomix/assessment/details.php?cid=' . $context->id . '&itemid=' .
@@ -118,7 +124,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
 
         // Show user�s works.
         $title = get_string('studentwork1', 'block_evalcomix').get_string('studentwork2', 'block_evalcomix'). $cmid;
-        echo ' <input type="image" value="'.$title.'" style="background-color:transparent;width:13px"
+        echo ' <input type="image" value="'.$title.'"
             title="'.$title.'" src="../images/task.png"
             onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/assessment/user_activity.php?id='.
             $userid.'&course='.
@@ -144,7 +150,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
             $giduser = $reportevalcomix->get_groupids($userid);
 
             $condition = false;
-            if ($evalcomixallowedusers = evalcomix_allowedusers::fetch(array('cmid' => $cmid,
+            if ($evalcomixallowedusers = $DB->get_record('block_evalcomix_allowedusers', array('cmid' => $cmid,
                 'assessorid' => $assessorid, 'studentid' => $userid))) {
                 $condition = true;
             }
@@ -187,9 +193,10 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
                     if ($mode == 'self') { // Details always are shown in selfassessment.
                         echo $details;
                     } else if ($nowtimestamp >= $due && $mode == 'peer' && $showdetails == true) {
-                        $urlpeerinstrument = webservice_evalcomix_client::get_ws_view_assessment($courseid,
-                        $typeinstrument, $cmid, $assessorid, $userid, 'peer', MOODLE_NAME);
-                        echo '<input type="image" value="'.get_string('details', 'block_evalcomix').'" style="width:16px" title='.
+                        $urlpeerinstrument = block_evalcomix_webservice_client::get_ws_view_assessment($courseid,
+                        $typeinstrument, $cmid, $assessorid, $userid, 'peer', BLOCK_EVALCOMIX_MOODLE_NAME);
+                        echo '<input type="image" value="'.get_string('details', 'block_evalcomix').
+                        '" class="block_evalcomix_w_16" title='.
                         get_string('details', 'block_evalcomix').' src="../images/lupa.png"
                         onclick="javascript:urlDetalles(\''. $urlpeerinstrument .'\');"/>';
                     }

@@ -23,7 +23,6 @@
  * @author     Daniel Cabeza Sánchez <info@ansaner.net>
  */
 require_once('../../../config.php');
-require_login();
 
 $requestgraphic = optional_param('requestgraphic', '', PARAM_RAW);
 $target = optional_param('target', '', PARAM_RAW);
@@ -37,6 +36,8 @@ $check = optional_param('check', 0, PARAM_INT);
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+require_course_login($course);
+
 $context = context_course::instance($course->id);
 $PAGE->set_context($context);
 require_once($CFG->dirroot . '/blocks/evalcomix/graphics/graphicsrenderer.php');
@@ -45,7 +46,7 @@ $renderer = new block_evalcomix_graphic_renderer();
 // Get students.
 if ($requestgraphic == 'getstudents' && !empty($taskid)) {
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
-    if (!empty($taskid) && !$users = evalcomix_assessments::get_students_assessed($taskid)) {
+    if (!empty($taskid) && !$users = block_evalcomix_assessments::get_students_assessed($taskid)) {
         echo '<option style="color:#f00">'.get_string('nostudents', 'block_evalcomix').'</option>';
     }
     if (!empty($users)) {
@@ -84,14 +85,14 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 's
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/calculator_average.php');
-    $assessments = evalcomix_assessments::get_assessments_by_modality($taskid, $users);
+    $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
     $result = array();
     $arrayself = array();
     $arraypeer = array();
     $arrayteacher = array();
     if ($assessments) {
-        $teachergrades = evalcomix_assessments::calculate_grades($assessments->teacherassessments);
-        $peergrades = evalcomix_assessments::calculate_grades($assessments->peerassessments);
+        $teachergrades = block_evalcomix_assessments::calculate_grades($assessments->teacherassessments);
+        $peergrades = block_evalcomix_assessments::calculate_grades($assessments->peerassessments);
 
         $xlabels[] = array(get_string('teachermod', 'block_evalcomix'));
         if ($teachergrades) {
@@ -169,14 +170,14 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
         $sgrades = array();
         foreach ($arraystudents as $student) {
             $studentid = $student->id;
-            $assessments = evalcomix_assessments::get_assessments_by_modality($taskid, (int)$studentid);
+            $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, (int)$studentid);
             if ($assessments) {
                 if (!empty($assessments->teacherassessments)) {
-                    $tgrade = evalcomix_assessments::calculate_gradearray($assessments->teacherassessments);
+                    $tgrade = block_evalcomix_assessments::calculate_gradearray($assessments->teacherassessments);
                     array_push($tgrades, $tgrade);
                 }
                 if (!empty($assessments->peerassessments)) {
-                    $pgrade = evalcomix_assessments::calculate_gradearray($assessments->peerassessments);
+                    $pgrade = block_evalcomix_assessments::calculate_gradearray($assessments->peerassessments);
                     array_push($pgrades, $pgrade);
                 }
                 if ($assessments->selfassessment) {
@@ -219,7 +220,7 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
 if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'class') {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/calculator_average.php');
-    $students = evalcomix_assessments::get_students_assessed($taskid);
+    $students = block_evalcomix_assessments::get_students_assessed($taskid);
     if ($students) {
         $xlabels[0] = get_string('teachermod', 'block_evalcomix');
         $xlabels[1] = get_string('selfmod', 'block_evalcomix');
@@ -229,14 +230,14 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
         $sgrades = array();
         foreach ($students as $student) {
             if ($DB->get_record('user', array('id' => $student, 'deleted' => '0'))) {
-                $assessments = evalcomix_assessments::get_assessments_by_modality($taskid, $student);
+                $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $student);
                 if (!empty($assessments->teacherassessments)) {
-                    $tgrade = evalcomix_assessments::calculate_gradearray($assessments->teacherassessments);
+                    $tgrade = block_evalcomix_assessments::calculate_gradearray($assessments->teacherassessments);
                     array_push($tgrades, $tgrade);
                 }
 
                 if (!empty($assessments->peerassessments)) {
-                    $pgrade = evalcomix_assessments::calculate_gradearray($assessments->peerassessments);
+                    $pgrade = block_evalcomix_assessments::calculate_gradearray($assessments->peerassessments);
                     array_push($pgrades, $pgrade);
                 }
 
@@ -279,7 +280,7 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
 // Datas for graphic student-teacher.
 if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'teacher' && !empty($users)) {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-    $assessments = evalcomix_assessments::get_assessments_by_modality($taskid, $users);
+    $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
     $teachergrades = array();
     if (!empty($assessments->teacherassessments)) {
         foreach ($assessments->teacherassessments as $tassessment) {
@@ -328,7 +329,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
 // Datas for graphic student-peer.
 if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'peer' && !empty($users)) {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-    $assessments = evalcomix_assessments::get_assessments_by_modality($taskid, $users);
+    $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
     $peergrades = array();
     if (!empty($assessments->peerassessments)) {
         foreach ($assessments->peerassessments as $passessment) {

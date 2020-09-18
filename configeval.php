@@ -24,92 +24,88 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Root directory of EvalCOMIX logo.
-if (!defined('EVXLOGOROOT')) {
-    define('EVXLOGOROOT', '/blocks/evalcomix/images/logoevalcomix.png');
+if (!defined('BLOCK_EVALCOMIX_EVXLOGOROOT')) {
+    define('BLOCK_EVALCOMIX_EVXLOGOROOT', '/blocks/evalcomix/images/logoevalcomix.png');
 }
 
 global $CFG;
 // Moodle instance name.
-if (!defined('MOODLE_NAME')) {
-    define('MOODLE_NAME', $CFG->dbname);
+if (!defined('BLOCK_EVALCOMIX_MOODLE_NAME')) {
+    define('BLOCK_EVALCOMIX_MOODLE_NAME', $CFG->dbname);
 }
 
 $config = get_config('block_evalcomix');
 if (isset($config->serverurl)) {
     // URL base of EvalCOMIX application.
-    if (!defined('DIREVALCOMIX')) {
-        define('DIREVALCOMIX', $config->serverurl);
+    if (!defined('BLOCK_EVALCOMIX_DIREVALCOMIX')) {
+        define('BLOCK_EVALCOMIX_DIREVALCOMIX', $config->serverurl);
     }
 
-    if (!defined('DIREVALCOMIXS')) {
-        define('DIREVALCOMIXS', $config->serverurl);
+    if (!defined('BLOCK_EVALCOMIX_DIREVALCOMIXS')) {
+        define('BLOCK_EVALCOMIX_DIREVALCOMIXS', $config->serverurl);
     }
 
     // EvalCOMIX API.
-    if (!defined('MAINAPI_EVALCOMIX')) {
-        define('MAINAPI_EVALCOMIX', DIREVALCOMIX . '/webservice/get_list_tools_course.php');
+    if (!defined('BLOCK_EVALCOMIX_MAINAPI_EVALCOMIX')) {
+        define('BLOCK_EVALCOMIX_MAINAPI_EVALCOMIX', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/get_list_tools_course.php');
     }
 
-    if (!defined('GRADE_EVALCOMIX')) {
-        define('GRADE_EVALCOMIX', DIREVALCOMIX .'/webservice/get_grade.php');
+    if (!defined('BLOCK_EVALCOMIX_GRADE_EVALCOMIX')) {
+        define('BLOCK_EVALCOMIX_GRADE_EVALCOMIX', BLOCK_EVALCOMIX_DIREVALCOMIX .'/webservice/get_grade.php');
     }
 
-    if (!defined('DISPLAY_TOOL')) {
-        define('DISPLAY_TOOL', DIREVALCOMIXS . '/webservice/get_view_form.php');
+    if (!defined('BLOCK_EVALCOMIX_DISPLAY_TOOL')) {
+        define('BLOCK_EVALCOMIX_DISPLAY_TOOL', BLOCK_EVALCOMIX_DIREVALCOMIXS . '/webservice/get_view_form.php');
     }
 
-    if (!defined('FORM_ASSESS')) {
-        define('FORM_ASSESS', DIREVALCOMIXS . '/webservice/get_assessment_form.php');
+    if (!defined('BLOCK_EVALCOMIX_FORM_ASSESS')) {
+        define('BLOCK_EVALCOMIX_FORM_ASSESS', BLOCK_EVALCOMIX_DIREVALCOMIXS . '/webservice/get_assessment_form.php');
     }
 
-    if (!defined('EVALCOMIX3')) {
-        define('EVALCOMIX3', DIREVALCOMIX .'/client/evalcomix3.php');
+    if (!defined('BLOCK_EVALCOMIX_EVALCOMIX3')) {
+        define('BLOCK_EVALCOMIX_EVALCOMIX3', BLOCK_EVALCOMIX_DIREVALCOMIX .'/client/evalcomix3.php');
     }
 
-    if (!defined('DELETE')) {
-        define('DELETE', DIREVALCOMIX .'/webservice/delete_tool.php');
+    if (!defined('BLOCK_EVALCOMIX_DELETE')) {
+        define('BLOCK_EVALCOMIX_DELETE', BLOCK_EVALCOMIX_DIREVALCOMIX .'/webservice/delete_tool.php');
     }
 
-    if (!defined('GET_TOOL_ASSESSED')) {
-        define('GET_TOOL_ASSESSED', DIREVALCOMIX . '/webservice/get_tool.php');
+    if (!defined('BLOCK_EVALCOMIX_GET_TOOL_ASSESSED')) {
+        define('BLOCK_EVALCOMIX_GET_TOOL_ASSESSED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/get_tool.php');
     }
 
-    if (!defined('DELETE_ASSESS')) {
-        define('DELETE_ASSESS', DIREVALCOMIX . '/webservice/delete_asessment.php');
+    if (!defined('BLOCK_EVALCOMIX_DELETE_ASSESS')) {
+        define('BLOCK_EVALCOMIX_DELETE_ASSESS', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/delete_asessment.php');
     }
 
-    if (!defined('DUPLICATE_COURSE')) {
-        define('DUPLICATE_COURSE', DIREVALCOMIX . '/webservice/duplicate_course.php');
+    if (!defined('BLOCK_EVALCOMIX_DUPLICATE_COURSE')) {
+        define('BLOCK_EVALCOMIX_DUPLICATE_COURSE', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/duplicate_course.php');
     }
 
-    if (!defined('DUPLICATE_COURSE2')) {
-        define('DUPLICATE_COURSE2', DIREVALCOMIX . '/webservice/duplicate_course2.php');
+    if (!defined('BLOCK_EVALCOMIX_DUPLICATE_COURSE2')) {
+        define('BLOCK_EVALCOMIX_DUPLICATE_COURSE2', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/duplicate_course2.php');
     }
 
-    if (!defined('DUPLICATE_TOOL')) {
-        define('DUPLICATE_TOOL', DIREVALCOMIX . '/webservice/duplicate_tool.php');
+    if (!defined('BLOCK_EVALCOMIX_DUPLICATE_TOOL')) {
+        define('BLOCK_EVALCOMIX_DUPLICATE_TOOL', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/duplicate_tool.php');
     }
-    if (!defined('GET_TOOLS')) {
-        define('GET_TOOLS', DIREVALCOMIX . '/webservice/get_tools.php');
+    if (!defined('BLOCK_EVALCOMIX_GET_TOOLS')) {
+        define('BLOCK_EVALCOMIX_GET_TOOLS', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/get_tools.php');
     }
 
-    if (!defined('VERIFY')) {
-        define('VERIFY', DIREVALCOMIX . '/webservice/verify.php');
+    if (!defined('BLOCK_EVALCOMIX_VERIFY')) {
+        define('BLOCK_EVALCOMIX_VERIFY', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/verify.php');
     }
-    if (!defined('GET_TOOLS2')) {
-        define('GET_TOOLS2', DIREVALCOMIX . '/webservice/get_tools2.php');
+    if (!defined('BLOCK_EVALCOMIX_GET_TOOLS2')) {
+        define('BLOCK_EVALCOMIX_GET_TOOLS2', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/get_tools2.php');
     }
-    if (!defined('CREATE_TOOL')) {
-        define('CREATE_TOOL', DIREVALCOMIX . '/webservice/import_tool.php');
+    if (!defined('BLOCK_EVALCOMIX_CREATE_TOOL')) {
+        define('BLOCK_EVALCOMIX_CREATE_TOOL', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/import_tool.php');
     }
-    if (!defined('GET_ASSESSMENT_MODIFIED')) {
-        define('GET_ASSESSMENT_MODIFIED', DIREVALCOMIX . '/webservice/get_assessment_modified.php');
+    if (!defined('BLOCK_EVALCOMIX_GET_ASSESSMENT_MODIFIED')) {
+        define('BLOCK_EVALCOMIX_GET_ASSESSMENT_MODIFIED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/get_assessment_modified.php');
     }
-    if (!defined('TOOL_MODIFIED')) {
-        define('TOOL_MODIFIED', DIREVALCOMIX . '/webservice/tool_modified.php');
+    if (!defined('BLOCK_EVALCOMIX_TOOL_MODIFIED')) {
+        define('BLOCK_EVALCOMIX_TOOL_MODIFIED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/webservice/tool_modified.php');
     }
-}
-// Block name.
-if (!defined('BLOCKNAME')) {
-    define('BLOCKNAME', 'evalcomix');
 }

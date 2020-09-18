@@ -110,10 +110,10 @@ $string['selfmodality_help'] = 'It is the self-assessment tool used by students 
 $string['pon_AE_help'] = 'It is the percentage of the mark obtained by the self-assessment tool has on the final grade.';
 $string['peermodality_help'] = 'This is the assessment tool used by students to assess their peers’ activity.';
 $string['pon_EI_help'] = 'It is the percentage of the mark obtained by the peer assessment tool on the final grade.';
-$string['availabledate_AE_help'] = '';
-$string['timedue_AE_help'] = '';
-$string['availabledate_EI_help'] = '';
-$string['timedue_EI_help'] = '';
+$string['availabledate_AE_help'] = 'Date from which students can evaluate their activity.';
+$string['timedue_AE_help'] = 'Deadline until which students can evaluate their activity.';
+$string['availabledate_EI_help'] = 'Date from which students can evaluate the activity carried out by their classmates.';
+$string['timedue_EI_help'] = 'Deadline until which students will be able to evaluate their classmates.';
 $string['anonymous_EI_help'] = 'It indicates if the students will can know which peers have assess them.';
 $string['whatis_help'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>
 The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.
@@ -183,7 +183,10 @@ $string['whoassesses_EI'] = 'Who assesses';
 $string['anystudent_EI'] = 'Any student';
 $string['groups_EI'] = 'Groups';
 $string['specificstudents_EI'] = 'Specific students';
-$string['whoassesses_EI_help'] = '';
+$string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation.
+If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates.
+If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected.
+If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated';
 $string['assignstudents_EI'] = 'Assign students';
 $string['assess_students'] = 'Assess students';
 $string['studentstoassess'] = 'Students to assess';
@@ -225,3 +228,10 @@ $string['groupmod'] = 'Group';
 $string['classmod'] = 'Class';
 $string['nostudents'] = 'No students with datas';
 $string['nostudentsgroup'] = 'No students with datas in group';
+
+$string['toolmanagerviewed'] = 'Tool manager viewed';
+$string['activityassessorviewed'] = 'Assessment manager viewed';
+$string['tooldeleted'] = 'Tool deleted';
+$string['studentassessed'] = 'Student assessed';
+$string['graphicsviewed'] = 'Graphics viewed';
+$string['configurationviewed'] = 'Configuration viewed';

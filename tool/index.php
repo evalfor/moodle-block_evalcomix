@@ -22,7 +22,6 @@
  */
 
 require_once('../../../config.php');
-require_login();
 
 $courseid      = required_param('id', PARAM_INT);
 $tid       = optional_param('tool', 0, PARAM_INT);
@@ -32,6 +31,7 @@ $edit      = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
+require_course_login($course);
 
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
@@ -48,10 +48,81 @@ $PAGE->set_pagelayout('incourse');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
-$PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
 $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->set_pagelayout('report');
+
+require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix.php');
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+
+if ($tid) {
+    $tooldelete = $DB->get_record('block_evalcomix_tools', array('id' => $tid));
+    if ($tooldelete) {
+        $response = block_evalcomix_webservice_client::get_ws_deletetool($tooldelete->idtool);
+        if ($DB->delete_records('block_evalcomix_tools', array('id' => $tooldelete->id))) {
+            $event = \block_evalcomix\event\tool_deleted::create(array('objectid' => $tid,
+                'courseid' => $course->id, 'context' => $context, 'relateduserid' => $USER->id));
+            $event->trigger();
+            redirect($CFG->wwwroot . '/blocks/evalcomix/tool/index.php?id='.$courseid, get_string('tooldeleted', 'block_evalcomix'),
+                null, \core\output\notification::NOTIFY_SUCCESS);
+        }
+    }
+}
+
+if (isset($edit) && $edit != '' && $edit != 'undefined') {
+    $tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $edit));
+    $response = block_evalcomix_webservice_client::get_ws_list_tool($course->id, $tool->idtool);
+    if ($response != false) {
+        $DB->update_record('block_evalcomix_tools', array('id' => $tool->id, 'evxid' => $tool->evxid, 'title' => $response->title,
+            'type' => $response->type, 'idtool' => $tool->idtool, 'timemodified' => time()));
+    }
+}
+
+if (!$environment = $DB->get_record('block_evalcomix', array('courseid' => $course->id))) {
+    $DB->insert_record('block_evalcomix', array('courseid' => $courseid, 'viewmode' => 'evalcomix', 'sendgradebook' => '0'));
+}
+
+$tools = $DB->get_records('block_evalcomix_tools', array('evxid' => $environment->id));
+$toollist = array();
+if ($tools) {
+    foreach ($tools as $tool) {
+        if ($tool->type == 'tmp') {
+            $response = block_evalcomix_webservice_client::get_ws_list_tool($course->id, $tool->idtool);
+            if ($response != false) {
+                if ($DB->update_record('block_evalcomix_tools', array('id' => $tool->id, 'evxid' => $tool->evxid,
+                    'title' => $response->title, 'type' => $response->type, 'idtool' => $tool->idtool,
+                    'timemodified' => time()))) {
+                    if ($toolupdated = $DB->get_record('block_evalcomix_tools', array('id' => $tool->id))) {
+                        array_push($toollist, $toolupdated);
+                    }
+                }
+            } else {
+                $result = $DB->delete_records('block_evalcomix_tools', array('id' => $tool->id));
+            }
+        } else {
+            array_push($toollist, $tool);
+        }
+    }
+}
+
+if ($sorttool == 'title') {
+    usort($toollist, 'block_evalcomix_cmp_type_tool');
+    usort($toollist, 'block_evalcomix_cmp_title_tool');
+} else if ($sorttool == 'type') {
+    usort($toollist, 'block_evalcomix_cmp_title_tool');
+    usort($toollist, 'block_evalcomix_cmp_type_tool');
+}
+
+$lang = current_language();
+$urlcreate = block_evalcomix_webservice_client::get_ws_createtool(null, $lms = BLOCK_EVALCOMIX_MOODLE_NAME,
+    $course->id, $lang.'_utf8');
+
+$counttool = count($toollist);
+
+$event = \block_evalcomix\event\tool_manager_viewed::create(array('courseid' => $course->id, 'context' => $context,
+    'relateduserid' => $USER->id));
+$event->trigger();
 
 echo $OUTPUT->header();
 $buttons = null;
@@ -62,14 +133,14 @@ if (ob_get_level() == 0) {
 
 echo '
     <center>
-        <div><img src="'. $CFG->wwwroot . EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
-        <div><input type="button" style="color:#333333" value="'. get_string('assesssection', 'block_evalcomix').'"
+        <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
+        <div><input type="button" value="'. get_string('assesssection', 'block_evalcomix').'"
         onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/index.php?id='.$courseid .'\'"/></div><br>
     </center>
 ';
 echo "
     <noscript>
-        <div style='color: #f00;'>".get_string('alertjavascript', 'block_evalcomix')."</div>
+        <div class='text-danger'>".get_string('alertjavascript', 'block_evalcomix')."</div>
     </noscript>\n";
 
 if (has_capability('moodle/block:edit', $context, $USER->id)) {  // If the login user is an editing teacher.
@@ -94,84 +165,22 @@ echo '
         }
     </script>
 ';
-require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
-
-
-if ($tid) {
-    $tooldelete = evalcomix_tool::fetch(array('id' => $tid));
-    if ($tooldelete) {
-        $response = webservice_evalcomix_client::get_ws_deletetool($tooldelete->idtool);
-        $tooldelete->delete();
-    }
-}
-
-if (isset($edit) && $edit != '' && $edit != 'undefined') {
-    $tool = evalcomix_tool::fetch(array('idtool' => $edit));
-    // LLamada para obtener datos y actualizar. Por lo general.
-    $response = webservice_evalcomix_client::get_ws_list_tool($course->id, $tool->idtool);
-    if ($response != false) {
-        $tool->type = $response->type;
-        $tool->title = $response->title;
-        $tool->update();
-    }
-}
-
-if (!$environment = evalcomix::fetch(array('courseid' => $course->id))) {
-    $environment = new evalcomix('', $courseid, 'evalcomix');
-    $environment->insert();
-}
-
-$tools = evalcomix_tool::fetch_all(array('evxid' => $environment->id));
-$toollist = array();
-if ($tools) {
-    foreach ($tools as $tool) {
-        if ($tool->type == 'tmp') {
-            // Llamada para obtener datos y actualizar. Por lo general.
-            $response = webservice_evalcomix_client::get_ws_list_tool($course->id, $tool->idtool);
-            if ($response != false) {
-                $tool->type = $response->type;
-                $tool->title = $response->title;
-                $tool->update();
-                array_push($toollist, $tool);
-            } else {
-                $result = $tool->delete();
-            }
-        } else {
-            array_push($toollist, $tool);
-        }
-    }
-}
-
-if ($sorttool == 'title') {
-    usort($toollist, 'block_evalcomix_cmp_type_tool');
-    usort($toollist, 'block_evalcomix_cmp_title_tool');
-} else if ($sorttool == 'type') {
-    usort($toollist, 'block_evalcomix_cmp_title_tool');
-    usort($toollist, 'block_evalcomix_cmp_type_tool');
-}
-
-$lang = current_language();
-$urlcreate = webservice_evalcomix_client::get_ws_createtool(null, $lms = MOODLE_NAME, $course->id, $lang.'_utf8');
-
-$counttool = count($toollist);
 
 echo '
     <center>
-        <div style="font-weight: bold; margin-bottom:0.5em">
+        <div class="font-weight-bold mb-1">
             <h5> '. $OUTPUT->help_icon('whatis', 'block_evalcomix') .
             get_string('counttool', 'block_evalcomix') .':  '. $counttool .'</h5>
         </div>
         <div>
-            <table style="width:80%;text-align:left;border-color:#146C84;background-color:#fff" border=1>
-                <tr style="color:#00f; font-weight: bold; text-align:center">
-                    <td style="background-color:inherit"><a href="index.php?id='.$courseid.'
+            <table class="generaltable w-75 text-left bg-white" border="1">
+                <thead>
+                <tr class="text-primary font-weight-bold text-center">
+                    <td><a href="index.php?id='.$courseid.'
                     &sorttool=title">'. get_string('title', 'block_evalcomix') .'</a></td>
-                    <td style="background-color:inherit"><a href="index.php?id='.$courseid.'
+                    <td><a href="index.php?id='.$courseid.'
                     &sorttool=type">'. get_string('type', 'block_evalcomix') .'</a></td>
-                    <td style="padding:0.2em;background-color:inherit;">';
+                    <td>';
 
 if ($editing) { // If the login user is an editing teacher.
     echo '
@@ -182,29 +191,31 @@ if ($editing) { // If the login user is an editing teacher.
 echo '
                     </td>
                 </tr>
+                </thead>
+                <tbody>
 ';
 
 foreach ($toollist as $tool) {
     $urlview = '../assessment/assessment_form.php?id='.$course->id.'&t='.$tool->idtool.'&mode=view&vt=1';
-    $urlopen = webservice_evalcomix_client::get_ws_createtool($tool->idtool, $lms = MOODLE_NAME,
+    $urlopen = block_evalcomix_webservice_client::get_ws_createtool($tool->idtool, $lms = BLOCK_EVALCOMIX_MOODLE_NAME,
     $course->id, $lang.'_utf8', 'open');
     echo '
                 <tr>
-                    <td style="border:1px solid #146C84; padding-left:0.6em">'. $tool->title.'</td>
-                    <td style="border:1px solid #146C84;padding-left:0.5em;text-align:center;">'.
+                    <td>'. $tool->title.'</td>
+                    <td class="text-center">'.
                     get_string($tool->type, 'block_evalcomix') .'</td>
-                    <td style="border:1px solid #146C84;text-align:center;">
-                    <input type="image" style="border:0; width:20px" src="'.
-                    $CFG->wwwroot.'/blocks/evalcomix/images/lupa.gif" title="'.
+                    <td class="text-center">
+                    <input type="image" src="'.
+                    $CFG->wwwroot.'/blocks/evalcomix/images/lupa.png" title="'.
                     get_string('view', 'block_evalcomix').'" alt="'. get_string('view', 'block_evalcomix').'" width="20"
                     onclick="url(\''. $urlview .'\', \'win1\')">';
 
     if ($editing) {
-        echo ' <input type="image" style="border:0; width:20px" src="'.
+        echo ' <input type="image" src="'.
         $CFG->wwwroot.'/blocks/evalcomix/images/edit.png" title="'.
         get_string('open', 'block_evalcomix') .'" alt="'. get_string('open', 'block_evalcomix') .'" width="20"
         onclick="urledit(\''. $urlopen .'\', \'win_open\', \''.$tool->idtool.'\');">
-                        <input type="image" style="border:0; width:20px" src="'.
+                        <input type="image"src="'.
                         $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
                         get_string('delete', 'block_evalcomix').'" alt="'.
                         get_string('delete', 'block_evalcomix').'" width="20"
@@ -217,6 +228,7 @@ foreach ($toollist as $tool) {
 }
 
 echo '
+            </tbody>
             </table>
         </div>
     </center>
@@ -224,23 +236,23 @@ echo '
 ob_flush();
 flush();
 
-$newgrades = webservice_evalcomix_client::get_assessments_modified(array('tools' => $toollist));
+$newgrades = block_evalcomix_webservice_client::get_assessments_modified(array('tools' => $toollist));
 if (!empty($newgrades)) {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-    $tasks = evalcomix_tasks::get_tasks_by_courseid($courseid);
+    $tasks = block_evalcomix_tasks::get_tasks_by_courseid($courseid);
     $toolids = array();
     foreach ($tasks as $task) {
-        if ($assessments = evalcomix_assessments::fetch_all(array('taskid' => $task->id))) {
+        if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
             foreach ($assessments as $assessment) {
                 $activity = $task->instanceid;
-                $module = evalcomix_tasks::get_type_task($activity);
+                $module = block_evalcomix_tasks::get_type_task($activity);
                 $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid,
                     $courseid, $assessment->assessorid);
                 $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
-                '_' . $assessment->assessorid . '_' . $mode . '_' . MOODLE_NAME;
+                '_' . $assessment->assessorid . '_' . $mode . '_' . BLOCK_EVALCOMIX_MOODLE_NAME;
                 $assessmentid = md5($str);
                 if (isset($newgrades[$assessmentid])) {
                     if (isset($newgrades[$assessmentid]->toolid)) {
@@ -249,24 +261,26 @@ if (!empty($newgrades)) {
 
                     if (isset($newgrades[$assessmentid]->grade)) {
                         $grade = $newgrades[$assessmentid]->grade;
-                        $assessment->grade = $grade;
-                        $assessment->update();
+                        $DB->update_record('block_evalcomix_assessments', array('id' => $assessment->id,
+                            'taskid' => $assessment->taskid, 'assessorid' => $assessment->assessorid,
+                            'studentid' => $assessment->studentid, 'grade' => $grade, 'timemodified' => time()));
                     }
-                    if ($evalcomixgrade = evalcomix_grades::fetch(array('courseid' => $courseid,
+                    if ($evalcomixgrade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
                         'cmid' => $task->instanceid, 'userid' => $assessment->studentid))) {
                         $params = array('cmid' => $task->instanceid, 'userid' => $assessment->studentid,
                         'courseid' => $courseid);
-                        $finalgrade = evalcomix_grades::get_finalgrade_user_task($params);
+                        $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
                         if ($finalgrade !== null && (int)$finalgrade > -1) {
-                            $evalcomixgrade->finalgrade = $finalgrade;
-                            $evalcomixgrade->update();
+                            $DB->update_record('block_evalcomix_grades', array('id' => $evalcomixgrade->id,
+                                'userid' => $evalcomixgrade->userid, 'cmid' => $evalcomixgrade->cmid, 'finalgrade' => $finalgrade,
+                                'courseid' => $evalcomixgrade->courseid));
                         }
                     }
                 }
             }
         }
     }
-    webservice_evalcomix_client::set_assessments_modified(array('toolids' => $toolids));
+    block_evalcomix_webservice_client::set_assessments_modified(array('toolids' => $toolids));
 }
 
 echo $OUTPUT->footer();

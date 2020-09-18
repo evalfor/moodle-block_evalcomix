@@ -26,7 +26,7 @@ require_once('evalcomix_modes.php');
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-class evalcomix_grades extends evalcomix_object{
+class block_evalcomix_grades extends block_evalcomix_object{
     public $table = 'block_evalcomix_grades';
 
     /**
@@ -122,13 +122,13 @@ class evalcomix_grades extends evalcomix_object{
     }
 
     /**
-     * Finds and returns all evalcomix_grades instances.
+     * Finds and returns all block_evalcomix_grades instances.
      * @static abstract
      * @param array $params
      * @return array array of evalcomix_assessments instances or false if none found.
      */
     public static function fetch_all($params) {
-        return evalcomix_object::fetch_all_helper('block_evalcomix_grades', 'evalcomix_grades', $params);
+        return evalcomix_object::fetch_all_helper('block_evalcomix_grades', 'block_evalcomix_grades', $params);
     }
 
     /**
@@ -138,7 +138,7 @@ class evalcomix_grades extends evalcomix_object{
      * @return an object instance or false if not found
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix_grades', 'evalcomix_grades', $params);
+        return evalcomix_object::fetch_helper('block_evalcomix_grades', 'block_evalcomix_grades', $params);
     }
 
     /**
@@ -172,7 +172,7 @@ class evalcomix_grades extends evalcomix_object{
 
         global $CFG, $DB;
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-        if (!$task = evalcomix_tasks::fetch(array('instanceid' => $cmid))) {
+        if (!$task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
             return null;
         }
 
@@ -183,7 +183,7 @@ class evalcomix_grades extends evalcomix_object{
         $peerweight = -1;
 
         $paramsmodes = array('taskid' => $task->id);
-        $modes = evalcomix_modes::fetch_all($paramsmodes);
+        $modes = $DB->get_records('block_evalcomix_modes', $paramsmodes);
         if ($modes) {
             // Obtains activity´s weights.
             foreach ($modes as $mode) {
@@ -199,7 +199,7 @@ class evalcomix_grades extends evalcomix_object{
             }
 
             $params2 = array('taskid' => $task->id, 'studentid' => $userid);
-            $assessments = evalcomix_assessments::fetch_all($params2);
+            $assessments = $DB->get_records('block_evalcomix_assessments', $params2);
             $inperiod = false;
             if ($assessments) {
                 $selfgrade = -1;
@@ -222,8 +222,9 @@ class evalcomix_grades extends evalcomix_object{
                     } else if ($assessment->studentid != $assessment->assessorid) { // If it is a peer assessment.
                         // Only gets grades when the assessment period in the task is finished.
 
-                        if ($modeei = evalcomix_modes::fetch(array('taskid' => $assessment->taskid, 'modality' => 'peer'))) {
-                            $modeeitime = evalcomix_modes_time::fetch(array('modeid' => $modeei->id));
+                        if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
+                            'modality' => 'peer'))) {
+                            $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modeei->id));
                             if ($modeeitime && $now > $modeeitime->timedue) {
                                 $peergrade += $assessment->grade;
                                 $numpeers++;
@@ -270,8 +271,9 @@ class evalcomix_grades extends evalcomix_object{
      * @return array with finalgrades by cmid and userid
      */
     public static function get_grades($courseid) {
+        global $DB;
         $result = array();
-        if ($finalgrades = self::fetch_all(array('courseid' => $courseid))) {
+        if ($finalgrades = $DB->get_records('block_evalcomix_grades', array('courseid' => $courseid))) {
             foreach ($finalgrades as $finalgrade) {
                 $userid = $finalgrade->userid;
                 $cmid = $finalgrade->cmid;

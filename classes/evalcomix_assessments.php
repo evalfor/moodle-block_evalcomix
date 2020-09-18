@@ -25,7 +25,7 @@ require_once('evalcomix_modes.php');
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-class evalcomix_assessments extends evalcomix_object{
+class block_evalcomix_assessments extends block_evalcomix_object{
     public $table = 'block_evalcomix_assessments';
 
     /**
@@ -140,7 +140,7 @@ class evalcomix_assessments extends evalcomix_object{
      * @return array $finalgrades with two dimensions [$taskinstance][$userid] that contains the finalgrades.
      */
     public static function get_final_grade($courseid, $users) {
-        global $CFG, $COURSE;
+        global $CFG, $COURSE, $DB;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
 
@@ -148,7 +148,7 @@ class evalcomix_assessments extends evalcomix_object{
 
         $finalgrades = array();
 
-        $tasks = evalcomix_tasks::get_tasks_by_courseid($courseid);
+        $tasks = block_evalcomix_tasks::get_tasks_by_courseid($courseid);
         $now = time();
 
         foreach ($tasks as $task) {
@@ -157,7 +157,7 @@ class evalcomix_assessments extends evalcomix_object{
             $peerweight = 0;
 
             $params = array('taskid' => $task->id);
-            $modes = evalcomix_modes::fetch_all($params);
+            $modes = $DB->get_records('block_evalcomix_modes', $params);
             if ($modes) {
                 // Obtains activity´s weights.
                 foreach ($modes as $mode) {
@@ -175,7 +175,7 @@ class evalcomix_assessments extends evalcomix_object{
                 foreach ($users as $user) {
                     // It obtains assignments for each task and user.
                     $params2 = array('taskid' => $task->id, 'studentid' => $user->id);
-                    $assessments = self::fetch_all($params2);
+                    $assessments = $DB->get_records('block_evalcomix_assessments', $params2);
                     if ($assessments) {
                         $selfgrade = -1;
                         $teachergrade = 0;
@@ -195,9 +195,9 @@ class evalcomix_assessments extends evalcomix_object{
                             } else { // If it is a peer assessment.
                                 // Only gets grades when the assessment period in the task is finished.
 
-                                if ($modeei = evalcomix_modes::fetch(array('taskid' => $assessment->taskid,
+                                if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
                                     'modality' => 'peer'))) {
-                                    $modeeitime = evalcomix_modes_time::fetch(array('modeid' => $modeei->id));
+                                    $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modeei->id));
                                     if ($modeeitime && $now > $modeeitime->timedue) {
                                         $peergrade += $assessment->grade;
                                         $numpeers++;
@@ -243,7 +243,7 @@ class evalcomix_assessments extends evalcomix_object{
      * @return array array of evalcomix_assessments instances or false if none found.
      */
     public static function fetch_all($params) {
-        return evalcomix_object::fetch_all_helper('block_evalcomix_assessments', 'evalcomix_assessments', $params);
+        return block_evalcomix_object::fetch_all_helper('block_evalcomix_assessments', 'block_evalcomix_assessments', $params);
     }
 
     /**
@@ -253,7 +253,7 @@ class evalcomix_assessments extends evalcomix_object{
      * @return an object instance or false if not found
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix_assessments', 'evalcomix_assessments', $params);
+        return block_evalcomix_object::fetch_helper('block_evalcomix_assessments', 'block_evalcomix_assessments', $params);
     }
 
     /**
@@ -275,9 +275,9 @@ class evalcomix_assessments extends evalcomix_object{
         global $CFG, $DB;
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-        $assessments = self::fetch_all(array('studentid' => $userid, 'taskid' => $taskid));
+        $assessments = $DB->get_records('block_evalcomix_assessments', array('studentid' => $userid, 'taskid' => $taskid));
         if ($assessments) {
-            if (!$task = evalcomix_tasks::fetch(array('id' => $taskid))) {
+            if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
                 return false;
             }
             $cm = $DB->get_record('course_modules', array('id' => $task->instanceid));
@@ -292,17 +292,17 @@ class evalcomix_assessments extends evalcomix_object{
 
             foreach ($assessments as $assessment) {
                 if (has_capability('moodle/grade:viewhidden', $context, $assessment->assessorid)) {
-                    if ($modality = evalcomix_modes::fetch(array('taskid' => $taskid, 'modality' => 'teacher'))) {
+                    if ($modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => 'teacher'))) {
                         $weighingteacher = $modality->weighing;
                         array_push($teacherassessment, $assessment);
                     }
                 } else if ($assessment->assessorid == $userid) {
-                    if ($modality = evalcomix_modes::fetch(array('taskid' => $taskid, 'modality' => 'self'))) {
+                    if ($modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => 'self'))) {
                         $weighingself = $modality->weighing;
                         $selfassessment = $assessment;
                     }
                 } else {
-                    if ($modality = evalcomix_modes::fetch(array('taskid' => $taskid, 'modality' => 'peer'))) {
+                    if ($modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => 'peer'))) {
                         $weighingpeer = $modality->weighing;
                         array_push($peerassessments, $assessment);
                     }
@@ -332,7 +332,7 @@ class evalcomix_assessments extends evalcomix_object{
             foreach ($assessments as $assessment) {
                 array_push($grades, $assessment->grade);
             }
-            $result = calculator_average::calculate_one_array($grades);
+            $result = block_evalcomix_calculator_average::calculate_one_array($grades);
             return $result;
         }
         return false;
