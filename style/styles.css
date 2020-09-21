@@ -70,14 +70,16 @@
     width: 35px;
     padding: 3px;
 }
- .wrapper1, .wrapper2{
+
+.wrapper1,
+.wrapper2 {
     width: 100%;
     border: none 0px RED;
     overflow-x: scroll;
     overflow-y:hidden;
 }
 
-.wrapper1{
+.wrapper1 {
     height: 20px;
 }
 
