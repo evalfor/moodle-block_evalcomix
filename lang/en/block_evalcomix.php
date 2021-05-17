@@ -99,6 +99,7 @@ $string['differential'] = 'Differential';
 $string['argumentset'] = 'Argumentative Assessment';
 $string['whatis'] = 'Management of assessment tools';
 $string['gradeof'] = 'Grade of ';
+$string['confirmdeletetool'] = 'Are you sure you want to delete the assessment tool?';
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'Peer Assessment is not included actually in EvalCOMIX grade because the period of assessment has not ended yet.';
 $string['evalcomixgrade_help'] = 'Weighted average of evalcomix assessments';

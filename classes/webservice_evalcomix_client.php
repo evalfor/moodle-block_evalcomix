@@ -532,7 +532,7 @@ class block_evalcomix_webservice_client {
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
                 $xml = '<?xml version="1.0" encoding="utf-8"?>
         <assessments>';
-        if ($block = block_evalcomix::fetch(array('courseid' => $params['courseid']))) {
+        if ($block = block_evalcomix_class::fetch(array('courseid' => $params['courseid']))) {
             if ($tools = block_evalcomix_tool::fetch_all(array('evxid' => $block->id))) {
                 foreach ($tools as $tool) {
                     $xml .= '<tool>';

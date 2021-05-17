@@ -141,8 +141,8 @@ echo '
                             <div class="text-left mt-1">
                                 <label>'.get_string('search', 'block_evalcomix').'</label><input type="text"
                                 size="15" id="buscarid" onkeyup="document.getElementById(\'add\').disabled=true;
-                                doWork(\'potential\', \'search.php\', \'as='.$assessorid.'&t=potential&a='.$cm->id.'
-                                &id='.$courseid.'&search=\'+this.value)">
+                                doWork(\'potential\', \'search.php\', \'as='.$assessorid.'&t=potential&a='.$cm->id.
+                                '&id='.$courseid.'&search=\'+this.value)">
                             </div>
                         </td>
                         </tr>

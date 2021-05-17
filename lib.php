@@ -134,15 +134,29 @@ function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
         $result['weighingAE'] = block_evalcomix_get_evalcomix_modality_weighing($courseid, $task->id, 'self');
         $result['weighingEI'] = block_evalcomix_get_evalcomix_modality_weighing($courseid, $task->id, 'peer');
         $timeae = block_evalcomix_get_evalcomix_modality_time($courseid, $task->id, 'self');
-        $result['availableAE'] = $timeae['available'];
-        $result['timedueAE'] = $timeae['timedue'];
+        if (isset($timeae['available'])) {
+            $result['availableAE'] = $timeae['available'];
+        }
+        if (isset($timeae['timedue'])) {
+            $result['timedueAE'] = $timeae['timedue'];
+        }
         $timeei = block_evalcomix_get_evalcomix_modality_time($courseid, $task->id, 'peer');
-        $result['availableEI'] = $timeei['available'];
-        $result['timedueEI'] = $timeei['timedue'];
+        if (isset($timeei['availableEI'])) {
+            $result['availableEI'] = $timeei['available'];
+        }
+        if (isset($timeei['timedue'])) {
+            $result['timedueEI'] = $timeei['timedue'];
+        }
         $timeei = block_evalcomix_get_evalcomix_modality_extra($courseid, $task->id, 'peer');
-        $result['anonymousEI'] = $timeei['anonymous'];
-        $result['alwaysvisibleEI'] = $timeei['visible'];
-        $result['whoassessesEI'] = $timeei['whoassesses'];
+        if (isset($timeei['anonymous'])) {
+            $result['anonymousEI'] = $timeei['anonymous'];
+        }
+        if (isset($timeei['visible'])) {
+            $result['alwaysvisibleEI'] = $timeei['visible'];
+        }
+        if (isset($timeei['whoassesses'])) {
+            $result['whoassessesEI'] = $timeei['whoassesses'];
+        }
     }
     return $result;
 }
@@ -387,7 +401,6 @@ function block_evalcomix_get_elements_course($params) {
 }
 
 function block_evalcomix_recalculate_grades() {
-    // Recalculamos en cualquier caso las notas.
     global $CFG, $DB;
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
     if ($grades = $DB->get_records('block_evalcomix_grades', array())) {

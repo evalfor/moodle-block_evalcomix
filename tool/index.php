@@ -219,7 +219,7 @@ foreach ($toollist as $tool) {
                         $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
                         get_string('delete', 'block_evalcomix').'" alt="'.
                         get_string('delete', 'block_evalcomix').'" width="20"
-                        value="'.$tool->id.'" onclick="if (confirm(\'¿Está seguro que desea eliminar el instrumento?\'))
+                        value="'.$tool->id.'" onclick="if (confirm(\''.get_string('confirmdeletetool', 'block_evalcomix').'\'))
                             location.href=\'index.php?id='.$courseid.'&tool='.$tool->id.'\';">';
     }
     echo '              </td>

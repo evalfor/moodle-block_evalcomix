@@ -97,6 +97,11 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                     }
 
                     if (isset($sid)) {
+                        if ($onlinetext = $DB->get_record('assignsubmission_onlinetext',
+                                array('assignment' => $assignment->get_instance()->id, 'submission' => $sid))) {
+                            echo '<br><b>'.get_string('enabled', 'assignsubmission_onlinetext').':</b> '. $onlinetext->onlinetext;
+                            echo '<br>';
+                        }
                         $tree = new assign_files($context, $sid, 'submission_files', 'assignsubmission_file');
                         $args = htmllize_tree($tree, $tree->dir);
                         if (isset($args) && !empty($args)) {

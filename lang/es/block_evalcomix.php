@@ -99,6 +99,7 @@ $string['argumentset'] = 'Argumentario	';
 
 $string['whatis'] = 'Gestión de instrumentos de evaluación';
 $string['gradeof'] = 'Nota de ';
+$string['confirmdeletetool'] = '¿Está seguro que desea eliminar el instrumento?';
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'La Evaluación entre Iguales no se incluye en la nota actual de EvalCOMIX ya que aún se encuentra en período de evaluación.';
 $string['evalcomixgrade_help'] = 'Media ponderada de las calificaciones de EvalCOMIX';

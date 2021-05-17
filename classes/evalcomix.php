@@ -89,7 +89,7 @@ class block_evalcomix_class extends block_evalcomix_object {
      * @return object grade_item instance or false if none found.
      */
     public static function fetch($params) {
-        return evalcomix_object::fetch_helper('block_evalcomix', 'evalcomix', $params);
+        return block_evalcomix_object::fetch_helper('block_evalcomix', 'block_evalcomix_class', $params);
     }
 
      /**
@@ -99,7 +99,7 @@ class block_evalcomix_class extends block_evalcomix_object {
       * @return array array of evalcomix_tool instances or false if none found.
       */
     public static function fetch_all($params) {
-        return self::fetch_all_helper('block_evalcomix', 'evalcomix', $params);
+        return self::fetch_all_helper('block_evalcomix', 'block_evalcomix_class', $params);
     }
 
     /**

@@ -445,8 +445,11 @@ class block_evalcomix_grade_report extends grade_report {
                     if ($modeeiextraobject = $DB->get_record('block_evalcomix_modes_extra', array('modeid' => $modeid->id))) {
                         $modeeiextraid = $modeeiextraobject->id;
                         $params = array('id' => $modeeiextraid, 'anonymous' => $anonymous, 'visible' => $alwaysvisible,
-                            'whoassesses' => $whoassesses);
+                            'whoassesses' => $whoassesses, 'modeid' => $modeid->id);
                         $DB->update_record('block_evalcomix_modes_extra', $params);
+                    } else {
+                         $DB->insert_record('block_evalcomix_modes_extra', array('modeid' => $modeid->id, 'anonymous' => $anonymous,
+                        'visible' => $alwaysvisible, 'whoassesses' => $whoassesses));
                     }
                 } else {
                     $modeid = $DB->insert_record('block_evalcomix_modes', array('taskid' => $taskid, 'toolid' => $data['toolEI'],
@@ -458,8 +461,8 @@ class block_evalcomix_grade_report extends grade_report {
 
                     $DB->insert_record('block_evalcomix_modes_time', array('modeid' => $modeid, 'timeavailable' => $timeavailable,
                         'timedue' => $timedue));
-                    $DB->insert_record('block_evalcomix_modes_extra', array('anonymous' => $anonymous, 'visible' => $alwaysvisible,
-                    'whoassesses' => $whoassesses));
+                    $DB->insert_record('block_evalcomix_modes_extra', array('modeid' => $modeid, 'anonymous' => $anonymous,
+                        'visible' => $alwaysvisible, 'whoassesses' => $whoassesses));
                 }
             } else if ($taskexists == true) {
                 if ($modeid = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => 'peer'))) {

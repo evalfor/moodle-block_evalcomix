@@ -231,7 +231,7 @@ if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_too
                         $grade = $newgrades[$assessmentid]->grade;
                         $toolids[] = $newgrades[$assessmentid]->toolid;
                         $assessment->grade = $grade;
-                        $assessment->update();
+                        $DB->update_record('block_evalcomix_assessments', $assessment);
                         if ($evalcomixgrade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
                         'cmid' => $task->instanceid, 'userid' => $assessment->studentid))) {
                             $params = array('cmid' => $task->instanceid, 'userid' => $assessment->studentid,
@@ -239,7 +239,7 @@ if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_too
                             $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
                             if ($finalgrade !== null) {
                                 $evalcomixgrade->finalgrade = $finalgrade;
-                                $evalcomixgrade->update();
+                                $DB->update_record('block_evalcomix_grades', $evalcomixgrade);
                             }
                         }
                     }

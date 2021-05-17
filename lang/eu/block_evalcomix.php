@@ -100,6 +100,7 @@ $string['argumentset'] = 'Argudioen bilduma ';
 
 $string['whatis'] = 'Ebaluazio- tresnen kudeaketa';
 $string['gradeof'] = ' -ren kalifikazioa ';
+$string['confirmdeletetool'] = 'Ziur zaude tresna ezabatu nahi duzula?';
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'Berdinen arteko Ebaluazioa, EvalCOMIXen egungo kalifikazioan ez da sartzen, oraindik ebaluazio-aldian dago eta.';
 $string['evalcomixgrade_help'] = 'EvalCOMIXeko kalifikazioen batezbesteko haztatua';

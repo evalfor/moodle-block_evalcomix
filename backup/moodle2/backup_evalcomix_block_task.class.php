@@ -53,7 +53,7 @@ class backup_evalcomix_block_task extends backup_block_task {
      * Code the transformations to perform in the block in
      * order to get transportable (encoded) links
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         return $content;
     }
 }

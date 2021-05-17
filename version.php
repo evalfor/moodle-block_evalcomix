@@ -22,8 +22,8 @@ defined('MOODLE_INTERNAL') || die;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
  */
-$plugin->version = 2020091600;
+$plugin->version = 2021051400;
 $plugin->component = 'block_evalcomix';
 $plugin->requires = 2017051500; // Moodle 3.3 is required.
 $plugin->maturity = MATURITY_STABLE; // This is considered as ready for production sites.
-$plugin->release = 'v4.3.4';
+$plugin->release = 'v4.3.5';
