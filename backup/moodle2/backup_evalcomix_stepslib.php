@@ -34,7 +34,7 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
             'timemodified', 'idtool', 'code'));
         $evalcomixtasks = new backup_nested_element('tasks');
         $evalcomixtask = new backup_nested_element('task', array('id'),
-            array('instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible'));
+            array('instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod'));
         $evalcomixassessments = new backup_nested_element('assessments');
         $evalcomixassessment = new backup_nested_element('assessment', array('id'),
             array('assessorid', 'studentid', 'grade', 'timemodified'));
@@ -113,7 +113,7 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
                 $evalcomixtool->set_source_array($array);
             }
         } catch (Exception $e) {
-             echo $e->message;
+             echo $e->getMessage();
             // This exception is not handled.
         }
 

@@ -143,6 +143,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                 $taskinstanceidold = (int)$task->instanceid;
                 $taskmaxgradeold = (string)$task->maxgrade;
                 $taskweighingold = (string)$task->weighing;
+                $grademethodold = (int)$task->grademethod;
                 $cm = $DB->get_record('block_evalcomix', array('courseid' => $courseidnew));
                 $cmmapping = $this->get_mapping('course_module', $taskinstanceidold);
                 $newcmid = $cmmapping->newitemid;
@@ -152,7 +153,8 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                 }
 
                 if (!$taskfetch = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $newcmid))) {
-                    $taskobject = new block_evalcomix_tasks('', $newcmid, $taskmaxgradeold, $taskweighingold, '', $visibletask);
+                    $taskobject = new block_evalcomix_tasks('', $newcmid, $taskmaxgradeold, $taskweighingold, '',
+                        $visibletask, $grademethodold);
                     $newtaskid = $taskobject->insert();
                     $tasksid .= $taskinstanceidold . '-' . $newcmid . ',';
                     foreach ($task->modes[0] as $mode) {

@@ -280,7 +280,6 @@ class block_evalcomix_grade_report extends grade_report {
     public function process_data($data) {
         global $CFG, $DB, $COURSE, $USER;
 
-        // Para guardar la actividad en la bd de evalcomix.
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
@@ -329,7 +328,6 @@ class block_evalcomix_grade_report extends grade_report {
         }
 
         if (isset($data['save']) && $data['save'] == get_string('save', 'block_evalcomix')) {
-            require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_time.php');
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_extra.php');
@@ -348,11 +346,12 @@ class block_evalcomix_grade_report extends grade_report {
                 $taskid = $task->id;
                 $taskexists = true;
                 $params = array('id' => $task->id, 'instanceid' => $data['cmid'], 'maxgrade' => $data['maxgrade'],
-                    'weighing' => '50', 'timemodified' => time(), 'visible' => 1);
+                    'weighing' => '50', 'timemodified' => time(), 'visible' => 1, 'grademethod' => $data['grademethod']);
                 $DB->update_record('block_evalcomix_tasks', $params);
             } else if ($dataexists == true) {
                 $taskid = $DB->insert_record('block_evalcomix_tasks', array('instanceid' => $data['cmid'],
-                    'maxgrade' => $data['maxgrade'], 'weighing' => '50', 'timemodified' => time(), 'visible' => '1'));
+                    'maxgrade' => $data['maxgrade'], 'weighing' => '50', 'timemodified' => time(), 'visible' => '1',
+                    'grademethod' => $data['grademethod']));
             }
 
             if ($data['toolEP'] != 0) {
@@ -512,11 +511,10 @@ class block_evalcomix_grade_report extends grade_report {
                     }
                 }
             }
-
         }
 
-        // Comprobar si hay datos de alguna evaluación realizada con evalcomix para guardarla en la base de datos de Moodle.
-        // Se hace aquí ya que ese método se procesa cada vez que se recarga la página.
+        // Check if there is data from any evaluation carried out with evalcomix to save it in the Moodle database.
+        // It is done here since that method is processed every time the page is reloaded.
         if (isset($data['stu']) && $data['stu'] != 0 && $data['cma'] != 0) {
             $activity = $data['cma'];
             $module = block_evalcomix_tasks::get_type_task($activity);

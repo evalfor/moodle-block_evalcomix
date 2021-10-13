@@ -41,6 +41,7 @@ require_capability('moodle/block:edit', $context);
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
+require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
 
 $tools = block_evalcomix_tool::get_tools($courseid);
 $activity = block_evalcomix_get_activity_data($cm);
@@ -107,7 +108,6 @@ if (isset($datas['timedueEI'])) {
     $timedueei = $datas['timedueEI'];
 }
 
-
 if (!isset($toolep) || !$toolep) {
     $disabledep = 'disabled';
 }
@@ -118,10 +118,21 @@ if (!isset($toolei) || !$toolei) {
     $disabledei = 'disabled';
 }
 
+$gmdisabled = 'disabled';
+if (!empty($toolep) || !empty($toolae) || !empty($toolei)) {
+    $gmdisabled = '';
+}
+
+$checkcalc1 = 'selected';
+$checkcalc2 = '';
+if (isset($datas['grademethod']) && $datas['grademethod'] == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
+    $checkcalc1 = '';
+    $checkcalc2 = 'selected';
+}
 
 global $OUTPUT;
 
-$PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', array('id' => $courseid)));
+$PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', array('id' => $courseid, 'a' => $id)));
 $PAGE->set_context($context);
 $PAGE->set_pagetype('course');
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
@@ -133,13 +144,11 @@ $PAGE->set_pagelayout('report');
 $PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
 echo $OUTPUT->header();
-echo '
-        <center>
-            <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
-            <div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
-			onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>
-        </center>
-';
+echo '<center>
+<div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
+<div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
+onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>
+</center>';
 
 
 echo '
@@ -226,6 +235,19 @@ echo '
                 return true;
             }
 
+            function check_gredemethod() {
+                var elementEP = document.getElementById("id_toolEP");
+                var elementAE = document.getElementById("id_toolAE");
+                var elementEI = document.getElementById("toolEI");
+                var elementGM = document.getElementById("grademethod");
+
+                if (elementEP.value > 0 || elementAE.value > 0 || elementEI.value > 0) {
+                    elementGM.disabled = false;
+                } else {
+                    elementGM.disabled = true;
+                }
+            }
+
         </script>
         <div>
             <h1 class="text-center">'. $activity->name .'</h1>
@@ -255,13 +277,16 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
 <!--TEACHER-ASSESSMENT-------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
-
+                            <tr class="border">
+                                <td colspan="2" class="pl-3 font-weight-bold text-secondary">'.
+                                get_string('teachermodality', 'block_evalcomix').'</td>
+                            </tr>
                             <tr>
-                                <td class="text-right">' . get_string('teachermodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('teachermodality', 'block_evalcomix').
                                 $OUTPUT->help_icon('teachermodality', 'block_evalcomix') . '</td>
-                                <td>
+                                <td class="pt-3">
                                     <select class="form-control" name="toolEP" id="id_toolEP"
-                                    onchange="javascript:disabling(this, \'pon_EP\');">
+                                    onchange="javascript:disabling(this, \'pon_EP\');check_gredemethod();">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
     ';
 
@@ -284,9 +309,9 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('pon_EP', 'block_evalcomix').
+                                <td class="pb-3 text-right">' . get_string('pon_EP', 'block_evalcomix').
                                 $OUTPUT->help_icon('pon_EP', 'block_evalcomix') . '</td>
-                                <td>
+                                <td class="pb-3">
 ';
 $extraep = $disabledep . ' onchange="javascript:check_weighing(this);"';
 echo block_evalcomix_add_select_range('pon_EP', 0, 100, $weighingep, $extraep);
@@ -295,18 +320,21 @@ echo '
 
                                 </td>
                             </tr>
-
-                            <tr><td/><td/></tr>
 <!---------------------------------------------------------------------------------------------------->
 <!--SELF-ASSESSMENT----------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
+                            <tr class="border">
+                                <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
+                                get_string('selfmodality', 'block_evalcomix').'</td>
+                            </tr>
                             <tr>
-                                <td class="text-right">' . get_string('selfmodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('selfmodality', 'block_evalcomix').
                                  $OUTPUT->help_icon('selfmodality', 'block_evalcomix') . '</td>
-                                <td><hr>
+                                <td class="pt-3">
                                     <select class="form-control" name="toolAE" id="id_toolAE"
                                     onchange="javascript:disabling(this, \'pon_AE\');
-									disabling_group(this, \'available_AE\');disabling_group(this, \'timedue_AE\');">
+                                    disabling_group(this, \'available_AE\');disabling_group(this, \'timedue_AE\');
+                                    check_gredemethod();">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
     ';
 
@@ -355,9 +383,9 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('timedue_AE', 'block_evalcomix').
+                                <td class="text-right pb-3">' . get_string('timedue_AE', 'block_evalcomix').
                                 $OUTPUT->help_icon('timedue_AE', 'block_evalcomix') . '</td>
-                                <td>
+                                <td class="pb-3">
 ';
 
 echo block_evalcomix_add_date_time_selector('timedue_AE', $timedueae, $disabledae) . '<br>';
@@ -366,22 +394,23 @@ echo '
                                 </td>
                             </tr>
 
-                            <tr><td/><td/></tr>
-
 <!---------------------------------------------------------------------------------------------------->
 <!--PEER-ASSESSMENT----------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
-
+                            <tr class="border">
+                                <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
+                                get_string('peermodality', 'block_evalcomix').'</td>
+                            </tr>
                             <tr>
-                                <td class="text-right">' . get_string('peermodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('peermodality', 'block_evalcomix').
                                 $OUTPUT->help_icon('peermodality', 'block_evalcomix') . '</td>
-                                <td><hr>
+                                <td class="pt-3">
                                     <select class="form-control" name="toolEI" id="toolEI"
                                     onchange="javascript:disabling(this, \'pon_EI\');
                                     disabling(this,\'anonymousEI\');disabling_group(this, \'available_EI\');
                                     disabling_group(this,\'timedue_EI\');disabling(this, \'alwaysvisibleEI\');
                                     disabling(this, \'anystudent_EI\');disabling(this, \'groups_EI\');
-                                    disabling(this, \'specificstudents_EI\');">
+                                    disabling(this, \'specificstudents_EI\');check_gredemethod();">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
     ';
 
@@ -474,10 +503,10 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right align-top">'
+                                <td class="pb-3 text-right align-top">'
                                .get_string('whoassesses_EI', 'block_evalcomix') .
                                $OUTPUT->help_icon('whoassesses_EI', 'block_evalcomix') . '</td>
-                                <td>
+                                <td class="pb-3">
 ';
 
 $checked0 = '';
@@ -513,6 +542,26 @@ echo '
                          </td>
                         </tr>
 
+<!---------------------------------------------------------------------------------------------------->
+<!--CALCULATION-OF-THE-FINAL-GRADE-------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------->
+                        <tr class="border">
+                            <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
+                            get_string('finalgradecalculation', 'block_evalcomix').'</td>
+                        </tr>
+
+                            <tr>
+                                <td class="pt-3 text-right">' . get_string('method', 'block_evalcomix').
+                                $OUTPUT->help_icon('method', 'block_evalcomix') . '</td>
+                                <td class="pt-3">
+                                    <select class="form-control" name="grademethod" id="grademethod" '.$gmdisabled.'>
+                                        <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL.'" '.$checkcalc1.'>'.
+                                        get_string('weightedaveragewithallvalues', 'block_evalcomix') . '</option>
+                                        <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART.'" '.$checkcalc2.'>'.
+                                        get_string('weightedaveragesmart', 'block_evalcomix') . '</option>
+                                    </select>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                     <div id="error_weighing" class="text-center text-danger">

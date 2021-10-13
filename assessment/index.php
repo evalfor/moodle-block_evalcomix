@@ -79,6 +79,7 @@ $data['maxgrade'] = optional_param('maxgrade', '', PARAM_ALPHANUM);
 $data['anonymousEI'] = optional_param('anonymousEI', '', PARAM_ALPHANUM);
 $data['alwaysvisibleEI'] = optional_param('alwaysvisibleEI', '', PARAM_ALPHANUM);
 $data['whoassessesEI'] = optional_param('whoassessesEI', '', PARAM_ALPHANUM);
+$data['grademethod'] = optional_param('grademethod', '', PARAM_INT);
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');

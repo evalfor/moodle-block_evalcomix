@@ -66,4 +66,12 @@ class block_evalcomix_curl {
     public function get($url, $data = null) {
         return $this->curl->get($url, $data, $this->options);
     }
+
+    public function delete($url, $data = null) {
+        return $this->curl->delete($url, $data, $this->options);
+    }
+
+    public function put($url, $data = null) {
+        return $this->curl->put($url, $data, $this->options);
+    }
 }

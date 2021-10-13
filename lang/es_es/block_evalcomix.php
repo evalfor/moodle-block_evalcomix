@@ -29,9 +29,7 @@ $string['instruments'] = 'Gestión de instrumentos';
 $string['evaluation'] = 'Evaluación de actividades';
 $string['evalcomix:view'] = 'Consulta EvalCOMIX';
 $string['evalcomix:edit'] = 'Edición EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX permite la creación y gestión de instrumentos de evaluación (listas de control, escalas de valoración, diferencial semántico,  y rúbricas) que pueden ser utilizados para evaluar Foros, Glosarios, Base de Datos, Wiki y Tareas.<br>
-La evaluación con estos instrumentos creados puede ser realizada por parte del profesor (evaluación del profesor), el propio estudiante (autoevaluación) o entre estudiantes (evaluación entre iguales).
-Para una mayor información se puede consultar el <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
+$string['whatis'] = 'EvalCOMIX permite la creación y gestión de instrumentos de evaluación (listas de control, escalas de valoración, diferencial semántico,  y rúbricas) que pueden ser utilizados para evaluar Foros, Glosarios, Base de Datos, Wiki y Tareas.<br>La evaluación con estos instrumentos creados puede ser realizada por parte del profesor (evaluación del profesor), el propio estudiante (autoevaluación) o entre estudiantes (evaluación entre iguales). Para una mayor información se puede consultar el <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
 $string['selfmodality'] = 'Autoevaluación del Estudiante - AE ';
 $string['peermodality'] = 'Evaluación entre Iguales - EI ';
 $string['teachermodality'] = 'Evaluación del Profesorado - EP';
@@ -100,9 +98,22 @@ $string['argumentset'] = 'Argumentario	';
 $string['whatis'] = 'Gestión de instrumentos de evaluación';
 $string['gradeof'] = 'Nota de ';
 $string['confirmdeletetool'] = '¿Está seguro que desea eliminar el instrumento?';
+$string['finalgradecalculation'] = 'Cálculo de la nota final';
+$string['method'] = 'Método';
+$string['weightedaveragewithallvalues'] = 'Media ponderada de todas las calificaciones';
+$string['weightedaveragesmart'] = 'Media ponderada de calificaciones no extremas';
+$string['confirmdeleteassessment'] = '¿Está seguro que desea eliminar la evaluación?';
+
+$string['mildoutlier'] = 'Valor atípico leve';
+$string['extremeoutlier'] = 'Valor atípico extremo';
+$string['overvaluation'] = 'Sobrevaloración';
+$string['undervaluation'] = 'Infravaloración';
+/* ----------------------------- HELP ----------------------------- */
+$string['method_help'] = 'Esta opción permite establecer cómo se calculará la nota final de la actividad. Si se selecciona la opción "Media ponderada de todas las calificaciones", la calificación final se calculará realizando la media ponderada de las calificaciones otorgadas en cada modalidad de evaluación sin ignorar ninguna. En cambio, si se selecciona la opción "Media ponderada de valores no extremos", se eliminarán del cálculo aquellas calificaciones que se consideran extremas por superar determinadas cotas. Para más información lea el manual de EvalCOMIX';
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'La Evaluación entre Iguales no se incluye en la nota actual de EvalCOMIX ya que aún se encuentra en período de evaluación.';
 $string['evalcomixgrade_help'] = 'Media ponderada de las calificaciones de EvalCOMIX';
+$string['evalcomixgradesmart_help'] = 'Media ponderada de las calificaciones de EvalCOMIX ignorando las sobrevaloraciones, infravaloraciones y valores atípicos extremos.';
 $string['moodlegrade_help'] = 'Media ponderada de las calificaciones de EvalCOMIX';
 $string['finalgrade_help'] = 'Media aritmética de la calificación final de EvalCOMIX y la calificación final de Moodle';
 $string['teachermodality_help'] = 'Este será el instrumento de evaluación utilizado por el profesor para calificar esta actividad a sus alumnos.';
@@ -116,9 +127,7 @@ $string['timedue_AE_help'] = 'Fecha límite hasta la cual los estudiantes podrá
 $string['availabledate_EI_help'] = 'Fecha a partir de la cual los estudiantes podrán evaluar la actividad realizada por sus compañeros.';
 $string['timedue_EI_help'] = 'Fecha límite hasta la cual los estudiantes podrán evaluar a sus compañeros.';
 $string['anonymous_EI_help'] = 'Indica si los estudiantes podrán saber qué compañeros les han calificado.';
-$string['whatis_help'] = 'EvalCOMIX permite la creación y gestión de instrumentos de evaluación (listas de control, escalas de valoración, diferencial semántico,  y rúbricas) que pueden ser utilizados para evaluar Foros, Glosarios, Base de Datos, Wiki y Tareas.<br>
-La evaluación con estos instrumentos creados puede ser realizada por parte del profesor (evaluación del profesor), el propio estudiante (autoevaluación) o entre estudiantes (evaluación entre iguales).
-Para una mayor información se puede consultar el <a href="../manual.pdf">Manual</a>';
+$string['whatis_help'] = 'EvalCOMIX permite la creación y gestión de instrumentos de evaluación (listas de control, escalas de valoración, diferencial semántico,  y rúbricas) que pueden ser utilizados para evaluar Foros, Glosarios, Base de Datos, Wiki y Tareas.<br>La evaluación con estos instrumentos creados puede ser realizada por parte del profesor (evaluación del profesor), el propio estudiante (autoevaluación) o entre estudiantes (evaluación entre iguales). Para una mayor información se puede consultar el <a href="../manual.pdf">Manual</a>';
 $string['selinstrument_help'] = 'Consulte el <a href="../manual.pdf">Manual</a> para una mayor información sobre cómo configurar una actividad de EvalCOMIX.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Gráfica tarea por alumno';
@@ -169,9 +178,9 @@ $string['adminheader'] = 'Configuración de EvalCOMIX';
 $string['serverurl'] = 'URL del servidor de EvalCOMIX:';
 $string['serverurlinfo'] = 'Introduce la URL de tu servidor EvalCOMIX. Ej: http://localhost/evalcomix';
 $string['validationheader'] = 'Ajustes de validación';
-$string['validationinfo'] = 'Por favor, antes de guardar la configuración, haga clic en el botón de validación. Si la validación es correcta, guarde los ajustes. En otro caso, por favor, vuelva a comprobar la URL';
+$string['validationinfo'] = 'Por favor, guarde la configuración antes de hacer clic en el botón de validación. Si la validación no es correcta, vuelva a comprobar la URL y el token';
 $string['validationbutton'] = 'Validar URL';
-$string['error_conection'] = 'La validación falló: por favor, compruebe que la URL se corresponde con la URL del servicio web EvalCOMIX';
+$string['error_conection'] = 'La validación falló: por favor, compruebe que la URL se corresponde con la URL del servicio web EvalCOMIX y que ha introducido correctamente el token';
 $string['valid_conection'] = 'Validación llevada a cabo con éxito';
 $string['simple_error_conection'] = 'URL válida. Pero se encontró el siguiente error:';
 
@@ -181,10 +190,7 @@ $string['whoassesses_EI'] = 'Quién evalúa';
 $string['anystudent_EI'] = 'Cualquier compañero';
 $string['groups_EI'] = 'Grupos';
 $string['specificstudents_EI'] = 'Estudiantes específicos';
-$string['whoassesses_EI_help'] = 'Esta opción permite controlar qué estudiantes participarán en la evaluación entre iguales.
-Si se selecciona la opción "'.$string['anystudent_EI'].'" cada estudiante podrá evaluar a cualquiera de sus compañeros.
-Si se selecciona la opción "'.$string['groups_EI'].'", se respetará la configuración de grupos y agrupamientos de la actividad.
-Si se selecciona la opción "'.$string['specificstudents_EI'].'" se podrá indicar quiénes evaluarán y quiénes serán evaluados';
+$string['whoassesses_EI_help'] = 'Esta opción permite controlar qué estudiantes participarán en la evaluación entre iguales. Si se selecciona la opción "'.$string['anystudent_EI'].'" cada estudiante podrá evaluar a cualquiera de sus compañeros. Si se selecciona la opción "'.$string['groups_EI'].'", se respetará la configuración de grupos y agrupamientos de la actividad. Si se selecciona la opción "'.$string['specificstudents_EI'].'" se podrá indicar quiénes evaluarán y quiénes serán evaluados';
 $string['assignstudents_EI'] = 'Asignar estudiantes';
 $string['assess_students'] = 'Estudiantes evaluadores';
 $string['studentstoassess'] = 'Estudiantes a los que evaluará';

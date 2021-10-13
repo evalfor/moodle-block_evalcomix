@@ -264,7 +264,7 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
     public function logoheader() {
         global $CFG;
-        include_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
+        require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         $output = html_writer::start_tag('center');
         $output .= html_writer::start_tag('div');
         $output .= html_writer::empty_tag('img', array('src' => $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT,
@@ -272,6 +272,145 @@ class block_evalcomix_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('center');
 
+        return $output;
+    }
+
+    public function grade_details ($grades) {
+        global $CFG;
+
+        $output = '
+         <table class="generaltable text-center">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>'. get_string('modality', 'block_evalcomix').'</th>
+                        <th>'. get_string('grade', 'block_evalcomix').'</th>
+                        <th>'. get_string('weighingfinalgrade', 'block_evalcomix').'</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>'. get_string('teachermodality', 'block_evalcomix').'</td>
+                        <td>
+        ';
+
+        if (!empty($grades->teacher->grades)) {
+            foreach ($grades->teacher->grades as $tgrade) {
+                $output .= '<a href="'.$tgrade->assessorurl.'" target="popup" title="'.$tgrade->assessorname.'"
+onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\');
+return false;">'. round($tgrade->grade, 2) .'/'. round($grades->teacher->maxgrade, 2) .' </a>';
+                $output .= '<input type="image" src="../images/lupa.png"
+onClick="window.open(\''.$tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
+return false;" title="'.get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'"
+width="15"/>';
+            }
+        } else {
+            $output .= '<i>' . get_string('nograde', 'block_evalcomix') . '</i>';
+        }
+        $output .= '
+                        </td>
+                        <td>
+        ';
+
+        if (!empty($grades->teacher->weighing)) {
+            $output .= $grades->teacher->weighing . '%';
+        }
+
+        $output .= '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>'. get_string('selfmodality', 'block_evalcomix').'</td>
+                        <td>
+        ';
+
+        if (!empty($grades->self->grades)) {
+            foreach ($grades->self->grades as $tgrade) {
+                $output .= '<span class="'.$tgrade->color.'">'.round($tgrade->grade, 2) .' / '. round($grades->self->maxgrade, 2) .'
+                <input type="image" src="../images/lupa.png" onClick="window.open(\''.
+                $tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\'); return false;" title="'.
+                get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'" width="15"/>';
+
+                if (!empty($tgrade->deleteurl)) {
+                    $output .= '<input type="image" src="'.
+                    $CFG->wwwroot.'/blocks/evalcomix/images/delete.png"
+                    title="'. get_string('delete', 'block_evalcomix').'" alt="'.
+                    get_string('delete', 'block_evalcomix').'" width="16"
+                    onclick="if (confirm(\''.get_string('confirmdeleteassessment', 'block_evalcomix').'\'))location.href=\''.
+                    $tgrade->deleteurl.'\';
+                    window.opener.change_recarga();">';
+                }
+            }
+        } else {
+            $output .= '<i>' . get_string('nograde', 'block_evalcomix') . '</i>';
+        }
+
+        $output .= '
+                        </td>
+                        <td>
+        ';
+        if (isset($grades->self->weighing)) {
+            $output .= '<span>'.$grades->self->weighing . '%</span>';
+        }
+        $output .= '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>'. get_string('peermodality', 'block_evalcomix').'</td>
+                        <td>
+        ';
+
+        if (!empty($grades->peer->grades)) {
+            if (!empty($grades->peer->extra)) {
+                $output .= $grades->peer->extra . '<br>';
+            }
+            foreach ($grades->peer->grades as $tgrade) {
+                $output .= '<a href="'.$tgrade->assessorurl.'" target="popup" title="'.$tgrade->assessorname.'"
+onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\');
+return false;" class="'.$tgrade->color.'">'. round($tgrade->grade, 2) .'/'. round($grades->peer->maxgrade, 2) .' </a>';
+                $output .= '<input type="image" src="../images/lupa.png"
+onClick="window.open(\''.$tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
+return false;" title="'.get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'"
+width="15"/>';
+                if (!empty($tgrade->deleteurl)) {
+                    $output .= '<input type="image" width:16px" src="'.
+                    $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
+                    get_string('delete', 'block_evalcomix').'" alt="'. get_string('delete', 'block_evalcomix').'"
+                    width="16"
+                    onclick="if (confirm(\''.get_string('confirmdeleteassessment', 'block_evalcomix').'\'))
+                    location.href=\''.$tgrade->deleteurl.'\';
+                    window.opener.change_recarga();"> ';
+                }
+            }
+        } else {
+            $output .= '<i>' . get_string('nograde', 'block_evalcomix') . '</i>';
+        }
+
+        $output .= '
+                        </td>
+                        <td>
+        ';
+
+        if (isset($grades->peer->weighing)) {
+            $output .= '<span>'.$grades->peer->weighing . '%</span>';
+        }
+
+        $output .= '
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            ';
+
+        if (!empty($grades->legend)) {
+            $output .= $grades->legend;
+        }
+
+        if (isset($grades->finalgrade) && $grades->finalgrade > -1) {
+            $output .= '<div class="text-right font-weight-bold">'.
+                $this->output->help_icon($grades->helpicon, 'block_evalcomix') .
+                get_string('evalcomixgrade', 'block_evalcomix') .': '.
+                format_float($grades->finalgrade, 2) .' / '. round($grades->maxgrade, 2) .'</div>';
+        }
         return $output;
     }
 }

@@ -29,9 +29,7 @@ $string['instruments'] = 'Tool Management';
 $string['evaluation'] = 'Assess Activities';
 $string['evalcomix:view'] = 'View EvalCOMIX';
 $string['evalcomix:edit'] = 'Edit EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>
-The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.
-For more information you can consult the <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
+$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.For more information you can consult the <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
 $string['selfmodality'] = 'Self Assessment - SA ';
 $string['peermodality'] = 'Peer Assessment - PA ';
 $string['teachermodality'] = 'Teacher Assessment - TA ';
@@ -71,6 +69,7 @@ $string['modality'] = 'Modality';
 $string['grade'] = 'Grade';
 $string['weighingfinalgrade'] = 'Weighing on final grade';
 $string['evalcomixgrade'] = 'EvalCOMIX grade';
+$string['evalcomixgradesmart'] = 'EvalCOMIX grade';
 $string['moodlegrade'] = 'Moodle grade';
 $string['graphics'] = 'Graphics';
 $string['timedue_AE'] = 'SA - deadline';
@@ -100,9 +99,21 @@ $string['argumentset'] = 'Argumentative Assessment';
 $string['whatis'] = 'Management of assessment tools';
 $string['gradeof'] = 'Grade of ';
 $string['confirmdeletetool'] = 'Are you sure you want to delete the assessment tool?';
+$string['finalgradecalculation'] = 'Calculation of the final grade';
+$string['method'] = 'Method';
+$string['weightedaveragewithallvalues'] = 'Weighted average of all grades';
+$string['weightedaveragesmart'] = 'Weighted average of non-extreme grades';
+$string['confirmdeleteassessment'] = 'Are you sure you want to delete the assessment?';
+$string['mildoutlier'] = 'Mild outlier';
+$string['extremeoutlier'] = 'Extreme outlier';
+$string['overvaluation'] = 'Overvaluation';
+$string['undervaluation'] = 'Undervaluation';
+
 /* ----------------------------- HELP ----------------------------- */
+$string['method_help'] = 'This option allows you to set how the final grade for the activity will be calculated. If the option "Weighted average of all grades" is selected, the final grade will be calculated by taking the weighted average of the grades awarded in each evaluation modality without ignoring any. On the other hand, if the "Weighted average of non-extreme values" option is selected, those ratings that are considered extreme will be eliminated from the calculation because they exceed certain levels. For more information read the EvalCOMIX manual';
 $string['timeopen_help'] = 'Peer Assessment is not included actually in EvalCOMIX grade because the period of assessment has not ended yet.';
 $string['evalcomixgrade_help'] = 'Weighted average of evalcomix assessments';
+$string['evalcomixgradesmart_help'] = 'Weighted average of evalcomix assessments';
 $string['moodlegrade_help'] = 'Grade assigned from Moodle';
 $string['finalgrade_help'] = 'Arithmetic average of EvalCOMIX final grade and Moodle final grade';
 $string['teachermodality_help'] = 'This tool will be the assessment tool used by teachers to grade students in this activity.';
@@ -142,7 +153,7 @@ $string['gradesdeleted'] = 'EvalCOMIX scores deleted from gradebook';
 $string['confirm_add'] = 'This operation will modificate the gradebook.\nIt will carry out the average between Moodle grades and EvalCOMIX one. Do you confirm that you wish to continue?';
 $string['confirm_update'] = 'The gradebook has been modificated previously.\nThis operation will submit last EvalCOMIX grades. Do you confirm that you wish to continue?';
 $string['confirm_delete'] = 'This operation will modificate the gradebook of Moodle.\nIt will delete EvalCOMIX grades from gradebook of Moodle.\nDo you confirm that you wish to continue?';
-$string['noconfigured'] = 'No conguration';
+$string['noconfigured'] = 'No configuration';
 $string['gradebook'] = 'Grade Book';
 
 $string['poweredby'] = 'Powered by:<br><span style="font-weight:bold; font-size: 10pt">EVALfor</span><br> Research Group';
@@ -172,11 +183,13 @@ $string['adminheader'] = 'EvalCOMIX server configuration';
 $string['serverurl'] = 'EvalCOMIX server URL:';
 $string['serverurlinfo'] = 'Here you need to enter the URL for your EvalCOMIX server. ie: http://localhost/evalcomix';
 $string['validationheader'] = 'Settings validation';
-$string['validationinfo'] = 'Before you save your settings, please press the button to validate them with the EvalCOMIX server. If the validation is correct, save these settings. If not, please check that the settings you have entered match with the values in the server';
+$string['validationinfo'] = 'Please save the settings before clicking the validation button. If the validation is unsuccessful, recheck the url and token';
 $string['validationbutton'] = 'Validate Settings';
 $string['error_conection'] = 'Validation failed: please check that the settings you have entered match with the settings in EvalCOMIX';
 $string['valid_conection'] = 'Successfully completed validation';
 $string['simple_error_conection'] = 'Valid URL. But there is a error: ';
+$string['token'] = 'Token';
+$string['tokeninfo'] = 'Token generated by EvalCOMIX Server. To obtain it, access the EvalCOMIX Server control panel to register this Moodle as a LMS allowed.';
 
 $string['alwaysvisible_EI_help'] = 'If it is not checked, students can only see peer-assessments after limit date. If it is checked, students can always see their peer-assessments';
 $string['alwaysvisible_EI'] = 'Always visible';
@@ -184,10 +197,7 @@ $string['whoassesses_EI'] = 'Who assesses';
 $string['anystudent_EI'] = 'Any student';
 $string['groups_EI'] = 'Groups';
 $string['specificstudents_EI'] = 'Specific students';
-$string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation.
-If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates.
-If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected.
-If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated';
+$string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation. If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates. If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected. If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated';
 $string['assignstudents_EI'] = 'Assign students';
 $string['assess_students'] = 'Assess students';
 $string['studentstoassess'] = 'Students to assess';

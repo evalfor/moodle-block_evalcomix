@@ -29,10 +29,7 @@ $string['instruments'] = 'Tresnen kudeaketa';
 $string['evaluation'] = 'Jardueren ebaluazioa';
 $string['evalcomix:view'] = 'EvalCOMIX kontsulta';
 $string['evalcomix:edit'] = 'EvalCOMIX argitalpena';
-$string['whatis'] = 'EvalCOMIXek, foro, glosario, datu-base, Wiki eta zereginak ebaluatzeko tresnen (kontrol zerrendak, balorazio eskalak,
-diferentzial semantikoa, eta errubrikak)sormena eta kudeaketa ahalbidetzen ditu. Tresna hauekin sortutako ebaluazioa, irakasleak (irakaslearen
-ebaluazioa), ikasle berak (auto-ebaluazioa) edo ikasleen artean (berdinen arteko ebaluazioa) burutu daiteke. Informazio gehiagorako
-<a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a> kontsulta daiteke';
+$string['whatis'] = 'EvalCOMIXek, foro, glosario, datu-base, Wiki eta zereginak ebaluatzeko tresnen (kontrol zerrendak, balorazio eskalak, diferentzial semantikoa, eta errubrikak)sormena eta kudeaketa ahalbidetzen ditu. Tresna hauekin sortutako ebaluazioa, irakasleak (irakaslearen ebaluazioa), ikasle berak (auto-ebaluazioa) edo ikasleen artean (berdinen arteko ebaluazioa) burutu daiteke. Informazio gehiagorako <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a> kontsulta daiteke';
 $string['selfmod'] = 'Ikaslearen Autoebaluazioa';
 $string['peermod'] = 'Berdinen arteko Ebaluazioa';
 $string['teachermod'] = 'Irakasleriaren Ebaluazioa';
@@ -101,6 +98,8 @@ $string['argumentset'] = 'Argudioen bilduma ';
 $string['whatis'] = 'Ebaluazio- tresnen kudeaketa';
 $string['gradeof'] = ' -ren kalifikazioa ';
 $string['confirmdeletetool'] = 'Ziur zaude tresna ezabatu nahi duzula?';
+$string['confirmdeleteassessment'] = 'Ziur zaude ebaluazioa ezabatu nahi duzula?';
+
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'Berdinen arteko Ebaluazioa, EvalCOMIXen egungo kalifikazioan ez da sartzen, oraindik ebaluazio-aldian dago eta.';
 $string['evalcomixgrade_help'] = 'EvalCOMIXeko kalifikazioen batezbesteko haztatua';
@@ -117,9 +116,7 @@ $string['timedue_AE_help'] = 'Ikasleek, beren jarduera ebaluatu ahal izateko azk
 $string['availabledate_EI_help'] = 'Ikasleek, beren kideek burututako jarduera ebaluatu ahal izaten hasteko data.';
 $string['timedue_EI_help'] = 'Ikasleek, beren kideak  ebaluatu ahal izateko azken data.';
 $string['anonymous_EI_help'] = 'Adierazi, ikasleek jakin ahalko duten zein kideengatik izan diren kalifikatuak.';
-$string['whatis_help'] = 'EvalCOMIXek, foro, glosario, datu-base, Wiki eta zereginak ebaluatzeko tresnen (kontrol zerrendak, balorazio eskalak, diferentzial semantikoa, eta errubrikak)sormena eta kudeaketa.<br>
-Tresna hauekin sortutako ebaluazioa, irakasleak (irakaslearen ebaluazioa), ikasle berak (auto-ebaluazioa) edo ikasleen artean (berdinen arteko ebaluazioa) burutu daiteke.
-Informazio gehiagorako <a href="../manual.pdf">Manual</a> kontsulta daiteke';
+$string['whatis_help'] = 'EvalCOMIXek, foro, glosario, datu-base, Wiki eta zereginak ebaluatzeko tresnen (kontrol zerrendak, balorazio eskalak, diferentzial semantikoa, eta errubrikak)sormena eta kudeaketa.<br>Tresna hauekin sortutako ebaluazioa, irakasleak (irakaslearen ebaluazioa), ikasle berak (auto-ebaluazioa) edo ikasleen artean (berdinen arteko ebaluazioa) burutu daiteke. Informazio gehiagorako <a href="../manual.pdf">Manual</a> kontsulta daiteke';
 $string['selinstrument_help'] = 'EvalCOMIXeko jarduera bat konfiguratzeko informazio gehiagorako, <a href="../manual.pdf">Manual</a> kontsultatu';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Ikasleko jarduera-irudia';

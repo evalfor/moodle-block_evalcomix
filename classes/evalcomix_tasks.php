@@ -37,7 +37,7 @@ class block_evalcomix_tasks extends block_evalcomix_object{
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible');
+    public $requiredfields = array('id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod');
 
     /**
      * Array of optional table fields, must start with 'id'.
@@ -75,6 +75,8 @@ class block_evalcomix_tasks extends block_evalcomix_object{
      */
     public $visible;
 
+    public $grademethod;
+
     /**
      * Constructor
      *
@@ -85,7 +87,7 @@ class block_evalcomix_tasks extends block_evalcomix_object{
      * @param int $timemodified
      */
     public function __construct($id = '', $instanceid = '0', $maxgrade = '100', $weighing = '50',
-        $timemodified = '0', $visible = '1') {
+        $timemodified = '0', $visible = '1', $grademethod = '1') {
         if ($instanceid != '0') {
             global $DB;
             $this->id = intval($id);
@@ -95,6 +97,7 @@ class block_evalcomix_tasks extends block_evalcomix_object{
             $this->weighing = intval($weighing);
             $this->timemodified = $timemodified;
             $this->visible = intval($visible);
+            $this->grademethod = intval($grademethod);
         }
     }
 

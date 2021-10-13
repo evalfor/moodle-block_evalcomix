@@ -33,9 +33,7 @@ $string['evaluation'] = 'Avaluació d\'activitats';
 $string['evalcomix:view'] = 'Consulta EvalCOMIX';
 $string['evalcomix:edit'] = 'Edició EvalCOMIX';
 $string['selinstrument'] = 'Planificació de l\'avaluació';
-$string['whatis'] = 'EvalCOMIX permet la creació i gestió d\'instruments d\'avaluació (llistes de control, escales de valoració, diferencial semàntic,  i rúbriques) que poden ser utilitzades per avaluar Forums, Glossaris, Base de Dades, Wiki i Tasques.<br>
-L\'avaluació amb aquests instruments creats pot ser realitzada per part del professor (avaluació del professor), pel propi estudiant (autoavaluació) o entre estudiants (avaluació entre iguals).
-Per més informació es pot consultar el <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
+$string['whatis'] = 'EvalCOMIX permet la creació i gestió d\'instruments d\'avaluació (llistes de control, escales de valoració, diferencial semàntic,  i rúbriques) que poden ser utilitzades per avaluar Forums, Glossaris, Base de Dades, Wiki i Tasques.<br>L\'avaluació amb aquests instruments creats pot ser realitzada per part del professor (avaluació del professor), pel propi estudiant (autoavaluació) o entre estudiants (avaluació entre iguals). Per més informació es pot consultar el <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
 $string['selfmod'] = 'Autoavaluació de l\'Estudiant';
 $string['peermod'] = 'Avaluació entre Iguals';
 $string['teachermod'] = 'Avaluació del Professorat';
@@ -102,6 +100,8 @@ $string['argumentset'] = 'Argumentari';
 $string['whatis'] = 'Gestió d\'instruments d\'avaluació';
 $string['gradeof'] = 'Nota de ';
 $string['confirmdeletetool'] = 'Esteu segur que voleu eliminar l\'instrument?';
+$string['confirmdeleteassessment'] = 'Esteu segur que voleu suprimir l\'avaluació?';
+
 /* ----------------------------- HELP ----------------------------- */
 $string['timeopen_help'] = 'L\'Avaliació ente Iguals no s\'inclou en la nota actual d\'EvalCOMIX ja que encara es troba en període d\'avaluació.';
 $string['evalcomixgrade_help'] = 'Mitja ponderada de les qualificacions d\'EvalCOMIX';
@@ -118,9 +118,7 @@ $string['timedue_AE_help'] = 'Data límit fins la qual els estudiants podran ava
 $string['availabledate_EI_help'] = 'Data a partir de la qual els estudiants podran avaluar l\'activitat realitzada pels seus companys.';
 $string['timedue_EI_help'] = 'Data límit fins la qual els estudiants podran avaluar l\'activitat realitzada pels seus companys.';
 $string['anonymous_EI_help'] = 'Indica si els estudiants podran saber que companys els han qualificat.';
-$string['whatis_help'] = 'EvalCOMIX permet la creació i gestió d\'instruments d\'avaluació (llistes de control, escales de valoració, diferencial semàntic,  i rúbriques) que poden ser utilitzades per avaluar Forums, Glossaris, Base de Dades, Wiki i Tasques.<br>
-L\'avaluació amb aquests instruments creats pot ser realitzada per part del professor (avaluació del professor), pel propi estudiant (autoavaluació) o entre estudiants (avaluació entre iguals).
-Per més informació es pot consultar el <a href="../manual.pdf">Manual</a>';
+$string['whatis_help'] = 'EvalCOMIX permet la creació i gestió d\'instruments d\'avaluació (llistes de control, escales de valoració, diferencial semàntic,  i rúbriques) que poden ser utilitzades per avaluar Forums, Glossaris, Base de Dades, Wiki i Tasques.<br>L\'avaluació amb aquests instruments creats pot ser realitzada per part del professor (avaluació del professor), pel propi estudiant (autoavaluació) o entre estudiants (avaluació entre iguals). Per més informació es pot consultar el <a href="../manual.pdf">Manual</a>';
 $string['selinstrument_help'] = 'Consulti el <a href="../manual.pdf">Manual</a> per més informació sobre com configurar una activitat d\'EvalCOMIX.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Gràfica tarea per alumne';

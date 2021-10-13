@@ -159,6 +159,7 @@ class block_evalcomix_assessments extends block_evalcomix_object{
             $params = array('taskid' => $task->id);
             $modes = $DB->get_records('block_evalcomix_modes', $params);
             if ($modes) {
+                $inperiod = false;
                 // Obtains activity´s weights.
                 foreach ($modes as $mode) {
                     switch ($mode->modality) {
@@ -166,7 +167,13 @@ class block_evalcomix_assessments extends block_evalcomix_object{
                         break;
                         case 'self': $selfweight = $mode->weighing;
                         break;
-                        case 'peer': $peerweight = $mode->weighing;
+                        case 'peer':{
+                            $peerweight = $mode->weighing;
+                            $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $mode->id));
+                            if ($modeeitime && $now >= $modeeitime->timeavailable && $now <= $modeeitime->timedue) {
+                                $inperiod = true;
+                            }
+                        }
                         break;
                         default:
                     }
@@ -194,14 +201,9 @@ class block_evalcomix_assessments extends block_evalcomix_object{
                                 $numteachers++;
                             } else { // If it is a peer assessment.
                                 // Only gets grades when the assessment period in the task is finished.
-
-                                if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
-                                    'modality' => 'peer'))) {
-                                    $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modeei->id));
-                                    if ($modeeitime && $now > $modeeitime->timedue) {
-                                        $peergrade += $assessment->grade;
-                                        $numpeers++;
-                                    }
+                                if (!$inperiod) {
+                                    $peergrade += $assessment->grade;
+                                    $numpeers++;
                                 }
                             }
                         }

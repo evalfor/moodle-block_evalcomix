@@ -36,18 +36,20 @@ class block_evalcomix_webservice_client {
      * @param $extra parameters to add to URI
      */
     public static function get_ws_createtool($id = null, $lms = 'Moodle24', $courseid, $language = 'es_es_utf8', $type = 'new') {
-        defined('BLOCK_EVALCOMIX_EVALCOMIX3') || print_error('EvalCOMIX is not configured');
+        defined('BLOCK_EVALCOMIX_CLIENT_NEW') || print_error('EvalCOMIX is not configured');
+        defined('BLOCK_EVALCOMIX_CLIENT_EDIT') || print_error('EvalCOMIX is not configured');
         global $CFG, $DB;
-
-        $serverurlaux = BLOCK_EVALCOMIX_EVALCOMIX3;
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_CLIENT_NEW;
         if (!$id && $type == 'new') {
-
             $id = self::generate_token();
+        } else if ($id) {
+            $serverurl = BLOCK_EVALCOMIX_CLIENT_EDIT;
         }
+        $serverurl = str_replace(':toolid', $id, $serverurl);
+        $get = '?lang='. $language . '&token='.$token;
 
-        $get = 'identifier='. $id . '&lang='. $language .'&type='.$type;
-
-        $serverurl = $serverurlaux . '?'. $get;
+        $serverurl .= $get;
 
         if (self::check_url($serverurl)) {
             $environmentid = 0;
@@ -78,12 +80,16 @@ class block_evalcomix_webservice_client {
         $activity = 0, $student = 0, $assessor = 0, $mode = 'teacher', $lms = 0,  $title = '') {
 
         defined('BLOCK_EVALCOMIX_DISPLAY_TOOL') || die('EvalCOMIX is not configured properly');
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_DISPLAY_TOOL . $toolid;
+        if ($courseid != 0) {
+            defined('BLOCK_EVALCOMIX_DISPLAY_TOOL_ASSESSED') || die('EvalCOMIX is not configured properly');
+            $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
+            $assessmentid = md5($str);
+            $serverurl = BLOCK_EVALCOMIX_DISPLAY_TOOL_ASSESSED . $assessmentid;
+        }
 
-        $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-        $assessmentid = md5($str);
-
-        $serverurlaux = BLOCK_EVALCOMIX_DISPLAY_TOOL;
-        $serverurl = $serverurlaux . '?ass='. $assessmentid .'&pla='. $toolid. '&tit='.urlencode($title). '&lang=' . $language;
+        $serverurl = $serverurl . '?title='.urlencode($title). '&lang=' . $language . '&token='.$token;
 
         if (self::check_url($serverurl)) {
             return $serverurl;
@@ -100,15 +106,14 @@ class block_evalcomix_webservice_client {
     public static function get_ws_deletetool($toolid) {
         global $CFG;
         defined('BLOCK_EVALCOMIX_DELETE') || die('EvalCOMIX is not configured');
-
-        $serverurlaux = BLOCK_EVALCOMIX_DELETE;
-        $get = 'id=' . $toolid;
-        $serverurl = $serverurlaux . '?'. $get;
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_DELETE;
+        $serverurl .= $toolid . '?token='.$token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
         $curl = new block_evalcomix_curl();
-        $response = $curl->get($serverurl);
+        $response = $curl->delete($serverurl);
 
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             return $response;
@@ -137,9 +142,11 @@ class block_evalcomix_webservice_client {
         $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
         $assessmentid = md5($str);
 
-        $serverurlaux = BLOCK_EVALCOMIX_FORM_ASSESS;
-        $serverurl = $serverurlaux . '?ass='. $assessmentid .'&pla='. $toolid .'&type=open&mode=' . $perspective.
-            '&tit='.urlencode($title).'&lang='.$language;
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_FORM_ASSESS;
+        $serverurl = str_replace(':assessmentid', $assessmentid, $serverurl);
+        $serverurl = str_replace(':toolid', $toolid, $serverurl);
+        $serverurl .= '?title='.urlencode($title).'&lang='.$language.'&token='.$token;
 
         if (self::check_url($serverurl)) {
             return $serverurl;
@@ -165,22 +172,20 @@ class block_evalcomix_webservice_client {
         global $CFG;
         defined('BLOCK_EVALCOMIX_DELETE_ASSESS') || die('EvalCOMIX is not configured');
 
-        $serverurlaux = BLOCK_EVALCOMIX_DELETE_ASSESS;
-
         $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-
         $assessmentid = md5($str);
 
-        $serverurl = $serverurlaux . '?ass='. $assessmentid;
+        $serverurl = BLOCK_EVALCOMIX_DELETE_ASSESS;
+        $serverurl .= $assessmentid;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
         $curl = new block_evalcomix_curl();
-        $response = $curl->get($serverurl);
+        $response = $curl->delete($serverurl);
 
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             if ($xml = simplexml_load_string($response)) {
-                if ((string)$xml->status == 'success' ) {
+                if ((string)$xml->status == 'Success' ) {
                     return $serverurl;
                 } else {
                     print_error('XML Document invalid');
@@ -201,10 +206,10 @@ class block_evalcomix_webservice_client {
      */
     public static function get_ws_list_tool($courseid, $tool) {
         global $CFG, $DB;
-        defined('BLOCK_EVALCOMIX_GET_TOOL_ASSESSED') || die('EvalCOMIX is not configured');
-
-        $serverurlaux = BLOCK_EVALCOMIX_GET_TOOL_ASSESSED;
-        $serverurl = $serverurlaux . '?tool='. $tool . '&format=xml';
+        defined('BLOCK_EVALCOMIX_GET_TOOL') || die('EvalCOMIX is not configured');
+        $token = self::get_token();
+        $serverurlaux = BLOCK_EVALCOMIX_GET_TOOL;
+        $serverurl = $serverurlaux . $tool . '?format=xml&token='.$token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
         $curl = new block_evalcomix_curl();
@@ -253,7 +258,7 @@ class block_evalcomix_webservice_client {
                 self::print_error('XML Document invalid');
             }
         } else {
-            self::print_error('GetTool: Invalid URL, EvalCOMIX is not configured correctly');
+            return false;
         }
     }
 
@@ -275,13 +280,11 @@ class block_evalcomix_webservice_client {
 
         $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $activity), '*', MUST_EXIST);
 
-        $serverurlaux = BLOCK_EVALCOMIX_GRADE_EVALCOMIX;
-
         $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
         $assessmentid = md5($str);
-
-        $get = 'pla=' . $toolid . '&ass=' . $assessmentid;
-        $serverurl = $serverurlaux . '?' . $get;
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_GRADE_EVALCOMIX;
+        $serverurl .= $assessmentid . '?token='.$token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
@@ -313,28 +316,30 @@ class block_evalcomix_webservice_client {
         global $DB, $CFG;
         defined('BLOCK_EVALCOMIX_DUPLICATE_COURSE') || die('EvalCOMIX is not configured');
 
-        $serverurl = BLOCK_EVALCOMIX_DUPLICATE_COURSE;
-        $xml = '<?xml version="1.0" encoding="utf-8"?>
-                <backup>
-                <toolsid>';
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_DUPLICATE_COURSE . '?token='.$token;
+        $xml = "<?xml version='1.0' encoding='utf-8'?>
+<assessmentTools xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessment.xsd'>
+<toolIdentifiers>";
 
         foreach ($tools as $tool) {
-            $xml .= '<toolid>
-                    <oldid>'.$tool->oldid.'</oldid>
-                    <newid>'.$tool->newid.'</newid>
-                </toolid>';
+            $xml .= '<toolIdentifier>
+    <oldid>'.$tool->oldid.'</oldid>
+    <newid>'.$tool->newid.'</newid>
+</toolIdentifier>';
         }
 
-        $xml .= '</toolsid>
-                <assessmentsid>';
+        $xml .= '</toolIdentifiers>
+<assessmentIdentifiers>';
         foreach ($assessments as $assessment) {
-            $xml .= '<assessmentid>
-                <oldid>'.$assessment->oldid.'</oldid>
-                <newid>'.$assessment->newid.'</newid>
-            </assessmentid>';
+            $xml .= '<assessmentIdentifier>
+        <oldid>'.$assessment->oldid.'</oldid>
+        <newid>'.$assessment->newid.'</newid>
+    </assessmentIdentifier>';
         }
-        $xml .= '</assessmentsid>
-                </backup>';
+        $xml .= '</assessmentIdentifiers>
+</assessmentTools>';
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
@@ -344,7 +349,7 @@ class block_evalcomix_webservice_client {
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             $result = simplexml_load_string($response);
 
-            if (isset($result->status) && (string)$result->status != '#error') {
+            if (isset($result->status) && (string)$result->status != 'error') {
                 return true;
             } else {
                 return false;
@@ -393,20 +398,22 @@ class block_evalcomix_webservice_client {
         global $CFG;
         defined('BLOCK_EVALCOMIX_DUPLICATE_TOOL') || die('EvalCOMIX is not configured');
 
-        $serverurlaux = BLOCK_EVALCOMIX_DUPLICATE_TOOL;
-
         $newid = self::generate_token();
-        $serverurl = $serverurlaux . '?oldid='. $toolold . '&newid='. $newid;
+        $token = $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_DUPLICATE_TOOL;
+        $serverurl = str_replace(':currenttool', $toolold, $serverurl);
+        $serverurl = str_replace(':newtool', $newid, $serverurl);
+        $serverurl .= '?token='. $token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
         $curl = new block_evalcomix_curl();
-        $response = $curl->get($serverurl);
+        $response = $curl->post($serverurl, '');
 
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             if ($xml = simplexml_load_string($response)) {
-                if ((string)$xml->status == 'success' ) {
-                    return (string)$xml->description;
+                if ((string)$xml->status == 'Success' ) {
+                    return $newid;
                 } else {
                     return 0;
                 }
@@ -436,7 +443,8 @@ class block_evalcomix_webservice_client {
         defined('BLOCK_EVALCOMIX_GET_TOOLS') || die('EvalCOMIX is not configured');
         global $CFG;
 
-        $serverurl = BLOCK_EVALCOMIX_GET_TOOLS . '?format=xml';
+        $token = $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_GET_TOOLS . '?token='.$token;
 
         if (!isset($params['courseid']) || !isset($params['module']) || !isset($params['activity'])
             || !isset($params['student']) || !isset($params['assessor']) || !isset($params['mode'])
@@ -456,7 +464,7 @@ class block_evalcomix_webservice_client {
         $courseid = $params['courseid'];
         $lms = $params['lms'];
         for ($i = 0; $i < $countmodules; ++$i) {
-            $xml .= '<assessment>';
+            $xml .= '<assessmentid>';
             $module = $params['module'][$i];
             $activity = $params['activity'][$i];
             $student = $params['student'][$i];
@@ -465,7 +473,7 @@ class block_evalcomix_webservice_client {
             $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
             $assessmentid = md5($str);
             $xml .= $assessmentid;
-            $xml .= '</assessment>';
+            $xml .= '</assessmentid>';
         }
         $xml .= '</assessments>';
 
@@ -485,7 +493,8 @@ class block_evalcomix_webservice_client {
     public static function verify($url) {
         defined('BLOCK_EVALCOMIX_VERIFY') || die('EvalCOMIX is not configured');
 
-        $serverurl = $url . '/webservice/verify.php';
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_VERIFY . '?token='.$token;
         global $CFG;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
@@ -522,7 +531,8 @@ class block_evalcomix_webservice_client {
         defined('BLOCK_EVALCOMIX_GET_TOOLS2') || die('EvalCOMIX is not configured');
         global $CFG;
 
-        $serverurl = BLOCK_EVALCOMIX_GET_TOOLS2 . '?format=xml';
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_GET_TOOLS2 . '?token='.$token;
 
         if (!isset($params['courseid'])) {
             throw new Exception('Missing Params');
@@ -531,18 +541,18 @@ class block_evalcomix_webservice_client {
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
                 $xml = '<?xml version="1.0" encoding="utf-8"?>
-        <assessments>';
+        <assessmenttools>';
         if ($block = block_evalcomix_class::fetch(array('courseid' => $params['courseid']))) {
             if ($tools = block_evalcomix_tool::fetch_all(array('evxid' => $block->id))) {
                 foreach ($tools as $tool) {
-                    $xml .= '<tool>';
+                    $xml .= '<toolid>';
                     $xml .= $tool->idtool;
-                    $xml .= '</tool>';
+                    $xml .= '</toolid>';
                 }
             }
         }
 
-        $xml .= '</assessments>';
+        $xml .= '</assessmenttools>';
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
@@ -566,7 +576,8 @@ class block_evalcomix_webservice_client {
         global $CFG;
 
         $id = self::generate_token();
-        $serverurl = BLOCK_EVALCOMIX_CREATE_TOOL . '?id='.$id;
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_CREATE_TOOL . $id . '?token=' . $token;
         $xml = $params['toolxml'];
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
@@ -575,7 +586,7 @@ class block_evalcomix_webservice_client {
 
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             $result = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NSCLEAN);
-            if (isset($result->status) && (string)$result->status == 'success' && isset($result->description)) {
+            if (isset($result->status) && (string)$result->status == 'Success' && isset($result->description)) {
                 $xmlresult = current($result->description);
 
                 return (string)$xmlresult['id'];
@@ -599,46 +610,50 @@ class block_evalcomix_webservice_client {
             return false;
         }
         $tools = $params['tools'];
-        $hashtools = array();
+        $result = array();
 
-        $xml = '<?xml version="1.0" encoding="utf-8"?>
-        <tools>';
-        foreach ($tools as $tool) {
-            $idtool = $tool->idtool;
-            $xml .= '<toolid>'.$idtool.'</toolid>';
-            $hashtools[$idtool] = $tool;
-        }
-        $xml .= '</tools>';
-
-        $serverurlaux = BLOCK_EVALCOMIX_GET_ASSESSMENT_MODIFIED;
-        $serverurl = $serverurlaux . '?&e=1';
-
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
-        $curl = new block_evalcomix_curl();
-        $response = $curl->post($serverurl, $xml);
-
-        if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
-            $xml = simplexml_load_string($response);
-            if (isset($xml->status) && $xml->status == 'success') {
-                $xmlresult = current($xml->description);
-                $result = array();
-                foreach ($xmlresult->assessment as $assessment) {
-                    $assid = (string)$assessment['id'];
-                    $newgrade = (string)$assessment->grade;
-                    $maxgrade = (string)$assessment->maxgrade;
-                    $object = new stdClass();
-                    $object->grade = $newgrade;
-                    $object->maxgrade = $maxgrade;
-                    $object->toolid = (string)$assessment->toolid;
-                    $result[$assid] = $object;
-                }
-                return $result;
-            } else {
-                return false;
+        if (!empty($tools)) {
+            $hashtools = array();
+            $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <assessmentTools>';
+            foreach ($tools as $tool) {
+                $idtool = $tool->idtool;
+                $xml .= '<toolid>'.$idtool.'</toolid>';
+                $hashtools[$idtool] = $tool;
             }
-        } else {
-            throw new Exception('Tool Modified: Bad Response');
+            $xml .= '</assessmentTools>';
+
+            $token = self::get_token();
+            $serverurlaux = BLOCK_EVALCOMIX_GET_ASSESSMENT_MODIFIED;
+            $serverurl = $serverurlaux . '?token='.$token;
+
+            require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
+            $curl = new block_evalcomix_curl();
+            $response = $curl->post($serverurl, $xml);
+
+            if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
+                $xml = simplexml_load_string($response);
+                if (isset($xml->status) && $xml->status == 'Success') {
+                    $xmlresult = current($xml->description);
+                    foreach ($xmlresult->assessment as $assessment) {
+                        $assid = (string)$assessment['id'];
+                        $newgrade = (string)$assessment->grade;
+                        $maxgrade = (string)$assessment->maxgrade;
+                        $object = new stdClass();
+                        $object->grade = $newgrade;
+                        $object->maxgrade = $maxgrade;
+                        $object->toolid = (string)$assessment->toolid;
+                        $result[$assid] = $object;
+                    }
+                    return $result;
+                } else {
+                    return false;
+                }
+            } else {
+                throw new Exception('Tool Modified: Bad Response');
+            }
         }
+        return $result;
     }
 
     /**
@@ -663,19 +678,26 @@ class block_evalcomix_webservice_client {
         }
         $xml .= '</toolids>';
 
-        $serverurlaux = BLOCK_EVALCOMIX_TOOL_MODIFIED;
-        $serverurl = $serverurlaux . '?&e=2';
+        $token = self::get_token();
+        $serverurl = BLOCK_EVALCOMIX_TOOL_MODIFIED . '?token=' . $token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
         $curl = new block_evalcomix_curl();
-        $response = $curl->post($serverurl, $xml);
+        $response = $curl->put($serverurl, $xml);
 
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             $xml = simplexml_load_string($response);
-            if (isset($xml->status) && $xml->status == 'success') {
+            if (isset($xml->status) && $xml->status == 'Success') {
                 return true;
             }
         }
         return false;
+    }
+
+    public static function get_token() {
+        defined('BLOCK_EVALCOMIX_TOKEN') || die('EvalCOMIX is not correctly configured');
+        date_default_timezone_set('Europe/Madrid');
+        $date = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+        return sha1(BLOCK_EVALCOMIX_TOKEN.$date);
     }
 }

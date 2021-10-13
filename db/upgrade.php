@@ -79,7 +79,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         upgrade_block_savepoint(true, 2012013004, 'evalcomix');
     }
 
-    if ($oldversion < 2012013004) {
+    if ($oldversion < 2012013005) {
         // Define table block_evalcomix_modes to be created.
         $table = new xmldb_table('block_evalcomix_modes');
 
@@ -99,10 +99,10 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2012013004, 'evalcomix');
+        upgrade_block_savepoint(true, 2012013005, 'evalcomix');
     }
 
-    if ($oldversion < 2012013004) {
+    if ($oldversion < 2012013006) {
 
         // Define table block_evalcomix_modes_time to be created.
         $table = new xmldb_table('block_evalcomix_modes_time');
@@ -122,10 +122,10 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2012013004, 'evalcomix');
+        upgrade_block_savepoint(true, 2012013006, 'evalcomix');
     }
 
-    if ($oldversion < 2012013004) {
+    if ($oldversion < 2012013007) {
 
         // Define table block_evalcomix_modes_extra to be created.
         $table = new xmldb_table('block_evalcomix_modes_extra');
@@ -144,10 +144,10 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2012013004, 'evalcomix');
+        upgrade_block_savepoint(true, 2012013007, 'evalcomix');
     }
 
-    if ($oldversion < 2012013004) {
+    if ($oldversion < 2012013008) {
 
         // Define table block_evalcomix_tools to be created.
         $table = new xmldb_table('block_evalcomix_tools');
@@ -170,7 +170,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2012013004, 'evalcomix');
+        upgrade_block_savepoint(true, 2012013008, 'evalcomix');
     }
 
     if ($oldversion < 2013102505) {
@@ -261,7 +261,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         upgrade_block_savepoint(true, 2013111801, 'evalcomix');
     }
 
-    if ($oldversion < 2013111801) {
+    if ($oldversion < 2013111802) {
 
         // Define field whoassesses to be added to block_evalcomix_modes_extra.
         $table = new xmldb_table('block_evalcomix_modes_extra');
@@ -308,6 +308,21 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
 
         // Evalcomix savepoint reached.
         upgrade_block_savepoint(true, 2014040716, 'evalcomix');
+    }
+
+    if ($oldversion < 2021081102) {
+
+        // Define field grademethod to be added to block_evalcomix_tasks.
+        $table = new xmldb_table('block_evalcomix_tasks');
+        $field = new xmldb_field('grademethod', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'visible');
+
+        // Conditionally launch add field grademethod.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2021081102, 'evalcomix');
     }
 
     return $result;

@@ -29,10 +29,11 @@ if ($ADMIN->fulltree) {
 
     // Server URL.
     $settings->add(new admin_setting_configtext('block_evalcomix/serverurl', get_string('serverurl', 'block_evalcomix'),
-                       get_string('serverurlinfo', 'block_evalcomix'), ''));
-
+                       get_string('serverurlinfo', 'block_evalcomix'), 'https://localhost/evalcomix'));
+    // Token.
+    $settings->add(new admin_setting_configtext('block_evalcomix/token', get_string('token', 'block_evalcomix'),
+                       get_string('tokeninfo', 'block_evalcomix'), ''));
      // Validation button.
-
     $html = html_writer::script('', $CFG->wwwroot.'/blocks/evalcomix/validate.js');
     $html .= html_writer::tag('p', get_string('validationinfo', 'block_evalcomix'));
     $html .= html_writer::start_tag('div', array('class' => 'text-center pb-5'));

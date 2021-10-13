@@ -16,6 +16,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+define('BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL', 1);
+define('BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART', 2);
+define('BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_EI_EXTREME', 'color-extreme');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_EI_MILD', 'color-mild');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_UPPER', 'color-upper');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_LOWER', 'color-lower');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_BGCOLOR_EI_EXTREME', 'bg-extreme');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_BGCOLOR_EI_MILD', 'bg-mild');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_BGCOLOR_UPPER', 'bg-upper');
+define('BLOCK_EVALCOMIX_GRADE_METHOD_BGCOLOR_LOWER', 'bg-lower');
+
 require_once('evalcomix_object.php');
 require_once('evalcomix_modes.php');
 
@@ -159,6 +170,8 @@ class block_evalcomix_grades extends block_evalcomix_object{
      * or -2 if there is not any assessment
      */
     public static function get_finalgrade_user_task($params) {
+        global $CFG, $DB;
+
         if (!isset($params['cmid']) || !isset($params['userid']) || !isset($params['courseid'])) {
             return null;
         }
@@ -168,101 +181,12 @@ class block_evalcomix_grades extends block_evalcomix_object{
 
         $coursecontext = context_course::instance($courseid);
 
-        $now = time();
-
-        global $CFG, $DB;
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
         if (!$task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
             return null;
         }
 
-        $result = null;
-
-        $teacherweight = -1;
-        $selfweight = -1;
-        $peerweight = -1;
-
-        $paramsmodes = array('taskid' => $task->id);
-        $modes = $DB->get_records('block_evalcomix_modes', $paramsmodes);
-        if ($modes) {
-            // Obtains activity´s weights.
-            foreach ($modes as $mode) {
-                switch($mode->modality) {
-                    case 'teacher': $teacherweight = $mode->weighing;
-                    break;
-                    case 'self': $selfweight = $mode->weighing;
-                    break;
-                    case 'peer': $peerweight = $mode->weighing;
-                    break;
-                    default:
-                }
-            }
-
-            $params2 = array('taskid' => $task->id, 'studentid' => $userid);
-            $assessments = $DB->get_records('block_evalcomix_assessments', $params2);
-            $inperiod = false;
-            if ($assessments) {
-                $selfgrade = -1;
-                $teachergrade = 0;
-                $numteachers = 0;
-                $peergrade = 0;
-                $numpeers = 0;
-                $grade = 0;
-                foreach ($assessments as $assessment) {
-                    // If it is a self assessment.
-                    if ($assessment->studentid == $assessment->assessorid && $selfweight != -1) {
-                        $selfgrade = $assessment->grade;
-                    } else if (has_capability('moodle/grade:viewhidden', $coursecontext, $assessment->assessorid)) {
-                        // If it is a teacher assessment.
-
-                        if ($teacherweight != -1) {
-                            $teachergrade += $assessment->grade;
-                            $numteachers++;
-                        }
-                    } else if ($assessment->studentid != $assessment->assessorid) { // If it is a peer assessment.
-                        // Only gets grades when the assessment period in the task is finished.
-
-                        if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
-                            'modality' => 'peer'))) {
-                            $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modeei->id));
-                            if ($modeeitime && $now > $modeeitime->timedue) {
-                                $peergrade += $assessment->grade;
-                                $numpeers++;
-                            } else if ($now >= $modeeitime->timeavailable && $now <= $modeeitime->timedue) {
-                                $inperiod = true;
-                            }
-                        }
-                    }
-                }
-
-                // Calculates peergrade.
-                if ($numpeers > 0) {
-                    $peergrade = round($peergrade / $numpeers, 2);
-                }
-                // Calculates teachergrade.
-                if ($numteachers > 0) {
-                    $teachergrade = round($teachergrade / $numteachers, 2);
-                }
-                // Calcultes the total grade.
-                if ($numteachers > 0 || $numpeers > 0 || $selfgrade != -1) {
-                    if ($selfgrade == -1) {
-                        $selfgrade = 0;
-                    }
-                    $result = $selfgrade * ($selfweight / 100) + $teachergrade * ($teacherweight / 100) + $peergrade *
-                    ($peerweight / 100);
-                } else if ($inperiod == true) {
-                    // There is peer assessments but assessment period hasn't finished.
-                    $result = -1;
-                } else {
-                    $result = -2;
-                }
-                return $result;
-            } else {
-                return null;
-            }
-        } else {
-            return -3;
-        }
+        return self::calculate_finalgrades($coursecontext, $task, $userid);
     }
 
     /**
@@ -281,5 +205,321 @@ class block_evalcomix_grades extends block_evalcomix_object{
             }
         }
         return $result;
+    }
+
+    public static function calculate_finalgrades($coursecontext, $task, $userid) {
+        global $CFG, $DB;
+        if (empty($coursecontext) || empty($task)) {
+            return null;
+        }
+
+        $result = null;
+        $now = time();
+
+        $selfgrade = -1;
+        $teachergrade = 0;
+        $numteachers = 0;
+        $peergrade = 0;
+        $numpeers = 0;
+
+        $teacherweight = -1;
+        $selfweight = -1;
+        $peerweight = -1;
+
+        $paramsmodes = array('taskid' => $task->id);
+        if ($modes = $DB->get_records('block_evalcomix_modes', $paramsmodes)) {
+            $modeeitime = null;
+            $inperiod = false;
+            // Obtains activity´s weights.
+            foreach ($modes as $mode) {
+                switch($mode->modality) {
+                    case 'teacher': $teacherweight = $mode->weighing;
+                    break;
+                    case 'self': $selfweight = $mode->weighing;
+                    break;
+                    case 'peer': {
+                        $peerweight = $mode->weighing;
+                        $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $mode->id));
+                        if ($modeeitime && $now >= $modeeitime->timeavailable && $now <= $modeeitime->timedue) {
+                            $inperiod = true;
+                        }
+                    }
+                    break;
+                    default:
+                }
+            }
+
+            $params2 = array('taskid' => $task->id, 'studentid' => $userid);
+            if ($assessments = $DB->get_records('block_evalcomix_assessments', $params2)) {
+                $selfgrade = -1;
+                $teachergrade = 0;
+                $numteachers = 0;
+                $peergrade = 0;
+                $peergrades = array();
+                $numpeers = 0;
+                $peergradesexist = false;
+
+                foreach ($assessments as $assessment) {
+                    // If it is a self assessment.
+                    if ($assessment->studentid == $assessment->assessorid && $selfweight != -1) {
+                        $selfgrade = $assessment->grade;
+                    } else if (has_capability('moodle/grade:viewhidden', $coursecontext, $assessment->assessorid)) {
+                        // If it is a teacher assessment.
+                        if ($teacherweight != -1) {
+                            $teachergrade += $assessment->grade;
+                            $numteachers++;
+                        }
+                    } else if ($assessment->studentid != $assessment->assessorid && $peerweight != -1) {
+                        // If it is a peer assessment.
+                        // Only gets grades when the assessment period in the task is finished.
+                        $peergradesexist = true;
+                        if (!$inperiod) {
+                            $peergrades[] = $assessment->grade;
+                        }
+                    }
+                }
+
+                // Calculates teacher's grade.
+                if ($numteachers > 0) {
+                    $teachergrade = round($teachergrade / $numteachers, 2);
+                }
+                $numpeers = count($peergrades);
+
+                require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+                if ($task->grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL) {
+                    // Calculates peergrade.
+                    if (!empty($peergrades)) {
+                        foreach ($peergrades as $item) {
+                            $peergrade += $item;
+                        }
+                    }
+
+                    if ($numpeers > 0) {
+                        $peergrade = round($peergrade / $numpeers, 2);
+                    }
+                    // Calcultes the total grade.
+                    if ($numteachers > 0 || ($numpeers > 0 && $peergradesexist == true) || $selfgrade != -1) {
+                        if ($selfgrade == -1) {
+                            $selfgrade = 0;
+                        }
+                        $result = $selfgrade * ($selfweight / 100) + $teachergrade * ($teacherweight / 100) +
+                            $peergrade * ($peerweight / 100);
+                    } else if ($inperiod == true) {
+                        // There is peer assessments but assessment period hasn't finished.
+                        $result = -1;
+                    } else {
+                        $result = -2;
+                    }
+
+                } else if ($task->grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
+                    if ($numteachers > 0 && $peergradesexist == false && $selfgrade == -1) {
+                        // Teacher mode.
+                        $result = $teachergrade * ($teacherweight / 100);
+                    } else if ($numteachers == 0 && $peergradesexist == false && $selfgrade > -1) {
+                        // Self mode.
+                        if ($inperiod === false && $teacherweight < 0) {
+                            $result = $selfgrade * ($selfweight / 100);
+                        } else {
+                            $result = -1;
+                        }
+                    } else if ($numteachers == 0 && $peergradesexist == true && $selfgrade == -1) {
+                        // Peer mode.
+                        $numpeergrade = 0;
+                        foreach ($peergrades as $grade) {
+                            if (!self::is_extreme_grade($grade, $peergrades)) {
+                                $peergrade += $grade;
+                                $numpeergrade++;
+                            }
+                        }
+                        if ($numpeergrade > 0) {
+                            if ($teacherweight < 0) {
+                                $peergrade = round($peergrade / $numpeergrade, 2);
+                                $result = $peergrade * ($peerweight / 100);
+                            } else {
+                                $result = -1;
+                            }
+                        } else {
+                            // There is peer assessments but assessment period hasn't finished.
+                            return -1;
+                        }
+                    } else if ($numteachers == 0 && $peergradesexist == true && $selfgrade > -1) {
+                        // Peer + Self modes.
+                        $numpeergrade = 0;
+                        foreach ($peergrades as $grade) {
+                            if (!self::is_extreme_grade($grade, $peergrades)) {
+                                $peergrade += $grade;
+                                $numpeergrade++;
+                            }
+                        }
+
+                        if ($teacherweight < 0) {
+                            if ($numpeergrade > 0) {
+                                $peergrade = round($peergrade / $numpeergrade, 2);
+                                if ($numpeers > 4 && ($selfgrade >= ($peergrade + 15) || $selfgrade <= ($peergrade - 15))) {
+                                    $result = $peergrade * ($selfweight / 100) + $peergrade * ($peerweight / 100);
+                                } else {
+                                    $result = $selfgrade * ($selfweight / 100) + $peergrade * ($peerweight / 100);
+                                }
+                            } else {
+                                if ($inperiod === false) {
+                                    $result = $selfgrade * ($selfweight / 100);
+                                } else {
+                                    $result = -1;
+                                }
+                            }
+                        } else {
+                            $result = -1;
+                        }
+                    } else if ($numteachers > 0 && $peergradesexist == true && $selfgrade == -1) {
+                        // Teacher + Peer modes.
+                        $countpeergrade = 0;
+                        foreach ($peergrades as $grade) {
+                            if ($grade < ($teachergrade + 15) && $grade > $teachergrade - 15) {
+                                $peergrade += $grade;
+                                $countpeergrade++;
+                            }
+                        }
+
+                        $result = $teachergrade * ($teacherweight / 100);
+                        if ($countpeergrade > 0) {
+                            $peergrade = round(($peergrade / $countpeergrade), 2);
+                            $result += $peergrade * ($peerweight / 100);
+                        } else if (!empty($peergrades)) {
+                            $result += $teachergrade * ($peerweight / 100);
+                        }
+
+                    } else if ($numteachers > 0 && $peergradesexist == false && $selfgrade > -1) {
+                        // Teacher + Self modes.
+                        if ($selfgrade >= ($teachergrade + 15) || $selfgrade <= ($teachergrade - 15)) {
+                            $result = $teachergrade * ($selfweight / 100) + $teachergrade * ($teacherweight / 100);
+                        } else {
+                            $result = $selfgrade * ($selfweight / 100) + $teachergrade * ($teacherweight / 100);
+                        }
+                    } else if ($numteachers > 0 && $peergradesexist == true && $selfgrade > -1) {
+                        // Teacher + Peer + Self modes.
+                        $countpeergrade = 0;
+                        foreach ($peergrades as $grade) {
+                            if ($grade < ($teachergrade + 15) && $grade > $teachergrade - 15) {
+                                $peergrade += $grade;
+                                $countpeergrade++;
+                            }
+                        }
+
+                        $result = $teachergrade * ($teacherweight / 100);
+                        if ($countpeergrade > 0) {
+                            $peergrade = round(($peergrade / $countpeergrade), 2);
+                            $result += $peergrade * ($peerweight / 100);
+                        } else if (!empty($peergrades)) {
+                            $result += $teachergrade * ($peerweight / 100);
+                        }
+
+                        if ($selfgrade > ($teachergrade - 15) && $selfgrade < ($teachergrade + 15)) {
+                            $result += $selfgrade * ($selfweight / 100);
+                        } else {
+                            $result += $teachergrade * ($selfweight / 100);
+                        }
+                    } else if ($numteachers == 0 && $peergradesexist == false && $selfgrade == -1) {
+                        $result = -2;
+                    }
+                }
+                return $result;
+            } else {
+                return null;
+            }
+        } else {
+            return -3;
+        }
+    }
+
+    public static function is_extreme_grade($grade, $setofgrades) {
+        $result = false;
+
+        if (!is_numeric($grade) || !is_array($setofgrades) || empty($setofgrades)) {
+            return null;
+        }
+
+        $countgrades = count($setofgrades);
+        $average = self::average($setofgrades);
+        $standarddeviation = self::standard_deviation($setofgrades);
+
+        if ($standarddeviation && $countgrades > 4
+                && (($grade >= ($average + 1.5 * $standarddeviation))
+                || ($grade <= ($average - 1.5 * $standarddeviation)))) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    public static function is_mild_grade($grade, $setofgrades) {
+        $result = false;
+
+        if (!is_numeric($grade) || !is_array($setofgrades) || empty($setofgrades)) {
+            return null;
+        }
+
+        $countgrades = count($setofgrades);
+        $average = self::average($setofgrades);
+        $standarddeviation = self::standard_deviation($setofgrades);
+
+        if ($standarddeviation && $countgrades > 4
+                && (($grade >= ($average + $standarddeviation))
+                || ($grade <= ($average - $standarddeviation)))) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    public static function is_upper_grade($grade, $setofgrades, $limit = 15) {
+        $result = false;
+
+        $average = self::average($setofgrades);
+        if ($average !== null) {
+            if (($grade >= ($average + 15))) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function is_lower_grade($grade, $setofgrades, $limit = 15) {
+        $result = false;
+
+        $average = self::average($setofgrades);
+        if ($average !== null) {
+            if (($grade <= ($average - 15))) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function average($setofgrades) {
+        $countgrades = count($setofgrades);
+        $average = null;
+        if ($countgrades > 0) {
+            $average = array_sum($setofgrades) / $countgrades;
+        }
+        return $average;
+    }
+
+    public static function standard_deviation($setofgrades) {
+        if (empty($setofgrades)) {
+            return null;
+        }
+
+        $countgrades = count($setofgrades);
+        $average = self::average($setofgrades);
+
+        $sum = 0;
+        for ($i = 0; $i < $countgrades; ++$i) {
+            $sum += ($setofgrades[$i] - $average) * ($setofgrades[$i] - $average);
+        }
+
+        $variance = $sum / $countgrades;
+        return sqrt($variance);
     }
 }

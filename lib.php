@@ -24,7 +24,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/grade/report/lib.php');
-
 require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_expert_db_block.php');
@@ -127,6 +126,7 @@ function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
     $result = array();
     if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
+        $result['grademethod'] = $task->grademethod;
         $result['toolEP'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'teacher');
         $result['toolAE'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'self');
         $result['toolEI'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'peer');

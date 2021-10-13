@@ -112,7 +112,8 @@ $vars = explode('?', $urlinstrument);
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
 $curl = new block_evalcomix_curl();
-$response = $curl->post($vars[0], $vars[1]);
+parse_str($vars[1], $query);
+$response = $curl->get($vars[0], $query);
 if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
     echo $response;
 } else {

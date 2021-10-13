@@ -1,0 +1,31 @@
+.color-mild {
+	color: #FE9A2E;
+}
+
+.color-extreme {
+	color: #DF3A01;
+}
+
+.color-lower {
+    color: #8963A6;
+}
+
+.color-upper {
+    color: #3E1B59;
+}
+
+.bg-mild {
+    background-color: #FE9A2E;
+}
+
+.bg-extreme {
+    background-color: #DF3A01;
+}
+
+.bg-lower {
+    background-color: #8963A6;
+}
+
+.bg-upper {
+    background-color: #3E1B59;
+}
