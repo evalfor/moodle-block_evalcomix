@@ -1,31 +1,31 @@
 .color-mild {
-	color: #FE9A2E;
+    color: #fe9a2e !important;
 }
 
 .color-extreme {
-	color: #DF3A01;
+    color: #df3a01 !important;
 }
 
 .color-lower {
-    color: #8963A6;
+    color: #8963a6 !important;
 }
 
 .color-upper {
-    color: #3E1B59;
+    color: #3e1b59 !important;
 }
 
 .bg-mild {
-    background-color: #FE9A2E;
+    background-color: #fe9a2e;
 }
 
 .bg-extreme {
-    background-color: #DF3A01;
+    background-color: #df3a01;
 }
 
 .bg-lower {
-    background-color: #8963A6;
+    background-color: #8963a6;
 }
 
 .bg-upper {
-    background-color: #3E1B59;
+    background-color: #3e1b59;
 }
