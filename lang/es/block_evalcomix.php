@@ -93,7 +93,7 @@ $string['listscale'] = 'Lista + Escala';
 $string['rubric'] = 'Rúbrica';
 $string['mixed'] = 'Mixto';
 $string['differential'] = 'Diferencial';
-$string['argumentset'] = 'Argumentario	';
+$string['argumentset'] = 'Argumentario';
 
 $string['whatis'] = 'Gestión de instrumentos de evaluación';
 $string['gradeof'] = 'Nota de ';
@@ -176,7 +176,7 @@ $string['nostudentselfassessed'] = 'No hay estudiantes autoevaluados';
 $string['admindescription'] = 'Configura las opciones de EvalCOMIX. Asegúrate de que los datos sean correctos. En otro caso la integración no funcionará';
 $string['adminheader'] = 'Configuración de EvalCOMIX';
 $string['serverurl'] = 'URL de EvalCOMIX Server:';
-$string['serverurlinfo'] = 'Introduce la URL de tu EvalCOMIX Server. Ej: http://localhost/evalcomix';
+$string['serverurlinfo'] = 'Introduce la URL de tu EvalCOMIX Server. No incluya barra inclinada al final. Ej: http://localhost/evalcomix';
 $string['validationheader'] = 'Ajustes de validación';
 $string['validationinfo'] = 'Por favor, guarde la configuración antes de hacer clic en el botón de validación. Si la validación no es correcta, vuelva a comprobar la URL y el token';
 $string['validationbutton'] = 'Validar URL';
@@ -192,7 +192,13 @@ $string['whoassesses_EI'] = 'Quién evalúa';
 $string['anystudent_EI'] = 'Cualquier compañero';
 $string['groups_EI'] = 'Grupos';
 $string['specificstudents_EI'] = 'Estudiantes específicos';
-$string['whoassesses_EI_help'] = 'Esta opción permite controlar qué estudiantes participarán en la evaluación entre iguales. Si se selecciona la opción "'.$string['anystudent_EI'].'" cada estudiante podrá evaluar a cualquiera de sus compañeros. Si se selecciona la opción "'.$string['groups_EI'].'", se respetará la configuración de grupos y agrupamientos de la actividad. Si se selecciona la opción "'.$string['specificstudents_EI'].'" se podrá indicar quiénes evaluarán y quiénes serán evaluados';
+$string['whoassesses_EI_help'] = 'Esta opción permite controlar qué estudiantes participarán en la evaluación entre iguales.
+
+Si se selecciona la opción **'.$string['anystudent_EI'].'** cada estudiante podrá evaluar a cualquiera de sus compañeros.
+
+Si se selecciona la opción **'.$string['groups_EI'].'**, se respetará la configuración de grupos y agrupamientos de la actividad.
+
+Si se selecciona la opción **'.$string['specificstudents_EI'].'** se podrá indicar quiénes evaluarán y quiénes serán evaluados. Esta opción se desactivará si se selecciona "Evaluación de equipos de trabajo"';
 $string['assignstudents_EI'] = 'Asignar estudiantes';
 $string['assess_students'] = 'Estudiantes evaluadores';
 $string['studentstoassess'] = 'Estudiantes a los que evaluará';
@@ -207,7 +213,6 @@ $string['edition'] = 'Edición';
 $string['settings_description'] = 'Desde este apartado se puede configurar aspectos relacionados con la tabla de evaluaciones de EvalCOMIX';
 
 $string['crontask'] = 'Tarea para la actualización de calificaciones del libro de EvaLCOMIX';
-
 
 // Graphics.
 $string['taskgraphic'] = 'Gráfica Tarea';
@@ -228,3 +233,157 @@ $string['tooldeleted'] = 'Instrumento de evaluación borrado';
 $string['studentassessed'] = 'Estudiante evaluado';
 $string['graphicsviewed'] = 'Gráficos visto';
 $string['configurationviewed'] = 'Ajustes visto';
+
+// Tool editor.
+$string['accept'] = 'Aceptar';
+$string['selecttool'] = 'Elija el tipo de instrumento a crear';
+$string['alertdimension'] = 'Debe existir al menos una dimensión';
+$string['alertsubdimension'] = 'Debe existir al menos una subdimensión';
+$string['alertatrib'] = 'Debe existir al menos un atributo';
+$string['rubricremember'] = 'RECUERDE: NO deberían existir valores REPETIDOS';
+$string['importfile'] = 'Importar Fichero';
+$string['noatrib'] = 'Atributo Negativo';
+$string['yesatrib'] = 'Atributo Positivo';
+
+$string['comments'] = 'Comentarios';
+$string['grade'] = 'Calificación';
+$string['nograde'] = 'Sin calificación';
+$string['alertsave'] = "Evaluación guardada satisfactoriamente.Si lo desea, ya puede cerrar la ventana";
+
+$string['add_comments'] = 'Activar comentarios';
+$string['checklist'] = 'Lista de Control';
+$string['ratescale'] = 'Escala de Valoración';
+$string['listrate'] = 'Lista de Control + Escala de Valoración';
+$string['rubric'] = 'Rúbrica';
+$string['differentail'] = 'Diferencial Semántico';
+$string['mix'] = 'Instrumento Mixto';
+$string['argument'] = 'Argumentario Evaluativo';
+$string['import'] = 'Importar';
+$string['numdimensions'] = 'Nº Dimensiones:';
+$string['numvalues'] = 'Nº de Valores:';
+$string['totalvalue'] = 'Valoración Global';
+$string['dimension'] = 'Dimensión:';
+$string['subdimension'] = 'Subdimensión:';
+$string['numsubdimension'] = 'Nº Subdimensiones:';
+$string['numattributes'] = 'Nº de Atributos:';
+$string['attribute'] = 'Atributos';
+$string['porvalue'] = 'Valor Porcentual:';
+$string['value'] = 'Valor';
+$string['values'] = 'Valores';
+$string['globalvalue'] = 'VALORACIÓN GLOBAL DIMENSIÓN:';
+$string['novalue'] = 'Valor Negativo';
+$string['yesvalue'] = 'Valor Positivo';
+$string['idea'] = 'IDEA Y DIRECCIÓN';
+$string['design'] = 'DISEÑO';
+$string['develop'] = 'DESARROLLO';
+$string['translation'] = 'TRADUCCIÓN';
+$string['colaboration'] = 'COLABORAN';
+$string['license'] = 'LICENCIA';
+$string['addtool'] = 'Añadir un Instrumento';
+$string['title'] = 'Título';
+$string['titledim'] = 'Dimension';
+$string['titlesubdim'] = 'Subdimension';
+$string['titleatrib'] = 'Atributo';
+$string['titlevalue'] = 'Valor';
+$string['no'] = 'No';
+$string['yes'] = 'Sí';
+$string['observation'] = 'Comentarios';
+$string['view'] = 'Cerrar Vista Previa';
+
+$string['windowselection'] = 'Ventana de selección';
+$string['selectfile'] = 'Seleccione el fichero';
+$string['upfile'] = 'Subir fichero';
+$string['cancel'] = 'Cancelar';
+
+$string['savedsaccessfully'] = 'El instrumento se ha guardado satisfactoriamente';
+$string['ADimension'] = 'Este campo no puede estar vacío. \"Nº de Dimensiones\" debe ser un número mayor que 0 y \"Valoración Global\" un número mayor o igual que 2';
+$string['ATotal'] = 'Este campo no puede estar vacío. \"Nº de Valores\" debe ser un número mayor o igual que 2';
+$string['ASubdimension'] = 'Este campo no puede estar vacío. \"Nº Subdimensiones\" debe ser un número mayor que 0 y \"Nº de Valores\" mayor o igual que 2';
+$string['AAttribute'] = 'Este campo no puede estar vacío. Por favor, especifique un número mayor que 0';
+$string['ADiferencial'] = '\"Nº de Atributos\" debe ser mayor que 0. \"Nº de Valores\" debe ser IMPAR';
+$string['ErrorFormato'] = 'El fichero está vacío o el formato es incorrecto';
+$string['ErrorAcceso'] = 'No se pudo acceder al instrumento';
+$string['ErrorExtension'] = 'Formato Incorrecto. La extensión debe ser \"evx\"';
+$string['ErrorSaveTitle'] = 'Error: El campo Título no puede estar vacío';
+$string['ErrorSaveTools'] = 'Error: Debe seleccionar al menos un instrumento';
+
+$string['TSave'] = 'Guardar';
+$string['TImport'] = 'Importar';
+$string['TExport'] = 'Exportar';
+$string['TAumentar'] = 'Aumentar tamaño de fuente';
+$string['TDisminuir'] = 'Disminuir tamaño de fuente';
+$string['TView'] = 'Vista Previa';
+$string['TPrint'] = 'Imprimir';
+$string['THelp'] = 'Ayuda';
+$string['TAbout'] = 'Acerca de';
+
+$string['mixed_por'] = 'Peso en la nota final';
+
+$string['handlerofco'] = 'Gestión de resultados de aprendizaje y competencias';
+$string['competencies'] = 'Competencias';
+$string['outcomes'] = 'Resultados de aprendizaje';
+$string['compidnumber'] = 'Código';
+$string['compshortname'] = 'Nombre corto';
+$string['compdescription'] = 'Descripción';
+$string['comptypes'] = 'Tipos de competencia';
+$string['comptype'] = 'Tipo de competencia';
+$string['newcomp'] = 'Nueva competencia';
+$string['newoutcome'] = 'Nuevo resultado de aprendizaje';
+$string['newcomptype'] = 'Nuevo tipo de competencia';
+$string['compreport'] = 'Informe de desarrollo';
+$string['compandout'] = 'Competencias y resultados de aprendizaje';
+$string['uploadcompetencies'] = 'Importar competencias y resultados';
+$string['uploadcompetencies_help'] = 'Las competencias y resultados de aprendizaje se pueden cargar a través de un archivo de texto. El formato del archivo debe ser el siguiente:
+
+* Cada línea del archivo contiene un registro
+* Cada registro es una serie de datos separados por comas (u otros delimitadores)
+* El primer registro contiene una lista de nombres de campo que definen el formato del resto del archivo
+* Los nombres de campo requeridos son idnumber, shortname, result';
+$string['idnumberduplicate'] = 'Valor de idnumber duplicado';
+$string['invalidoutcome'] = 'Valor de outcome inválido. Debe ser 0 o 1';
+$string['invalididnumberupload'] = 'Valor de idnumber no válido. El tamaño debe ser menor que 100';
+$string['missingidnumber'] = 'Falta la columna idnumber';
+$string['missingshortname'] = 'Falta la columna shortname';
+$string['missingoutcome'] = 'Falta la columna outcome';
+$string['ignored'] = 'Ignorados';
+$string['errors'] = 'Errores';
+$string['importresult'] = 'Importar resultados';
+$string['uploadcompetenciespreview'] = 'Vista preliminar de competencias subidas';
+$string['choicecompetency'] = 'Seleccione una competencia';
+$string['choiceoutcome'] = 'Seleccione un resultado';
+$string['associatecompandout'] = 'Asociar competencias y resultados';
+$string['allstudens'] = 'Todos los estudiantes';
+$string['onestudent'] = 'Estudiante específico';
+$string['onegroup'] = 'Grupo específico';
+$string['selectcomptype'] = 'Seleccione tipo de competencia';
+$string['assessmentreport'] = 'Informe de evaluaciones';
+$string['unrealized'] = 'No realizada';
+$string['doneoutofrange'] = 'Ha realizado la autoevaluación o evaluación entre iguales pero fuera de rango';
+$string['doneoutofrangecomments'] = 'Ha realizado la autoevaluación o evaluación entre iguales, fuera de rango y aporta comentarios';
+$string['donewithinrange'] = 'Ha realizado la autoevaluación o evaluación entre iguales dentro de rango';
+$string['donewithinrangecomments'] = 'Ha realizado la autoevaluación o evaluación entre iguales dentro de rango y aporta comentarios';
+$string['threshold'] = 'Umbral de sobrevaloración e infravaloración';
+$string['threshold_help'] = 'Límite a partir del cual la puntuación de un estudiante se considera sobrevaloración o infravaloración. Por ejemplo, si el umbral está establecido a 15 y la calificación del profesor (o en su defecto, la media de la evaluación entre iguales) es 50, entonces se considerará sobrevaloración cualquier puntuación del estudiante que sobrepase los 65 (50+15) puntos e infravaloración las inferiores a 35 (50-15) puntos. ';
+$string['assessmentreporttotalAE'] = 'Total AE (Sobre 10)';
+$string['assessmentreporttotalEI'] = 'Total EI (Sobre 10)';
+$string['AE'] = 'AE';
+$string['EI'] = 'EI';
+$string['evaluationexporthelp'] = 'Informe resultados de discrepancia entre autoevaluación y evaluaciones entre iguales con respecto a criterio (umbral de sobrevaloración o infravaloración';
+$string['evaluationandreports'] = 'Evaluación e informes';
+$string['workteams'] = 'Equipos de trabajo';
+$string['workteamsassessments'] = 'Evaluación de equipos de trabajo';
+$string['assignteamcoordinators'] = 'Asignar coordinadores de equipo';
+$string['workteamsassessments_help'] = 'Si activa esta opción, podrá nombrar un coordinador que represente al grupo.
+
+Si hay **Evaluación del Profesorado - EP**, los profesores sólo podrán evaluar a los coordinadores y esa evaluación se le asignará a cada miembro de su grupo.
+
+Si hay **Autoevaluación – AE**, sólo el coordinador podrá autoevaluarse y su evaluación se le asignará a cada miembro de su grupo.
+
+Si hay **Evaluación entre Iguales – EI**, los alumnos solo podrán evaluar  a los coordinadores de cada grupo y cada evaluación se le asignará a cada miembro del grupo.
+
+Los alumnos que no estén en ningún grupo no recibirán evaluación. Los grupos que no tengan asignado un coordinador no recibirán ninguna evaluación y tampoco podrán evaluar.';
+$string['selectcoordinator'] = 'Elige coordinador';
+$string['alertnogroup'] = 'Todavía no se han creado grupos en el curso. Para crearlos deberá acceder a la siguiente sección:';
+$string['activityassessed'] = 'Deshabilitado debido a que ya se ha evaluado a algún/a estudiante';
+$string['coordinatorassessed'] = 'Actualmente, hay coordinadores que ya han recibido alguna evaluación. Aquellos que hayan recibido alguna evaluación no podrán ser reemplazados. Si desea reemplazarlos, primero deberá eliminar las evaluaciones';
+$string['confirmdisabledworkteams'] = 'En esta actividad ya se han realizado evaluaciones. Si desactiva esta opción y guarda los cambios, se eliminarán todas esas evaluaciones y no se podrán recuperar. ¿Confirma que desea desactivar la opción?';

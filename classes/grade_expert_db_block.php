@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.ph
 /**
  * It defined "get_grades" method of "igrade_expert"
  */
-class block_evalcomix_grade_expert_db_block implements block_evalcomix_igrade_expert{
+class block_evalcomix_grade_expert_db_block implements block_evalcomix_igrade_expert {
 
     public function get_grades($courseid, $users, $platform = '') {
         return block_evalcomix_assessments::get_final_grade($courseid, $users);

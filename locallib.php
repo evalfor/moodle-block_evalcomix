@@ -21,8 +21,6 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 function block_evalcomix_get_user_submission($assignment, $userid) {
     global $DB, $USER;
 
@@ -42,7 +40,7 @@ function block_evalcomix_get_user_submission($assignment, $userid) {
 }
 
 
-function assignsubmission_file_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload) {
+function block_evalcomix_assignsubmission_file_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload) {
     global $USER, $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -102,4 +100,123 @@ function block_evalcomix_get_user_submission_old($assignment, $userid) {
     }
 
     return false;
+}
+
+function block_evalcomix_get_members_course($courseid, $groupid = 0, $page = '0', $search = '') {
+    global $DB;
+
+    $members = array();
+    if ($course = $DB->get_record('course', array('id' => $courseid))) {
+        $contextcourse = context_course::instance($courseid);
+        $conditions = '';
+        if (!empty($search)) {
+            $words = explode(' ', $search);
+            foreach ($words as $word) {
+                $conditions .= ' AND (u.firstname LIKE "%'. $word .'%" OR u.lastname LIKE "%'. $word .'%") ';
+            }
+            $joins = $where = '';
+            $params = array();
+            $params['contextid'] = $contextcourse->id;
+            $sql = 'SELECT u.*
+            FROM {user} u
+            '.$joins.'
+            WHERE 1 '. $conditions .' AND u.id IN (
+                SELECT ra.userid
+                FROM {role} r, {role_assignments} ra
+                WHERE ra.userid = u.id AND ra.roleid = r.id AND r.shortname="student" AND ra.contextid = :contextid)
+                '.$where;
+            $members = $DB->get_records_sql($sql, $params);
+        } else if ($groupid !== 'nogroup' && is_numeric($groupid)) {
+            $members = get_enrolled_users($contextcourse, 'moodle/course:isincompletionreports', $groupid, 'u.*',
+                'u.firstname ASC');
+        } else if ($groupid === 'nogroup') {
+            $joins = $where = '';
+            $params = array();
+            $params['courseid'] = $courseid;
+            $params['contextid'] = $contextcourse->id;
+            $sql = 'SELECT u.*
+            FROM {user} u
+            '.$joins.'
+            WHERE u.deleted = 0 AND u.id IN (
+                SELECT ra.userid
+                FROM {role} r, {role_assignments} ra
+                WHERE ra.userid = u.id AND ra.roleid = r.id AND r.shortname="student" AND ra.contextid = :contextid)
+            AND u.id NOT IN (
+                SELECT gm.userid
+                FROM {groups} g, {groups_members} gm
+                WHERE g.courseid = :courseid AND g.id = gm.groupid)
+            ' . $where;
+            $members = $DB->get_records_sql($sql, $params);
+        } else if ($groupid === 'all') {
+            list($esql, $params) = get_enrolled_sql($contextcourse, 'moodle/course:isincompletionreports');
+            $sql = '';
+
+            $members = get_enrolled_users($contextcourse, 'moodle/course:isincompletionreports', 0, 'u.*', 'u.firstname ASC');
+        }
+    }
+
+    return $members;
+}
+
+function block_evalcomix_get_student_assessments($courseid, $subdimension, $students) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+    $result = array();
+
+    $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
+    $studentids = array_keys($students);
+
+    $sql = '
+    SELECT s.*
+    FROM {block_evalcomix_assessments} s
+    WHERE s.studentid IN ('.implode(',', $studentids).') AND s.taskid IN (
+        SELECT m.taskid
+        FROM {block_evalcomix_modes} m
+        WHERE m.toolid = :toolid
+        )
+    ';
+
+    if ($assessments = $DB->get_records_sql($sql, array('toolid' => $subdimension->toolid))) {
+        $hashtasks = block_evalcomix_tasks::get_tasks_by_courseid($courseid);
+        $tasks = array();
+        foreach ($hashtasks as $task) {
+            $taskid = $task->id;
+            $tasks[$taskid] = $task;
+        }
+        foreach ($assessments as $assessment) {
+            $studentid = $assessment->studentid;
+            $assessorid = $assessment->assessorid;
+            $taskid = $assessment->taskid;
+            if (isset($tasks[$taskid])) {
+                $cmid = $tasks[$taskid]->instanceid;
+                $module = block_evalcomix_tasks::get_type_task($cmid);
+                $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid, $assessorid);
+                $str = $courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' . $mode . '_' . $lms;
+                $assessmentid = md5($str);
+                $result[$assessmentid] = new stdClass();
+                $result[$assessmentid]->studentid = $studentid;
+                $result[$assessmentid]->cmid = $cmid;
+            }
+        }
+    }
+    return $result;
+}
+
+function block_evalcomix_get_assessmentid($courseid, $assessment) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+    $result = '';
+
+    $assessorid = $assessment->assessorid;
+    $studentid = $assessment->studentid;
+    $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
+    if ($task = $DB->get_record('block_evalcomix_tasks', array('id' => $assessment->taskid))) {
+        $cmid = $task->instanceid;
+        $module = block_evalcomix_tasks::get_type_task($cmid);
+        $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid, $assessorid);
+        $str = $courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' . $mode . '_' .     $lms;
+        $result = md5($str);
+    }
+    return $result;
 }

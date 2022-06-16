@@ -1,0 +1,340 @@
+body {
+    background-color: #D2E7C9;
+    margin:0;
+    padding-top:47px;
+    font-size: 0.69em;
+}
+
+.maintable td {
+    border: 1px solid #FFF;
+}
+
+/*.grado {
+    width: 0%;
+}*/
+
+.font, .atributovalores, .valores, body, .atributovista {
+    font-family: "arial";
+    font-weight: bold;
+    color: #0C4A15;
+}
+
+#cabecera {
+    width: 100%;
+    height: 40px;
+    background: #6B8F6B url('../images/logo43.png') no-repeat center top;
+    border: 1px solid #044B03;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+@media screen {
+  body>div#cabecera {
+   position:fixed;
+  }
+ }
+ * html body {
+  overflow:hidden;
+ }
+ * html div#cuerpo {
+  height:100%;
+  overflow:auto;
+ }
+
+
+#menu {
+    margin-top: 16px;
+}
+
+#cuerpo, #cuerpomix {
+    margin-top: 1em;
+    margin-left: 1em;
+}
+
+input {
+    width: 3em;
+    height:18px;
+}
+
+input, textarea {
+    font-family:"arial";
+    font-size: 1em;
+    color: #0C4A15;
+    font-weight: bold;
+}
+
+input, label, a, #seltool {
+    vertical-align: top;
+}
+
+input:focus, textarea:focus {
+    border: 2px solid #489BCF;
+}
+
+#valtotal {
+    height:1em;
+    width:1em;
+    margin-right:1em;
+}
+
+/*a:hover {
+    width: 30px;
+    height: 22px;
+}*/
+
+.labelcampo {
+    margin: 1em;
+}
+
+img {
+    border:0;
+}
+
+.dimension {
+    background-color: #DBE8DB;
+    margin: 0.7em 2em 0em 2em;
+}
+
+.subdimension {
+    background-color: #F1F2F1;
+    margin: 0.7em 2em 0em 2em;
+    overflow:auto;
+    overflow-y:hidden;
+}
+
+.valoracionglobal {
+    background-color: #DAEFE9;
+    margin: 0.7em 2em 1em 2em;
+}
+
+.bordertool {
+    border:1px solid #0C6D05;
+    margin: 0.7em 2em 0em 2em;
+}
+.valoraciontotal {
+    background-color: #D2E7C9;
+    margin: 0.7em 2em 1em 2em;
+}
+
+.dimension, .subdimension, .valoracionglobal, .valoraciontotal, #comentario {
+    border: 2px solid #FFF;
+    min-width: 1100px;
+}
+
+.margin {
+    margin:0 1em 1em 1em;
+}
+
+#comentario {
+    margin: 0.7em 0em 0em 2em;
+    padding: 1em 0em 1em 0em;
+    background-color: #E2E2E2;
+}
+
+#comentario div {
+    margin: 0 1em 0 1em;
+}
+
+#labelatributo {
+    margin: 1em 0 1em 8em;
+}
+
+.valores {
+    width: 100%;
+}
+
+.esquinasup {
+    vertical-align: super;
+}
+
+.esquinainf {
+    vertical-align: sub;
+
+}
+.width {
+    width: 20em;
+    height: 4em;
+}
+
+.porcentaje {
+    background-color: #000;
+    color: #0F0;
+    font-size:1em;
+}
+
+.botonporcentaje, .botonporcentaje:hover {
+    width: 18px;
+    height: 22px;
+    background-repeat: no-repeat;
+}
+
+.botonporcentaje {
+    background-image: url("../images/porcentaje.png");
+    border:0;
+}
+
+.botonporcentaje:hover {
+    background-image: url("../images/porcentajehover.png");
+    display:inline-block;
+}
+
+.flecha {
+    background-color:#e3e3e3;
+}
+
+.flecha, .flecha:hover {
+    width: 30px;
+    height: 24px;
+    display:inline-block;
+    background-image: url("../images/flecha.png");
+    background-repeat: no-repeat;
+}
+
+.add, .add:hover, .delete, .delete:hover, .showcomment, .showcomment:hover {
+    width: 12px;
+    height: 12px;
+    background-repeat: no-repeat;
+    background-color: #E3E3E3;
+    display: inline-block;
+    padding: 1px;
+}
+
+.add, .delete, .flecha, .showcomment, .up, .down {
+    border: 1px solid #737677;
+}
+
+.add:hover, .delete:hover, .flecha:hover, .showcomment:hover, .up:hover, .down:hover {
+    border: 1px solid #0076C1;
+}
+
+.add, .add:hover {
+    background-image: url("../images/mas.png");
+}
+
+.delete, .delete:hover {
+    background-image: url("../images/equis.png");
+}
+
+.showcomment, .showcomment:hover {
+    background-image: url("../images/editar.gif");
+    width: 17px;
+    height: 13px;
+    border:0;
+}
+
+.up, .up:hover {
+    background-image: url("../images/flecha_arriba.png");
+    width: 11px;
+    height: 17px;
+    background-color:#FFF;
+}
+
+.down, .down:hover {
+    background-image: url("../images/flecha_abajo.png");
+    width: 11px;
+    height: 17px;
+    background-color: #FFF;
+}
+
+#about{
+    visibility: hidden;
+    position: absolute;
+    filter: alpha(opacity=95);
+    opacity: .95;
+    left: 37%;
+    top: 10%;
+    width: 270px;
+    height: 350px;
+    background-color: #DBE8DB;
+    border: 1px solid #DBE8ff;
+}
+
+.about_linea {
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+#about_white {
+    margin: 10px 10px 10px 10px;
+    background-color: #FFF;
+    width: 200px;
+    height: 290px;
+    padding-left: 50px;
+}
+
+#rubrica {
+    margin: 0.7em 0 0 2em;
+}
+
+.descripcion {
+    text-align: center;
+    height: 1em;
+    margin-bottom: 1em;
+}
+
+.descripcion  input, .descripcion label {
+    width: 1em;
+    vertical-align: middle;
+}
+
+.rango {
+    float: left;
+    margin-right: 0.7em;
+    border: 1px solid #fff;
+}
+
+.clear {
+    clear:both;
+}
+
+.itemrango1 {
+    width: 11em;
+}
+.itemrango2 {
+    width: 7em;
+}
+
+.mensaje {
+    color: #f00;
+}
+
+.atributovista {
+    font-size: 1.1em;
+    font-style: italic;
+    width: 12em;
+    width: 12em;
+}
+
+.subdimensionvista {
+    font-size: 1.4em;
+    font-style: italic;
+}
+
+.dimensionvista {
+    font-size: 1.5em;
+    font-style: italic;
+}
+
+.titulovista {
+    font-size: 1.6em;
+    font-style: italic;
+}
+
+.error {
+    color: #F00;
+}
+
+.atrcomment {
+    width: 100%;
+    height: 1em;
+    visibility: visible;
+}
+
+.bg-compcolor {
+    background-color: #49A249;
+}
+
+.overflow-auto {
+    overflow: auto;
+}

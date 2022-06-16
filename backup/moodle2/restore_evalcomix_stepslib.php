@@ -20,16 +20,18 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 class restore_evalcomix_block_structure_step extends restore_structure_step {
-
     protected function define_structure() {
-
         $paths = array();
 
         $paths[] = new restore_path_element('evalcomix', '/block/evalcomix');
         $paths[] = new restore_path_element('evalcomix_tool', '/block/evalcomix/tools/tool');
+        $paths[] = new restore_path_element('evalcomix_comptype',
+        '/block/evalcomix/competencysection/competencytypes/competencytype');
+        $paths[] = new restore_path_element('evalcomix_competency',
+        '/block/evalcomix/competencysection/competencies/competency');
+        $paths[] = new restore_path_element('evalcomix_subdimension',
+        '/block/evalcomix/competencysection/subdimensions/subdimension');
 
         return $paths;
     }
@@ -88,6 +90,120 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    public function process_evalcomix_comptype($data) {
+        global $DB, $CFG;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+
+        $data->courseid = $this->get_courseid();
+        if (!$DB->get_record('block_evalcomix_comptype', array('courseid' => $data->courseid, 'shortname' => $data->shortname))) {
+            $newitemid = $DB->insert_record('block_evalcomix_comptype', $data);
+            $this->set_mapping('evalcomix_comptype', $oldid, $newitemid);
+        } else {
+            $this->set_mapping('evalcomix_comptype', $oldid, $oldid);
+        }
+    }
+
+    public function process_evalcomix_competency($data) {
+        global $DB, $CFG;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+
+        $data->courseid = $this->get_courseid();
+        if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $data->courseid,
+                'idnumber' => $data->idnumber, 'outcome' => $data->outcome))) {
+            if (isset($data->typeid)) {
+                $oldtypeid = $data->typeid;
+                $newtypeid = $this->get_mapping('evalcomix_comptype', $oldtypeid);
+                $data->typeid = $newtypeid->newitemid;
+            }
+            $newitemid = $DB->insert_record('block_evalcomix_competencies', $data);
+            $this->set_mapping('evalcomix_competency', $oldid, $newitemid);
+        } else {
+            $this->set_mapping('evalcomix_competency', $oldid, $oldid);
+        }
+    }
+
+    public function process_evalcomix_subdimension($data) {
+        global $DB, $CFG;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+        $data->courseid = $this->get_courseid();
+        if (!empty($data->toolid) && !empty($data->subdimensionid)) {
+            $oldtoolid = $data->toolid;
+            $evalcomixtool = $this->get_mapping('evalcomix_tool', $oldtoolid);
+            $newtoolid = $evalcomixtool->newitemid;
+            $data->toolid = $newtoolid;
+            $newitemid = 0;
+
+            if ($oldsubdimensions = $this->get_subdimensionids($oldtoolid)) {
+                if ($newsubdimensions = $this->get_subdimensionids($newtoolid)) {
+                    if (count($oldsubdimensions) == count($newsubdimensions)) {
+                        foreach ($oldsubdimensions as $id => $subdimensionid) {
+                            if (!$newitemid && (string)$subdimensionid === (string)$data->subdimensionid) {
+                                if (!empty($newsubdimensions)) {
+                                    $data->subdimensionid = $newsubdimensions[$id];
+                                    $competency = $this->get_mapping('evalcomix_competency', $data->competencyid);
+                                    $data->competencyid = $competency->newitemid;
+                                    $newitemid = $DB->insert_record('block_evalcomix_subdimension', $data);
+                                    $this->set_mapping('evalcomix_subdimension', $oldid, $newitemid);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private function get_subdimensionids($toolid) {
+        global $CFG, $DB;
+        $result = array();
+        $tool = $DB->get_record('block_evalcomix_tools', array('id' => $toolid));
+        require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+        if ($xmlstring = block_evalcomix_webservice_client::get_tool($tool->idtool)) {
+            $xml = simplexml_load_string($xmlstring);
+            $typeevx3 = dom_import_simplexml($xml)->tagName;
+            $type = '';
+            if ($typeevx3 == 'mt:MixTool' || $typeevx3 == 'MixTool') {
+                foreach ($xml as $valor) {
+                    $ids = $this->get_subdimensionids_from_xml($valor);
+                    $result = array_merge($result, $ids);
+                }
+            } else {
+                $result = $this->get_subdimensionids_from_xml($xml);
+            }
+        }
+        return $result;
+    }
+
+    private function get_subdimensionids_from_xml($xml) {
+        $result = array();
+        $tagname = dom_import_simplexml($xml)->tagName;
+        $typetool = '';
+        if ($tagname[2] == ':') {
+            $typeevx3 = explode(':', $tagname);
+            $typetool = $typeevx3[1];
+        } else {
+            $typetool = $tagname;
+        }
+        if ($typetool == 'SemanticDifferential') {
+            $result[] = (string)$xml['id'];
+        } else {
+            foreach ($xml->Dimension as $dimen) {
+                foreach ($dimen->Subdimension as $subdimen) {
+                    $result[] = (string)$subdimen['id'];
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function after_restore() {
         global $DB, $COURSE, $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
@@ -136,14 +252,15 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         $coursecontext = context_course::instance($courseidnew);
 
         $tasksid = '';
+        $assessmentids = array();
         if (isset($xml->evalcomix->tasks[0])) {
-            $assessmentids = array();
             foreach ($xml->evalcomix->tasks[0] as $task) {
                 $taskidold = (int)$task['id'];
                 $taskinstanceidold = (int)$task->instanceid;
                 $taskmaxgradeold = (string)$task->maxgrade;
                 $taskweighingold = (string)$task->weighing;
                 $grademethodold = (int)$task->grademethod;
+                $workteamsold = (int)$task->workteams;
                 $cm = $DB->get_record('block_evalcomix', array('courseid' => $courseidnew));
                 $cmmapping = $this->get_mapping('course_module', $taskinstanceidold);
                 $newcmid = $cmmapping->newitemid;
@@ -154,7 +271,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
 
                 if (!$taskfetch = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $newcmid))) {
                     $taskobject = new block_evalcomix_tasks('', $newcmid, $taskmaxgradeold, $taskweighingold, '',
-                        $visibletask, $grademethodold);
+                        $visibletask, $grademethodold, $workteamsold);
                     $newtaskid = $taskobject->insert();
                     $tasksid .= $taskinstanceidold . '-' . $newcmid . ',';
                     foreach ($task->modes[0] as $mode) {
@@ -202,11 +319,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                 if ($settings['users'] == 1) {
                     foreach ($task->assessments[0] as $assessment) {
                         $assessmentidold = (string)$assessment['id'];
-                        $assessmentassessoridold = (string)$assessment->assessorid;
-                        $assessmentstudentidold = (string)$assessment->studentid;
+                        $assessmentassessoridold = (int)$assessment->assessorid;
+                        $assessmentstudentidold = (int)$assessment->studentid;
                         $assessmentgradeold = (string)$assessment->grade;
                         $assessoruser = $this->get_mapping('user', $assessmentassessoridold);
                         $studentuser = $this->get_mapping('user', $assessmentstudentidold);
+
                         if (!isset($assessoruser->newitemid) || !isset($studentuser->newitemid)) {
                             continue;
                         }
@@ -237,6 +355,21 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         $object->oldid = $assessmentidold;
                         $object->newid = $assessmentidnew;
                         $assessmentids[] = $object;
+                    }
+
+                    if (isset($task->coordinators[0])) {
+                        foreach ($task->coordinators[0] as $coordinator) {
+                            if (!empty($coordinator->groupid)) {
+                                $groupid = $this->get_mappingid('group', (int)$coordinator->groupid);
+                                if ($groupid) {
+                                    if ($coordinator->userid > 0) {
+                                        $coordinatorid = $this->get_mappingid('user', (int)$coordinator->userid);
+                                        $DB->insert_record('block_evalcomix_coordinators', array('taskid' => $newtaskid,
+                                        'groupid' => $groupid, 'userid' => $coordinatorid));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

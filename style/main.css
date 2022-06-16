@@ -1,6 +1,34 @@
-body {
-    margin: 0;
-    font: 13px/1.231 arial, helvetica, clean, ssans-serif;
-    *font-size: small; /* for IE */
-    *font: x-small; /* for IE in quirks mode */
+#bgmenu{
+    background-color: #f3f3f3;
+    margin: auto;
+    padding: 10px;
+}
+
+#menu{
+    background-color: #fff;
+    margin:5px 0 0 3px;
+}
+
+#submit, #submit:hover{
+    background-image: url("../images/botoninicio.png");
+    background-repeat: no-repeat;
+    width:70px;
+    margin-left: auto;
+    margin-bottom: 5px;
+    color: #0a323b;
+    font-weight:bold;
+    font-size:1em;
+}
+
+#submit{
+    border: 1px solid #737677;
+}
+
+#submit:hover{
+    border: 1px solid #0076C1;
+}
+
+form{
+    font-weight:normal;
+    line-height:2.5em;
 }

@@ -17,8 +17,8 @@
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza S�nchez <daniel.cabeza@uca.es>,
-               Juan Antonio Caballero Hern�ndez <juanantonio.caballero@uca.es>
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>,
+               Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
 require_once('../../../config.php');
@@ -55,7 +55,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
     // Obtains course's users.
     $users = $reportevalcomix->load_users();
 
-    $coursegroups = $reportevalcomix->load_groups();
+    $coursegroups = $reportevalcomix->coursegroups;
     $coursegroupings = $reportevalcomix->load_groupings();
 
     $finalgrades = block_evalcomix_grades::get_grades($courseid);
@@ -96,12 +96,23 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         $urlinstrument = 'assessment_form.php?id='.$courseid.'&a='.$cmid.'&t='.$tool->idtool.'&s='.$userid.'&mode=assess';
         $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid));
 
+        $membersgroup = array();
+        if ($task->workteams == 1) {
+            if (!empty($coursegroups)) {
+                foreach ($coursegroups as $groupid => $mgroup) {
+                    if (in_array($userid, $mgroup)) {
+                        $membersgroup = $mgroup;
+                    }
+                }
+            }
+        }
+
         // Evaluate, Delete and Details buttons.
         $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'"
             title="'.get_string('evaluate', 'block_evalcomix').'"
             class="block_evalcomix_w_16" src="../images/evaluar.png" onclick="javascript:url(\'' . $urlinstrument . '\',\''.
         $userid . '\',\'' . $cmid . '\',\'' .
-        $page . '\',\'' . $courseid . '\');"/>';
+        $page . '\',\'' . $courseid . '\', \'\', [' . implode(',', $membersgroup) . ']);"/>';
         if ($assessmentgrade = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
             'assessorid' => $assessorid, 'studentid' => $userid))) {
 
@@ -109,7 +120,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
                 title="'.get_string('evaluate', 'block_evalcomix').'"
                 class="block_evalcomix_w_16" src="../images/evaluar2.png" onclick="javascript:url(\'' .
                 $urlinstrument . '\',\'' . $userid . '\',\'' .
-                $cmid . '\', \'' . $page . '\',\'' . $courseid . '\');"/>';
+                $cmid . '\', \'' . $page . '\',\'' . $courseid . '\', \'\', [' . implode(',', $membersgroup) . ']);"/>';
         }
         if ($showdetails) {
             $details = '<input type="image" value="'.get_string('details', 'block_evalcomix').'"
@@ -122,7 +133,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
             $details = '';
         }
 
-        // Show user�s works.
+        // Show user's works.
         $title = get_string('studentwork1', 'block_evalcomix').get_string('studentwork2', 'block_evalcomix'). $cmid;
         echo ' <input type="image" value="'.$title.'"
             title="'.$title.'" src="../images/task.png"

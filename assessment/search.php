@@ -36,9 +36,7 @@ $assessorid = optional_param('as', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 }
 
 if (!empty($assesorid) && !$assessor = $DB->get_record('user', array('id' => $assessorid))) {

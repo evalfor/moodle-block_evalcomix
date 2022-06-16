@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 echo '
     <script type="text/javascript">
         function url(u, nombre){
-            win2 = window.open(u, nombre, "menubar=0,location=0,scrollbars,resizable,width=780,height=500");
+            win2 = window.open(u, nombre, "menubar=0,location=0,scrollbars,resizable,height=500");
             checkChild();
         }
         function checkChild() {

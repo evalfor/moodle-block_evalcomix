@@ -150,11 +150,8 @@ class block_evalcomix_grade_report extends grade_report {
 
         $this->canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($this->course->id));
 
-        if (!has_capability('moodle/grade:viewhidden', $context, $USER->id)) {
-            $coursegroups = $this->load_groups();
-            $coursegroupings = $this->load_groupings();
-        }
-
+        $coursegroups = $this->load_groups();
+        $coursegroupings = $this->load_groupings();
     }
 
     /**
@@ -346,12 +343,71 @@ class block_evalcomix_grade_report extends grade_report {
                 $taskid = $task->id;
                 $taskexists = true;
                 $params = array('id' => $task->id, 'instanceid' => $data['cmid'], 'maxgrade' => $data['maxgrade'],
-                    'weighing' => '50', 'timemodified' => time(), 'visible' => 1, 'grademethod' => $data['grademethod']);
+                    'weighing' => '50', 'timemodified' => time(), 'visible' => 1,
+                    'grademethod' => $data['grademethod'], 'threshold' => $data['threshold'], 'workteams' => $data['workteams']);
                 $DB->update_record('block_evalcomix_tasks', $params);
+
+                $groupcoordinators = $DB->get_records('block_evalcomix_coordinators', array('taskid' => $taskid));
+                $coordinators = (isset($data['coordinators'])) ? $data['coordinators'] : array();
+                if (!empty($data['workteams'])) {
+                    if ($groupcoordinators) {
+                        foreach ($groupcoordinators as $gc) {
+                            $gcgroupid = $gc->groupid;
+                            if (isset($coordinators[$gcgroupid])) {
+                                $coordinatorid = $coordinators[$gcgroupid];
+                                if ($gc->userid != $coordinatorid) {
+                                    $DB->update_record('block_evalcomix_coordinators', array('id' => $gc->id, 'taskid' => $taskid,
+                                    'groupid' => $gcgroupid, 'userid' => $coordinatorid));
+                                }
+                            } else {
+                                $DB->delete_records('block_evalcomix_coordinators', array('id' => $gc->id));
+                            }
+                            unset($coordinators[$gcgroupid]);
+                        }
+                        if (!empty($coordinators)) {
+                            foreach ($coordinators as $gcgroupid => $coordinatorid) {
+                                $DB->insert_record('block_evalcomix_coordinators', array('taskid' => $taskid,
+                                'groupid' => $gcgroupid, 'userid' => $coordinatorid));
+                            }
+                        }
+                    } else {
+                        foreach ($coordinators as $gcgroupid => $coordinatorid) {
+                            $DB->insert_record('block_evalcomix_coordinators', array('taskid' => $taskid, 'groupid' => $gcgroupid,
+                            'userid' => $coordinatorid));
+                        }
+                    }
+                } else {
+                    if (!empty($groupcoordinators)) {
+                        foreach ($groupcoordinators as $gc) {
+                            $DB->delete_records('block_evalcomix_coordinators', array('id' => $gc->id));
+                        }
+                        if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $taskid))) {
+                            $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
+                            $module = block_evalcomix_tasks::get_type_task($task->instanceid);
+                            foreach ($assessments as $assessment) {
+                                $mode = self::get_type_evaluation($assessment->studentid, $COURSE->id, $assessment->assessorid);
+                                try {
+                                    block_evalcomix_webservice_client::delete_ws_assessment($COURSE->id, $module, $task->instanceid,
+                                    $assessment->studentid, $assessment->assessorid, $mode, $lms);
+                                } catch (Exception $e) {
+                                    continue;
+                                }
+                            }
+                            $DB->delete_records('block_evalcomix_assessments', array('taskid' => $taskid));
+                        }
+                    }
+                }
             } else if ($dataexists == true) {
                 $taskid = $DB->insert_record('block_evalcomix_tasks', array('instanceid' => $data['cmid'],
                     'maxgrade' => $data['maxgrade'], 'weighing' => '50', 'timemodified' => time(), 'visible' => '1',
-                    'grademethod' => $data['grademethod']));
+                    'grademethod' => $data['grademethod'], 'threshold' => $data['threshold'], 'workteams' => $data['workteams']));
+                if (!empty($data['workteams'])) {
+                    $coordinators = (isset($data['coordinators'])) ? $data['coordinators'] : array();
+                    foreach ($coordinators as $gcgroupid => $coordinatorid) {
+                        $DB->insert_record('block_evalcomix_coordinators', array('taskid' => $taskid, 'groupid' => $gcgroupid,
+                        'userid' => $coordinatorid));
+                    }
+                }
             }
 
             if ($data['toolEP'] != 0) {
@@ -447,7 +503,7 @@ class block_evalcomix_grade_report extends grade_report {
                             'whoassesses' => $whoassesses, 'modeid' => $modeid->id);
                         $DB->update_record('block_evalcomix_modes_extra', $params);
                     } else {
-                         $DB->insert_record('block_evalcomix_modes_extra', array('modeid' => $modeid->id, 'anonymous' => $anonymous,
+                        $DB->insert_record('block_evalcomix_modes_extra', array('modeid' => $modeid->id, 'anonymous' => $anonymous,
                         'visible' => $alwaysvisible, 'whoassesses' => $whoassesses));
                     }
                 } else {
@@ -491,6 +547,8 @@ class block_evalcomix_grade_report extends grade_report {
                         if ($finalgrade !== null) {
                             $DB->update_record('block_evalcomix_grades', array('id' => $grade->id, 'userid' => $grade->userid,
                                 'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid));
+                        } else {
+                            $DB->delete_records('block_evalcomix_grades', array('id' => $grade->id));
                         }
                     }
                 }
@@ -700,18 +758,37 @@ class block_evalcomix_grade_report extends grade_report {
                         checkChildDetalles();
                     }
 
-                    function url(u, alu, cmidassign, page, courseid, nombre) {
+                    function url(u, alu, cmidassign, page, courseid, nombre, workteams) {
                         win2 = window.open(u, nombre, \"menubar=0,location=0,scrollbars,resizable,width=780,height=500\");
-                        checkChild(alu, cmidassign, page, courseid);
+                        checkChild(alu, cmidassign, page, courseid, workteams);
                     }
 
-                    function checkChild(alu, cmidassign, page, course) {
+                    function checkChild(alu, cmidassign, page, course, workteams) {
                         if (win2.closed) {
                             /*relocate(window.location, {'stu':alu, 'cma':cmidassign}); */
+
                             doWork('evalcomixtablegrade_'+alu+'_'+cmidassign,
 'servidor.php?id=".$this->courseid."&eva=".$USER->id."', 'courseid='+course+'&page='+page+'&stu='+alu+'&cma='+cmidassign);
+                            if (workteams && workteams.length > 0) {
+                                /*var join = workteams.join(',');
+                                ajax('".$CFG->wwwroot.
+        "/blocks/evalcomix/assessment/loadworkteams.php?id='+course+'&stu='+alu+'&cma='+cmidassign+'&newstu='+join,
+        '#evalcomixtablegrade_'+alu+'_'+cmidassign);*/
+
+                                var len = workteams.length;
+                                for (var i = 0; i < len; i++) {
+                                    var alugr = workteams[i];
+                                    if (alu == alugr) {
+                                        continue;
+                                    }
+                                    ajax('".$CFG->wwwroot.
+        "/blocks/evalcomix/assessment/loadworkteams.php?id='+course+'&stu='+alu+'&cma='+cmidassign+'&newstu='+alugr,
+'#evalcomixtablegrade_'+alugr+'_'+cmidassign);
+                                }
+                            }
+                        } else {
+                            setTimeout(checkChild, 10, alu, cmidassign, page, course, workteams);
                         }
-                        else setTimeout(\"checkChild(\"+alu+\",\"+cmidassign+\")\",1);
                     }
 
 
@@ -798,6 +875,7 @@ class block_evalcomix_grade_report extends grade_report {
         $typeinstrument = array();
         $cm = array();
         $whoassesses = array();
+        $coordinators = array();
 
         for ($i = 0; $i < $numactivities; $i++) {
             $cmid = $this->activities['id'][$i];
@@ -820,6 +898,13 @@ class block_evalcomix_grade_report extends grade_report {
                         $whoassesses[$cmid] = $modepeerextra->whoassesses;
                     }
                 }
+                if ($tasksarray[$cmid]->workteams == 1) {
+                    if ($taskcoordinators = $DB->get_records('block_evalcomix_coordinators', array('taskid' => $taskid))) {
+                        foreach ($taskcoordinators as $tc) {
+                            $coordinators[$taskid][] = $tc->userid;
+                        }
+                    }
+                }
             }
         }
 
@@ -829,6 +914,9 @@ class block_evalcomix_grade_report extends grade_report {
         $nowtimestamp = mktime($now["hours"], $now["minutes"], $now["seconds"], $now["mon"], $now["mday"], $now["year"]);
 
         foreach ($users as $user) {
+            if ($user->suspendedenrolment) {
+                continue;
+            }
             $mode = self::get_type_evaluation($user->id, $this->courseid);
             if ($mode == 'self' || $mode == 'peer') {
                 $gidloginuser = $this->get_groupids($USER->id);
@@ -844,8 +932,8 @@ class block_evalcomix_grade_report extends grade_report {
             $table .= '
                     <tr class="block_evalcomix-border '. $background .'">
                     <td class="block_evalcomix_usertopic"><div class="userpic">'. $OUTPUT->user_picture($user) .'</div></td>
-                    <td class="block_evalcomix-border"><a href="'.$CFG->wwwroot.'/user/view.php?
-                    id='.$user->id.'&course='.$this->courseid.'">'. fullname($user) .'</a></td>';
+                    <td class="block_evalcomix-border"><a href="'.$CFG->wwwroot.'/user/view.php?id='.
+                    $user->id.'&course='.$this->courseid.'">'. fullname($user) .'</a></td>';
 
             for ($i = 0; $i < $numactivities; $i++) {
                 $allowedusers = array();
@@ -901,12 +989,22 @@ class block_evalcomix_grade_report extends grade_report {
                         $tool = $tools[$taskid][$mode];
                         $urlinstrument = 'assessment_form.php?id='.$this->courseid.'&a='.$cmid.'&t='.
                         $tool->idtool.'&s='.$user->id.'&mode=assess';
+                        $membersgroup = array();
+                        if ($tasksarray[$cmid]->workteams == 1) {
+                            if (!empty($this->coursegroups)) {
+                                foreach ($this->coursegroups as $groupid => $mgroup) {
+                                    if (in_array($user->id, $mgroup)) {
+                                        $membersgroup = $mgroup;
+                                    }
+                                }
+                            }
+                        }
                         $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'" title="'.
                         get_string('evaluate', 'block_evalcomix').'" class="block_evalcomix_w_16"
                         src="../images/evaluar.png"
                         onclick="javascript:url(\'' . $urlinstrument . '\',\'' . $user->id . '\',\'' .
                         $this->activities['id'][$i] . '\',\'' .
-                        $this->page . '\',\'' . $this->courseid . '\');"/>';
+                        $this->page . '\',\'' . $this->courseid . '\', \'\', [' . implode(',', $membersgroup) . ']);"/>';
                         $assessorid = $USER->id;
                         $studentid = $user->id;
                         if (isset($assessments[$taskid][$assessorid][$studentid])) {
@@ -914,7 +1012,8 @@ class block_evalcomix_grade_report extends grade_report {
                             get_string('evaluate', 'block_evalcomix').'" class="block_evalcomix_w_16"
                             src="../images/evaluar2.png" onclick="javascript:url(\'' . $urlinstrument . '\',\'' .
                             $user->id . '\',\'' .
-                            $this->activities['id'][$i] . '\', \'' . $this->page . '\',\'' . $this->courseid . '\');"/>';
+                            $this->activities['id'][$i] . '\', \'' . $this->page . '\',\'' . $this->courseid .
+                            '\', \'\', [' . implode(',', $membersgroup) . ']);"/>';
                         }
                     }
 
@@ -929,15 +1028,12 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                     }
 
                     // Show user´s documents.
-                    if ($mode == 'teacher') {
-                        $paramsurlpopup = 'assessment/user_activity.php?id='.$user->id.'&course='.$this->courseid.'&mod='.$cmid;
-                        $title = get_string('studentwork1', 'block_evalcomix').
-                        get_string('studentwork2', 'block_evalcomix'). $this->activities['name'][$i];
-                        $table .= ' <input type="image" value="'.$title.'"
-                        title="'.$title. '" src="../images/task.png"
-                        onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/'.$paramsurlpopup. '\');"/>';
-                    }
-
+                    $paramsurlpopup = 'assessment/user_activity.php?id='.$user->id.'&course='.$this->courseid.'&mod='.$cmid;
+                    $title = get_string('studentwork1', 'block_evalcomix').
+                    get_string('studentwork2', 'block_evalcomix'). $this->activities['name'][$i];
+                    $documents = ' <input type="image" value="'.$title.'"
+                    title="'.$title. '" src="../images/task.png"
+                    onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/'.$paramsurlpopup. '\');"/>';
                     // If the $USER isn´t a teacher or admin evaluate if it should show Evaluate and Details buttons.
                     if ($mode == 'self' || $mode == 'peer') {
                         $whoassesses = null;
@@ -987,14 +1083,39 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                                 }
                                 // Show the buttons if they must be availables.
                                 if ($nowtimestamp >= $available && $nowtimestamp < $due) {
-                                    $table .= $evaluate;
+                                    if ($mode == 'self') {
+                                        if ($tasksarray[$cmid]->workteams == 1) {
+                                            if (isset($coordinators[$taskid]) && in_array($user->id, $coordinators[$taskid])) {
+                                                $table .= $evaluate;
+                                            }
+                                        } else {
+                                            $table .= $evaluate;
+                                        }
+                                    } else if ($mode == 'peer') {
+                                        if ($tasksarray[$cmid]->workteams == 1) {
+                                            if (!$this->same_group($USER->id, $user->id) && isset($coordinators[$taskid])
+                                                    && in_array($user->id, $coordinators[$taskid])) {
+                                                $table .= $evaluate;
+                                            }
+                                        } else {
+                                            $table .= $evaluate;
+                                        }
+                                    }
                                 }
                             }
                         }
                     } else { // If mode == 'teacher'.
                         $table .= $details;
                         if ($modeteacher[$cmid] != null && $modeteacher[$cmid]->modality == 'teacher') {
-                            $table .= $evaluate;
+                            if ($tasksarray[$cmid]->workteams == 1) {
+                                if (isset($coordinators[$taskid]) && in_array($user->id, $coordinators[$taskid])) {
+                                    $table .= $documents;
+                                    $table .= $evaluate;
+                                }
+                            } else {
+                                $table .= $documents;
+                                $table .= $evaluate;
+                            }
                         }
                     }
                 }
@@ -1247,10 +1368,9 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
      * @return string HTML
      */
     public function get_headers() {
-        global $USER, $DB;
-        if (!$course = $DB->get_record('course', array('id' => $this->courseid))) {
-            print_error('nocourseid');
-        }
+        global $USER, $DB, $COURSE;
+        $course = $DB->get_record('course', array('id' => $this->courseid), '*', MUST_EXIST);
+
         $total = '';
         // To print  Lastname / Firstname.
         $arrows = $this->get_sort_arrows();
@@ -1375,9 +1495,8 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
         $itemmodule   = $element['object']->itemmodule;
         $iteminstance = $element['object']->iteminstance;
 
-        if (!$course = $DB->get_record('course', array('id' => $this->courseid))) {
-            print_error('nocourseid');
-        }
+        $course = $DB->get_record('course', array('id' => $this->courseid), '*', MUST_EXIST);
+
         if ($withlink and $itemtype == 'mod' and $iteminstance and $itemmodule) {
             if ($cm = get_coursemodule_from_instance($itemmodule, $iteminstance, $this->courseid)) {
 
@@ -1448,8 +1567,8 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
      * To obtain the data: $this->activities['id'][] / $this->activities['name'][]
      * @return array activities of the object
      */
-    public static function get_activities() {
-        return $self::activities;
+    public function get_activities() {
+        return $this->activities;
     }
 
 
@@ -1566,7 +1685,8 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
         list($enrolledsql, $enrolledparams) = get_enrolled_sql($this->context);
 
         // Fields we need from the user table.
-        $userfields = user_picture::fields('u', array('idnumber'));
+        $userfields = 'u.id,u.picture,u.firstname,u.lastname,u.firstnamephonetic,u.lastnamephonetic,
+        u.middlename,u.alternatename,u.imagealt,u.email,u.idnumber';
 
         $sortjoin = $sort = $params = null;
 

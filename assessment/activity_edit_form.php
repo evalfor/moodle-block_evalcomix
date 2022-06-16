@@ -125,12 +125,28 @@ if (!empty($toolep) || !empty($toolae) || !empty($toolei)) {
 
 $checkcalc1 = 'selected';
 $checkcalc2 = '';
+$thresholddisabled = 'style="display:none"';
 if (isset($datas['grademethod']) && $datas['grademethod'] == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
     $checkcalc1 = '';
     $checkcalc2 = 'selected';
+    $thresholddisabled = 'style="display:table-row"';
 }
+$threshold = (isset($datas['threshold'])) ? $datas['threshold'] : 15;
 
-global $OUTPUT;
+$wtchecked = (!empty($datas['workteams'])) ? 'checked' : '';
+$disabledss = (!empty($datas['workteams'])) ? 'disabled' : '';
+$groups = groups_get_all_groups($courseid);
+$atcdisabled = (empty($wtchecked)) ? 'disabled' : '';
+$coordinators = (isset($datas['coordinators'])) ? $datas['coordinators'] : array();
+$wtdisabled = '';
+$activityassessed = false;
+if (empty($wtchecked)) {
+    $activityassessed = block_evalcomix_activity_assessed($cm);
+    if ($activityassessed) {
+        $wtdisabled = 'disabled';
+    }
+}
+$coordinatorsassessed = (!empty($coordinators)) ? block_evalcomix_activity_assessed($cm, $coordinators) : false;
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', array('id' => $courseid, 'a' => $id)));
 $PAGE->set_context($context);
@@ -410,7 +426,8 @@ echo '
                                     disabling(this,\'anonymousEI\');disabling_group(this, \'available_EI\');
                                     disabling_group(this,\'timedue_EI\');disabling(this, \'alwaysvisibleEI\');
                                     disabling(this, \'anystudent_EI\');disabling(this, \'groups_EI\');
-                                    disabling(this, \'specificstudents_EI\');check_gredemethod();">
+                                    if (document.getElementById(\'workteams\').checked != true) {
+                                    disabling(this, \'specificstudents_EI\');}check_gredemethod();">
                                         <option value="0">' . get_string('nuloption', 'block_evalcomix') . '</option>
     ';
 
@@ -521,6 +538,9 @@ switch ($whoassessesei) {
     case '2': $checked2 = 'checked';$disabled2 = '';
     break;
 }
+if (!empty($wtchecked)) {
+    $disabled2 = 'disabled';
+}
 echo '
                         <div><input type="radio" '.$checked0.' id="anystudent_EI" '. $disabledei .'
                         name="whoassessesEI" value="0"
@@ -531,7 +551,7 @@ echo '
                         name="whoassessesEI" value="1"
                         onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="groups_EI">'.
                         get_string('groups_EI', 'block_evalcomix').'</label></div>
-                        <div><input type="radio" '.$checked2.' id="specificstudents_EI" '. $disabledei .'
+                        <div><input type="radio" '.$checked2.' id="specificstudents_EI" '. $disabledei .' '.$disabledss.'
                         name="whoassessesEI" value="2"
                         onclick="document.getElementById(\'assignstudents\').disabled = false;"> <label for="specificstudents_EI">'.
                         get_string('specificstudents_EI', 'block_evalcomix').'</label></div>
@@ -542,6 +562,123 @@ echo '
                          </td>
                         </tr>
 
+<!---------------------------------------------------------------------------------------------------->
+<!--WORK-TEAMS---------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------->
+                        <tr class="border">
+                            <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
+                            get_string('workteams', 'block_evalcomix').'</td>
+                        </tr>
+                        <tr>
+                            <td class="pt-3 text-right">' . get_string('workteamsassessments', 'block_evalcomix').
+                                $OUTPUT->help_icon('workteamsassessments', 'block_evalcomix') . '</td>
+                            <td class="pt-3">
+                                <input type="checkbox" ' . $wtchecked . ' '.$wtdisabled.' onchange="
+                                    if (this.checked == true) {
+                                        document.getElementById(\'assigncoordinators\').disabled=false;
+                                        document.getElementById(\'specificstudents_EI\').disabled = true;
+                                        document.getElementById(\'assignstudents\').disabled = true;
+                                    } else {
+                                        var coordinatorassessed = false;
+';
+if ($coordinatorsassessed) {
+    echo 'coordinatorassessed = true;';
+}
+echo '                                  if (coordinatorassessed) {
+                                            if (!confirm(\''.get_string('confirmdisabledworkteams', 'block_evalcomix').'\')) {
+                                                this.checked = true;
+                                                exit;
+                                            }
+                                        }
+                                        document.getElementById(\'assigncoordinators\').disabled=true;
+
+                                        if (document.getElementById(\'toolEI\').value != 0) {
+                                            document.getElementById(\'specificstudents_EI\').disabled = false;
+                                            if (document.getElementById(\'specificstudents_EI\').checked == true) {
+                                                document.getElementById(\'assignstudents\').disabled = false;
+                                            }
+                                        }
+                                    }
+                                " id="workteams" name="workteams">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"></td>
+                            <td class="pb-3">
+                                <input type="button" id="assigncoordinators" name="assigncoordinators" value="'.
+                                get_string('assignteamcoordinators', 'block_evalcomix').'" '.$atcdisabled.'
+                                data-toggle="modal" data-target="#exampleModal">
+
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+                                    <div class="modal-dialog modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">'.
+                                                get_string('assignteamcoordinators', 'block_evalcomix').'</h5>
+                                                <button type="button" class="close border" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">OK</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+';
+
+if ($coordinatorsassessed) {
+    echo '
+                                                <div class="text-info mb-2">'.get_string('coordinatorassessed', 'block_evalcomix').
+                                                '</div>
+    ';
+}
+echo '<div class="row">';
+
+if ($groups) {
+    foreach ($groups as $group) {
+        $gcgroupid = $group->id;
+        $members = groups_get_members($gcgroupid);
+        echo '
+            <div class="col-md">
+        ';
+        echo $group->name;
+        $coordinatorid = (isset($coordinators[$gcgroupid])) ? $coordinators[$gcgroupid] : 0;
+        $disableselect = (block_evalcomix_activity_assessed($cm, array($coordinatorid))) ? true : false;
+        if ($disableselect) {
+            echo '<div><input type="text" class="form-control" readonly value="'.fullname($members[$coordinatorid]).
+            '"><input type="hidden" name="coordinator-'.$gcgroupid.'" value="'.$coordinatorid.'"></div>';
+        } else {
+            echo '<div><select class="form-control" name="coordinator-'.$gcgroupid.'" '.$disableselect.'>';
+            echo '<option value="0">'.get_string('selectcoordinator', 'block_evalcomix').'</option>';
+            foreach ($members as $member) {
+                $selected = ($coordinatorid == $member->id) ? 'selected' : '';
+                echo '<option '.$selected.' value="'.$member->id.'">'.fullname($member).'</option>';
+            }
+            echo '
+                    </select></div>
+            ';
+        }
+        echo '</div>';
+    }
+} else {
+    echo '<h5 class="p-3">'.get_string('alertnogroup', 'block_evalcomix').' <b><a target="_blank" href="'.$CFG->wwwroot.
+    '/group/index.php?id='.$course->id.'">'.
+    get_string('groups').'</a></b></h5>';
+}
+
+echo '
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+';
+if ($activityassessed) {
+    echo '<tr>
+        <td></td>
+        <td class="text-secondary"><i>'.get_string('activityassessed', 'block_evalcomix').'</i></td>
+    </tr>';
+}
+echo '
 <!---------------------------------------------------------------------------------------------------->
 <!--CALCULATION-OF-THE-FINAL-GRADE-------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
@@ -554,12 +691,26 @@ echo '
                                 <td class="pt-3 text-right">' . get_string('method', 'block_evalcomix').
                                 $OUTPUT->help_icon('method', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
-                                    <select class="form-control" name="grademethod" id="grademethod" '.$gmdisabled.'>
+                                    <select class="form-control" name="grademethod" id="grademethod" '.$gmdisabled.
+                                    ' onchange="
+                                            if (this.value == '.BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL.') {
+                                                document.getElementById(\'trthreshold\').style.display = \'none\';
+                                            } else if (this.value == '.BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART.') {
+                                                document.getElementById(\'trthreshold\').style.display = \'table-row\';
+                                            }
+                                            ">
                                         <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL.'" '.$checkcalc1.'>'.
                                         get_string('weightedaveragewithallvalues', 'block_evalcomix') . '</option>
                                         <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART.'" '.$checkcalc2.'>'.
                                         get_string('weightedaveragesmart', 'block_evalcomix') . '</option>
                                     </select>
+                                </td>
+                            </tr>
+                            <tr id="trthreshold" '.$thresholddisabled.'>
+                                <td class="pt-3 text-right">' . get_string('threshold', 'block_evalcomix').
+                                $OUTPUT->help_icon('threshold', 'block_evalcomix') . '</td>
+                                <td class="pt-3">
+                                    <input type="number" min="1" max="99" id="threshold" name="threshold" value="'.$threshold.'">
                                 </td>
                             </tr>
                         </table>

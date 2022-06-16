@@ -27,9 +27,8 @@ $courseid      = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
 $assessorid = optional_param('as', 0, PARAM_INT);
 
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
-}
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+
 require_course_login($course);
 
 $context = context_course::instance($course->id);

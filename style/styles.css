@@ -63,7 +63,7 @@
 }
 
 .block_evalcomix-border {
-    border: 1px solid #146C84;
+    border: 1px solid #146c84;
 }
 
 .block_evalcomix_usertopic {
@@ -74,9 +74,9 @@
 .wrapper1,
 .wrapper2 {
     width: 100%;
-    border: none 0px RED;
+    border: none 0 RED;
     overflow-x: scroll;
-    overflow-y:hidden;
+    overflow-y: hidden;
 }
 
 .wrapper1 {

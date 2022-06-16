@@ -25,8 +25,6 @@
 
 namespace block_evalcomix\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 class cron_task extends \core\task\scheduled_task {
     public function get_name() {
         return get_string('crontask', 'block_evalcomix');

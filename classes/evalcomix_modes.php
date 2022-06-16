@@ -25,7 +25,7 @@ require_once('evalcomix_tool.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
-class block_evalcomix_modes extends block_evalcomix_object{
+class block_evalcomix_modes extends block_evalcomix_object {
     public $table = 'block_evalcomix_modes';
 
     /**

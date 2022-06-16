@@ -21,8 +21,6 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @param int $oldversion
  */
@@ -33,7 +31,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     $result = true;
 
     // Add a new column newcol to the mdl_question_myqtype.
-    if ($oldversion < 2012013005) {
+    if ($oldversion < 2012013003) {
 
         // Define table block_evalcomix to be created.
         $table = new xmldb_table('block_evalcomix');
@@ -53,7 +51,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2012013005, 'evalcomix');
+        upgrade_block_savepoint(true, 2012013003, 'evalcomix');
     }
 
     if ($oldversion < 2012013004) {
@@ -323,6 +321,116 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
 
         // Evalcomix savepoint reached.
         upgrade_block_savepoint(true, 2021081102, 'evalcomix');
+    }
+
+    if ($oldversion < 2022010401) {
+
+        // Define table block_evalcomix_competencies to be created.
+        $table = new xmldb_table('block_evalcomix_competencies');
+
+        // Adding fields to table block_evalcomix_competencies.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('idnumber', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('typeid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('outcome', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table block_evalcomix_competencies.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for block_evalcomix_competencies.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+           // Define table block_evalcomix_comptype to be created.
+        $table2 = new xmldb_table('block_evalcomix_comptype');
+
+        // Adding fields to table block_evalcomix_comptype.
+        $table2->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table2->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table2->add_field('shortname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table2->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+        // Adding keys to table block_evalcomix_comptype.
+        $table2->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for block_evalcomix_comptype.
+        if (!$dbman->table_exists($table2)) {
+            $dbman->create_table($table2);
+        }
+
+         // Define table block_evalcomix_subdimension to be created.
+        $table3 = new xmldb_table('block_evalcomix_subdimension');
+
+        // Adding fields to table block_evalcomix_subdimension.
+        $table3->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table3->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table3->add_field('toolid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table3->add_field('competencyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table3->add_field('subdimensionid', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_evalcomix_subdimension.
+        $table3->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for block_evalcomix_subdimension.
+        if (!$dbman->table_exists($table3)) {
+            $dbman->create_table($table3);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2022010401, 'evalcomix');
+    }
+
+    if ($oldversion < 2022033100) {
+
+         // Define field threshold to be added to block_evalcomix_tasks.
+        $table = new xmldb_table('block_evalcomix_tasks');
+        $field = new xmldb_field('threshold', XMLDB_TYPE_INTEGER, '10', null, null, null, '15', 'grademethod');
+
+        // Conditionally launch add field threshold.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2022033100, 'evalcomix');
+    }
+
+    if ($oldversion < 2022051600) {
+
+        // Define field workteams to be added to block_evalcomix_tasks.
+        $table = new xmldb_table('block_evalcomix_tasks');
+        $field = new xmldb_field('workteams', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'threshold');
+
+        // Conditionally launch add field workteams.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define table block_evalcomix_coordinators to be created.
+        $newtable = new xmldb_table('block_evalcomix_coordinators');
+
+        // Adding fields to table block_evalcomix_coordinators.
+        $newtable->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $newtable->add_field('taskid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $newtable->add_field('groupid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $newtable->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_evalcomix_coordinators.
+        $newtable->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for block_evalcomix_coordinators.
+        if (!$dbman->table_exists($newtable)) {
+            $dbman->create_table($newtable);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2022051600, 'evalcomix');
     }
 
     return $result;

@@ -177,3 +177,143 @@ $string['groupmod'] = 'Taldea';
 $string['classmod'] = 'Klase';
 $string['nostudents'] = 'Ez da jarduerarako daturik';
 $string['nostudentsgroup'] = 'Ez da datuak hautatutako taldean';
+
+// Tool editor.
+$string['accept'] = 'Onartu';
+$string['selecttool'] = 'Sortu beharreko tresna mota aukeratu';
+$string['alertdimension'] = 'Dimentsio bat egon behar du gutxienez';
+$string['alertsubdimension'] = 'Azpi-dimentsio bat egon behar du gutxienez';
+$string['alertatrib'] = 'Atributu bat egon behar du gutxienez';
+$string['rubricremember'] = 'GOGOAN IZAN: Ezin dira egon balore ERREPIKATUAK';
+$string['importfile'] = 'Fitxategia inportatu';
+$string['noatrib'] = 'Atributu negatiboa';
+$string['yesatrib'] = 'Atributu positiboa';
+
+$string['comments'] = 'Oharrak';
+$string['grade'] = 'Kalifikazioa';
+$string['nograde'] = 'Kalifikaziorik gabe';
+$string['alertsave'] = 'Ebaluazioa behar bezala gordeta. Nahi izanez gero, leihoa itxi dezakezu';
+
+$string['add_comments'] = 'Oharrak aktibatu';
+$string['checklist'] = 'Kontrol zerrenda';
+$string['ratescale'] = 'Balorazio eskala';
+$string['listrate'] = 'Kontrol zerrenda + Balorazio eskala';
+$string['rubric'] = 'Errubrika';
+$string['differentail'] = 'Diferentzial semantikoa';
+$string['mix'] = 'Tresna mistoa';
+$string['argument'] = 'Ebaluaziorako argudio zerrenda';
+$string['import'] = 'Inportatu';
+$string['numdimensions'] = 'Dimentsio kopurua';
+$string['numvalues'] = 'Balio kopurua';
+$string['totalvalue'] = 'Balorazio orokorra';
+$string['dimension'] = 'Dimentsioa';
+$string['subdimension'] = 'Azpi-dimentsioa';
+$string['numsubdimension'] = 'Dimentsio kopurua';
+$string['numattributes'] = 'Atributu kopurua';
+$string['attribute'] = 'Atributuak';
+$string['porvalue'] = 'Balioa ehunekoetan';
+$string['value'] = 'Balioa';
+$string['values'] = 'Balioak';
+$string['globalvalue'] = 'DIMENTSIOAREN BALORAZIO OROKORRA:';
+$string['novalue'] = 'Balio negatiboa';
+$string['yesvalue'] = 'Balio positiboa';
+$string['idea'] = 'IDEIA ETA ZUZENDARITZA';
+$string['design'] = 'DISEINUA';
+$string['develop'] = 'GARAPENA';
+$string['translation'] = 'ITZULPENA';
+$string['colaboration'] = 'LANKIDETZA';
+$string['license'] = 'LIZENTZIA';
+$string['addtool'] = 'Tresna bat gehitu';
+$string['title'] = 'Izenburua';
+$string['titledim'] = 'Dimentsioa';
+$string['titlesubdim'] = 'Azpi-dimentsioa';
+$string['titleatrib'] = 'Atributua';
+$string['titlevalue'] = 'Balioa';
+$string['no'] = 'Ez';
+$string['yes'] = 'Bai';
+$string['observation'] = 'Oharrak';
+$string['view'] = 'Aurre bistaratzea itxi';
+
+$string['windowselection'] = 'Aukeraketarako leihoa';
+$string['selectfile'] = 'Fitxategia aukeratu';
+$string['upfile'] = 'Fitxategia igo';
+$string['cancel'] = 'Ezeztatu';
+
+$string['savedsaccessfully'] = 'Tresna behar bezala gorde da';
+$string['ADimension'] = 'Eremu hau ezin daiteke hutsik egon. \"Dimentsio kopurua\" 0 baino handiagoa den zenbakia izan behar du eta \"Balorazio orokorra\" 2ren berdin edo handiagoa den zenbaki bat';
+$string['ATotal'] = 'Eremu hau ezin daiteke hutsik egon. \"Balio kopurua\" 2ren berdin edo handiagoa den zenbaki bat izan behar du';
+$string['ASubdimension'] = 'Eremu hau ezin daiteke hutsik egon. \"Azpi-dimentsio kopurua\" 0 baino handiagoa den zenbakia izan behar du eta \"Balio kopurua\" 2ren berdin edo handiagoa';
+$string['AAttribute'] = 'Eremu hau ezin daiteke hutsik egon. Mesedez, 0 baino handiagoa den zenbaki bat adierazi';
+$string['ADiferencial'] = '\"Atributu kopurua\" 0 baino handiagoa izan behar du. \"Balio kopurua\" BAKOITIA izan behar du';
+$string['ErrorFormato'] = 'Fitxategia hutsik dago edo formatua desegokia da';
+$string['ErrorAcceso'] = 'Tresnan ezin izan da sartu';
+$string['ErrorExtension'] = 'Formatu desegokia. Luzapena \"evx\" izan behar du';
+$string['ErrorSaveTitle'] = 'Error: Izenburua ezin da hutsik egon';
+$string['ErrorSaveTools'] = 'Errorea: bat, gutxienez, tresna bat aukeratu behar duzu';
+
+$string['TSave'] = 'Gorde';
+$string['TImport'] = 'Inportatu';
+$string['TExport'] = 'Esportatu';
+$string['TAumentar'] = 'Testu tamaina handiagotu';
+$string['TDisminuir'] = 'Testu tamaina txikiagotu';
+$string['TView'] = 'Aurre bistaratzea';
+$string['TPrint'] = 'Inprimatu';
+$string['THelp'] = 'Laguntza';
+$string['TAbout'] = '-i buruz';
+
+$string['mixed_por'] = 'Pisua';
+
+$string['handlerofco'] = 'Trebetasunen kudeaketa eta ikaskuntzaren emaitzak';
+$string['competencies'] = 'Gaitasunak';
+$string['outcomes'] = 'Ikaskuntzaren emaitzak';
+$string['compidnumber'] = 'Kodea';
+$string['compshortname'] = 'Izen laburra';
+$string['compdescription'] = 'Deskribapena';
+$string['comptypes'] = 'Lehiaketa motak';
+$string['comptype'] = 'Lehiaketa mota';
+$string['newcomp'] = ' Konposizio berria ';
+$string['newoutcome'] = 'Ikaskuntzaren emaitza berria';
+$string['newcomptype'] = 'Konpen mota berria';
+$string['compreport'] = 'Garapen txostena';
+$string['compandout'] = 'Konpetentziak eta ikaskuntzaren emaitzak';
+$string['uploadcompetencies'] = 'Inportatu gaitasunak eta emaitzak';
+$string['uploadcompetencies_help'] = 'Gaitasunak eta ikaskuntza-emaitzak testu-fitxategi baten bidez igo daitezke. Fitxategiaren formatuak honako hau izan behar du:
+
+* Fitxategiko lerro bakoitzak erregistro bat dauka
+* Erregistro bakoitza komaz (edo beste mugatzaile batzuekin) bereizitako datu sorta bat da
+* Lehenengo erregistroak gainerako fitxategiaren formatua definitzen duten eremu-izenen zerrenda dauka
+* Beharrezko eremuen izenak idzenbakia, izen laburra, emaitza dira';
+$string['idnumberduplicate'] = 'Bikoiztu ID zenbakiaren balioa';
+$string['invalidoutcome'] = 'Emaitza balio baliogabea. 0 edo 1 izan behar du';
+$string['invalididnumberupload'] = 'ID-zenbakiaren balio baliogabea. Tamainak 100 baino txikiagoa izan behar du';
+$string['missingidnumber'] = 'Zutabearen ID zenbakia falta da';
+$string['missingshortname'] = 'Zutabearen izen laburra falta da';
+$string['missingoutcome'] = 'Emaitza zutabea falta da';
+$string['ignored'] = 'Ez ikusi egin da';
+$string['errors'] = 'Akatsak';
+$string['importresult'] = 'Inportatu emaitzak';
+$string['uploadcompetenciespreview'] = 'Igotako gaitasunen aurrebista';
+$string['choicecompetency'] = 'Aukeratu lehiaketa bat';
+$string['choiceoutcome'] = 'Aukeratu emaitza bat';
+$string['associatecompandout'] = 'Lotu gaitasunak eta emaitzak';
+$string['allstudens'] = 'Ikasle guztiak';
+$string['onestudent'] = 'Ikasle espezifikoa';
+$string['onegroup'] = 'Talde zehatza';
+$string['evaluationandreports'] = 'Ebaluazioa eta txostenak';
+$string['workteams'] = 'Lan-taldeak';
+$string['workteamsassessments'] = 'Lan-taldeen ebaluazioa';
+$string['assignteamcoordinators'] = 'Taldeko koordinatzaileak esleitu';
+$string['workteamsassessments_help'] = 'Aukera hau aktibatzen baduzu, taldearen ordezkari izateko koordinatzaile bat izendatzeko aukera izango duzu.
+
+**Irakasleen Ebaluazioa - EP** badago, irakasleek koordinatzaileak soilik ebaluatu ahal izango dituzte eta ebaluazio hori bere taldeko kide bakoitzari esleituko zaio.
+
+**Autoebaluazioa – ​​AE** badago, koordinatzaileak bakarrik egin dezake autoebaluazioa eta bere ebaluazioa bere taldeko kide bakoitzari esleituko zaio.
+
+**Berdinen arteko ebaluazioa – ​​EI** badago, ikasleek talde bakoitzeko koordinatzaileak soilik ebaluatu ahal izango dituzte eta ebaluazio bakoitza taldeko kide bakoitzari esleituko zaio.
+
+Edozein taldetan ez dauden ikasleek ez dute ebaluaziorik jasoko. Koordinatzaile izendaturik ez duten taldeek ez dute inolako ebaluaziorik jasoko eta ezin izango dute ebaluatu.';
+$string['selectcoordinator'] = 'aukeratu koordinatzailea';
+$string['alertnogroup'] = 'Ikastaroan oraindik ez da talderik sortu. Horiek sortzeko hurrengo atalera sartu behar duzu:';
+$string['activityassessed'] = 'Desgaituta dago ikasle bat dagoeneko proba egin duelako';
+$string['coordinatorassessed'] = 'Gaur egun, badira dagoeneko ebaluazioren bat jaso duten koordinatzaileak. Ebaluazioa jaso dutenak ezin dira ordezkatu.';
+$string['confirmdisabledworkteams'] = 'Jarduera honetan ebaluazioak egin dira dagoeneko. Aukera hau desgaitzen baduzu eta aldaketak gordetzen badituzu, ebaluazio horiek guztiak ezabatu egingo dira eta ezin izango dira berreskuratu. Ziur aukera desgaitu nahi duzula?';

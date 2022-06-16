@@ -32,7 +32,7 @@ require_once('webservice_evalcomix_client.php');
  * @package    block-evalcomix
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  */
-class block_evalcomix_tool extends block_evalcomix_object{
+class block_evalcomix_tool extends block_evalcomix_object {
     public $table = 'block_evalcomix_tools';
 
     /**

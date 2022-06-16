@@ -30,14 +30,15 @@ require_once('evalcomix_object.php');
  * @package    block-evalcomix
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  */
-class block_evalcomix_tasks extends block_evalcomix_object{
+class block_evalcomix_tasks extends block_evalcomix_object {
     public $table = 'block_evalcomix_tasks';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod');
+    public $requiredfields = array('id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod',
+                            'workteams');
 
     /**
      * Array of optional table fields, must start with 'id'.
@@ -77,6 +78,8 @@ class block_evalcomix_tasks extends block_evalcomix_object{
 
     public $grademethod;
 
+    public $workteams;
+
     /**
      * Constructor
      *
@@ -87,7 +90,7 @@ class block_evalcomix_tasks extends block_evalcomix_object{
      * @param int $timemodified
      */
     public function __construct($id = '', $instanceid = '0', $maxgrade = '100', $weighing = '50',
-        $timemodified = '0', $visible = '1', $grademethod = '1') {
+        $timemodified = '0', $visible = '1', $grademethod = '1', $workteams = '0') {
         if ($instanceid != '0') {
             global $DB;
             $this->id = intval($id);
@@ -98,6 +101,7 @@ class block_evalcomix_tasks extends block_evalcomix_object{
             $this->timemodified = $timemodified;
             $this->visible = intval($visible);
             $this->grademethod = intval($grademethod);
+            $this->workteams = intval($workteams);
         }
     }
 
@@ -203,7 +207,8 @@ class block_evalcomix_tasks extends block_evalcomix_object{
             if ($cm) {
                 $module = self::get_type_task($cm->id);
                 $taskmoodle = $DB->get_record($module, array('id' => $cm->instance));
-                $result[] = array('id' => $task->id, 'nombre' => $taskmoodle->name);
+                $cmid = $cm->id;
+                $result[$cmid] = array('id' => $task->id, 'nombre' => $taskmoodle->name);
             }
         }
         return $result;

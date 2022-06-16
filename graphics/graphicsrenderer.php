@@ -22,8 +22,6 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 class block_evalcomix_graphic_renderer {
 
     /**

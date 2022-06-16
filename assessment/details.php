@@ -58,6 +58,10 @@ require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
 global $DB, $USER;
 
+if (!has_capability('moodle/grade:viewhidden', $context) && $userid != $USER->id) {
+    print_error('You do not have permission to view the content');
+}
+
 $renderer = $PAGE->get_renderer('block_evalcomix');
 
 // Getting datas.
@@ -79,6 +83,19 @@ $maxgrade = $task->maxgrade;
 $dataactivity = $DB->get_record($module->name, array('id' => $cm->instance));
 $grademethod = $task->grademethod;
 
+$studentid = $user->id;
+$groups = array();
+if ($task->workteams) {
+    if ($groups = groups_get_all_groups($course->id, $user->id)) {
+        foreach ($groups as $group) {
+            if ($coordinator = $DB->get_record('block_evalcomix_coordinators', array('taskid' => $task->id,
+                    'groupid' => $group->id))) {
+                $studentid = $coordinator->userid;
+            }
+        }
+    }
+}
+
 // If a teacher has done click on Delete button.
 if ($assid && has_capability('moodle/block:edit', $context)) {
     $assessdelete = $DB->get_record('block_evalcomix_assessments', array('id' => $assid));
@@ -87,21 +104,35 @@ if ($assid && has_capability('moodle/block:edit', $context)) {
         if ($assessdelete->assessorid == $assessdelete->studentid) {
             $stringmode = 'self';
         }
-        $response = block_evalcomix_webservice_client::delete_ws_assessment($course->id, $module->name,
-            $task->instanceid, $user->id, $assessdelete->assessorid, $stringmode, BLOCK_EVALCOMIX_MOODLE_NAME);
-        $DB->delete_records('block_evalcomix_assessments', array('id' => $assessdelete->id));
-
-        $params = array('cmid' => $task->instanceid, 'userid' => $user->id, 'courseid' => $course->id);
-        $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-        if ($finalgrade !== null) {
-            if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
-                $params['id'] = $gradeobject->id;
-                $params['finalgrade'] = $finalgrade;
-                $DB->update_record('block_evalcomix_grades', $params);
+        $members = array($user->id => $user);
+        if ($task->workteams) {
+            foreach ($groups as $group) {
+                $membersgroup = groups_get_members($group->id);
+                $members = array_merge($members, $membersgroup);
             }
-        } else {
-            if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
-                $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
+        }
+
+        foreach ($members as $member) {
+            $assessorid = ($stringmode == 'self') ? $member->id : $assessdelete->assessorid;
+            if ($assdelete = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
+                    'assessorid' => $assessorid, 'studentid' => $member->id))) {
+                $response = block_evalcomix_webservice_client::delete_ws_assessment($course->id, $module->name,
+                $task->instanceid, $member->id, $assessorid, $stringmode, BLOCK_EVALCOMIX_MOODLE_NAME);
+                $DB->delete_records('block_evalcomix_assessments', array('id' => $assdelete->id));
+
+                $params = array('cmid' => $task->instanceid, 'userid' => $member->id, 'courseid' => $course->id);
+                $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
+                if ($finalgrade !== null) {
+                    if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
+                        $params['id'] = $gradeobject->id;
+                        $params['finalgrade'] = $finalgrade;
+                        $DB->update_record('block_evalcomix_grades', $params);
+                    }
+                } else {
+                    if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
+                        $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
+                    }
+                }
             }
         }
     }
@@ -142,14 +173,20 @@ if ($modality != null) {
     $withteachergrade = true;
 }
 
+$now = time();
 $weighingself = '';
+$inselfperiod = false;
 $modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'self'));
 if ($modality != null) {
     $gradeobject->self->weighing = $modality->weighing;
     $weighingself = $modality->weighing;
+    if ($modeaetime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $modality->id))) {
+        if ($now >= $modeaetime->timeavailable && $now <= $modeaetime->timedue) {
+            $inselfperiod = true;
+        }
+    }
 }
 
-$now = time();
 $inperiod = false;
 $weighingpeer = '';
 $modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'peer'));
@@ -186,7 +223,7 @@ if (!empty($teacherassessments) && $tool = block_evalcomix_get_modality_tool($co
 
         $tgrade->assessmenturl = $CFG->wwwroot . '/blocks/evalcomix/assessment/assessment_form.php?id='.
             $course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.
-            '&s='.$user->id.'&as='.$teachergrade->assessorid.'&mode=view';
+            '&s='.$studentid.'&as='.$teachergrade->assessorid.'&mode=view';
 
         $tgrade->assessorname = $name;
         $tgrade->assessorurl = $CFG->wwwroot . '/user/view.php?id='.$teachergrade->assessorid .'&course='.$course->id;
@@ -227,7 +264,7 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
             unset($tgrade);
             $tgrade = new stdClass();
             $tgrade->assessmenturl = $CFG->wwwroot . '/blocks/evalcomix/assessment/assessment_form.php?id='.
-                $course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.'&s='.$user->id.'&as='.
+                $course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.'&s='.$studentid.'&as='.
                 $peergrade->assessorid.'&mode=view';
             $tgrade->assessorname = '';
             $tgrade->assessorurl = '';
@@ -245,9 +282,9 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
                     $mainsetofgrades[] = $peergrade->grade;
                 }
             } else if ($grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART && $withteachergrade) {
-                if (block_evalcomix_grades::is_upper_grade($peergrade->grade, $mainsetofgrades)) {
+                if (block_evalcomix_grades::is_upper_grade($peergrade->grade, $mainsetofgrades, $task->threshold)) {
                     $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_UPPER . ' font-weight-bold';
-                } else if (block_evalcomix_grades::is_lower_grade($peergrade->grade, $mainsetofgrades)) {
+                } else if (block_evalcomix_grades::is_lower_grade($peergrade->grade, $mainsetofgrades, $task->threshold)) {
                     $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_LOWER . ' font-weight-bold';
                 } else {
                     $normalpeervalues = true;
@@ -264,9 +301,11 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
             }
 
             // Teachers can delete grades.
-            if (has_capability('moodle/block:edit', $context)) {
-                $tgrade->deleteurl = $CFG->wwwroot . '/blocks/evalcomix/assessment/details.php?cid='.
-                    $contextid.'&itemid='.$itemid.'&userid='.$userid.'&popup=1&assid='.$peergrade->id;
+            if (!$task->workteams || ($task->workteams && $studentid == $userid)) {
+                if (has_capability('moodle/block:edit', $context)) {
+                    $tgrade->deleteurl = $CFG->wwwroot . '/blocks/evalcomix/assessment/details.php?cid='.
+                        $contextid.'&itemid='.$itemid.'&userid='.$userid.'&popup=1&assid='.$peergrade->id;
+                }
             }
             $gradeobject->peer->grades[] = $tgrade;
         }
@@ -277,6 +316,10 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
 
         }
     }
+} else if ($grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART && empty($peerassessments)
+        && is_numeric($gradeobject->peer->weighing) && !$inperiod && $withteachergrade) {
+    $gradeobject->teacher->weighing += $gradeobject->peer->weighing;
+    $gradeobject->peer->weighing = 0;
 }
 
 /*-------------------------------------------------------------------------------------------
@@ -291,42 +334,51 @@ if ($selfassessment != null && $tool = block_evalcomix_get_modality_tool($course
     $tgrade = new stdClass();
     $tgrade->color = 'text-dark';
     if ($grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
-        if (block_evalcomix_grades::is_upper_grade($selfassessment->grade, $mainsetofgrades)) {
+        if (block_evalcomix_grades::is_upper_grade($selfassessment->grade, $mainsetofgrades, $task->threshold)) {
             if (!empty($gradeobject->teacher->grades)) {
                 $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_UPPER . ' font-weight-bold';
                 $gradeobject->teacher->weighing += $gradeobject->self->weighing;
                 $gradeobject->self->weighing = 0;
-            } else if (!empty($gradeobject->peer->grades) && count($peergrades) > 4) {
+            } else if (!empty($gradeobject->peer->grades) && count($peergrades) > BLOCK_EVALCOMIX_GRADE_METHOD_MIN_PEERS) {
                 $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_UPPER . ' font-weight-bold';
                 $gradeobject->peer->weighing += $gradeobject->self->weighing;
                 $gradeobject->self->weighing = 0;
             }
-        } else if (block_evalcomix_grades::is_lower_grade($selfassessment->grade, $mainsetofgrades)) {
+        } else if (block_evalcomix_grades::is_lower_grade($selfassessment->grade, $mainsetofgrades, $task->threshold)) {
             if (!empty($gradeobject->teacher->grades)) {
                 $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_LOWER . ' font-weight-bold';
                 $gradeobject->teacher->weighing += $gradeobject->self->weighing;
                 $gradeobject->self->weighing = 0;
-            } else if (!empty($gradeobject->peer->grades)  && count($peergrades) > 4) {
+            } else if (!empty($gradeobject->peer->grades)  && count($peergrades) > BLOCK_EVALCOMIX_GRADE_METHOD_MIN_PEERS) {
                 $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_LOWER . ' font-weight-bold';
                 $gradeobject->peer->weighing += $gradeobject->self->weighing;
                 $gradeobject->self->weighing = 0;
             }
         }
     }
+    $selfassessorid = ($task->workteams) ? $studentid : $selfassessment->assessorid;
     $tgrade->assessmenturl = $CFG->wwwroot . '/blocks/evalcomix/assessment/assessment_form.php?id='.
         $course->id.'&a='.$task->instanceid.'&t='.$tool->idtool.
-        '&s='.$user->id.'&as='.$selfassessment->assessorid.'&mode=view';
+        '&s='.$studentid.'&as='.$selfassessorid.'&mode=view';
 
     $tgrade->assessorname = '';
     $tgrade->assessorurl = '';
     $tgrade->grade = $selfassessment->grade;
     $tgrade->deleteurl = '';
 
-    if (has_capability('moodle/block:edit', $context)) {
-        $tgrade->deleteurl = $CFG->wwwroot . '/blocks/evalcomix/assessment/details.php?cid='.
-            $contextid.'&itemid='.$itemid.'&userid='.$userid.'&popup=1&assid='.$selfassessment->id;
+    if (!$task->workteams || ($task->workteams && $studentid == $userid)) {
+        if (has_capability('moodle/block:edit', $context)) {
+            $tgrade->deleteurl = $CFG->wwwroot . '/blocks/evalcomix/assessment/details.php?cid='.
+                $contextid.'&itemid='.$itemid.'&userid='.$userid.'&popup=1&assid='.$selfassessment->id;
+        }
     }
     $gradeobject->self->grades[] = $tgrade;
+} else if ($selfassessment == null) {
+    if ($grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART && is_numeric($gradeobject->self->weighing) && !$inselfperiod
+            && $withteachergrade) {
+        $gradeobject->teacher->weighing += $gradeobject->self->weighing;
+        $gradeobject->self->weighing = 0;
+    }
 } else {
     $selfassessment = null;
 }

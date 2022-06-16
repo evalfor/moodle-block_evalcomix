@@ -25,9 +25,8 @@ require_once('../../../config.php');
 
 $mode = optional_param('mode', 1, PARAM_INT);
 $courseid      = required_param('id', PARAM_INT);
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
-}
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+
 require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);

@@ -91,7 +91,7 @@ function block_evalcomix_add_date_time_selector($name, $timestamp, $extra) {
         get_string('november', 'block_evalcomix').'"', 12 => '"'.get_string('december', 'block_evalcomix') . '"');
     $result = block_evalcomix_add_select_range('day_'. $name, 1, 31, $day, $extra);
     $result .= block_evalcomix_add_select('month_'. $name, $months, $month, $extra);
-    $result .= block_evalcomix_add_select_range('year_'. $name, 1970, 2030, $year, $extra);
+    $result .= block_evalcomix_add_select_range('year_'. $name, 2020, 2030, $year, $extra);
     $result .= block_evalcomix_add_select_range('hour_'. $name, 0, 23, $hour, $extra);
     $minutes = array(0 => '00', 5 => '05', 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35,
         40 => 40, 45 => 45, 50 => 50, 55 => 55);
@@ -127,6 +127,20 @@ function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
     $result = array();
     if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
         $result['grademethod'] = $task->grademethod;
+        $result['threshold'] = $task->threshold;
+        $result['workteams'] = $task->workteams;
+        if ($task->workteams == 1) {
+            if ($groupcoordinators = $DB->get_records('block_evalcomix_coordinators', array('taskid' => $task->id))) {
+                $coordinators = array();
+                foreach ($groupcoordinators as $gc) {
+                    $gcgroupid = $gc->groupid;
+                    $coordinators[$gcgroupid] = $gc->userid;
+                }
+                if (!empty($coordinators)) {
+                    $result['coordinators'] = $coordinators;
+                }
+            }
+        }
         $result['toolEP'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'teacher');
         $result['toolAE'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'self');
         $result['toolEI'] = block_evalcomix_get_modality_tool($courseid, $task->id, 'peer');
@@ -141,7 +155,7 @@ function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
             $result['timedueAE'] = $timeae['timedue'];
         }
         $timeei = block_evalcomix_get_evalcomix_modality_time($courseid, $task->id, 'peer');
-        if (isset($timeei['availableEI'])) {
+        if (isset($timeei['available'])) {
             $result['availableEI'] = $timeei['available'];
         }
         if (isset($timeei['timedue'])) {
@@ -170,9 +184,7 @@ function block_evalcomix_get_evalcomix_modality_extra($courseid, $taskid, $modal
     global $DB, $CFG;
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_extra.php');
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
         print_error('noevalcomixtaskid');
@@ -203,9 +215,7 @@ function block_evalcomix_get_evalcomix_modality_time($courseid, $taskid, $modali
     global $DB, $CFG;
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_time.php');
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
         print_error('noevalcomixtaskid');
@@ -234,9 +244,7 @@ function block_evalcomix_get_evalcomix_modality_time($courseid, $taskid, $modali
 function block_evalcomix_get_evalcomix_modality_weighing($courseid, $taskid, $modality) {
     global $DB, $CFG;
     require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('nocourseid');
-    }
+    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
         print_error('noevalcomixtaskid');
@@ -420,4 +428,50 @@ function block_evalcomix_recalculate_grades() {
         }
     }
     return true;
+}
+
+function block_evalcomix_activity_assessed($cm, $studentid = array()) {
+    global $DB;
+    $result = false;
+
+    if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
+        if ($modes = $DB->get_records('block_evalcomix_modes', array('taskid' => $task->id))) {
+            $modetypes = array();
+            foreach ($modes as $mode) {
+                $modality = $mode->modality;
+                $modetypes[$modality] = $modality;
+            }
+            $sql = 'SELECT *
+            FROM {block_evalcomix_assessments}
+            WHERE taskid = ?';
+            if (!empty($studentid)) {
+                $sql .= ' AND studentid IN ('.implode(',', $studentid).')';
+            }
+            if ($assessments = $DB->get_records_sql($sql, array('taskid' => $task->id))) {
+                $context = context_course::instance($cm->course);
+                foreach ($assessments as $assessment) {
+                    if ($assessment->studentid == $assessment->assessorid) {
+                        if (!isset($modetypes['self'])) {
+                            continue;
+                        }
+                    } else {
+                        if (has_capability('moodle/grade:viewhidden', $context, $assessment->assessorid)) {
+                            if (!isset($modetypes['teacher'])) {
+                                continue;
+                            }
+                        } else {
+                            if (!isset($modetypes['peer'])) {
+                                continue;
+                            }
+                        }
+                    }
+                    if (is_enrolled($context, $assessment->studentid, 'mod/choice:choose', true)) {
+                        $result = true;
+                    }
+                }
+            }
+        }
+    }
+
+    return $result;
 }

@@ -29,10 +29,10 @@ $perpageurl    = optional_param('perpage', 0, PARAM_INT);
 $sortitemid    = optional_param('sortitemid', 0, PARAM_ALPHANUM); // Sort by which grade item.
 $grd           = optional_param('grd', 0, PARAM_INT);   // 1 if the system must pass grades to Moodle´s Grades Report.
 $cma = optional_param('cma', 0, PARAM_INT);   // Cm id of evaluated activity.
+$export        = optional_param('e', '0', PARAM_INT);
 
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
-}
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$context = context_course::instance($courseid);
 
 require_once($CFG->dirroot .'/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/grade/report/grader/lib.php');
@@ -40,6 +40,12 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+
+if ($export && has_capability('moodle/block:edit', $context, $USER->id)) {
+    require_once($CFG->dirroot . '/blocks/evalcomix/util.php');
+    block_evalcomix_export_assessment::export($course);
+    exit;
+}
 
 if (!empty($cma)) {
     $data['cma'] = $cma;
@@ -80,19 +86,25 @@ $data['anonymousEI'] = optional_param('anonymousEI', '', PARAM_ALPHANUM);
 $data['alwaysvisibleEI'] = optional_param('alwaysvisibleEI', '', PARAM_ALPHANUM);
 $data['whoassessesEI'] = optional_param('whoassessesEI', '', PARAM_ALPHANUM);
 $data['grademethod'] = optional_param('grademethod', '', PARAM_INT);
-
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
+$data['threshold'] = optional_param('threshold', '', PARAM_INT);
+$workteams = optional_param('workteams', '', PARAM_ALPHA);
+$data['workteams'] = (!empty($workteams) && strtolower($workteams) == 'on') ? 1 : 0;
+$groups = groups_get_all_groups($courseid);
+$coordinators = array();
+foreach ($groups as $group) {
+    $groupid = $group->id;
+    $coordinator = optional_param('coordinator-'.$groupid, '', PARAM_INT);
+    if (!empty($coordinator)) {
+        $coordinators[$groupid] = $coordinator;
+    }
 }
-
-$context = context_course::instance($courseid);
+$data['coordinators'] = $coordinators;
 
 // It is verified that the course is not newly restored, in which case it updates the instruments.
 $environment = $DB->get_record('block_evalcomix', array('courseid' => $courseid));
 // If there are duplicate instruments (timemodified == -1).
 if (isset($environment->id) && $webtools = $DB->get_records('block_evalcomix_tools',
         array('evxid' => $environment->id, 'timemodified' => '-1'))) {
-    // Before $webtools = block_evalcomix_webservice_client::get_ws_list_tool($courseid, BLOCK_EVALCOMIX_MOODLE_NAME);.
     $tools = array();
     if (!empty($webtools) && $environment) {
         block_evalcomix_update_tool_list($environment->id, $webtools);
@@ -212,42 +224,48 @@ if ($grd == 1 && $showmessage == true) {
 }
 
 if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_tools', array('evxid' => $environment->id))) {
-    $newgrades = block_evalcomix_webservice_client::get_assessments_modified(array('tools' => $toollist));
-    if (!empty($newgrades)) {
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
+    try {
+        $newgrades = block_evalcomix_webservice_client::get_assessments_modified(array('tools' => $toollist));
+        if (!empty($newgrades)) {
+            require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
+            require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
 
-        $toolids = array();
-        foreach ($tasks as $task) {
-            if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
-                foreach ($assessments as $assessment) {
-                    $activity = $task->instanceid;
-                    $module = block_evalcomix_tasks::get_type_task($activity);
-                    $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $courseid,
-                        $assessment->assessorid);
-                    $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
-                        '_' . $assessment->assessorid . '_' . $mode . '_' . BLOCK_EVALCOMIX_MOODLE_NAME;
-                    $assessmentid = md5($str);
-                    if (isset($newgrades[$assessmentid])) {
-                        $grade = $newgrades[$assessmentid]->grade;
-                        $toolids[] = $newgrades[$assessmentid]->toolid;
-                        $assessment->grade = $grade;
-                        $DB->update_record('block_evalcomix_assessments', $assessment);
-                        if ($evalcomixgrade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
-                        'cmid' => $task->instanceid, 'userid' => $assessment->studentid))) {
-                            $params = array('cmid' => $task->instanceid, 'userid' => $assessment->studentid,
-                            'courseid' => $courseid);
-                            $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-                            if ($finalgrade !== null) {
-                                $evalcomixgrade->finalgrade = $finalgrade;
-                                $DB->update_record('block_evalcomix_grades', $evalcomixgrade);
+            $toolids = array();
+            foreach ($tasks as $task) {
+                if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
+                    foreach ($assessments as $assessment) {
+                        $activity = $task->instanceid;
+                        $module = block_evalcomix_tasks::get_type_task($activity);
+                        $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $courseid,
+                            $assessment->assessorid);
+                        $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
+                            '_' . $assessment->assessorid . '_' . $mode . '_' . BLOCK_EVALCOMIX_MOODLE_NAME;
+                        $assessmentid = md5($str);
+                        if (isset($newgrades[$assessmentid])) {
+                            if (is_numeric($newgrades[$assessmentid]->grade)) {
+                                $grade = $newgrades[$assessmentid]->grade;
+                                $toolids[] = $newgrades[$assessmentid]->toolid;
+                                $assessment->grade = $grade;
+                                $DB->update_record('block_evalcomix_assessments', $assessment);
+                                if ($evalcomixgrade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
+                                'cmid' => $task->instanceid, 'userid' => $assessment->studentid))) {
+                                    $params = array('cmid' => $task->instanceid, 'userid' => $assessment->studentid,
+                                    'courseid' => $courseid);
+                                    $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
+                                    if ($finalgrade !== null) {
+                                        $evalcomixgrade->finalgrade = $finalgrade;
+                                        $DB->update_record('block_evalcomix_grades', $evalcomixgrade);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+            block_evalcomix_webservice_client::set_assessments_modified(array('toolids' => $toolids));
         }
-        block_evalcomix_webservice_client::set_assessments_modified(array('toolids' => $toolids));
+    } catch (Exception $e) {
+        \core\notification::error('EvalCOMIX is not configured correctly. Please contact the administrator');
     }
 }
 
@@ -258,7 +276,7 @@ $PAGE->set_context($context);
 $PAGE->navbar->add($strplural);
 $PAGE->set_title($strplural);
 $PAGE->set_pagelayout('report');
-$PAGE->set_heading($course->fullname);
+$PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
 $PAGE->requires->jquery();
 $PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
@@ -267,22 +285,21 @@ $event = \block_evalcomix\event\activity_assessor_viewed::create(array('courseid
 $event->trigger();
 
 echo $OUTPUT->header();
-echo '
-        <center>
-            <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>';
+
+require_once($CFG->dirroot . '/blocks/evalcomix/renderer.php');
+echo block_evalcomix_renderer::display_main_menu($courseid, 'assessment');
+
+echo '<h3 class="mb-5">'.get_string('evaluation', 'block_evalcomix').'</h3>';
+require_once($CFG->dirroot . '/blocks/evalcomix/renderer.php');
+$renderer = $PAGE->get_renderer('block_evalcomix');
 
 // If $USER has editing permits.
 if (is_siteadmin($USER) || has_capability('moodle/grade:viewhidden', $context)) {
-    echo '<div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
-        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>';
-    echo '<div><input type="button" value="'.get_string('graphics', 'block_evalcomix').'"
-        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/graphics/index.php?mode=1&id='.$courseid .'\'"/></div>';
-
+    echo $renderer->display_assessmentsection_menu($courseid);
     if (has_capability('moodle/block:edit', $context)) {
-        echo '<div><input type="button" value="'.get_string('settings', 'block_evalcomix').'"
-        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/configuration.php?id='.$courseid .'\'"/></div>';
-
-        echo '<fieldset class="border border-secondary w-50">
+        echo '
+        <center>
+        <fieldset class="border border-secondary w-50 mb-4">
         <legend class="text-left">
         <a href='.$CFG->wwwroot.'/grade/report/index.php?id='.$courseid.'>'.
         get_string('gradebook', 'block_evalcomix').'</a></legend>';
@@ -299,7 +316,8 @@ if (is_siteadmin($USER) || has_capability('moodle/grade:viewhidden', $context)) 
             onclick="if (confirm(\'' . get_string('confirm_delete', 'block_evalcomix') . '\'))location.href=\''.
             $CFG->wwwroot .'/blocks/evalcomix/assessment/index.php?id='.$courseid .'&page='.$page.'&grd=2\'"/></div>';
         }
-        echo '</fieldset>';
+        echo '</fieldset>
+        </center>';
     }
 }
 

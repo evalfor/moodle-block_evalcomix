@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
 /**
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
@@ -26,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Interface of class calcultator
  */
-interface block_evalcomix_icalculator{
+interface block_evalcomix_icalculator {
     /**
      * It applies a mathematical operation to $elements1 and $elements2
      * $activities and $users to travel the element arrays

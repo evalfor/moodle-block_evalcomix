@@ -24,13 +24,12 @@
 require_once('../../../config.php');
 
 $courseid      = required_param('id', PARAM_INT);
-$tid       = optional_param('tool', 0, PARAM_INT);
+$tid           = optional_param('tool', 0, PARAM_INT);
 $sorttool      = optional_param('sorttool', '', PARAM_TEXT);        // Course idsortitemid=lastname.
-$edit      = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be uploaded.
+$edit          = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be uploaded.
 
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
-}
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+
 require_course_login($course);
 
 $context = context_course::instance($course->id);
@@ -55,12 +54,14 @@ require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/renderer.php');
 
 if ($tid) {
     $tooldelete = $DB->get_record('block_evalcomix_tools', array('id' => $tid));
     if ($tooldelete) {
         $response = block_evalcomix_webservice_client::get_ws_deletetool($tooldelete->idtool);
         if ($DB->delete_records('block_evalcomix_tools', array('id' => $tooldelete->id))) {
+            $DB->delete_records('block_evalcomix_subdimension', array('toolid' => $tid));
             $event = \block_evalcomix\event\tool_deleted::create(array('objectid' => $tid,
                 'courseid' => $course->id, 'context' => $context, 'relateduserid' => $USER->id));
             $event->trigger();
@@ -131,13 +132,8 @@ if (ob_get_level() == 0) {
     ob_start();
 }
 
-echo '
-    <center>
-        <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>
-        <div><input type="button" value="'. get_string('assesssection', 'block_evalcomix').'"
-        onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/assessment/index.php?id='.$courseid .'\'"/></div><br>
-    </center>
-';
+echo block_evalcomix_renderer::display_main_menu($courseid, 'design');
+echo  '<h3 class="mb-5">'.get_string('instruments', 'block_evalcomix').'</h3>';
 echo "
     <noscript>
         <div class='text-danger'>".get_string('alertjavascript', 'block_evalcomix')."</div>
@@ -152,7 +148,7 @@ if (has_capability('moodle/block:edit', $context, $USER->id)) {  // If the login
 echo '
     <script type="text/javascript">
         function urledit(u, nombre, edit) {
-            win2 = window.open(u, nombre, "menubar=0,location=0,scrollbars,resizable,width=780,height=500");
+            win2 = window.open(u, nombre, "menubar=0,location=0,scrollbars,resizable,width=900,height=500");
             checkChildedit(edit);
         }
         function checkChildedit(edit) {
@@ -260,10 +256,12 @@ if (!empty($newgrades)) {
                     }
 
                     if (isset($newgrades[$assessmentid]->grade)) {
-                        $grade = $newgrades[$assessmentid]->grade;
-                        $DB->update_record('block_evalcomix_assessments', array('id' => $assessment->id,
+                        if (is_numeric($newgrades[$assessmentid]->grade)) {
+                            $grade = $newgrades[$assessmentid]->grade;
+                            $DB->update_record('block_evalcomix_assessments', array('id' => $assessment->id,
                             'taskid' => $assessment->taskid, 'assessorid' => $assessment->assessorid,
                             'studentid' => $assessment->studentid, 'grade' => $grade, 'timemodified' => time()));
+                        }
                     }
                     if ($evalcomixgrade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
                         'cmid' => $task->instanceid, 'userid' => $assessment->studentid))) {

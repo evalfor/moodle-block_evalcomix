@@ -194,3 +194,143 @@ $string['settings_description'] = 'W tej sekcji zostanie skonfigurowana tabela o
 
 $string['crontask'] = 'Zadanie aktualizacji oceny w księdze ocen EvalCOMIX';
 $string['confirmdeleteassessment'] = 'Czy na pewno chcesz usunąć ocenę?';
+
+// Tool editor.
+$string['selecttool'] = 'Wybierz typ narzędzia';
+$string['accept'] = 'Zaakceptuj';
+$string['alertdimension'] = 'Musi być określony wymiar';
+$string['alertsubdimension'] = 'Musi być określony wymiar podwymiar';
+$string['alertatrib'] = 'Musi być określony atrybut';
+$string['rubricremember'] = 'PAMIĘTAJ: Wartości nie mogą się powtarzać';
+$string['importfile'] = 'Import pliku';
+$string['noatrib'] = 'Atrybut negatywny';
+$string['yesatrib'] = 'Atrybut pozytywny';
+
+$string['comments'] = 'Komentarze';
+$string['grade'] = 'Ocena';
+$string['nograde'] = 'Brak oceny';
+$string['alertsave'] = "Ocena pomyślnie zapisana. Jeśli chcesz, możesz zamknąć okno";
+
+$string['add_comments'] = 'Włącz komentarze';
+$string['checklist'] = 'Check-Lista';
+$string['ratescale'] = 'Skala ocen';
+$string['listrate'] = 'Check-Lista + Skala Ocen';
+$string['rubric'] = 'Rubryka';
+$string['differentail'] = 'Różnica semantyczna';
+$string['mix'] = 'Narzędzia mieszane';
+$string['argument'] = 'Ocena argumentacyjna';
+$string['numdimensions'] = 'Nr Wymiarów:';
+$string['numvalues'] = 'Nr Wartości:';
+$string['totalvalue'] = 'Ocena globalna';
+$string['dimension'] = 'Wymiar:';
+$string['subdimension'] = 'Podwymiar:';
+$string['numsubdimension'] = 'Nr Podwymiarów:';
+$string['numattributes'] = 'Nr Atrybutów:';
+$string['attribute'] = 'Atrybuty';
+$string['porvalue'] = 'Wartość procentowa:';
+$string['value'] = 'Wartość';
+$string['values'] = 'Wartości';
+$string['globalvalue'] = 'WYMIAR OCENY GLOBALNEJ:';
+$string['import'] = 'Import';
+$string['novalue'] = 'Wartość negatywna';
+$string['yesvalue'] = 'Wartość pozytywna';
+$string['idea'] = 'Idea i kierunek';
+$string['design'] = 'PROJEKT';
+$string['develop'] = 'ROZWÓJ';
+$string['translation'] = 'TŁUMACZENIE';
+$string['colaboration'] = 'WSPÓŁPRACA';
+$string['license'] = 'LICENCJA';
+$string['addtool'] = 'Dodaj narzędzie oceny';
+$string['title'] = 'Tytuł';
+$string['titledim'] = 'Wymiar';
+$string['titlesubdim'] = 'Podwymiar';
+$string['titleatrib'] = 'Atrybut';
+$string['titlevalue'] = 'Wartość';
+$string['no'] = 'Nie';
+$string['yes'] = 'Tak';
+$string['observation'] = 'Komentarze';
+$string['view'] = 'Zamknij poprzednie okno';
+
+$string['windowselection'] = 'Wybór okna';
+$string['selectfile'] = 'Wybierz plik';
+$string['upfile'] = 'Załaduj plik';
+$string['cancel'] = 'Anuluj';
+
+$string['savedsaccessfully'] = 'Plik został pomyślnie zapisany';
+$string['ADimension'] = 'Pole nie może być unieważnione. \"Nr Wymiarów\" wartość musi być większa niż zero \"Nr Wartości\" wartość musi być większa lub równa 2';
+$string['ATotal'] = 'Pole nie może być unieważnione. \"Nr Wartości\" wartość musi być większa lub równa 2';
+$string['ASubdimension'] = 'Pole nie może być unieważnione. \"Nr Podwymiarów\" wartość musi być większa niż zero i \"Nr Wartości\" większy lub równy 2';
+$string['AAttribute'] = 'Pole nie może być unieważnione. Wstaw liczbę większą niż 0';
+$string['ADiferencial'] = '\"Nr Atrybutów\" musi być większy niż 0. \"Nr Wartości\" musi być ODD';
+$string['ErrorFormato'] = 'Plik jest unieważniony lub format niewłaściwy"';
+$string['ErrorAcceso'] = 'Brak dostępu do pliku';
+$string['ErrorExtension'] = 'Niewłaściwy format. Rozszerzenie musi być \"evx\"';
+$string['ErrorSaveTitle'] = 'Błąd: Tytuł nie może być usunięty';
+$string['ErrorSaveTools'] = 'Błąd: Musisz wybrać przynajmniej jedno narzędzie oceny';
+
+$string['TSave'] = 'Zapisz';
+$string['TImport'] = 'Import';
+$string['TExport'] = 'Eksport';
+$string['TAumentar'] = 'Zwiększ rozmiar czcionki';
+$string['TDisminuir'] = 'Zmniejsz rozmiar czcionki';
+$string['TView'] = 'Poprzedni widok';
+$string['TPrint'] = 'Drukuj';
+$string['THelp'] = 'Pomoc';
+$string['TAbout'] = 'O';
+
+$string['mixed_por'] = 'Ważenie w ocenie finalnej';
+
+$string['handlerofco'] = 'Zarządzanie umiejętnościami i efektami uczenia się';
+$string['competencies'] = 'Kompetencje';
+$string['outcomes'] = 'Wyniki nauki';
+$string['compidnumber'] = 'Kod';
+$string['compshortname'] = 'Krótkie imię';
+$string['compdescription'] = 'Opis';
+$string['comptypes'] = 'Typy zawodów';
+$string['comptype'] = 'Typ zawodów';
+$string['newcomp'] = 'Nowa kompozycja';
+$string['newoutcome'] = 'Nowy efekt uczenia się';
+$string['newcomptype'] = 'Nowy typ kompilacji';
+$string['compreport'] = 'Raport z rozwoju';
+$string['compandout'] = 'Kompetencje i wyniki nauki';
+$string['uploadcompetencies'] = 'Importuj kompetencje i wyniki';
+$string['uploadcompetencies_help'] = 'Kompetencje i efekty uczenia się można przesłać za pomocą pliku tekstowego. Format pliku powinien być następujący:
+
+* Każdy wiersz pliku zawiera jeden rekord
+* Każdy rekord to seria danych oddzielonych przecinkami (lub innymi ogranicznikami)
+* Pierwszy rekord zawiera listę nazw pól, które definiują format reszty pliku
+* Wymagane nazwy pól to idnumber, shortname, result';
+$string['idnumberduplicate'] = 'Zduplikowana wartość numeru identyfikacyjnego';
+$string['invalidoutcome'] = 'Nieprawidłowa wartość wyniku. Musi wynosić 0 lub 1';
+$string['invalididnumberupload'] = 'Nieprawidłowa wartość numeru identyfikacyjnego. Rozmiar musi być mniejszy niż 100';
+$string['missingidnumber'] = 'Brak numeru identyfikacyjnego kolumny';
+$string['missingshortname'] = 'Brak krótkiej nazwy kolumny';
+$string['missingoutcome'] = 'Brak kolumny wyniku';
+$string['ignored'] = 'Ignorowane';
+$string['errors'] = 'Błędy';
+$string['importresult'] = 'Importuj wyniki';
+$string['uploadcompetenciespreview'] = 'Podgląd przesłanych kompetencji';
+$string['choicecompetency'] = 'Wybierz zawody';
+$string['choiceoutcome'] = 'Wybierz wynik';
+$string['associatecompandout'] = 'Powiąż kompetencje i wyniki';
+$string['allstudens'] = 'Wszyscy studenci';
+$string['onestudent'] = 'Konkretny uczeń';
+$string['onegroup'] = 'Konkretna grupa';
+$string['evaluationandreports'] = 'Ocena i raporty';
+$string['workteams'] = 'Zespoły robocze';
+$string['workteamsassessments'] = 'Ocena zespołów roboczych';
+$string['assignteamcoordinators'] = 'Przypisz koordynatorów zespołu';
+$string['workteamsassessments_help'] = 'Jeśli aktywujesz tę opcję, będziesz mógł wyznaczyć koordynatora do reprezentowania grupy.
+
+Jeśli jest **Ocena Nauczyciela - PE**, nauczyciele będą mogli oceniać tylko koordynatorów, a ocena ta zostanie przypisana każdemu członkowi ich grupy.
+
+Jeśli jest **Samoocena – AE**, tylko koordynator może dokonać samooceny i jego ocena zostanie przypisana każdemu członkowi jego grupy.
+
+W przypadku **Oceny koleżeńskiej – EI**, studenci będą mogli oceniać tylko koordynatorów każdej grupy, a każda ocena zostanie przypisana każdemu członkowi grupy.
+
+Uczniowie, którzy nie należą do żadnej grupy, nie otrzymają oceny. Grupy, które nie mają przypisanego koordynatora, nie otrzymają żadnej oceny i nie będą mogły oceniać.';
+$string['selectcoordinator'] = 'wybierz koordynatora';
+$string['alertnogroup'] = 'W kursie nie utworzono jeszcze żadnych grup. Aby je utworzyć, musisz uzyskać dostęp do następującej sekcji:';
+$string['activityassessed'] = 'Wyłączony, ponieważ uczeń został już oceniony';
+$string['coordinatorassessed'] = 'Obecnie są koordynatorzy, którzy otrzymali już pewną ocenę. Tych, którzy otrzymali ocenę, nie można zastąpić. Jeśli chcesz je zastąpić, musisz najpierw usunąć recenzje.';
+$string['confirmdisabledworkteams'] = 'W ramach tego działania przeprowadzono już oceny. Jeśli wyłączysz tę opcję i zapiszesz zmiany, wszystkie takie oceny zostaną usunięte i nie będzie można ich odzyskać. Czy na pewno chcesz wyłączyć tę opcję?';

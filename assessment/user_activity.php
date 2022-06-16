@@ -107,7 +107,7 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                         if (isset($args) && !empty($args)) {
                             echo '<ul>';
                             foreach ($args as $arg) {
-                                $relativepath = assignsubmission_file_pluginfile($course, $tree->cm,
+                                $relativepath = block_evalcomix_assignsubmission_file_pluginfile($course, $tree->cm,
                                     $tree->context, 'submission_files', $arg, 1);
                                 $fullpath = 'pluginfile.php' . $relativepath . '?forcedownload=1';
                                 echo '<li><div><a href="'. $fullpath . '">'. $arg[1] .'</a></div></li>';

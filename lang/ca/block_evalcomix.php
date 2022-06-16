@@ -179,3 +179,143 @@ $string['groupmod'] = 'Grup';
 $string['classmod'] = 'Classe';
 $string['nostudents'] = 'No hi ha dades per a aquesta activitat';
 $string['nostudentsgroup'] = 'No hi ha dades en el grup seleccionat';
+
+// Tool editor.
+$string['accept'] = 'Acceptar';
+$string['selecttool'] = 'Esculli el tipus d\ínstrument a crear';
+$string['alertdimension'] = 'Ha d\existir al menys una dimensió';
+$string['alertsubdimension'] = 'Ha d\existir al menys una subdimensió';
+$string['alertatrib'] = 'Ha d\existir al menys un atribut';
+$string['rubricremember'] = 'RECORDI: NO haurien d\'existir valors REPETITS';
+$string['importfile'] = 'Importar Arxiu';
+$string['noatrib'] = 'Atribut Negatiu';
+$string['yesatrib'] = 'Atribut Positiu';
+
+$string['comments'] = 'Comentaris';
+$string['grade'] = 'Qualificació';
+$string['nograde'] = 'Sense qualificació';
+$string['alertsave'] = "Avaluació desada satisfactoriament. Si ho dessitja, ja pot tancar la finestra.";
+
+$string['add_comments'] = 'Activar comentaris';
+$string['checklist'] = 'Llista de Control';
+$string['ratescale'] = 'Escala de Valoració';
+$string['listrate'] = 'Llista de Control + Escala de Valoració';
+$string['rubric'] = 'Rúbrica';
+$string['differentail'] = 'Diferencial Semàntic';
+$string['mix'] = 'Instrument Mixte';
+$string['argument'] = 'Argumentari Avaluatiu';
+$string['import'] = 'Importar';
+$string['numdimensions'] = 'Nº Dimensions:';
+$string['numvalues'] = 'Nº de Valors:';
+$string['totalvalue'] = 'Valoració Global';
+$string['dimension'] = 'Dimensió:';
+$string['subdimension'] = 'Subdimensió:';
+$string['numsubdimension'] = 'Nº Subdimensions:';
+$string['numattributes'] = 'Nº de Atributs:';
+$string['attribute'] = 'Atributs';
+$string['porvalue'] = 'Valor Percentual:';
+$string['value'] = 'Valor';
+$string['values'] = 'Valors';
+$string['globalvalue'] = 'VALORACIÓ GLOBAL DIMENSIÓ:';
+$string['novalue'] = 'Valor Negatiu';
+$string['yesvalue'] = 'Valor Positiu';
+$string['idea'] = 'IDEA I DIRECCIÓ';
+$string['design'] = 'DISSENY';
+$string['develop'] = 'DESENVOLUPAMENT';
+$string['translation'] = 'TRADUCCIÓ';
+$string['colaboration'] = 'COL.LABOREN';
+$string['license'] = 'LLICÈNCIA';
+$string['addtool'] = 'Afegir un Instrument';
+$string['title'] = 'Títol';
+$string['titledim'] = 'Dimensio';
+$string['titlesubdim'] = 'Subdimensio';
+$string['titleatrib'] = 'Atribut';
+$string['titlevalue'] = 'Valor';
+$string['no'] = 'No';
+$string['yes'] = 'Sí';
+$string['observation'] = 'Comentaris';
+$string['view'] = 'Tancar Vista Prèvia';
+
+$string['windowselection'] = 'Finestra de selecció';
+$string['selectfile'] = 'Seleccioni l\'arxiu';
+$string['upfile'] = 'Pujar fichero';
+$string['cancel'] = 'Cancelar';
+
+$string['savedsaccessfully'] = "L\'instrument s\'ha desat satisfactoriament";
+$string['ADimension'] = 'Aquest camp no pot ésser buit. \"Nº de Dimensions\" ha ser un nombre major que 0 i \"Valoració Global\" un nombre major o igual que 2';
+$string['ATotal'] = 'Aquest camp no pot ésser buit. \"Nº de Valors\" ha de ser un nombre major o igual que 2';
+$string['ASubdimension'] = 'Aquest camp no pot ésser buit. \"Nº Subdimensions\" ha de ser un nombre major que 0 i \"Nº de Valors\" major o igual que 2';
+$string['AAttribute'] = 'Aquest camp no pot ésser buit. Si us plau, especifiqui un nombre major de 0';
+$string['ADiferencial'] = '\"Nº de Atributs\" ha de ser major que 0. \"Nº de Valors\" ha de ser SENAR';
+$string['ErrorFormato'] = 'L\'arxiu està buit o el format és incorrecte';
+$string['ErrorAcceso'] = 'No s\'ha pogut accedir a l\'instrument';
+$string['ErrorExtension'] = 'Formato Incorrecte. La extensió ha de ser \"evx\"';
+$string['ErrorSaveTitle'] = 'Error: Títol no pot ésser buit';
+$string['ErrorSaveTools'] = 'Error: Heu de seleccionar almenys un instrument';
+
+$string['TSave'] = 'Desar';
+$string['TImport'] = 'Importar';
+$string['TExport'] = 'Exportar';
+$string['TAumentar'] = 'Augmentar tamany de fuente';
+$string['TDisminuir'] = 'Disminuir tamany de fuente';
+$string['TView'] = 'Vista Prèvia';
+$string['TPrint'] = 'Imprimir';
+$string['THelp'] = 'Ajuda';
+$string['TAbout'] = 'Acerca de';
+
+$string['mixed_por'] = 'Pes en la nota final';
+
+$string['handlerofco'] = 'Gestió de competències i resultats daprenentatge';
+$string['competencies'] = 'Competències';
+$string['outcomes'] = 'Resultats d\'aprenentatge';
+$string['compidnumber'] = 'Codi';
+$string['compshortname'] = 'Nom curt';
+$string['compdescription'] = 'Descripció';
+$string['comptypes'] = 'Tipus de competència';
+$string['comptype'] = 'Tipus de competència';
+$string['newcomp'] = 'Nova competència';
+$string['newoutcome'] = 'Nou resultat d\'aprenentatge';
+$string['newcomptype'] = 'Nou tipus de competència';
+$string['compreport'] = 'Informe de desenvolupament';
+$string['compandout'] = 'Competències i resultats d\'aprenentatge';
+$string['uploadcompetencies'] = 'Importar competències i resultats';
+$string['uploadcompetencies_help'] = 'Les competències i els resultats d\'aprenentatge es poden carregar mitjançant un fitxer de text. El format del fitxer ha de ser el següent:
+
+* Cada línia del fitxer conté un registre
+* Cada registre és una sèrie de dades separades per comes (o altres delimitadors)
+* El primer registre conté una llista de noms de camp que defineixen el format de la resta del fitxer
+* Els noms de camp requerits són idnumber, shortname, result';
+$string['idnumberduplicate'] = 'Valor d\'idnumber duplicat';
+$string['invalidoutcome'] = 'Valor d\'outcome invàlid. Ha de ser 0 o 1';
+$string['invalididnumberupload'] = 'El valor d\'idnumber no és vàlid. La mida ha de ser menor que 100';
+$string['missingidnumber'] = 'Manca la columna idnumber';
+$string['missingshortname'] = 'Falta la columna shortname';
+$string['missingoutcome'] = 'Falta la columna outcome';
+$string['ignored'] = 'Ignorats';
+$string['errors'] = 'Errors';
+$string['importresult'] = 'Importar resultats';
+$string['uploadcompetenciespreview'] = 'Vista preliminar de competències pujades';
+$string['choicecompetency'] = 'Seleccioneu una competència';
+$string['choiceoutcome'] = 'Seleccioneu un resultat';
+$string['associatecompandout'] = 'Associar competències i resultats';
+$string['allstudens'] = 'Tots els estudiants';
+$string['onestudent'] = 'Estudiant específic';
+$string['onegroup'] = 'Grup específic';
+$string['evaluationandreports'] = 'Avaluació i informes';
+$string['workteams'] = 'Equips de treball';
+$string['workteamsassessments'] = 'Avaluació dels equips de treball';
+$string['assignteamcoordinators'] = 'Assigneu coordinadors d\'equip';
+$string['workteamsassessments_help'] = 'Si activeu aquesta opció, podreu nomenar un coordinador que representi el grup.
+
+Si hi ha **Avaluació del Professorat - EP**, els professors només podran avaluar els coordinadors i aquesta avaluació se li assignarà a cada membre del seu grup.
+
+Si hi ha **Autoavaluació – AE**, només el coordinador podrà autoavaluar-se i la seva avaluació se li assignarà a cada membre del grup.
+
+Si hi ha **Avaluació entre Iguals – EI**, els alumnes només podran avaluar els coordinadors de cada grup i cada avaluació se li assignarà a cada membre del grup.
+
+Els alumnes que no estiguin a cap grup no rebran avaluació. Els grups que no tinguin assignat un coordinador no rebran cap avaluació i tampoc no podran avaluar.';
+$string['selectcoordinator'] = 'Tria coordinador';
+$string['alertnogroup'] = 'Encara no s\'han creat grups al curs. Per crear-los haureu d\'accedir a la secció següent:';
+$string['activityassessed'] = 'Deshabilitat pel fet que ja s\'ha avaluat algun estudiant';
+$string['coordinatorassessed'] = 'Actualment hi ha coordinadors que ja han rebut alguna avaluació. Aquells que hagin rebut alguna avaluació no podran ser reemplaçats';
+$string['confirmdisabledworkteams'] = 'En aquesta activitat ja s\'han fet avaluacions. Si desactiva aquesta opció i desa els canvis, s\'eliminaran totes aquestes avaluacions i no es podran recuperar. Confirmeu que voleu desactivar l\'opció?';

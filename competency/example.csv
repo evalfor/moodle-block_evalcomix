@@ -1,0 +1,5 @@
+idnumber;shortname;description;outcome;timecreated;timemodified;typename;typedescription
+C01;Competency01;"Description of Competency01";0;1640088471;1640168289;BASIC;"Description of type of competency BASIC"
+C02;Competency02;"Description of Competency02";0;1640088472;1640168288;GENERAL;"Description of type of competency GENERAL"
+O01;Outcome01;"Description of Outcome01";1;1640168334;;;
+O02;Outcome02;"Description of Outcome02";1;1640168335;;;

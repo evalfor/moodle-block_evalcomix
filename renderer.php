@@ -295,9 +295,8 @@ class block_evalcomix_renderer extends plugin_renderer_base {
 
         if (!empty($grades->teacher->grades)) {
             foreach ($grades->teacher->grades as $tgrade) {
-                $output .= '<a href="'.$tgrade->assessorurl.'" target="popup" title="'.$tgrade->assessorname.'"
-onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\');
-return false;">'. round($tgrade->grade, 2) .'/'. round($grades->teacher->maxgrade, 2) .' </a>';
+                $output .= '<span title="'.$tgrade->assessorname.'">'
+                . round($tgrade->grade, 2) .'/'. round($grades->teacher->maxgrade, 2) .' </span>';
                 $output .= '<input type="image" src="../images/lupa.png"
 onClick="window.open(\''.$tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
 return false;" title="'.get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'"
@@ -364,9 +363,8 @@ width="15"/>';
                 $output .= $grades->peer->extra . '<br>';
             }
             foreach ($grades->peer->grades as $tgrade) {
-                $output .= '<a href="'.$tgrade->assessorurl.'" target="popup" title="'.$tgrade->assessorname.'"
-onClick="window.open(this.href, this.target, \'scrollbars,resizable,width=780,height=500\');
-return false;" class="'.$tgrade->color.'">'. round($tgrade->grade, 2) .'/'. round($grades->peer->maxgrade, 2) .' </a>';
+                $output .= '<span title="'.$tgrade->assessorname.'"
+class="'.$tgrade->color.'">'. round($tgrade->grade, 2) .'/'. round($grades->peer->maxgrade, 2) .'</span>';
                 $output .= '<input type="image" src="../images/lupa.png"
 onClick="window.open(\''.$tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
 return false;" title="'.get_string('view', 'block_evalcomix').'" alt="'.get_string('view', 'block_evalcomix').'"
@@ -411,6 +409,107 @@ width="15"/>';
                 get_string('evalcomixgrade', 'block_evalcomix') .': '.
                 format_float($grades->finalgrade, 2) .' / '. round($grades->maxgrade, 2) .'</div>';
         }
+        return $output;
+    }
+
+    public static function display_main_menu($courseid, $option = 'assessment') {
+        global $CFG;
+        require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
+        $output = '';
+
+        $active1 = '';
+        $active2 = '';
+        $active3 = '';
+        $active4 = '';
+
+        switch ($option) {
+            case 'design':
+                $active1 = 'active';
+            break;
+            case 'competency':
+                $active3 = 'active';
+            break;
+            case 'report':
+                $active4 = 'active';
+            break;
+            default:
+                $active2 = 'active';
+        }
+
+        $output .= '
+        <div class="mb-5 border-bottom">
+            <ul class="nav nav-tabs">
+        ';
+
+        $context = context_course::instance($courseid);
+        if (has_capability('moodle/grade:viewhidden', $context)) {
+            $output .= '
+                <li class="nav-item">
+                    <a class="nav-link py-0 '.$active3.'" href="'.$CFG->wwwroot.'/blocks/evalcomix/competency/index.php?id='.
+                    $courseid.'">'. get_string('compandout', 'block_evalcomix').'</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link py-0 '.$active1.'" href="'.$CFG->wwwroot.'/blocks/evalcomix/tool/index.php?id='.
+                    $courseid.'">'. get_string('instruments', 'block_evalcomix').'</a>
+                </li>
+            ';
+        }
+
+        $output .= '
+                <li class="nav-item">
+                    <a class="nav-link py-0 '.$active2.'" href="'.$CFG->wwwroot.'/blocks/evalcomix/assessment/index.php?id='.
+                    $courseid.'">'. get_string('evaluation', 'block_evalcomix').'</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link py-0 '.$active4.'" href="'.$CFG->wwwroot.'/blocks/evalcomix/competency/report.php?id='.
+                    $courseid.'">'. get_string('compreport', 'block_evalcomix').'</a>
+                </li>
+            </ul>
+        </div>
+
+        <center>
+         <!--  <div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div><br>-->
+        </center>
+        ';
+
+        return $output;
+    }
+
+    public function display_assessmentsection_menu($courseid) {
+        global $CFG;
+        $output = '';
+
+        $output = '
+        <div class="mb-1">
+            <ul class="nav nav-pills justify-content-center">
+                <li class="nav-item">
+                    <button type="button" class="mr-1" onclick="location.href=\''. $CFG->wwwroot .
+                    '/blocks/evalcomix/graphics/index.php?mode=1&id='.$courseid .'\'">'.
+                    get_string('graphics', 'block_evalcomix').'</button>
+                </li>
+        ';
+        $context = context_course::instance($courseid);
+        if (has_capability('moodle/block:edit', $context)) {
+            $output .= '
+                <li class="nav-item">
+                    <button type="button" class="mr-1" onclick="location.href=\''.$CFG->wwwroot .
+                    '/blocks/evalcomix/assessment/configuration.php?id='.$courseid.'\'">'.
+                    get_string('settings', 'block_evalcomix').'</button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" onclick="location.href=\''.$CFG->wwwroot .
+                    '/blocks/evalcomix/assessment/index.php?id='.$courseid.'&e=1\'" data-toggle="tooltip" data-placement="right"
+                    title="'.get_string('evaluationexporthelp', 'block_evalcomix').'">'.
+                    get_string('export', 'block_evalcomix'). ' <i class="icon fa fa-question-circle text-info fa-fw mr-0"
+                    ></i></button>
+                </li>
+            ';
+        }
+        $output .= '
+            </ul>
+        </div>
+        ';
+
         return $output;
     }
 }

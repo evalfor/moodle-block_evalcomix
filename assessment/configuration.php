@@ -30,9 +30,7 @@ $page          = optional_param('page', 0, PARAM_INT);   // Active page.
 $hide          = optional_param('hide', 0, PARAM_INT);
 $show          = optional_param('show', 0, PARAM_INT);
 
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
-}
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($courseid);
 require_capability('moodle/block:edit', $context);
 

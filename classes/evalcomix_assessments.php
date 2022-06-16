@@ -25,7 +25,7 @@ require_once('evalcomix_modes.php');
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-class block_evalcomix_assessments extends block_evalcomix_object{
+class block_evalcomix_assessments extends block_evalcomix_object {
     public $table = 'block_evalcomix_assessments';
 
     /**
@@ -322,6 +322,10 @@ class block_evalcomix_assessments extends block_evalcomix_object{
             return $result;
         }
         return false;
+    }
+
+    public static function get_assessments_by_modality_helper() {
+
     }
 
     /**

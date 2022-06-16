@@ -1,0 +1,13 @@
+.progress {
+    height: 2rem;
+}
+.label-progress {
+	font-size: 0.85rem;
+	text-align: right;
+}
+.progres-gradient-blue {
+  background-image: linear-gradient(to right, #41AED9, #004059);
+}
+.progress-bar {
+	transition: width 2s ease-out;
+}

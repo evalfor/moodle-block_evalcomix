@@ -28,7 +28,7 @@ require_once('icalculator.php');
 /**
  * It defined "calculate" method of "icalculator" as average operation
  */
-class block_evalcomix_calculator_average implements block_evalcomix_icalculator{
+class block_evalcomix_calculator_average implements block_evalcomix_icalculator {
     /**
      * It works out the average between elements of array $grades1 and $grades2
      * $activities and $users to travel the element arrays

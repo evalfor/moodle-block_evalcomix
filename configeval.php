@@ -59,15 +59,18 @@ if (isset($config->serverurl)) {
     }
 
     if (!defined('BLOCK_EVALCOMIX_FORM_ASSESS')) {
-        define('BLOCK_EVALCOMIX_FORM_ASSESS', BLOCK_EVALCOMIX_DIREVALCOMIXS . '/app.php/api/client/assessment/:assessmentid/tool/:toolid/edit');
+        define('BLOCK_EVALCOMIX_FORM_ASSESS', BLOCK_EVALCOMIX_DIREVALCOMIXS .
+        '/app.php/api/client/assessment/:assessmentid/tool/:toolid/edit');
     }
 
     if (!defined('BLOCK_EVALCOMIX_CLIENT_NEW')) {
-        define('BLOCK_EVALCOMIX_CLIENT_NEW', BLOCK_EVALCOMIX_DIREVALCOMIX .'/app.php/api/client/tool/:toolid/new');
+        define('BLOCK_EVALCOMIX_CLIENT_NEW', $CFG->wwwroot .
+        '/blocks/evalcomix/tool/editor/selection.php?type=new&identifier=:toolid');
     }
 
     if (!defined('BLOCK_EVALCOMIX_CLIENT_EDIT')) {
-        define('BLOCK_EVALCOMIX_CLIENT_EDIT', BLOCK_EVALCOMIX_DIREVALCOMIX .'/app.php/api/client/tool/:toolid/edit');
+        define('BLOCK_EVALCOMIX_CLIENT_EDIT', $CFG->wwwroot .
+        '/blocks/evalcomix/tool/editor/selection.php?type=open&identifier=:toolid');
     }
 
     if (!defined('BLOCK_EVALCOMIX_DELETE')) {
@@ -87,7 +90,8 @@ if (isset($config->serverurl)) {
     }
 
     if (!defined('BLOCK_EVALCOMIX_DUPLICATE_TOOL')) {
-        define('BLOCK_EVALCOMIX_DUPLICATE_TOOL', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/tool/:currenttool/duplicate/:newtool');
+        define('BLOCK_EVALCOMIX_DUPLICATE_TOOL', BLOCK_EVALCOMIX_DIREVALCOMIX .
+        '/app.php/api/tool/:currenttool/duplicate/:newtool');
     }
 
     if (!defined('BLOCK_EVALCOMIX_GET_TOOLS')) {
@@ -108,6 +112,12 @@ if (isset($config->serverurl)) {
     }
     if (!defined('BLOCK_EVALCOMIX_TOOL_MODIFIED')) {
         define('BLOCK_EVALCOMIX_TOOL_MODIFIED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/tool/nomodified');
+    }
+    if (!defined('BLOCK_EVALCOMIX_GET_GRADE_SUBDIMENSION')) {
+        define('BLOCK_EVALCOMIX_GET_GRADE_SUBDIMENSION', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/grade/subdimension');
+    }
+    if (!defined('BLOCK_EVALCOMIX_ASSESSMENT_COMMENTED')) {
+        define('BLOCK_EVALCOMIX_ASSESSMENT_COMMENTED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/assessment/commented');
     }
 }
 if (isset($config->token)) {

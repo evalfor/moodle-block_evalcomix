@@ -181,7 +181,7 @@ $string['nostudentselfassessed'] = 'There is not assessed student';
 $string['admindescription'] = 'Configure your EvalCOMIX server settings. Make <strong>sure</strong> that the values you enter here are right. Otherwise the integration might not work.';
 $string['adminheader'] = 'EvalCOMIX server configuration';
 $string['serverurl'] = 'EvalCOMIX server URL:';
-$string['serverurlinfo'] = 'Here you need to enter the URL for your EvalCOMIX server. ie: http://localhost/evalcomix';
+$string['serverurlinfo'] = 'Here you need to enter the URL for your EvalCOMIX server. Do not include a trailing slash. ie: http://localhost/evalcomix';
 $string['validationheader'] = 'Settings validation';
 $string['validationinfo'] = 'Please save the settings before clicking the validation button. If the validation is unsuccessful, recheck the url and token';
 $string['validationbutton'] = 'Validate Settings';
@@ -197,7 +197,13 @@ $string['whoassesses_EI'] = 'Who assesses';
 $string['anystudent_EI'] = 'Any student';
 $string['groups_EI'] = 'Groups';
 $string['specificstudents_EI'] = 'Specific students';
-$string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation. If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates. If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected. If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated';
+$string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation.
+
+If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates.
+
+If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected.
+
+If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated. This option will be disabled if "Evaluation of work teams" is selected';
 $string['assignstudents_EI'] = 'Assign students';
 $string['assess_students'] = 'Assess students';
 $string['studentstoassess'] = 'Students to assess';
@@ -246,3 +252,157 @@ $string['tooldeleted'] = 'Tool deleted';
 $string['studentassessed'] = 'Student assessed';
 $string['graphicsviewed'] = 'Graphics viewed';
 $string['configurationviewed'] = 'Configuration viewed';
+
+// Tool Editor.
+$string['selecttool'] = 'Select tool type to create';
+$string['accept'] = 'Accept';
+$string['alertdimension'] = 'Al least, must exist a dimension';
+$string['alertsubdimension'] = 'Al least, must exist a subdimension';
+$string['alertatrib'] = 'At least, must exist an attribute';
+$string['rubricremember'] = 'REMEMBER: REPEATED values should not exist';
+$string['importfile'] = 'Import file';
+$string['noatrib'] = 'Negative Attribute';
+$string['yesatrib'] = 'Positive Attribute';
+
+$string['comments'] = 'Comments';
+$string['grade'] = 'Grade';
+$string['nograde'] = 'No Grade';
+$string['alertsave'] = "Assessment saved saccessfully. If you want, can close this windows";
+
+$string['add_comments'] = 'Turn Comments';
+$string['checklist'] = 'Check List';
+$string['ratescale'] = 'Rating Scale';
+$string['listrate'] = 'Check List + Rating Scale';
+$string['rubric'] = 'Rubric';
+$string['differentail'] = 'Semantic Differential';
+$string['mix'] = 'Mixed Tool';
+$string['argument'] = 'Argumentative Assessment';
+$string['numdimensions'] = 'Nº Dimensions:';
+$string['numvalues'] = 'Nº of Values:';
+$string['totalvalue'] = 'Global Assessment';
+$string['dimension'] = 'Dimension:';
+$string['subdimension'] = 'Subdimension:';
+$string['numsubdimension'] = 'Nº Subdimensions:';
+$string['numattributes'] = 'Nº of Attributes:';
+$string['attribute'] = 'Attributes';
+$string['porvalue'] = 'Percentage Value:';
+$string['value'] = 'Value';
+$string['values'] = 'Values';
+$string['globalvalue'] = 'DIMENSIÓN GLOBAL ASSESSMENT:';
+$string['import'] = 'Import';
+$string['novalue'] = 'Negative Value';
+$string['yesvalue'] = 'Positive Value';
+$string['idea'] = 'IDEA Y DIRECTION';
+$string['design'] = 'DESIGN';
+$string['develop'] = 'DEVELOPMENT';
+$string['translation'] = 'TRANSLATION';
+$string['colaboration'] = 'COOPERATE';
+$string['license'] = 'LICENSE';
+$string['addtool'] = 'Add Assessment Tool';
+$string['title'] = 'Title';
+$string['titledim'] = 'Dimension';
+$string['titlesubdim'] = 'Subdimension';
+$string['titleatrib'] = 'Attribute';
+$string['titlevalue'] = 'Value';
+$string['no'] = 'No';
+$string['yes'] = 'Yes';
+$string['observation'] = 'Comments';
+$string['view'] = 'Close Previous View';
+
+$string['windowselection'] = 'Selection Window';
+$string['selectfile'] = 'Select the file';
+$string['upfile'] = 'Upload file';
+$string['cancel'] = 'Cancel';
+
+$string['savedsaccessfully'] = 'This tool has been saved successfully';
+$string['ADimension'] = 'This field cannot be void. \"Nº of Dimensions\" must be a number greater than 0 and \"Nº of Values\" a number greater than o equal to 2';
+$string['ATotal'] = 'This field cannot be void. \"Nº of Values\" must be a number greater than or equal to  2';
+$string['ASubdimension'] = 'This field cannot be void. \"Nº Subdimensions\" must be a number greater than 0 and \"Nº of Values\" greater than or equal to 2';
+$string['AAttribute'] = 'This field cannot be void. Please, insert a number greater than 0';
+$string['ADiferencial'] = '\"Nº of Attributes\" must be greater than 0. \"Nº of Values\" must be ODD';
+$string['ErrorFormato'] = 'The file is void or the format is wrong"';
+$string['ErrorAcceso'] = 'The file cannot be accessed';
+$string['ErrorExtension'] = 'Wrong format. The extension must be \"evx\"';
+$string['ErrorSaveTitle'] = 'Error: The Title cannot be void';
+$string['ErrorSaveTools'] = 'Error: You must select at least one assessment tool';
+
+$string['TSave'] = 'Save';
+$string['TImport'] = 'Import';
+$string['TExport'] = 'Export';
+$string['TAumentar'] = 'Increase font size';
+$string['TDisminuir'] = 'Reduce font size';
+$string['TView'] = 'Previous view';
+$string['TPrint'] = 'Print';
+$string['THelp'] = 'Help';
+$string['TAbout'] = 'About of';
+
+$string['mixed_por'] = 'Weight in the final grade';
+
+$string['handlerofco'] = 'Learning Outcome and Competency Management';
+$string['competencies'] = 'Competencies';
+$string['outcomes'] = 'Outcomes';
+$string['compidnumber'] = 'Code';
+$string['compshortname'] = 'Short name';
+$string['compdescription'] = 'Description';
+$string['comptypes'] = 'Types of competency';
+$string['comptype'] = 'Type of competency';
+$string['newcomp'] = 'Add Competency';
+$string['newoutcome'] = 'Add Outcome';
+$string['newcomptype'] = 'Add Type of Competency';
+$string['compreport'] = 'Development report';
+$string['compandout'] = 'Competencies and learning outcomes';
+$string['uploadcompetencies'] = 'Import competencies and outcomes';
+$string['uploadcompetencies_help'] = 'Competencies and outcomes may be uploaded via text file. The format of the file should be as follows:
+
+* Each line of the file contains one record
+* Each record is a series of data separated by commas (or other delimiters)
+* The first record contains a list of fieldnames defining the format of the rest of the file
+* Required fieldnames are idnumber, shortname, outcome';
+$string['idnumberduplicate'] = 'Duplicate idnumber value';
+$string['invalidoutcome'] = 'Invalid outcome value. It must be 0 or 1';
+$string['invalididnumberupload'] = 'Invalid idnumber value. Size must be less than 100';
+$string['missingidnumber'] = 'idnumber column is missing';
+$string['missingshortname'] = 'shortname column is missing';
+$string['missingoutcome'] = 'outcome column is missing';
+$string['ignored'] = 'Ignored';
+$string['errors'] = 'Errors';
+$string['importresult'] = 'Import result';
+$string['uploadcompetenciespreview'] = 'Upload competencies preview';
+$string['choicecompetency'] = 'Choice a competency';
+$string['choiceoutcome'] = 'Choice an outcome';
+$string['associatecompandout'] = 'Associate competences and outcomes';
+$string['allstudens'] = 'All students';
+$string['onestudent'] = 'Specific student';
+$string['onegroup'] = 'Specific group';
+$string['selectcomptype'] = 'Choice type of competency';
+$string['assessmentreport'] = 'Report of Assessments';
+$string['unrealized'] = 'Unrealized';
+$string['doneoutofrange'] = 'Has done the self-assessment or peer assessment but out of range';
+$string['doneoutofrangecomments'] = 'Has performed the self-assessment or peer assessment, out of range and provides feedback';
+$string['donewithinrange'] = 'Has performed the self-assessment or peer assessment within range';
+$string['donewithinrangecomments'] = 'Has completed the self-assessment or peer assessment within range and provides feedback';
+$string['threshold'] = 'Threshold';
+$string['threshold_help'] = 'Limit from which a student\'s score is considered overevaluation or underevaluation. For example, if the threshold is set to 15 and the teacher\'s grade (or alternatively, the average of the peer evaluation) is 50, then any student score that exceeds 65 (50+15) points will be considered overevaluation and those below 35 points (50-15)  will be considered underevaluation.';
+$string['assessmentreporttotalAE'] = 'Total SA (Over 10)';
+$string['assessmentreporttotalEI'] = 'Total PA (Over 10)';
+$string['AE'] = 'SA';
+$string['EI'] = 'PA';
+$string['evaluationexporthelp'] = 'Report discrepancy results between self-assessment and peer assessments with respect to criteria (threshold for over- or under-assessment)';
+$string['evaluationandreports'] = 'Assessment and reports';
+$string['workteams'] = 'Work teams';
+$string['workteamsassessments'] = 'Assessment of work teams';
+$string['assignteamcoordinators'] = 'Assign team coordinators';
+$string['workteamsassessments_help'] = 'If you activate this option, a coordinator can be appointed to represent the group.
+
+If there is a **Teacher Assessment - TA**, the teachers will only be able to evaluate the coordinators and that evaluation will be assigned to each member of their group.
+
+If there is a **Self-Assessment – SA**, only the coordinator can self-assess and his evaluation will be assigned to each member of his group.
+
+If there is **Peer Assessment – PA**, students will only be able to evaluate the coordinators of each group and each evaluation will be assigned to each member of the group.
+
+Students who are not in any group will not receive an assessment. Groups that do not have a coordinator assigned will not receive any evaluation and will not be able to evaluate';
+$string['selectcoordinator'] = 'Select coordinator';
+$string['alertnogroup'] = 'No groups have been created in the course yet. To create them you must access the following section:';
+$string['activityassessed'] = 'Disabled because some student has already been assessed';
+$string['coordinatorassessed'] = 'Currently, there are coordinators who have already received some evaluation. Those who have received an evaluation cannot be replaced. If you want to replace them, you\'ll need to delete the assessments first.';
+$string['confirmdisabledworkteams'] = 'Evaluations have already been carried out in this activity. If you disable this option and save your changes, all such assessments will be deleted and cannot be recovered. Are you sure you want to disable the option?';

@@ -22,8 +22,6 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This function obtains students evaluated from a group in a activity
  * @param int $groupid
