@@ -1,4 +1,4 @@
-Block of integration of EvalCOMIX Server 4.3+ in Moodle 3.8, 3.9, 3.10 and 3.11.
+Block of integration of EvalCOMIX Server 4.3.2+ in Moodle 3.11, 4.0.
 
 EvalCOMIX is a web service designed to create and implement assessment tools. With EvalCOMIX is possible to:
 1) Design and manage versatile assessment tools such as checklists, rating scales and

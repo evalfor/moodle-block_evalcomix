@@ -64,14 +64,15 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
     }
     if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $taskid, 'assessorid' => $assessorid,
             'studentid' => $studentid))) {
-        $str = $courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' . $mode . '_' . $lms;
-        $assessmentid = md5($str);
+        $assessmentid = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
+        'studentid' => $studentid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
 
         if ($mode == 'self') {
             $assessorid = $memberid;
         }
-        $str = $courseid . '_' . $module . '_' . $cmid . '_' . $memberid . '_' . $assessorid . '_' . $mode . '_' . $lms;
-        $newassessmentid = md5($str);
+
+        $newassessmentid = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module,
+        'cmid' => $cmid, 'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
         $object = new stdClass();
         $object->oldid = $assessmentid;
         $object->newid = $newassessmentid;
@@ -85,8 +86,7 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                         'taskid' => $duplicateassessment->taskid, 'assessorid' => $assessorid,
                         'studentid' => $duplicateassessment->studentid,
                         'grade' => $assessment->grade, 'timemodified' => $now))) {
-                    block_evalcomix_webservice_client::delete_ws_assessment($courseid, $module, $cmid,
-                    $memberid, $assessorid, $mode, $lms);
+                    block_evalcomix_webservice_client::delete_ws_assessment($duplicateassessment);
                     block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
                     $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
                     $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
@@ -100,14 +100,22 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                                 'cmid' => $cmid, 'finalgrade' => $finalgrade, 'courseid' => $courseid));
                         }
                     }
+                    if ($mode == 'teacher') {
+                        require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+                        block_evalcomix_insert_teacher_pending(array('task' => $task, 'assessmentid' => $duplicateassessment->id,
+                            'mode' => $mode, 'cmid' => $cmid, 'courseid' => $courseid));
+                    }
                     $event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
                     'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid));
                     $event->trigger();
                 }
             }
         } else {
-            if ($DB->insert_record('block_evalcomix_assessments', array('taskid' => $taskid, 'assessorid' => $assessorid,
-                    'studentid' => $memberid, 'grade' => $assessment->grade, 'timemodified' => $now))) {
+            $idassessment = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
+                'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
+            if ($newassessmentid = $DB->insert_record('block_evalcomix_assessments', array('taskid' => $taskid,
+                    'assessorid' => $assessorid, 'studentid' => $memberid, 'grade' => $assessment->grade,
+                    'timemodified' => $now, 'idassessment' => $idassessment))) {
                 block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
                 $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
                 $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
@@ -124,6 +132,9 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                     'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid));
                     $event->trigger();
                 }
+                require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+                block_evalcomix_insert_teacher_pending(array('task' => $task, 'assessmentid' => $newassessmentid, 'mode' => $mode,
+                    'cmid' => $cmid, 'courseid' => $courseid));
             }
         }
     } else {
@@ -134,8 +145,7 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                 'assessorid' => $assessorid, 'studentid' => $memberid))) {
             if ($DB->delete_records('block_evalcomix_assessments', array('id' => $duplicateassessment->id))) {
                 try {
-                    block_evalcomix_webservice_client::delete_ws_assessment($courseid, $module, $cmid, $memberid,
-                    $assessorid, $mode, $lms);
+                    block_evalcomix_webservice_client::delete_ws_assessment($duplicateassessment);
                 } catch (Exception $e) {
                     echo '<span class="text-danger">!</span>';
                 }
@@ -144,6 +154,12 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                 if ($finalgrade == null) {
                     $DB->delete_records('block_evalcomix_grades', array('userid' => $memberid, 'cmid' => $cmid,
                         'courseid' => $courseid));
+                }
+                if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $duplicateassessment->idassessment))) {
+                    $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $duplicateassessment->idassessment));
+                }
+                if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $duplicateassessment->idassessment))) {
+                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $duplicateassessment->idassessment));
                 }
             }
         }

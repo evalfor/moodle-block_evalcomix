@@ -31,8 +31,8 @@ if (file_exists($CFG->dirroot.'/report/outline/locallib.php')) {
 require_once($CFG->dirroot.'/course/lib.php');
 require_once($CFG->dirroot.'/blocks/evalcomix/locallib.php');
 
-$userid   = required_param('id', PARAM_INT);
-$modid     = required_param('mod', PARAM_INT);
+$userid = required_param('id', PARAM_INT);
+$modid = required_param('mod', PARAM_INT);
 
 $user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -78,7 +78,7 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
 
                 ob_start();
 
-                if ($mod->modname == 'assign' and $USER->id != $user->id and !has_capability('moodle/grade:viewhidden', $context)) {
+                if ($mod->modname == 'assign' && $USER->id != $user->id and !has_capability('moodle/grade:viewhidden', $context)) {
                     require_once($CFG->dirroot . '/mod/assign/locallib.php');
                     $context = context_module::instance($mod->id);
                     $assignment = new assign($context, $mod, $course);
@@ -151,7 +151,7 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                 } else if ($mod->modname == 'workshop') {
                     $context = context_module::instance($mod->id);
                     require_once($CFG->dirroot . '/mod/workshop/locallib.php');
-                    $workshop   = new workshop($instance, $mod, $course);
+                    $workshop = new workshop($instance, $mod, $course);
                     $submission = $workshop->get_submission_by_author($user->id);
 
                     if (is_object($submission)) {
@@ -159,28 +159,28 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                         $content = file_rewrite_pluginfile_urls($content, 'pluginfile.php', $context->id,
                                                                 'mod_workshop', 'submission_content', $submission->id);
 
-                        $fs     = get_file_storage();
-                        $ctx    = $context;
-                        $files  = $fs->get_area_files($ctx->id, 'mod_workshop', 'submission_attachment', $submission->id);
+                        $fs = get_file_storage();
+                        $ctx = $context;
+                        $files = $fs->get_area_files($ctx->id, 'mod_workshop', 'submission_attachment', $submission->id);
                         echo '<ul>';
                         foreach ($files as $file) {
                             if ($file->is_directory()) {
                                 continue;
                             }
 
-                            $filepath   = $file->get_filepath();
-                            $filename   = $file->get_filename();
-                            $fileurl    = file_encode_url($CFG->wwwroot . '/blocks/evalcomix/assessment/pluginfile.php',
+                            $filepath = $file->get_filepath();
+                            $filename = $file->get_filename();
+                            $fileurl = file_encode_url($CFG->wwwroot . '/blocks/evalcomix/assessment/pluginfile.php',
                                             '/' . $ctx->id . '/mod_workshop/submission_attachment/' . $submission->id .
                                             $filepath . $filename, false);
 
-                            $type       = $file->get_mimetype();
+                            $type = $file->get_mimetype();
 
                             $linkhtml = html_writer::link($fileurl, $image) . substr($filepath, 1) .
                                 html_writer::link($fileurl, $filename);
 
                             echo '<li>' . $linkhtml . '</li>';
-                            $linktxt    = "$filename [$fileurl]";
+                            $linktxt = "$filename [$fileurl]";
                         }
                         echo '</ul>';
                     }

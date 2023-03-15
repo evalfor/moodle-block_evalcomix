@@ -22,7 +22,7 @@
  */
 
 require_once('../../../config.php');
-$courseid      = required_param('id', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_course_login($course);
 

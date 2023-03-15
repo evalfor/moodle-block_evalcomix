@@ -26,11 +26,11 @@ defined('MOODLE_INTERNAL') || die();
 
 $observers = array(
     array(
-        'eventname'   => '\core\event\group_member_removed',
-        'callback'    => 'block_evalcomix_observer::group_member_removed',
+        'eventname' => '\core\event\group_member_removed',
+        'callback' => 'block_evalcomix_observer::group_member_removed',
     ),
     array(
-        'eventname'   => '\core\event\group_deleted',
-        'callback'    => 'block_evalcomix_observer::group_deleted',
+        'eventname' => '\core\event\group_deleted',
+        'callback' => 'block_evalcomix_observer::group_deleted',
     ),
 );

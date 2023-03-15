@@ -158,65 +158,68 @@ function block_evalcomix_get_members_course($courseid, $groupid = 0, $page = '0'
     return $members;
 }
 
-function block_evalcomix_get_student_assessments($courseid, $subdimension, $students) {
-    global $CFG, $DB;
-    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-    $result = array();
+function block_evalcomix_get_assessmentid($params = array()) {
+    global $CFG;
+    require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
 
+    $courseid = (isset($params['courseid'])) ? $params['courseid'] : 0;
+    $module = (isset($params['module'])) ? $params['module'] : 0;
+    $cmid = (isset($params['cmid'])) ? $params['cmid'] : 0;
+    $studentid = (isset($params['studentid'])) ? $params['studentid'] : 0;
+    $assessorid = (isset($params['assessorid'])) ? $params['assessorid'] : 0;
+    $mode = (isset($params['mode'])) ? $params['mode'] : 0;
     $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
-    $studentids = array_keys($students);
 
-    $sql = '
-    SELECT s.*
-    FROM {block_evalcomix_assessments} s
-    WHERE s.studentid IN ('.implode(',', $studentids).') AND s.taskid IN (
-        SELECT m.taskid
-        FROM {block_evalcomix_modes} m
-        WHERE m.toolid = :toolid
-        )
-    ';
-
-    if ($assessments = $DB->get_records_sql($sql, array('toolid' => $subdimension->toolid))) {
-        $hashtasks = block_evalcomix_tasks::get_tasks_by_courseid($courseid);
-        $tasks = array();
-        foreach ($hashtasks as $task) {
-            $taskid = $task->id;
-            $tasks[$taskid] = $task;
-        }
-        foreach ($assessments as $assessment) {
-            $studentid = $assessment->studentid;
-            $assessorid = $assessment->assessorid;
-            $taskid = $assessment->taskid;
-            if (isset($tasks[$taskid])) {
-                $cmid = $tasks[$taskid]->instanceid;
-                $module = block_evalcomix_tasks::get_type_task($cmid);
-                $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid, $assessorid);
-                $str = $courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' . $mode . '_' . $lms;
-                $assessmentid = md5($str);
-                $result[$assessmentid] = new stdClass();
-                $result[$assessmentid]->studentid = $studentid;
-                $result[$assessmentid]->cmid = $cmid;
-            }
-        }
-    }
-    return $result;
+    return md5($courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' .
+                $mode . '_' . $lms);
 }
 
-function block_evalcomix_get_assessmentid($courseid, $assessment) {
+function block_evalcomix_get_existing_assessmentid($assessment) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-    $result = '';
+    $result = 0;
 
     $assessorid = $assessment->assessorid;
     $studentid = $assessment->studentid;
     $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
     if ($task = $DB->get_record('block_evalcomix_tasks', array('id' => $assessment->taskid))) {
         $cmid = $task->instanceid;
-        $module = block_evalcomix_tasks::get_type_task($cmid);
-        $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid, $assessorid);
-        $str = $courseid . '_' . $module . '_' . $cmid . '_' . $studentid . '_' . $assessorid . '_' . $mode . '_' .     $lms;
-        $result = md5($str);
+        if ($cm = $DB->get_record('course_modules', array('id' => $cmid))) {
+            $courseid = $cm->course;
+            $module = block_evalcomix_tasks::get_type_task($cmid);
+            $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid, $assessorid);
+            $result = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module,
+                'cmid' => $cmid, 'studentid' => $studentid, 'assessorid' => $assessorid, 'mode' => $mode));
+        }
     }
     return $result;
+}
+
+function block_evalcomix_fill_assessmentid() {
+    global $CFG, $DB;
+    $result = array();
+
+    if ($assessments = $DB->get_records('block_evalcomix_assessments', array())) {
+        foreach ($assessments as $assessment) {
+            $assessmentid = $assessment->id;
+            $idassessment = block_evalcomix_update_assessmentid($assessment);
+            $result[$assessmentid] = $idassessment;
+        }
+    }
+
+    return $result;
+}
+
+function block_evalcomix_update_assessmentid($assessment) {
+    global $DB;
+
+    if (isset($assessment->idassessment) && $assessment->idassessment === '0') {
+        $assessment->idassessment = block_evalcomix_get_existing_assessmentid($assessment);
+        if ($assessment->idassessment !== '0') {
+            $DB->update_record('block_evalcomix_assessments', $assessment);
+        }
+    }
+
+    return $assessment->idassessment;
 }

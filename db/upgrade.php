@@ -433,5 +433,80 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         upgrade_block_savepoint(true, 2022051600, 'evalcomix');
     }
 
+    if ($oldversion < 2022112802) {
+
+        // Define field idassessment to be added to block_evalcomix_assessments.
+        $table = new xmldb_table('block_evalcomix_assessments');
+        $field = new xmldb_field('idassessment', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+
+        // Conditionally launch add field idassessment.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+
+            global $CFG;
+            require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
+            block_evalcomix_fill_assessmentid();
+
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2022112802, 'evalcomix');
+    }
+
+    if ($oldversion < 2023030100) {
+
+        // Define table block_evalcomix_dr_pending to be created.
+        $table = new xmldb_table('block_evalcomix_dr_pending');
+
+        // Adding fields to table block_evalcomix_dr_pending.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('modeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('idassessment', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('idsubdimension', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_evalcomix_dr_pending.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes to table block_evalcomix_dr_pending.
+        $table->add_index('block_evalcomix_courseid_ix', XMLDB_INDEX_NOTUNIQUE, ['courseid']);
+        $table->add_index('block_evalcomix_cmid_ix', XMLDB_INDEX_NOTUNIQUE, ['cmid']);
+        $table->add_index('block_evalcomix_idass_ix', XMLDB_INDEX_NOTUNIQUE, ['idassessment']);
+        $table->add_index('block_evalcomix_subass_ix', XMLDB_INDEX_UNIQUE, ['idsubdimension', 'idassessment']);
+
+        // Conditionally launch create table for block_evalcomix_dr_pending.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table block_evalcomix_dr_grade to be created.
+        $table = new xmldb_table('block_evalcomix_dr_grade');
+
+        // Adding fields to table block_evalcomix_dr_grade.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('modeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('idassessment', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('idsubdimension', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('grade', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table block_evalcomix_dr_grade.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes to table block_evalcomix_dr_grade.
+        $table->add_index('block_evalcomix_drgcmid_ix', XMLDB_INDEX_NOTUNIQUE, ['cmid']);
+        $table->add_index('block_evalcomix_drg_subass_ix', XMLDB_INDEX_UNIQUE, ['idsubdimension', 'idassessment']);
+        $table->add_index('block_evalcomix_drgass_ix', XMLDB_INDEX_NOTUNIQUE, ['idassessment']);
+
+        // Conditionally launch create table for block_evalcomix_dr_grade.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2023030100, 'evalcomix');
+    }
+
     return $result;
 }

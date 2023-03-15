@@ -387,8 +387,7 @@ class block_evalcomix_grade_report extends grade_report {
                             foreach ($assessments as $assessment) {
                                 $mode = self::get_type_evaluation($assessment->studentid, $COURSE->id, $assessment->assessorid);
                                 try {
-                                    block_evalcomix_webservice_client::delete_ws_assessment($COURSE->id, $module, $task->instanceid,
-                                    $assessment->studentid, $assessment->assessorid, $mode, $lms);
+                                    block_evalcomix_webservice_client::delete_ws_assessment($assessment);
                                 } catch (Exception $e) {
                                     continue;
                                 }
@@ -415,6 +414,18 @@ class block_evalcomix_grade_report extends grade_report {
                     $params = array('id' => $modeid->id, 'taskid' => $taskid, 'toolid' => $data['toolEP'], 'modality' => 'teacher',
                         'weighing' => $data['pon_EP']);
                     $DB->update_record('block_evalcomix_modes', $params);
+                    if ($data['toolEP'] != $modeid->toolid) {
+                        if ($DB->get_records('block_evalcomix_dr_pending', array('cmid' => $data['cmid'],
+                                'modeid' => $modeid->id))) {
+                            $DB->delete_records('block_evalcomix_dr_pending', array('cmid' => $data['cmid'],
+                                'modeid' => $modeid->id));
+                        }
+                        if ($DB->get_records('block_evalcomix_dr_grade', array('cmid' => $data['cmid'],
+                                'modeid' => $modeid->id))) {
+                            $DB->delete_records('block_evalcomix_dr_grade', array('cmid' => $data['cmid'],
+                                'modeid' => $modeid->id));
+                        }
+                    }
                 } else {
                     $modeid = $DB->insert_record('block_evalcomix_modes', array('taskid' => $taskid, 'toolid' => $data['toolEP'],
                         'modality' => 'teacher', 'weighing' => $data['pon_EP']));
@@ -423,6 +434,14 @@ class block_evalcomix_grade_report extends grade_report {
                 if ($modeid = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => 'teacher'))) {
                     $DB->delete_records('block_evalcomix_modes', array('id' => $modeid->id));
                     $modalitydelete = true;
+                    if ($pending = $DB->get_records('block_evalcomix_dr_pending', array('cmid' => $data['cmid'],
+                            'modeid' => $modeid->id))) {
+                        $DB->delete_records('block_evalcomix_dr_pending', array('cmid' => $data['cmid'], 'modeid' => $modeid->id));
+                    }
+                    if ($DB->get_records('block_evalcomix_dr_grade', array('cmid' => $data['cmid'],
+                            'modeid' => $modeid->id))) {
+                        $DB->delete_records('block_evalcomix_dr_grade', array('cmid' => $data['cmid'], 'modeid' => $modeid->id));
+                    }
                 }
             }
 
@@ -574,15 +593,20 @@ class block_evalcomix_grade_report extends grade_report {
         // Check if there is data from any evaluation carried out with evalcomix to save it in the Moodle database.
         // It is done here since that method is processed every time the page is reloaded.
         if (isset($data['stu']) && $data['stu'] != 0 && $data['cma'] != 0) {
-            $activity = $data['cma'];
-            $module = block_evalcomix_tasks::get_type_task($activity);
-
-            $mode = self::get_type_evaluation($data['stu'], $this->courseid);
-
             if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $data['cma']))) {
-                $tool = block_evalcomix_get_modality_tool($this->courseid, $task->id, $mode);
-                $evalcomixassessment = block_evalcomix_webservice_client::get_ws_singlegrade($tool->idtool,
-                    $this->courseid, $module, $activity, $data['stu'], $USER->id, $mode, BLOCK_EVALCOMIX_MOODLE_NAME);
+                $assessmentsg = null;
+                $idass = '0';
+                if ($assessmentsg = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
+                        'assessorid' => $USER->id, 'studentid' => $data['stu']))) {
+                    $evalcomixassessment = block_evalcomix_webservice_client::get_ws_singlegrade($assessmentsg);
+                    $idass = $assessmentsg->idassessment;
+                } else {
+                    $mode = self::get_type_evaluation($data['stu'], $this->courseid);
+                    $module = block_evalcomix_tasks::get_type_task($data['cma']);
+                    $evalcomixassessment = block_evalcomix_webservice_client::get_ws_singlegrade(null,
+                        array('courseid' => $this->courseid, 'module' => $module, 'cmid' => $data['cma'],
+                        'studentid' => $data['stu'], 'assessorid' => $USER->id, 'mode' => $mode));
+                }
             }
 
             // If $evalcomixassessment->grade == -1  means that the grade is empty.
@@ -601,11 +625,26 @@ class block_evalcomix_grade_report extends grade_report {
                         $DB->update_record('block_evalcomix_assessments', $params);
                     } else { // If the grade is null.
                         $DB->delete_records('block_evalcomix_assessments', array('id' => $evxassessmentobject->id));
+                        if ($DB->get_records('block_evalcomix_dr_grade',
+                                array('idassessment' => $evxassessmentobject->idassessment))) {
+                            $DB->delete_records('block_evalcomix_dr_grade',
+                                array('idassessment' => $evxassessmentobject->idassessment));
+                        }
+                        if ($DB->get_records('block_evalcomix_dr_pending',
+                                array('idassessment' => $evxassessmentobject->idassessment))) {
+                            $DB->delete_records('block_evalcomix_dr_pending',
+                                array('idassessment' => $evxassessmentobject->idassessment));
+                        }
                     }
                 } else if ($evalcomixassessment->grade != -1) { // If it does not exist and the grade is not null inserts it.
-                    $DB->insert_record('block_evalcomix_assessments', array('taskid' => $evalcomixassessment->taskid,
+                    $assessment = array('taskid' => $evalcomixassessment->taskid,
                         'assessorid' => $evalcomixassessment->assessorid, 'studentid' => $evalcomixassessment->studentid,
-                        'grade' => $evalcomixassessment->grade, 'timemodified' => time()));
+                        'grade' => $evalcomixassessment->grade, 'timemodified' => time());
+                    $assessment = (object)$assessment;
+                    if ($idassessment = block_evalcomix_get_existing_assessmentid($assessment)) {
+                        $assessment->idassessment = $idassessment;
+                    }
+                    $assessmentid = $DB->insert_record('block_evalcomix_assessments', $assessment);
                 }
             }
             // Save the finalgrade.
@@ -624,6 +663,27 @@ class block_evalcomix_grade_report extends grade_report {
             } else {
                 if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
                     $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
+                }
+            }
+
+            // Check teacher mode and upgrade block_evalcomix_dr_pending.
+            if (self::editing_permits_user()) {
+                require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+                if ($assessment = $DB->get_record('block_evalcomix_assessments',
+                        array('taskid' => $task->id, 'assessorid' => $USER->id, 'studentid' => $data['stu']))) {
+                    block_evalcomix_insert_teacher_pending(array('task' => $task, 'assessmentid' => $assessment->id,
+                        'mode' => 'teacher', 'cmid' => $data['cma'], 'courseid' => $this->courseid));
+                } else {
+                    if ($DB->get_records('block_evalcomix_dr_pending',
+                            array('cmid' => $data['cma'], 'idassessment' => $idass))) {
+                        $DB->delete_records('block_evalcomix_dr_pending',
+                            array('cmid' => $data['cma'], 'idassessment' => $idass));
+                    }
+                    if ($DB->get_records('block_evalcomix_dr_grade',
+                            array('cmid' => $data['cma'], 'idassessment' => $idass))) {
+                        $DB->delete_records('block_evalcomix_dr_grade',
+                            array('cmid' => $data['cma'], 'idassessment' => $idass));
+                    }
                 }
             }
         }
@@ -1486,18 +1546,18 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
 
         $header .= substr($element['object']->get_name(), 0, 24) . $dots;
 
-        if ($element['type'] != 'item' and $element['type'] != 'categoryitem' and
+        if ($element['type'] != 'item' && $element['type'] != 'categoryitem' &&
             $element['type'] != 'courseitem') {
             return $header;
         }
 
-        $itemtype     = $element['object']->itemtype;
-        $itemmodule   = $element['object']->itemmodule;
+        $itemtype = $element['object']->itemtype;
+        $itemmodule = $element['object']->itemmodule;
         $iteminstance = $element['object']->iteminstance;
 
         $course = $DB->get_record('course', array('id' => $this->courseid), '*', MUST_EXIST);
 
-        if ($withlink and $itemtype == 'mod' and $iteminstance and $itemmodule) {
+        if ($withlink && $itemtype == 'mod' && $iteminstance && $itemmodule) {
             if ($cm = get_coursemodule_from_instance($itemmodule, $iteminstance, $this->courseid)) {
 
                 // Insert id and name in $this->activities[] to know the activities order.
@@ -1784,10 +1844,10 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
         global $OUTPUT;
         $arrows = array();
 
-        $strsortasc   = $this->get_lang_string('sortasc', 'grades');
-        $strsortdesc  = $this->get_lang_string('sortdesc', 'grades');
+        $strsortasc = $this->get_lang_string('sortasc', 'grades');
+        $strsortdesc = $this->get_lang_string('sortdesc', 'grades');
         $strfirstname = $this->get_lang_string('firstname');
-        $strlastname  = $this->get_lang_string('lastname');
+        $strlastname = $this->get_lang_string('lastname');
 
         $firstlink = html_writer::link(new moodle_url($this->baseurl, array('sortitemid' => 'firstname')), $strfirstname);
         $lastlink = html_writer::link(new moodle_url($this->baseurl, array('sortitemid' => 'lastname')), $strlastname);

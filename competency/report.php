@@ -23,10 +23,10 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
-$studentid     = optional_param('u', 0, PARAM_INT);
-$groupid       = optional_param('g', 0, PARAM_INT);
-$export        = optional_param('e', 0, PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
+$studentid = optional_param('u', 0, PARAM_INT);
+$groupid = optional_param('g', 0, PARAM_INT);
+$export = optional_param('e', 0, PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_course_login($course);
@@ -66,13 +66,24 @@ $renderer = $PAGE->get_renderer('block_evalcomix', 'competency');
 
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
-$competencydatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_COMPETENCY, $groupid, $studentid, $grades);
-$outcomedatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_OUTCOME, $groupid, $studentid, $grades);
+$competencydatas = array();
+$outcomedatas = array();
+if (!empty($studentid)) {
+    $datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
+    $competencydatas = $datas->competency;
+    $outcomedatas = $datas->outcome;
+}
 $students = block_evalcomix_get_members_course($courseid, $groupid);
 $groups = $DB->get_records('groups', array('courseid' => $courseid));
+$timeleft = block_evalcomix_get_remaining_download_time($courseid);
 
 echo $OUTPUT->header();
 
+if ($timeleft === 'disabled') {
+    \core\notification::error(get_string('reporttimeleftdisabled', 'block_evalcomix', $timeleft));
+} else if (!empty($timeleft)) {
+    \core\notification::info(get_string('reporttimeleft', 'block_evalcomix', $timeleft));
+}
 echo html_writer::start_tag('div', array('id' => 'change'));
 echo $renderer->display_report_page($courseid, $competencydatas, $outcomedatas, $groups, $groupid, $students, $studentid);
 echo html_writer::end_tag('div');

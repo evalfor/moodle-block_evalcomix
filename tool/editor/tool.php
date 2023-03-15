@@ -242,12 +242,12 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/disminuirhover.png\');"
         onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/disminuir.png\');"/></a>
 
-        <a href="generator.php?op=view"><img id="visualizar"
+        <a href="generator.php?op=view&courseid='.$data['courseid'].'"><img id="visualizar"
         src="'. $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png" alt="Ver" title="'.
         get_string('TView', 'block_evalcomix') . '"
         onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/visualizarhover.png\');"
         onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png\');"/></a>
-        <a href="servidor.php?op=imprimir"><img id="imprimir" src="'.
+        <a href="servidor.php?op=imprimir&courseid='.$data['courseid'].'"><img id="imprimir" src="'.
         $CFG->wwwroot . '/blocks/evalcomix/images/imprimir.png" alt="'.
         get_string('TPrint', 'block_evalcomix') . '" title="' . get_string('TPrint', 'block_evalcomix') .
         '" onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/imprimirhover.png\');"
@@ -1302,7 +1302,6 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
     }
 
     public function view_tool($root = '', $grade = '', $print='view', $title = '') {
-        require('lang/'. $this->language . '/evalcomix.php');
         $wprint = '';
         if ($print == 'print') {
             $wprint = 'onload="window.print()"';
@@ -1379,7 +1378,7 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
                 <br><hr>
                 <div class="botones">
                     <div class="boton" style="margin-right: 1em;">
-!--                         <input type="button" name="imprimir" value="Imprimir" onclick="window.focus();
+<!--                         <input type="button" name="imprimir" value="Imprimir" onclick="window.focus();
 window.print().window.close();"> -->
 
                             <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"

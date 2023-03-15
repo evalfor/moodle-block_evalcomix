@@ -22,7 +22,7 @@
  */
 
 require_once('../../../config.php');
-$courseid      = required_param('id', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
 require_course_login($courseid);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');

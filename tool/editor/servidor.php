@@ -134,7 +134,7 @@ if (isset($print)) {
         }
 
         $error = false;
-        if (!isset($postcleaned['titulo'.$componentid]) or trim($postcleaned['titulo'.$componentid]) == '') {
+        if (!isset($postcleaned['titulo'.$componentid]) || trim($postcleaned['titulo'.$componentid]) == '') {
             echo "<script type='text/javascript'>alert('". $string['ErrorSaveTitle'] ."');</script>";
             echo "<script type='text/javascript'>location.href = 'generator.php';</script>";$tool->display_footer();
             $error = true;

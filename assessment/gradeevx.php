@@ -64,7 +64,7 @@ if (isset($grade->grade_item)) {
 
                 if (!empty($CFG->unlimitedgrades)) {
                     $grademax = $grademax * $maxcoef;
-                } else if ($gradeitem->is_category_item() or $gradeitem->is_course_item()) {
+                } else if ($gradeitem->is_category_item() || $gradeitem->is_course_item()) {
                     $category = $gradeitem->load_item_category();
                     if ($category->aggregation >= 100) {
                         // Grade >100% hack.

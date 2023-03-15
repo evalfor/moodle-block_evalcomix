@@ -23,12 +23,12 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);        // Course id.
+$courseid = required_param('id', PARAM_INT);        // Course id.
 require_course_login($courseid);
 
-$page          = optional_param('page', 0, PARAM_INT);   // Active page.
-$hide          = optional_param('hide', 0, PARAM_INT);
-$show          = optional_param('show', 0, PARAM_INT);
+$page = optional_param('page', 0, PARAM_INT);   // Active page.
+$hide = optional_param('hide', 0, PARAM_INT);
+$show = optional_param('show', 0, PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($courseid);

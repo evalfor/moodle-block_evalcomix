@@ -50,7 +50,10 @@ if ($mode == 'teacher' || (($mode == 'self' || $mode == 'peer'))) {
                 if (!file_exists("$dir/lib.php")) {
                     send_file_not_found();
                 }
-                if (!$file = $fs->get_file_by_hash(sha1($relativepath)) or $file->is_directory()) {
+                if (!$file = $fs->get_file_by_hash(sha1($relativepath))) {
+                    send_file_not_found();
+                }
+                if ($file->is_directory()) {
                     send_file_not_found();
                 }
                 send_stored_file($file, 0, 0, true);

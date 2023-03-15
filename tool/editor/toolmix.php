@@ -567,7 +567,7 @@ class block_evalcomix_editor_toolmix {
     public function display_body($data) {
         if ($this->view == 'view') {
             echo '<input type="button" style="width:10em" value="'.get_string('view', 'block_evalcomix').'"
-                onclick=\'javascript:location.href="generator.php?op=design"\'><br>';
+                onclick=\'javascript:location.href="generator.php?op=design&courseid='.$data['courseid'].'"\'><br>';
         }
         if (isset($data['titulo'])) {
             $this->titulo = stripslashes($data['titulo']);
@@ -796,5 +796,12 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/mixtool http://avanza
 
         </div>
         ';
+    }
+
+    public function print_tool($root = '') {
+        foreach ($this->listtool as $tool) {
+            $tool->print_tool();
+            echo '<br><br><br>';
+        }
     }
 }

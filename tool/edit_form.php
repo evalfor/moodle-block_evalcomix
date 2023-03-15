@@ -23,7 +23,7 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
 $toolid = required_param('t', PARAM_ALPHANUM);
 $context = context_course::instance($courseid);
 require_course_login($courseid);

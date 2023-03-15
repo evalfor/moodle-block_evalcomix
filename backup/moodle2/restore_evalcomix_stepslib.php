@@ -328,12 +328,6 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         if (!isset($assessoruser->newitemid) || !isset($studentuser->newitemid)) {
                             continue;
                         }
-                        if (!$assessmentobject = $DB->get_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
-                            'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid))) {
-                            $assessmentobject = new block_evalcomix_assessments('', $newtaskid, $assessoruser->newitemid,
-                                $studentuser->newitemid, $assessmentgradeold);
-                            $assessmentobject->insert();
-                        }
 
                         $modulename = block_evalcomix_tasks::get_type_task($newcmid);
                         $mode = '';
@@ -344,19 +338,27 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         } else {
                             $mode = 'peer';
                         }
-                        $str = $courseidold . '_' . $modulename . '_' . $taskinstanceidold . '_' .
-                            $assessmentstudentidold . '_' . $assessmentassessoridold . '_' . $mode . '_' . $moodlenameold;
-                        $assessmentidold = md5($str);
 
-                        $str = $courseidnew . '_' . $modulename . '_' . $newcmid . '_' . $studentuser->newitemid .
-                            '_' . $assessoruser->newitemid . '_' . $mode . '_' . $moodlenamenew;
-                        $assessmentidnew = md5($str);
+                        $assessmentidold = block_evalcomix_get_assessmentid(array('courseid' => $courseidold,
+                            'module' => $modulename,
+                            'cmid' => $taskinstanceidold, 'studentid' => $assessmentstudentidold,
+                            'assessorid' => $assessmentassessoridold, 'mode' => $mode, 'lms' => $moodlenameold));
+
+                        $assessmentidnew = block_evalcomix_get_assessmentid(array('courseid' => $courseidnew,
+                            'module' => $modulename,
+                            'cmid' => $newcmid, 'studentid' => $studentuser->newitemid,
+                            'assessorid' => $assessoruser->newitemid, 'mode' => $mode, 'lms' => $moodlenamenew));
                         $object = new stdClass();
                         $object->oldid = $assessmentidold;
                         $object->newid = $assessmentidnew;
                         $assessmentids[] = $object;
+                        if (!$assessmentobject = $DB->get_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
+                            'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid))) {
+                            $DB->insert_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
+                                'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid,
+                                'grade' => $assessmentgradeold, 'timemodified' => time(), 'idassessment' => $assessmentidnew));
+                        }
                     }
-
                     if (isset($task->coordinators[0])) {
                         foreach ($task->coordinators[0] as $coordinator) {
                             if (!empty($coordinator->groupid)) {

@@ -23,9 +23,9 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
-$studentid     = optional_param('u', 0, PARAM_INT);
-$groupid     = optional_param('g', 0, PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
+$studentid = optional_param('u', 0, PARAM_INT);
+$groupid = optional_param('g', 0, PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_course_login($course);
@@ -33,11 +33,10 @@ $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
-$competencydatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_COMPETENCY, $groupid, $studentid);
-$outcomedatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_OUTCOME, $groupid, $studentid);
+$datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
+$competencydatas = $datas->competency;
+$outcomedatas = $datas->outcome;
 
-$competencyxdatas = array_reverse($competencydatas->xdatas);
-$competencyydatas = array_reverse($competencydatas->ydatas);
 require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 $students = block_evalcomix_get_members_course($courseid, $groupid);
 $groups = $DB->get_records('groups', array('courseid' => $courseid));

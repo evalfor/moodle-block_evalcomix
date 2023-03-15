@@ -82,9 +82,9 @@ class block_evalcomix_uploadcompetence_form2 extends moodleform {
     public function definition () {
         global $CFG, $USER;
 
-        $mform   = $this->_form;
+        $mform = $this->_form;
         $columns = $this->_customdata['columns'];
-        $data    = $this->_customdata['data'];
+        $data = $this->_customdata['data'];
 
         // I am the template user, why should it be the administrator? we have roles now, other ppl may use this script.
         $templateuser = $USER;
@@ -254,7 +254,7 @@ class block_evalcomix_uploadcompetence_form2 extends moodleform {
      * Form tweaks that depend on current data.
      */
     public function definition_after_data() {
-        $mform   = $this->_form;
+        $mform = $this->_form;
         $columns = $this->_customdata['columns'];
 
         foreach ($columns as $column) {
@@ -277,7 +277,7 @@ class block_evalcomix_uploadcompetence_form2 extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         $columns = $this->_customdata['columns'];
-        $optype  = $data['uutype'];
+        $optype = $data['uutype'];
         $updatetype = $data['uuupdatetype'];
 
         // Detect if password column needed in file.
@@ -329,7 +329,7 @@ class block_evalcomix_uploadcompetence_form2 extends moodleform {
             if ($missing) {
                 $errors['uutype'] = implode('<br />',  $missing);
             }
-            if (!in_array('email', $columns) and empty($data['email'])) {
+            if (!in_array('email', $columns) && empty($data['email'])) {
                 $errors['email'] = get_string('requiredtemplate', 'tool_uploaduser');
             }
         }
@@ -344,7 +344,7 @@ class block_evalcomix_uploadcompetence_form2 extends moodleform {
     public function get_data() {
         $data = parent::get_data();
 
-        if ($data !== null and isset($data->description)) {
+        if ($data !== null && isset($data->description)) {
             $data->descriptionformat = $data->description['format'];
             $data->description = $data->description['text'];
         }

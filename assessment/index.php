@@ -21,15 +21,15 @@
  */
 
 require_once('../../../config.php');
-$courseid      = required_param('id', PARAM_INT);        // Course id.
+$courseid = required_param('id', PARAM_INT);        // Course id.
 require_course_login($courseid);
 
-$page          = optional_param('page', 0, PARAM_INT);   // Active page.
-$perpageurl    = optional_param('perpage', 0, PARAM_INT);
-$sortitemid    = optional_param('sortitemid', 0, PARAM_ALPHANUM); // Sort by which grade item.
-$grd           = optional_param('grd', 0, PARAM_INT);   // 1 if the system must pass grades to Moodle´s Grades Report.
+$page = optional_param('page', 0, PARAM_INT);   // Active page.
+$perpageurl = optional_param('perpage', 0, PARAM_INT);
+$sortitemid = optional_param('sortitemid', 0, PARAM_ALPHANUM); // Sort by which grade item.
+$grd = optional_param('grd', 0, PARAM_INT);   // 1 if the system must pass grades to Moodle´s Grades Report.
 $cma = optional_param('cma', 0, PARAM_INT);   // Cm id of evaluated activity.
-$export        = optional_param('e', '0', PARAM_INT);
+$export = optional_param('e', '0', PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($courseid);
@@ -234,13 +234,7 @@ if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_too
             foreach ($tasks as $task) {
                 if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
                     foreach ($assessments as $assessment) {
-                        $activity = $task->instanceid;
-                        $module = block_evalcomix_tasks::get_type_task($activity);
-                        $mode = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $courseid,
-                            $assessment->assessorid);
-                        $str = $courseid . '_' . $module . '_' . $activity . '_' . $assessment->studentid .
-                            '_' . $assessment->assessorid . '_' . $mode . '_' . BLOCK_EVALCOMIX_MOODLE_NAME;
-                        $assessmentid = md5($str);
+                        $assessmentid = block_evalcomix_get_idassessment($assessment);
                         if (isset($newgrades[$assessmentid])) {
                             if (is_numeric($newgrades[$assessmentid]->grade)) {
                                 $grade = $newgrades[$assessmentid]->grade;

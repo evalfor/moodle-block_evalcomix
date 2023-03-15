@@ -626,7 +626,7 @@ class block_evalcomix_editor_toolrubric extends block_evalcomix_editor {
 
         if ($this->view == 'view' && !is_numeric($mix)) {
             echo '<input type="button" style="width:10em" value="'.get_string('view', 'block_evalcomix').'"
-            onclick=\'javascript:location.href="generator.php?op=design"\'><br>';
+            onclick=\'javascript:location.href="generator.php?op=design&courseid='.$data['courseid'].'"\'><br>';
         }
 
         $numdimen = count($this->dimension[$this->id]);
@@ -1073,7 +1073,7 @@ class block_evalcomix_editor_toolrubric extends block_evalcomix_editor {
                 $divheight = 'height:2.5em';
                 $textheight = 'height:2em';
             } else {
-                $divheight  = 'height:0em';
+                $divheight = 'height:0em';
                 $textheight = 'height:0em';
             }
             echo '<div class="atrcomment" id="atribcomment'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'" style="'.$divheight.'">
@@ -1336,7 +1336,7 @@ class block_evalcomix_editor_toolrubric extends block_evalcomix_editor {
                     $divheight = 'height:2.5em';
                     $textheight = 'height:2em';
                 } else {
-                    $divheight  = 'height:0.5em';
+                    $divheight = 'height:0.5em';
                     $textheight = 'height:0.5em';
                 }
                 echo '<div class="atrcomment" id="atribcomment'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'"
@@ -1869,5 +1869,245 @@ class block_evalcomix_editor_toolrubric extends block_evalcomix_editor {
             ';
         }
         flush();
+    }
+
+    public function print_tool($globalcomment = 'global_comment') {
+        $id = $this->id;
+        $max = 0;
+        $maxrango = array();
+        foreach ($this->dimension[$id] as $dim => $value) {
+            $maxrango[$dim] = array_sum($this->numrango[$id][$dim]);
+        }
+        $colspan = max($maxrango);
+
+        echo '
+                                <table class="tabla" border=1 cellpadding=5px >
+
+                                <!--TITULO-INSTRUMENTO------------>
+        ';
+        if (is_numeric($this->porcentage)) {
+            echo '
+                                <tr>
+                                   <td colspan="'.($colspan + 2) .'">'. get_string('mixed_por', 'block_evalcomix'). ': ' .
+                                   $this->porcentage.'%</td>
+                                </tr>
+                ';
+        }
+
+        echo '
+                                </tr>
+                                <tr>
+                                   <th colspan="'.($colspan + 2) .'">'.htmlspecialchars($this->titulo).'</th>
+                                </tr>
+
+                                <tr>
+                                   <th colspan="'.($colspan + 2) .'"></th>
+                                </tr>
+
+
+                                <tr>
+                                   <td></td>
+                                   <td></td>
+                                </tr>';
+        $i = 0;
+        foreach ($this->dimension[$id] as $dim => $value) {
+            $colspandim = array_sum($this->numrango[$id][$dim]);
+
+            echo '
+                                <tr id="dim">
+                                    <!--DIMENSIÓN-TITLE----------->
+                                    <td class="pordim">
+                                    '.$this->dimpor[$this->id][$dim].'%
+                                    </td>
+                                    <td class="bold" colspan="'.($colspan - $colspandim + 1) .'">
+                                        <span>'.htmlspecialchars($this->dimension[$this->id][$dim]['nombre']).'</span>
+                                    </td>
+            ';
+            foreach ($this->valores[$this->id][$dim] as $grado => $elemvalue) {
+                echo '
+                                    <td class="td" colspan='.$this->numrango[$id][$dim][$grado].'>'.
+                                    htmlspecialchars($this->valores[$this->id][$dim][$grado]['nombre']).'</td>
+                ';
+            }
+
+            echo '
+                                </tr>
+            ';
+
+            $l = 0;
+            foreach ($this->subdimension[$this->id][$dim] as $subdim => $elemsubdim) {
+                echo '
+                                <!--TITULO-SUBDIMENSIÓN------------>
+                                <tr>
+                                    <td class="subdimpor">'.$this->subdimpor[$this->id][$dim][$subdim].'%</td>
+                                    <td class="subdim" colspan="'.($colspan + 1).'">'.
+                                    htmlspecialchars($this->subdimension[$this->id][$dim][$subdim]['nombre']).'</td></tr>
+                ';
+
+                if (isset($this->atributo[$this->id][$dim][$subdim])) {
+                    $j = 0;
+                    foreach ($this->atributo[$this->id][$dim][$subdim] as $atrib => $elematrib) {
+                        echo '
+                                <!--ATRIBUTOS---------------------->
+                                <tr rowspan=2>
+                                <td class="atribpor">'.$this->atribpor[$this->id][$dim][$subdim][$atrib].'%</td>
+                                <td colspan="'. ($colspan - $colspandim + 1) .'">'.
+                                htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre']).'</td>
+                        ';
+
+                        foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
+                            echo '<td colspan="'.$this->numrango[$id][$dim][$grado].'">'.
+                            htmlspecialchars($this->description[$id][$dim][$subdim][$atrib][$grado]).'</td>';
+                        }
+                        echo '
+                                </tr>
+                                <tr><td colspan="'. ($colspan - $colspandim + 2) .'"></td>
+                        ';
+                        $k = 0;
+                        foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
+                            $m = 0;
+                            foreach ($this->rango[$id][$dim][$grado] as $key => $rango) {
+                                $checked = '';
+                                if (isset($this->valueattribute[$id][$dim][$subdim][$atrib]) &&
+                                    $this->valueattribute[$id][$dim][$subdim][$atrib] == $this->rango[$id][$dim][$grado][$key]) {
+                                    $checked = 'checked';
+                                }
+                                echo '<td class="descripcion" style="text-align:center"    >' .
+                                $this->rango[$id][$dim][$grado][$key] .'
+                                    <div><input type="radio" class="custom-radio" id="radio' . $i . $l . $j . $k . $m .
+                                    '" name="radio' . $i . $l . $j . '" '. $checked .' value=' .
+                                    $this->rango[$id][$dim][$grado][$key] . '></div>
+                                    </td>';
+                                ++$m;
+                            }
+                            ++$k;
+                        }
+
+                        echo '
+                                </tr>
+                                <tr>
+                                    <td colspan="'. ($colspan - $colspandim + 2) .'"></td>
+                        ';
+                        if (isset($this->commentAtr[$id][$dim][$subdim][$atrib])
+                                && $this->commentAtr[$id][$dim][$subdim][$atrib] == 'visible') {
+                            $vcomment = '';
+                            if (isset($this->valuecommentAtr[$id][$dim][$subdim][$atrib])) {
+                                $vcomment = $this->valuecommentAtr[$id][$dim][$subdim][$atrib];
+                            }
+                            echo '
+                                    <td colspan="'.$colspan.'">
+                                        <textarea rows="2" style="height:6em;width:100%" id="observaciones'.
+                                        $dim.'_'.$subdim.'_'.$atrib.'" name="observaciones'.$dim.'_'.$subdim.'_'.$atrib.
+                                        '" style="width:100%">'.$vcomment.'</textarea>
+                                    </td>
+                            ';
+                        }
+                        echo '
+                                </tr>
+                                <tr></tr>
+                                <tr></tr>
+                        ';
+                        ++$j;
+                    }
+                }
+                ++$l;
+            }
+
+            if (isset($this->valglobal[$id][$dim]) && $this->valglobal[$id][$dim] == 'true') {
+                echo "
+                        <tr>
+                            <td class='subdimpor'>".$this->valglobalpor[$id][$dim]."%</td>
+                            <td class='global' colspan='".($colspan - $colspandim + 1) ."'>".$string['globalvalue']."</td>
+                ";
+
+                foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
+                    foreach ($this->rango[$id][$dim][$grado] as $key => $rango) {
+                        $checked = '';
+                        if (isset($this->valueglobaldim[$id][$dim]) &&
+                        $this->valueglobaldim[$id][$dim] == $this->rango[$id][$dim][$grado][$key]) {
+                            $checked = 'checked';
+                        }
+                        echo '<td class="descripcion" style="text-align:center"    >' .
+                        $this->rango[$id][$dim][$grado][$key] . '
+                                <div><input type="radio" class="custom-radio" id="radio' . $i . '" name="radio' . $i . '" '.
+                                $checked .' value=' . $this->rango[$id][$dim][$grado][$key] . '></div>
+                                </td>';
+                    }
+                }
+                echo "
+                        </tr>
+                        <tr>
+                            <td colspan='".($colspan - $colspandim + 2) ."'></td>
+                ";
+                if (isset($this->commentDim[$id][$dim]) && $this->commentDim[$id][$dim] == 'visible') {
+                    $vcomment = '';
+                    if (isset($this->valuecommentDim[$id][$dim])) {
+                        $vcomment = $this->valuecommentDim[$id][$dim];
+                    }
+
+                    echo "
+                            <td colspan='".$colspandim."'>
+                                <textarea rows='3' style='height:6em;width:100%' id='observaciones".$dim.
+                                "' name='observaciones".
+                                $dim."' style='width:100%'>".$vcomment."</textarea>
+                            </td>
+                    ";
+                }
+                echo "
+                        </tr>
+                ";
+            }
+            ++$i;
+        }
+
+        echo '
+                            </table>
+        ';
+        if (isset($this->valorestotal[$id])) {
+            echo '
+                    <table class="tabla" border=1 cellpadding=5px >
+                                <tr>
+                                    <td class="pordim">'.$this->valtotalpor[$id].'%</td>
+                                    <td class="global" colspan="1">'.
+                                    strtoupper(get_string('totalvalue', 'block_evalcomix')).'</td>
+            ';
+
+            foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
+                echo '<th>'.htmlspecialchars($this->valorestotal[$id][$grado]['nombre']).'</th>
+                ';
+            }
+
+            echo '<tr><td class="global" colspan="2"></td>';
+            foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
+                $checked = '';
+                if (isset($this->valuetotalvalue[$id]) &&
+                        $this->valuetotalvalue[$id] == $this->valorestotal[$id][$grado]['nombre']) {
+                    $checked = 'checked';
+                }
+
+                echo '<td><input type="radio" class="custom-radio" name="total" value="'.
+                htmlspecialchars($this->valorestotal[$id][$grado]['nombre']).'" '.$checked.' /></td>
+                ';
+            }
+            echo '
+                                </tr>
+                            </table>
+        ';
+        }
+
+        if (isset($globalcomment)) {
+            $globalcomment = ($globalcomment === 'global_comment') ? $this->observation[$id] : $globalcomment;
+            $width = (empty($this->comment[$id])) ? 100 : 60;
+            $comment = (empty($this->comment[$id])) ? (get_string('comments', 'block_evalcomix')).':' : $this->comment[$id];
+            echo '<br><br><br>
+                            <table class="tabla" border=1 cellpadding="5px">
+                                <tr>
+                                    <td>'.htmlspecialchars($comment).'</td>
+                                    <td style="width:'.$width.'%"><textarea name="observaciones" id="observaciones"
+                                    rows=4 cols=20 style="width:100%">'.$globalcomment.'</textarea></td>
+                                </tr>
+                            </table>
+            ';
+        }
     }
 }

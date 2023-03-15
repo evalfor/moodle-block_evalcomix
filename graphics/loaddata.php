@@ -31,7 +31,7 @@ $users = optional_param('user', '', PARAM_RAW);
 $modality = optional_param('modality', '', PARAM_RAW);
 $mode = required_param('mode', PARAM_INT);
 $taskid = optional_param('task', 0, PARAM_INT);
-$courseid      = required_param('id', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
 $check = optional_param('check', 0, PARAM_INT);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 

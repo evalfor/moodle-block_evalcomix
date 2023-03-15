@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/evalcomix/db" VERSION="20220516" COMMENT="XMLDB file for Moodle blocks/evalcomix"
+<XMLDB PATH="blocks/evalcomix/db" VERSION="20230301" COMMENT="XMLDB file for Moodle blocks/evalcomix"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -38,6 +38,7 @@
         <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="grade" TYPE="number" LENGTH="10" NOTNULL="false" DEFAULT="-1.00000" SEQUENCE="false" DECIMALS="5"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="idassessment" TYPE="char" LENGTH="64" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -155,7 +156,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="block_evalcomix_coordinators" COMMENT="This table saves datas of work teams coordinators ">
+    <TABLE NAME="block_evalcomix_coordinators" COMMENT="This table saves datas of work teams coordinators">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -165,6 +166,43 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+    </TABLE>
+    <TABLE NAME="block_evalcomix_dr_grade" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="idassessment" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="idsubdimension" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="block_evalcomix_drgcmid_ix" UNIQUE="false" FIELDS="cmid"/>
+        <INDEX NAME="block_evalcomix_drg_subass_ix" UNIQUE="true" FIELDS="idsubdimension, idassessment"/>
+        <INDEX NAME="block_evalcomix_drgass_ix" UNIQUE="false" FIELDS="idassessment"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="block_evalcomix_dr_pending" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="idassessment" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="idsubdimension" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="block_evalcomix_courseid_ix" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="block_evalcomix_cmid_ix" UNIQUE="false" FIELDS="cmid"/>
+        <INDEX NAME="block_evalcomix_idass_ix" UNIQUE="false" FIELDS="idassessment"/>
+        <INDEX NAME="block_evalcomix_subass_ix" UNIQUE="true" FIELDS="idsubdimension, idassessment"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

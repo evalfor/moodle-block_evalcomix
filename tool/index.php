@@ -23,10 +23,10 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
-$tid           = optional_param('tool', 0, PARAM_INT);
-$sorttool      = optional_param('sorttool', '', PARAM_TEXT);        // Course idsortitemid=lastname.
-$edit          = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be uploaded.
+$courseid = required_param('id', PARAM_INT);
+$tid = optional_param('tool', 0, PARAM_INT);
+$sorttool = optional_param('sorttool', '', PARAM_TEXT);        // Course idsortitemid=lastname.
+$edit = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be uploaded.
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 

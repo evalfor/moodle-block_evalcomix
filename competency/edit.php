@@ -23,10 +23,10 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
-$option        = optional_param('o', 'competency', PARAM_ALPHA);
-$itemid        = optional_param('iid', 0, PARAM_INT);
-$delete        = optional_param('del', 0, PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
+$option = optional_param('o', 'competency', PARAM_ALPHA);
+$itemid = optional_param('iid', 0, PARAM_INT);
+$delete = optional_param('del', 0, PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_course_login($course);

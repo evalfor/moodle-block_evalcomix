@@ -363,7 +363,7 @@ width="15"/>';
                 $output .= $grades->peer->extra . '<br>';
             }
             foreach ($grades->peer->grades as $tgrade) {
-                $output .= '<span title="'.$tgrade->assessorname.'"
+                $output .= ' <span title="'.$tgrade->assessorname.'"
 class="'.$tgrade->color.'">'. round($tgrade->grade, 2) .'/'. round($grades->peer->maxgrade, 2) .'</span>';
                 $output .= '<input type="image" src="../images/lupa.png"
 onClick="window.open(\''.$tgrade->assessmenturl.'\', \'popup\', \'scrollbars,resizable,width=780,height=500\');
@@ -376,7 +376,7 @@ width="15"/>';
                     width="16"
                     onclick="if (confirm(\''.get_string('confirmdeleteassessment', 'block_evalcomix').'\'))
                     location.href=\''.$tgrade->deleteurl.'\';
-                    window.opener.change_recarga();"> ';
+                    window.opener.change_recarga();">';
                 }
             }
         } else {

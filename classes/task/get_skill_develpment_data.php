@@ -14,16 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
-/*
+/**
+ * Class for cron
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
  */
-$plugin->version = 2023031000;
-$plugin->component = 'block_evalcomix';
-$plugin->requires = 2019111801; // Moodle 3.8 is required.
-$plugin->maturity = MATURITY_STABLE; // This is considered as ready for production sites.
-$plugin->release = 'v4.4.1';
+
+namespace block_evalcomix\task;
+
+class get_skill_develpment_data extends \core\task\scheduled_task {
+    public function get_name() {
+        return get_string('crontaskdevdata', 'block_evalcomix');
+    }
+
+    public function execute() {
+        global $CFG;
+        require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+        block_evalcomix_get_skill_development_data_ws();
+    }
+}

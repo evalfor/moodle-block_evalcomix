@@ -406,3 +406,6 @@ $string['alertnogroup'] = 'No groups have been created in the course yet. To cre
 $string['activityassessed'] = 'Disabled because some student has already been assessed';
 $string['coordinatorassessed'] = 'Currently, there are coordinators who have already received some evaluation. Those who have received an evaluation cannot be replaced. If you want to replace them, you\'ll need to delete the assessments first.';
 $string['confirmdisabledworkteams'] = 'Evaluations have already been carried out in this activity. If you disable this option and save your changes, all such assessments will be deleted and cannot be recovered. Are you sure you want to disable the option?';
+$string['crontaskdevdata'] = 'Task to download data for development report';
+$string['reporttimeleft'] = 'The report data is being downloaded in the background. {$a} left for full download';
+$string['reporttimeleftdisabled'] = 'There is data waiting to be downloaded in the background, but the task is disabled. Contact the administrator.';

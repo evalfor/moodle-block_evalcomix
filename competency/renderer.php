@@ -520,12 +520,16 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
         $outcometitle = (isset($outcomedatas->gradebytask)) ? $outcomedatas->gradebytask : array();
 
         $output = '';
-        $exportdisabled = (!empty($outcomexdatas) || !empty($competencyxdatas)) ? '' : 'disabled';
-        $output .= '<div class="form-group text-right">
-                    <button type="button" onclick="location.href=\''.$CFG->wwwroot.'/blocks/evalcomix/competency/report.php?id='.
-                    $courseid.'&g='.$groupselected.'&u='.$studentselected.'&e=1\'" '.$exportdisabled.'>'.
-                    get_string('export', 'block_evalcomix').'</button>
-                </div>';
+        $context = context_course::instance($courseid);
+        if (has_capability('moodle/grade:viewhidden', $context)) {
+            $exportdisabled = (!empty($outcomexdatas) || !empty($competencyxdatas)) ? '' : 'disabled';
+            $output .= '<div class="form-group text-right">
+                        <button type="button" onclick="location.href=\''.
+                        $CFG->wwwroot.'/blocks/evalcomix/competency/report.php?id='.
+                        $courseid.'&g='.$groupselected.'&u='.$studentselected.'&e=1\'" '.$exportdisabled.'>'.
+                        get_string('export', 'block_evalcomix').'</button>
+                    </div>';
+        }
         $output .= '<h4>'.get_string('outcomes', 'block_evalcomix').'</h4>';
         $output .= $this->display_report($outcomexdatas, $outcomeydatas, 'orange', 'bediv2', array('title' => $outcometitle));
         $output .= '<h4 class="mt-5">'.get_string('competencies', 'block_evalcomix').'</h4>';

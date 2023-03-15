@@ -73,16 +73,14 @@ class block_evalcomix_webservice_client {
      * @param $toolid Assessment tool ID
      * @return string URL validated to view tool
      */
-    public static function get_ws_viewtool($toolid = 0, $language = 'es_utf8', $courseid = 0, $module = 0,
-        $activity = 0, $student = 0, $assessor = 0, $mode = 'teacher', $lms = 0,  $title = '') {
+    public static function get_ws_viewtool($toolid = 0, $assessment = null, $language = 'es_utf8', $title = '') {
 
         defined('BLOCK_EVALCOMIX_DISPLAY_TOOL') || die('EvalCOMIX is not configured properly');
         $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_DISPLAY_TOOL . $toolid;
-        if ($courseid != 0) {
+        if (!empty($assessment)) {
             defined('BLOCK_EVALCOMIX_DISPLAY_TOOL_ASSESSED') || die('EvalCOMIX is not configured properly');
-            $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-            $assessmentid = md5($str);
+            $assessmentid = block_evalcomix_update_assessmentid($assessment);
             $serverurl = BLOCK_EVALCOMIX_DISPLAY_TOOL_ASSESSED . $assessmentid;
         }
 
@@ -130,14 +128,20 @@ class block_evalcomix_webservice_client {
      * @param string $lms name
      * @return string URL of assessment form
      */
-    public static function get_ws_assessment_form($toolid = 0, $language = 'es_utf8', $courseid = 0,
-        $module = 0, $activity = 0, $student = 0, $assessor = 0, $mode = 'teacher', $lms = 0,
-        $perspective = 'assess', $title = '') {
+    public static function get_ws_assessment_form($toolid = 0, $assessment = null, $language = 'es_utf8', $title = '',
+            $params = array()) {
 
         defined('BLOCK_EVALCOMIX_FORM_ASSESS') || die('EvalCOMIX is not configured properly');
 
-        $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-        $assessmentid = md5($str);
+        $assessmentid = '';
+        if (!empty($assessment)) {
+            $assessmentid = block_evalcomix_update_assessmentid($assessment);
+        } else if (isset($params['courseid'], $params['module'], $params['cmid'], $params['studentid'],
+                $params['assessorid'], $params['mode'])) {
+            $assessmentid = block_evalcomix_get_assessmentid($params);
+        } else {
+            print_error('EvalCOMIX: invalid assessment');
+        }
 
         $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_FORM_ASSESS;
@@ -162,14 +166,13 @@ class block_evalcomix_webservice_client {
      * @param string $lms name
      * @return string URL of delete assessment
      */
-    public static function delete_ws_assessment($courseid = 0, $module = 0, $activity = 0,
+    public static function delete_ws_assessment($assessment = null, $courseid = 0, $module = 0, $activity = 0,
         $student = 0, $assessor = 0, $mode = 'teacher', $lms = 0) {
 
         global $CFG;
         defined('BLOCK_EVALCOMIX_DELETE_ASSESS') || die('EvalCOMIX is not configured');
 
-        $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-        $assessmentid = md5($str);
+        $assessmentid = block_evalcomix_update_assessmentid($assessment);
 
         $serverurl = BLOCK_EVALCOMIX_DELETE_ASSESS;
         $serverurl .= $assessmentid;
@@ -270,16 +273,31 @@ class block_evalcomix_webservice_client {
      * @param string $lms name
      * @return object evalcomix_assessment object with the grade associated to the params
      */
-    public static function get_ws_singlegrade($toolid = 0, $courseid = 0, $module = 0, $activity = 0,
-        $student = 0, $assessor = 0, $mode = 'teacher', $lms = 0) {
+    public static function get_ws_singlegrade($assessment = null, $params = array()) {
 
         global $DB, $CFG;
         defined('BLOCK_EVALCOMIX_GRADE_EVALCOMIX') || die('EvalCOMIX is not configured');
 
-        $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $activity), '*', MUST_EXIST);
-
-        $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-        $assessmentid = md5($str);
+        $taskid = null;
+        $assessor = null;
+        $student = null;
+        $assessmentid = '';
+        if (!empty($assessment)) {
+            $assessmentid = block_evalcomix_update_assessmentid($assessment);
+            $taskid = $assessment->taskid;
+            $assessor = $assessment->assessorid;
+            $student = $assessment->studentid;
+        } else if (isset($params['courseid'], $params['module'], $params['cmid'], $params['studentid'],
+                $params['assessorid'], $params['mode'])) {
+            $assessmentid = block_evalcomix_get_assessmentid($params);
+            $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $params['cmid']), '*', MUST_EXIST);
+            $taskid = $task->id;
+            $assessor = $params['assessorid'];
+            $student = $params['studentid'];
+        } else {
+            var_dump($params);
+            print_error('EvalCOMIX: invalid assessment');
+        }
         $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_GRADE_EVALCOMIX;
         $serverurl .= $assessmentid . '?token='.$token;
@@ -300,7 +318,7 @@ class block_evalcomix_webservice_client {
                     $grade = -1;
                 }
 
-                $result = new block_evalcomix_assessments('', $task->id, $assessor, $student, $grade);
+                $result = new block_evalcomix_assessments('', $taskid, $assessor, $student, $grade);
                 return $result;
             } else {
                 self::print_error('Invalid Link');
@@ -662,7 +680,7 @@ xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessme
                         $newgrade = (string)$assessment->grade;
                         $maxgrade = (string)$assessment->maxgrade;
                         $object = new stdClass();
-                        $object->grade = $newgrade;
+                        $object->grade = trim($newgrade);
                         $object->maxgrade = $maxgrade;
                         $object->toolid = (string)$assessment->toolid;
                         $result[$assid] = $object;
@@ -717,9 +735,7 @@ xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessme
     }
 
     /**
-     * @param int $params['courseid']
-     * @param int $params['competencyid']
-     * @return xml document with data assessments
+     * @param int $params[subdimensionid][assessmentid]
      */
     public static function get_grade_subdimension($params = array()) {
         defined('BLOCK_EVALCOMIX_GET_GRADE_SUBDIMENSION') || die('EvalCOMIX is not configured');
@@ -728,87 +744,34 @@ xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessme
         $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_GET_GRADE_SUBDIMENSION . '?token='.$token;
 
-        if (!isset($params['courseid']) && !isset($params['competencyid'])) {
-            throw new Exception('Missing Params');
-        }
-
-        $courseid = $params['courseid'];
-        $competencyid = $params['competencyid'];
-        $studentid = (isset($params['studentid'])) ? (int)$params['studentid'] : 0;
-        $groupid = (isset($params['groupid'])) ? (int)$params['groupid'] : 0;
-
-        // Only de subdimensions of tools linked to some activity.
-        $sql = '
-        SELECT bes.*
-        FROM {block_evalcomix_subdimension} bes
-        WHERE bes.courseid = :courseid
-            AND competencyid IN ('.implode(',', $competencyid).')
-            AND bes.toolid IN (
-                SELECT bem.toolid
-                FROM {block_evalcomix_modes} bem
-                )
-        ';
-
-        $studentbyassessment = array();
-        if ($student = $DB->get_record('user', array('id' => $studentid, 'deleted' => 0))) {
-            $students[$studentid] = $student;
-        } else {
-            $students = block_evalcomix_get_members_course($courseid, $groupid);
-        }
-        $xml = '';
-        $subdimensionhash = array();
-        if (!empty($students) && $subdimensions = $DB->get_records_sql($sql, array('courseid' => $courseid))) {
-            require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
-
-            $paramsxml = array();
-            foreach ($subdimensions as $subdimension) {
-                $subdimensionid = $subdimension->subdimensionid;
-                $subdimensionhash[$subdimensionid][] = $subdimension->id;
-                $studentbyassessment[$subdimensionid] = block_evalcomix_get_student_assessments($courseid, $subdimension,
-                    $students);
-                $allassessments = array();
-
-                foreach ($studentbyassessment as $subdimension) {
-                    foreach ($subdimension as $assessmentid => $studentid) {
-                        $allassessments[$assessmentid] = $assessmentid;
-                    }
-                }
-                $paramsxml[$subdimensionid] = $allassessments;
-            }
-
+        if (!empty($params)) {
             $xml = '<?xml version="1.0" encoding="utf-8"?>
-            <subdimensionassessments>';
-            foreach ($paramsxml as $subdimensionid => $assessments) {
-                $xml .= '<subdimensionassessment subdimensionid="'.$subdimensionid.'">';
-                foreach ($assessments as $assessment) {
-                    $xml .= '<assessmentid>'.$assessment.'</assessmentid>';
+<subdimensionassessments>';
+            foreach ($params as $subdimensionid => $assessments) {
+                $xml .= '<subdimass subid="'.$subdimensionid.'">';
+                foreach ($assessments as $assessmentid => $assessment) {
+                    $xml .= '<id>'.$assessmentid.'</id>';
                 }
-                $xml .= '</subdimensionassessment>';
+                $xml .= '</subdimass>';
             }
             $xml .= '</subdimensionassessments>';
-        }
 
-        if (!empty($xml)) {
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
-
             $curl = new block_evalcomix_curl();
             $response = $curl->post($serverurl, $xml);
-
             if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
                 $result = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NSCLEAN);
                 $datas = array();
                 foreach ($result as $subdimensiongrades) {
-                    $subdimensionid = (string)$subdimensiongrades['subdimensionid'];
+                    $subdimensionid = (string)$subdimensiongrades['subid'];
                     foreach ($subdimensiongrades as $assessment) {
                         $assessmentid = (string)$assessment['id'];
-                        $grade = (string)$assessment->grade;
-                        if (isset($studentbyassessment[$subdimensionid][$assessmentid])) {
-                            $studentid = $studentbyassessment[$subdimensionid][$assessmentid]->studentid;
-                            $cmid = $studentbyassessment[$subdimensionid][$assessmentid]->cmid;
-                            foreach ($subdimensionhash[$subdimensionid] as $subid) {
-                                $compid = $subdimensions[$subid]->competencyid;
-                                $datas[$compid][$subdimensionid][$studentid][$cmid][$assessmentid] = $grade;
-                            }
+                        $grade = (int)$assessment;
+                        if (isset($params[$subdimensionid][$assessmentid])) {
+                            $cmid = $params[$subdimensionid][$assessmentid]->cmid;
+                            $modeid = $params[$subdimensionid][$assessmentid]->modeid;
+                            $datas[] = array('cmid' => (int)$cmid, 'idsubdimension' => $subdimensionid,
+                                'idassessment' => $assessmentid, 'grade' => $grade, 'modeid' => $modeid);
                         }
                     }
                 }
@@ -817,8 +780,6 @@ xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessme
                 throw new Exception('Page: Bad Response');
             }
         }
-
-        return array();
     }
 
     public static function get_commented_assessments($courseid, $assessments) {
@@ -831,6 +792,7 @@ xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessme
             $xml = '<assessments>';
             foreach ($assessments as $assessment) {
                 $assid = block_evalcomix_get_assessmentid($courseid, $assessment);
+                $assid = ($assid == 0) ? '' : $assid;
                 $assessmentid = $assessment->id;
                 $hash[$assid] = $assessmentid;
                 $xml .= '<assessment>'.$assid.'</assessment>';

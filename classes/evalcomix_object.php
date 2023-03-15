@@ -132,7 +132,7 @@ class block_evalcomix_object {
     public static function set_properties(&$instance, $params) {
         $params = (array) $params;
         foreach ($params as $var => $value) {
-            if (in_array($var, $instance->requiredfields) or array_key_exists($var, $instance->optionalfields)) {
+            if (in_array($var, $instance->requiredfields) || array_key_exists($var, $instance->optionalfields)) {
                 $instance->$var = $value;
             }
         }
@@ -145,8 +145,8 @@ class block_evalcomix_object {
         $data = new stdClass();
 
         foreach ($this as $var => $value) {
-            if (in_array($var, $this->requiredfields) or array_key_exists($var, $this->optionalfields)) {
-                if (is_object($value) or is_array($value)) {
+            if (in_array($var, $this->requiredfields) || array_key_exists($var, $this->optionalfields)) {
+                if (is_object($value) || is_array($value)) {
                     debugging("Incorrect property '$var' found when inserting grade object");
                 } else {
                     $data->$var = $value;
@@ -183,13 +183,13 @@ class block_evalcomix_object {
         $instance = new $classname();
 
         $classvars = (array)$instance;
-        $params    = (array)$params;
+        $params = (array)$params;
 
         $wheresql = array();
         $newparams = array();
 
         foreach ($params as $var => $value) {
-            if (!in_array($var, $instance->requiredfields) and !array_key_exists($var, $instance->optionalfields)) {
+            if (!in_array($var, $instance->requiredfields) && !array_key_exists($var, $instance->optionalfields)) {
                 continue;
             }
             if (is_null($value)) {

@@ -30,8 +30,8 @@ require_once($CFG->dirroot . '/blocks/evalcomix/competency/forms/csv_form.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/util.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/preview.php');
 
-$courseid    = required_param('id', PARAM_INT);
-$iid         = optional_param('iid', '', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
+$iid = optional_param('iid', '', PARAM_INT);
 $previewrows = optional_param('previewrows', 10, PARAM_INT);
 $continue = optional_param('continue', 0, PARAM_INT);
 

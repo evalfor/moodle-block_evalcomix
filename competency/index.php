@@ -23,13 +23,13 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
-$option        = optional_param('o', 'competency', PARAM_ALPHA);
-$itemid        = optional_param('item', 0, PARAM_INT);
-$export        = optional_param('e', '0', PARAM_INT);
-$sort          = optional_param('sort', '', PARAM_ALPHA);
-$dir           = optional_param('dir', 'ASC', PARAM_ALPHA);
-$search        = optional_param('search', '', PARAM_RAW);
+$courseid = required_param('id', PARAM_INT);
+$option = optional_param('o', 'competency', PARAM_ALPHA);
+$itemid = optional_param('item', 0, PARAM_INT);
+$export = optional_param('e', '0', PARAM_INT);
+$sort = optional_param('sort', '', PARAM_ALPHA);
+$dir = optional_param('dir', 'ASC', PARAM_ALPHA);
+$search = optional_param('search', '', PARAM_RAW);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_course_login($course);

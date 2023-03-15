@@ -23,7 +23,7 @@
 
 require_once('../../../config.php');
 
-$courseid      = required_param('id', PARAM_INT);
+$courseid = required_param('id', PARAM_INT);
 $id = required_param('a', PARAM_INT);
 $assessorid = optional_param('as', 0, PARAM_INT);
 

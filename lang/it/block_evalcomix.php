@@ -193,3 +193,143 @@ $string['settings_description'] = 'In questa sezione sarà configurata la tabell
 
 $string['crontask'] = 'Compito per aggiornare i punteggi sul registro EvalCOMIX';
 $string['confirmdeleteassessment'] = 'Sei sicuro di voler eliminare la valutazione?';
+
+// Tool editor.
+$string['selecttool'] = 'Seleziona il tipo di strumento da creare';
+$string['accept'] = 'Accetta';
+$string['alertdimension'] = 'Deve esistere almeno una dimensione';
+$string['alertsubdimension'] = 'Deve esistere almeno una sottodimensione';
+$string['alertatrib'] = 'Deve esistere almeno un attributo';
+$string['rubricremember'] = 'RICORDA: non devono esistere valori RIPETUTI';
+$string['importfile'] = 'Importa file';
+$string['noatrib'] = 'Attributo negativo';
+$string['yesatrib'] = 'Attributo positivo';
+
+$string['comments'] = 'Commenti';
+$string['grade'] = 'Voto';
+$string['nograde'] = 'Nessun voto';
+$string['alertsave'] = "Valutazione salvata con successo. Se vuoi, puoi chiudere questa finestra";
+
+$string['add_comments'] = 'Cambia commento';
+$string['checklist'] = 'Lista di controllo';
+$string['ratescale'] = 'Scala di valutazione';
+$string['listrate'] = 'Lista di controllo + Scala di valutazione';
+$string['rubric'] = 'Rubrica';
+$string['differentail'] = 'Differenziale semantico';
+$string['mix'] = 'Strumento misto';
+$string['argument'] = 'Valutazione argomentativa';
+$string['numdimensions'] = 'Nº delle Dimensioni:';
+$string['numvalues'] = 'Nº dei valori:';
+$string['totalvalue'] = 'Valutazione globale';
+$string['dimension'] = 'Dimensione:';
+$string['subdimension'] = 'Sottodimensione:';
+$string['numsubdimension'] = 'Nº Sottodimensioni:';
+$string['numattributes'] = 'Nº di attributi:';
+$string['attribute'] = 'Attributi';
+$string['porvalue'] = 'Valore percentuale:';
+$string['value'] = 'Valore';
+$string['values'] = 'Valori';
+$string['globalvalue'] = 'DIMENSIONE DELLA VALUTAZIONE GLOBALE:';
+$string['import'] = 'Importa';
+$string['novalue'] = 'Valore negativo';
+$string['yesvalue'] = 'Valore positivo';
+$string['idea'] = 'IDEA & DIREZIONE';
+$string['design'] = 'PROGETTAZIONE';
+$string['develop'] = 'SVILUPPO';
+$string['translation'] = 'TRADUZIONE';
+$string['colaboration'] = 'COOPERARE';
+$string['license'] = 'LICENZA';
+$string['addtool'] = 'Aggiungi strumento di valutazione';
+$string['title'] = 'Titolo';
+$string['titledim'] = 'Dimensione';
+$string['titlesubdim'] = 'Sottodimensione';
+$string['titleatrib'] = 'Attributo';
+$string['titlevalue'] = 'Valore';
+$string['no'] = 'No';
+$string['yes'] = 'Sì';
+$string['observation'] = 'Commenti';
+$string['view'] = 'Chiudi visualizzazione precedente';
+
+$string['windowselection'] = 'Seleziona finestra';
+$string['selectfile'] = 'Seleziona file';
+$string['upfile'] = 'Carica file';
+$string['cancel'] = 'Cancella';
+
+$string['savedsaccessfully'] = 'Questo strumento è stato salvato con successo';
+$string['ADimension'] = 'Questo campo non può essere lasciato vuoto. \"Nº delle Dimensioni\" Deve essere un numero maggiore di 0 e \"Nº dei Valori\" un numero maggiore o uguale a 2';
+$string['ATotal'] = 'Questo campo non può essere lasciato vuoto. \"Nº dei valori\" deve essere un numero maggiore o uguale a 2';
+$string['ASubdimension'] = 'Questo campo non può essere lasciato vuoto. \"Nº Delle Sottodimensioni\" deve essere un numero maggiore di 0 e \"Nº dei Valori\" maggiore o uguale a 2';
+$string['AAttribute'] = 'Questo campo non può essere lasciato vuoto. Per favore, inserisci un numero maggiore di 0';
+$string['ADiferencial'] = '\"Nº di Attributi\" deve essere maggiore di 0. \"Nº dei Valori\" Deve essere ODD';
+$string['ErrorFormato'] = 'Il file è vuoto o il formato è sbagliato"';
+$string['ErrorAcceso'] = 'Il file non è accessibile';
+$string['ErrorExtension'] = 'Formato sbagliato. Estensione deve essere \"evx\"';
+$string['ErrorSaveTitle'] = 'Errore: il titolo non può essere omesso';
+$string['ErrorSaveTools'] = 'Errore: deve essere selezionato almeno uno strumento di valutazione';
+
+$string['TSave'] = 'Salva';
+$string['TImport'] = 'Importa';
+$string['TExport'] = 'Esporta';
+$string['TAumentar'] = 'Aumenta dimensione carattere';
+$string['TDisminuir'] = 'Riduci dimensione carattere';
+$string['TView'] = 'visualizzazione precedente';
+$string['TPrint'] = 'Stampa';
+$string['THelp'] = 'Aiuto';
+$string['TAbout'] = 'A proposito di';
+
+$string['mixed_por'] = 'Peso nella votazione finale';
+
+$string['handlerofco'] = 'Gestione delle competenze e risultati di apprendimento';
+$string['competencies'] = 'Competenze';
+$string['outcomes'] = 'Risultati di apprendimento';
+$string['compidnumber'] = 'Codice';
+$string['compshortname'] = 'Nome corto';
+$string['compdescription'] = 'Descrizione';
+$string['comptypes'] = 'Tipi di competizione';
+$string['competizione'] = 'Tipo di competizione';
+$string['newcomp'] = 'Nuovo comp';
+$string['newoutcome'] = 'Nuovo risultato di apprendimento';
+$string['newcomptype'] = 'Nuovo tipo di composizione';
+$string['compreport'] = 'Rapporto di sviluppo';
+$string['compandout'] = 'Competenze e risultati di apprendimento';
+$string['uploadcompetencies'] = 'Importa competenze e risultati';
+$string['uploadcompetencies_help'] = 'Le competenze ei risultati di apprendimento possono essere caricati tramite un file di testo. Il formato del file dovrebbe essere il seguente:
+
+* Ogni riga del file contiene un record
+* Ogni record è una serie di dati separati da virgole (o altri delimitatori)
+* Il primo record contiene un elenco di nomi di campo che definiscono il formato del resto del file
+* I nomi dei campi obbligatori sono idnumber, shortname, result';
+$string['idnumberduplicate'] = 'Numero ID duplicato';
+$string['invalidoutcome'] = 'Valore risultato non valido. Deve essere 0 o 1';
+$string['invalididnumberupload'] = 'Valore idnumber non valido. La dimensione deve essere inferiore a 100';
+$string['missingidnumber'] = 'Numero ID colonna mancante';
+$string['missingshortname'] = 'Manca il nome breve della colonna';
+$string['missingoutcome'] = 'Manca la colonna del risultato';
+$string['ignored'] = 'Ignorato';
+$string['errors'] = 'Errori';
+$string['importresult'] = 'Importa risultati';
+$string['uploadcompetenciespreview'] = 'Anteprima delle competenze caricate';
+$string['choicecompetency'] = 'Scegli un concorso';
+$string['choiceoutcome'] = 'Scegli un risultato';
+$string['associatecompandout'] = 'Associa competenze e risultati';
+$string['allstudens'] = 'Tutti gli studenti';
+$string['onestudent'] = 'Studente specifico';
+$string['onegroup'] = 'Gruppo specifico';
+$string['evaluationandreports'] = 'Valutazione e rapporti';
+$string['workteams'] = 'Squadre di lavoro';
+$string['workteamsassessments'] = 'Valutazione dei gruppi di lavoro';
+$string['assignteamcoordinators'] = 'Assegnare i coordinatori del team';
+$string['workteamsassessments_help'] = 'Se attivi questa opzione, potrai nominare un coordinatore per rappresentare il gruppo.
+
+Se c\'è **Teacher Evaluation - EP**, gli insegnanti potranno valutare solo i coordinatori e tale valutazione sarà assegnata a ciascun membro del loro gruppo.
+
+Se c\'è **Autovalutazione – ​​AE**, solo il coordinatore può effettuare l\'autovalutazione e la sua valutazione sarà assegnata a ciascun membro del suo gruppo.
+
+In presenza di **Peer Assessment – ​​​​EI**, gli studenti potranno valutare solo i coordinatori di ciascun gruppo e ogni valutazione sarà assegnata a ciascun componente del gruppo.
+
+Gli studenti che non fanno parte di alcun gruppo non riceveranno una valutazione. I gruppi che non hanno un coordinatore assegnato non riceveranno alcuna valutazione e non potranno valutare.';
+$string['selectcoordinator'] = 'scegli il coordinatore';
+$string['alertnogroup'] = 'Nessun gruppo è stato ancora creato nel corso. Per crearli è necessario accedere alla seguente sezione:';
+$string['activityassessed'] = 'Disabilitato perché uno studente è già stato testato';
+$string['coordinatorassessed'] = 'Attualmente, ci sono coordinatori che hanno già ricevuto una valutazione. Coloro che hanno ricevuto una valutazione non possono essere sostituiti. Se desideri sostituirli, dovrai prima eliminare le recensioni.';
+$string['confirmdisabledworkteams'] = 'Le valutazioni sono già state effettuate in questa attività. Se disabiliti questa opzione e salvi le modifiche, tutte queste valutazioni verranno eliminate e non potranno essere recuperate. Sei sicuro di voler disabilitare l\'opzione?';

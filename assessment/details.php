@@ -25,14 +25,14 @@
 
 require_once('../../../config.php');
 
-$contextid  = required_param('cid', PARAM_INT);
+$contextid = required_param('cid', PARAM_INT);
 list($context, $course) = get_context_info_array($contextid);
 require_course_login($course);
 
-$itemid     = required_param('itemid', PARAM_INT);
-$userid     = required_param('userid', PARAM_INT);
-$popup      = optional_param('popup', 0, PARAM_INT);
-$assid      = optional_param('assid', 0, PARAM_INT);
+$itemid = required_param('itemid', PARAM_INT);
+$userid = required_param('userid', PARAM_INT);
+$popup = optional_param('popup', 0, PARAM_INT);
+$assid = optional_param('assid', 0, PARAM_INT);
 
 require_capability('block/evalcomix:view', $context, $userid);
 
@@ -116,8 +116,7 @@ if ($assid && has_capability('moodle/block:edit', $context)) {
             $assessorid = ($stringmode == 'self') ? $member->id : $assessdelete->assessorid;
             if ($assdelete = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
                     'assessorid' => $assessorid, 'studentid' => $member->id))) {
-                $response = block_evalcomix_webservice_client::delete_ws_assessment($course->id, $module->name,
-                $task->instanceid, $member->id, $assessorid, $stringmode, BLOCK_EVALCOMIX_MOODLE_NAME);
+                $response = block_evalcomix_webservice_client::delete_ws_assessment($assdelete);
                 $DB->delete_records('block_evalcomix_assessments', array('id' => $assdelete->id));
 
                 $params = array('cmid' => $task->instanceid, 'userid' => $member->id, 'courseid' => $course->id);
@@ -132,6 +131,12 @@ if ($assid && has_capability('moodle/block:edit', $context)) {
                     if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
                         $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
                     }
+                }
+                if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assdelete->idassessment))) {
+                    $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assdelete->idassessment));
+                }
+                if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assdelete->idassessment))) {
+                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assdelete->idassessment));
                 }
             }
         }
@@ -169,7 +174,7 @@ $weighingteacher = '';
 $modality = $DB->get_record('block_evalcomix_modes', array('taskid' => $itemid, 'modality' => 'teacher'));
 if ($modality != null) {
     $gradeobject->teacher->weighing = $modality->weighing;
-    $weighingteacher  = $modality->weighing;
+    $weighingteacher = $modality->weighing;
     $withteachergrade = true;
 }
 

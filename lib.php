@@ -386,12 +386,12 @@ function block_evalcomix_get_elements_course($params) {
     $elements = array();
     foreach ($levels as $row) {
         foreach ($row as $element) {
-            if ($element['type'] == 'item' or $element['type'] == 'categoryitem') {
-                $itemtype     = $element['object']->itemtype;
-                $itemmodule   = $element['object']->itemmodule;
+            if ($element['type'] == 'item' || $element['type'] == 'categoryitem') {
+                $itemtype = $element['object']->itemtype;
+                $itemmodule = $element['object']->itemmodule;
                 $iteminstance = $element['object']->iteminstance;
 
-                if ($itemtype == 'mod' and $iteminstance and $itemmodule) {
+                if ($itemtype == 'mod' && $iteminstance && $itemmodule) {
                     if ($cm = get_coursemodule_from_instance($itemmodule, $iteminstance, $courseid)) {
                         if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
                             if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id,

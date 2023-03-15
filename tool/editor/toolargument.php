@@ -404,7 +404,7 @@ class block_evalcomix_editor_toolargument extends block_evalcomix_editor {
 
         if ($this->view == 'view' && !is_numeric($mix)) {
             echo '<input type="button" style="width:10em" value="'.get_string('view', 'block_evalcomix').'"
-            onclick=\'javascript:location.href="generator.php?op=design"\'><br>';
+            onclick=\'javascript:location.href="generator.php?op=design&courseid='.$data['courseid'].'"\'><br>';
         }
         $id = $this->id;
             echo '
@@ -1023,5 +1023,117 @@ class block_evalcomix_editor_toolargument extends block_evalcomix_editor {
         ';
 
         flush();
+    }
+
+    public function print_tool($root = '') {
+        $id = $this->id;
+        $colspan = 0;
+
+        echo '
+                                <table class="tabla" border=1 cellpadding=5px >
+
+                                <!--TITULO-INSTRUMENTO------------>
+                                <tr>
+                                   <th colspan="2">'.htmlspecialchars($this->titulo).'</th>
+                                </tr>
+
+                                <tr>
+                                   <th colspan="2"></th>
+                                </tr>
+
+
+                                <tr>
+                                   <td></td>
+                                   <td></td>
+                                </tr>';
+        $i = 0;
+        foreach ($this->dimension[$id] as $dim => $value) {
+            $colspandim = 0;
+
+            echo '
+                                <tr id="dim">
+                                    <!--DIMENSIÓN-TITLE----------->
+                                    <td class="bold" colspan="2">
+                                        <span>'.htmlspecialchars($this->dimension[$this->id][$dim]['nombre']).'</span>
+                                    </td>
+            ';
+
+            echo '
+                                </tr>
+            ';
+            $l = 0;
+            foreach ($this->subdimension[$this->id][$dim] as $subdim => $elemsubdim) {
+                echo '
+                                <!--TITULO-SUBDIMENSIÓN------------>
+                                <tr><td class="subdim" colspan="2">'.
+                                htmlspecialchars($this->subdimension[$this->id][$dim][$subdim]['nombre']).'</td></tr>
+                ';
+
+                if (isset($this->atributo[$this->id][$dim][$subdim])) {
+                    $j = 0;
+                    foreach ($this->atributo[$this->id][$dim][$subdim] as $atrib => $elematrib) {
+                        $vcomment = '';
+                        if (isset($this->valuecommentAtr[$id][$dim][$subdim][$atrib])) {
+                            $vcomment = $this->valuecommentAtr[$id][$dim][$subdim][$atrib];
+                        }
+
+                        echo '
+                                <!--ATRIBUTOS---------------------->
+                                <tr rowspan=0><td colspan="'.($colspan - $colspandim + 1) .'">'.
+                                htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre']).'</td>
+
+                                    <td colspan="'.$colspan.'">
+                                        <textarea rows="4" style="height:8em;width:100%" id="observaciones'.$i.'_'.$l.'_'.$j.
+                                        '" name="observaciones'.$i.'_'.$l.'_'.$j.'" style="width:100%">'.$vcomment.'</textarea>
+                                    </td>
+
+                        ';
+
+                        echo '
+                                </tr>
+
+                        ';
+
+                        ++$j;
+                    }
+                }
+                ++$l;
+            }
+
+            echo "
+
+                    <tr>
+                        <td colspan='".($colspan - $colspandim + 1) ."'></td>
+            ";
+            if (isset($this->commentDim[$id][$dim]) && $this->commentDim[$id][$dim] == 'visible') {
+                echo "
+                        <td colspan='".$colspandim."'>
+                            <textarea rows='3' style='height:4em;width:100%' id='observaciones".$dim."' name='observaciones".$dim.
+                            "' style='width:100%'></textarea>
+                        </td>
+                ";
+            }
+            echo "
+                    </tr>
+            ";
+            ++$i;
+        }
+
+        echo '
+                            </table>
+        ';
+
+        $width = (empty($this->comment[$id])) ? 100 : 60;
+        $comment = (empty($this->comment[$id])) ? (get_string('comments', 'block_evalcomix')).':' :
+        htmlspecialchars($this->comment[$id]);
+        echo '<br><br><br>
+                            <table class="tabla" border=1 cellpadding="5px">
+                                <tr>
+                                    <td>'.$comment.'</td>
+                                    <td style="width:'.$width.'%"><textarea name="observaciones" id="observaciones"
+                                    rows=4 cols=20 style="width:100%">'.$this->observation[$id].'</textarea></td>
+                                </tr>
+                            </table>
+        ';
     }
 }

@@ -57,29 +57,29 @@ class block_evalcomix extends block_base {
         }
         global $CFG;
 
-        $this->content->text   .= "<STYLE type='text/css'>";
-        $this->content->text   .= " LI.eps_li {list-style-type:none; background:url('') no-repeat
+        $this->content->text .= "<STYLE type='text/css'>";
+        $this->content->text .= " LI.eps_li {list-style-type:none; background:url('') no-repeat
         scroll 0px -893px transparent; margin:0 0 3px; padding:0 0 0 9px; }
         #block_evalcomix_ul_block {padding: 0px; margin-left: 21%;color:#00648C;
         font-weight:bold;}      </STYLE>";
 
-        $this->content->text   .= "<img src='".$CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT ."' alt='' align='absmiddle'
+        $this->content->text .= "<img src='".$CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT ."' alt='' align='absmiddle'
         width='100%'>";
-        $this->content->text   .= "<ul id='block_evalcomix_ul_block'><li class='eps_li'>";
+        $this->content->text .= "<ul id='block_evalcomix_ul_block'><li class='eps_li'>";
 
         if ($autorizado == true) {
-            $this->content->text   .= "<li class='mb-2'><a title='Handler of competencies and outcomes'
+            $this->content->text .= "<li class='mb-2'><a title='Handler of competencies and outcomes'
             href='".$CFG->wwwroot ."/blocks/evalcomix/competency/index.php?id=".$COURSE->id."' name='clickcomp'
             class='p-0'>".get_string('handlerofco', 'block_evalcomix')."</a></li>";
         }
 
         if ($autorizado == true) {
-            $this->content->text   .= "<li class='mb-2'><a title='Instruments'
+            $this->content->text .= "<li class='mb-2'><a title='Instruments'
             href='".$CFG->wwwroot ."/blocks/evalcomix/tool/index.php?id=".$COURSE->id."' name='clickinst'
             class='p-0' >".get_string('instruments', 'block_evalcomix')."</a></li>";
         }
 
-        $this->content->text   .= "<li class='mb-2'>
+        $this->content->text .= "<li class='mb-2'>
         <a href='".$CFG->wwwroot ."/blocks/evalcomix/assessment/index.php?id=".$COURSE->id."' name='clickeval'
         class='p-0'>".get_string('evaluationandreports', 'block_evalcomix')."</a></li>";
 

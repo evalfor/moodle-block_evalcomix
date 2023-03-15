@@ -286,8 +286,10 @@ function block_evalcomix_export_development_report($params) {
     $courseid = $course->id;
     require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-    $competencydatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_COMPETENCY, $groupid, $studentid);
-    $outcomedatas = block_evalcomix_get_development_datas($courseid, BLOCK_EVALCOMIX_OUTCOME, $groupid, $studentid);
+    require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+    $datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
+    $competencydatas = $datas->competency;
+    $outcomedatas = $datas->outcome;
     $competencyxdatas = array_reverse($competencydatas->xdatas);
     $outcomexdatas = array_reverse($outcomedatas->xdatas);
     $ctitle = (isset($competencydatas->gradebytask)) ? $competencydatas->gradebytask : array();
@@ -386,7 +388,7 @@ function block_evalcomix_get_file_columns($cir) {
         $field = $columns[$key];
         $field = trim($field);
         $lcfield = core_text::strtolower($field);
-        if (in_array($field, $stdfields) or in_array($lcfield, $stdfields)) {
+        if (in_array($field, $stdfields) || in_array($lcfield, $stdfields)) {
             $newfield = $lcfield;
         } else {
             $cir->close();

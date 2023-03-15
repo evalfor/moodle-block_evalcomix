@@ -372,3 +372,5 @@ $string['alertnogroup'] = 'Todavía no se han creado grupos en el curso. Para cr
 $string['activityassessed'] = 'Deshabilitado debido a que ya se ha evaluado a algún/a estudiante';
 $string['coordinatorassessed'] = 'Actualmente, hay coordinadores que ya han recibido alguna evaluación. Aquellos que hayan recibido alguna evaluación no podrán ser reemplazados. Si desea reemplazarlos, primero deberá eliminar las evaluaciones';
 $string['confirmdisabledworkteams'] = 'En esta actividad ya se han realizado evaluaciones. Si desactiva esta opción y guarda los cambios, se eliminarán todas esas evaluaciones y no se podrán recuperar. ¿Confirma que desea desactivar la opción?';
+$string['crontaskdevdata'] = 'Tarea para la descarga de datos de el informe de desarrollo';
+$string['reporttimeleft'] = 'Se están descargando los datos del informe en segundo plano. Faltan {$a} para la descarga completa';
