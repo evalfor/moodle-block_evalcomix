@@ -22,7 +22,7 @@
 
 define('BLOCK_EVALCOMIX_COMPETENCY', 0);
 define('BLOCK_EVALCOMIX_OUTCOME', 1);
-define('BLOCK_EVALCOMIX_DR_REQUEST', 1);
+define('BLOCK_EVALCOMIX_DR_REQUEST', 200);
 define('BLOCK_EVALCOMIX_DR_PENDING', 5000);
 
 function block_evalcomix_get_development_datas($courseid, $groupid = 0, $studentid = 0, $grades = true) {
