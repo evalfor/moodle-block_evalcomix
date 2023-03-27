@@ -453,7 +453,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         upgrade_block_savepoint(true, 2022112802, 'evalcomix');
     }
 
-    if ($oldversion < 2023030100) {
+    if ($oldversion < 2023031800) {
 
         // Define table block_evalcomix_dr_pending to be created.
         $table = new xmldb_table('block_evalcomix_dr_pending');
@@ -505,7 +505,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         }
 
         // Evalcomix savepoint reached.
-        upgrade_block_savepoint(true, 2023030100, 'evalcomix');
+        upgrade_block_savepoint(true, 2023031800, 'evalcomix');
     }
 
     return $result;

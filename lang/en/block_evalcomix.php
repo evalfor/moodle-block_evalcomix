@@ -409,3 +409,4 @@ $string['confirmdisabledworkteams'] = 'Evaluations have already been carried out
 $string['crontaskdevdata'] = 'Task to download data for development report';
 $string['reporttimeleft'] = 'The report data is being downloaded in the background. {$a} left for full download';
 $string['reporttimeleftdisabled'] = 'There is data waiting to be downloaded in the background, but the task is disabled. Contact the administrator.';
+$string['inforeporttime'] = 'The report data is downloaded in the background. If when selecting a filter they are not yet available, please be patient.';

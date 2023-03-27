@@ -373,4 +373,5 @@ $string['activityassessed'] = 'Deshabilitado debido a que ya se ha evaluado a al
 $string['coordinatorassessed'] = 'Actualmente, hay coordinadores que ya han recibido alguna evaluación. Aquellos que hayan recibido alguna evaluación no podrán ser reemplazados. Si desea reemplazarlos, primero deberá eliminar las evaluaciones';
 $string['confirmdisabledworkteams'] = 'En esta actividad ya se han realizado evaluaciones. Si desactiva esta opción y guarda los cambios, se eliminarán todas esas evaluaciones y no se podrán recuperar. ¿Confirma que desea desactivar la opción?';
 $string['crontaskdevdata'] = 'Tarea para la descarga de datos de el informe de desarrollo';
-$string['reporttimeleft'] = 'Se están descargando los datos del informe en segundo plano. Faltan {$a} para la descarga completa';
+$string['reporttimeleft'] = 'Se están descargando los datos del informe. Faltan {$a} para la descarga completa';
+$string['inforeporttime'] = 'Los datos del informe se descargan en segundo plano. Si al seleccionar un filtro todavía no estuvieran disponibles, por favor, tenga paciencia';

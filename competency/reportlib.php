@@ -512,11 +512,6 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
 
 function block_evalcomix_get_remaining_download_time($courseid) {
     global $DB;
-    $check = new \tool_task\check\cronrunning();
-    $result = $check->get_result();
-    if ($result->status !== 'ok') {
-        return 'disabled';
-    }
 
     $sql = "SELECT *
     FROM {block_evalcomix_dr_pending} p

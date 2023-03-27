@@ -336,7 +336,7 @@ class block_evalcomix_webservice_client {
         $serverurl = BLOCK_EVALCOMIX_DUPLICATE_COURSE . '?token='.$token;
         $xml = "<?xml version='1.0' encoding='utf-8'?>
 <assessmentTools xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-xsi:schemaLocation='http://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessment.xsd'>
+xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessment.xsd'>
 <toolIdentifiers>";
 
         foreach ($tools as $tool) {

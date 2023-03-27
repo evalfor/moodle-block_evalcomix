@@ -79,6 +79,7 @@ $timeleft = block_evalcomix_get_remaining_download_time($courseid);
 
 echo $OUTPUT->header();
 
+\core\notification::info(get_string('inforeporttime', 'block_evalcomix', $timeleft));
 if ($timeleft === 'disabled') {
     \core\notification::error(get_string('reporttimeleftdisabled', 'block_evalcomix', $timeleft));
 } else if (!empty($timeleft)) {
