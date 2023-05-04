@@ -24,8 +24,8 @@
 /* Translation from Spanish to Catalan by USQUID-ESUP, UPF.
 * http://www.usquidesup.upf.edu */
 
-$string['pluginname'] = 'EvalCOMIX';
-$string['evalcomix'] = 'EvalCOMIX';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
 $string['blocksettings'] = 'Configuració';
 $string['blockstring'] = 'Contingut d\'EvalCOMIX';
 $string['instruments'] = 'Gestió d\'instruments';

@@ -21,8 +21,8 @@
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX';
-$string['evalcomix'] = 'EvalCOMIX';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
 $string['blocksettings'] = 'Configuration';
 $string['blockstring'] = 'Content of EvalCOMIX';
 $string['instruments'] = 'Tool Management';
