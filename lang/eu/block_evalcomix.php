@@ -275,7 +275,7 @@ $string['newcomp'] = ' Konposizio berria ';
 $string['newoutcome'] = 'Ikaskuntzaren emaitza berria';
 $string['newcomptype'] = 'Konpen mota berria';
 $string['compreport'] = 'Garapen txostena';
-$string['compandout'] = 'Konpetentziak eta ikaskuntzaren emaitzak';
+$string['compandout'] = 'Ikaskuntzaren emaitzak eta konpetentziak';
 $string['uploadcompetencies'] = 'Inportatu gaitasunak eta emaitzak';
 $string['uploadcompetencies_help'] = 'Gaitasunak eta ikaskuntza-emaitzak testu-fitxategi baten bidez igo daitezke. Fitxategiaren formatuak honako hau izan behar du:
 
@@ -317,3 +317,8 @@ $string['alertnogroup'] = 'Ikastaroan oraindik ez da talderik sortu. Horiek sort
 $string['activityassessed'] = 'Desgaituta dago ikasle bat dagoeneko proba egin duelako';
 $string['coordinatorassessed'] = 'Gaur egun, badira dagoeneko ebaluazioren bat jaso duten koordinatzaileak. Ebaluazioa jaso dutenak ezin dira ordezkatu.';
 $string['confirmdisabledworkteams'] = 'Jarduera honetan ebaluazioak egin dira dagoeneko. Aukera hau desgaitzen baduzu eta aldaketak gordetzen badituzu, ebaluazio horiek guztiak ezabatu egingo dira eta ezin izango dira berreskuratu. Ziur aukera desgaitu nahi duzula?';
+$string['itemaddedsuccessfully'] = 'Elementua ongi gehitu da';
+$string['duplicatevalue'] = 'Balioa bikoiztu';
+$string['itemmodifiedsuccessfully'] = 'Elementua ongi aldatu da';
+$string['itemdeletedsuccessfully'] = 'Elementua ongi ezabatu da';
+$string['lastconfirmdeletetool'] = 'OHARRA: ebaluazio-tresnak {$a} ebaluazio elkartu ditu. Ezabatzen baduzu, lotutako ebaluazio guztiak ere ezabatu egingo dira. Ziur jarraitu nahi duzula?';

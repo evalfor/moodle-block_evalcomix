@@ -291,7 +291,7 @@ $string['newcomp'] = 'Nuovo comp';
 $string['newoutcome'] = 'Nuovo risultato di apprendimento';
 $string['newcomptype'] = 'Nuovo tipo di composizione';
 $string['compreport'] = 'Rapporto di sviluppo';
-$string['compandout'] = 'Competenze e risultati di apprendimento';
+$string['compandout'] = 'Risultati di apprendimento e competenze';
 $string['uploadcompetencies'] = 'Importa competenze e risultati';
 $string['uploadcompetencies_help'] = 'Le competenze ei risultati di apprendimento possono essere caricati tramite un file di testo. Il formato del file dovrebbe essere il seguente:
 
@@ -333,3 +333,8 @@ $string['alertnogroup'] = 'Nessun gruppo è stato ancora creato nel corso. Per c
 $string['activityassessed'] = 'Disabilitato perché uno studente è già stato testato';
 $string['coordinatorassessed'] = 'Attualmente, ci sono coordinatori che hanno già ricevuto una valutazione. Coloro che hanno ricevuto una valutazione non possono essere sostituiti. Se desideri sostituirli, dovrai prima eliminare le recensioni.';
 $string['confirmdisabledworkteams'] = 'Le valutazioni sono già state effettuate in questa attività. Se disabiliti questa opzione e salvi le modifiche, tutte queste valutazioni verranno eliminate e non potranno essere recuperate. Sei sicuro di voler disabilitare l\'opzione?';
+$string['itemaddedsuccessfully'] = 'Articolo aggiunto con successo';
+$string['duplicatevalue'] = 'Duplica valore';
+$string['itemmodifiedsuccessfully'] = 'Articolo modificato con successo';
+$string['itemdeletedsuccessfully'] = 'Elemento eliminato con successo';
+$string['lastconfirmdeletetool'] = 'ATTENZIONE: Il seguente strumento di valutazione ha associato {$a} valutazioni. Se lo elimini, verranno eliminate anche tutte le valutazioni associate. Sei sicuro di voler continuare?';

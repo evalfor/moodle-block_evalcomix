@@ -55,7 +55,11 @@ class block_evalcomix_uploadcompetence_form1 extends moodleform {
         $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'tool_uploaduser'), $choices);
         $mform->setType('previewrows', PARAM_INT);
 
-        $this->add_action_buttons(false, get_string('upfile', 'block_evalcomix'));
+        $objs = array();
+        $objs[] =& $mform->createElement('submit', 'submitbutton', get_string('upfile', 'block_evalcomix'));
+        $objs[] =& $mform->createElement('cancel', 'cancel', get_string('cancel'));
+        $grp =& $mform->addElement('group', 'buttonsgrp', '', $objs,
+               array(' ', '<br />'), false);
     }
 
     /**

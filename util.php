@@ -196,15 +196,19 @@ class block_evalcomix_export_assessment {
 
                                         if (!$outofrange) {
                                             if ($assessment->assessorid == $assessment->studentid) {
-                                                $gradeself = ($commented[$assessmentid] == 1) ? 4 : 3;
+                                                $gradeself = (isset($commented[$assessmentid])
+                                                    && $commented[$assessmentid] == 1) ? 4 : 3;
                                             } else {
-                                                $gradepeeraverage[] = ($commented[$assessmentid] == 1) ? 4 : 3;
+                                                $gradepeeraverage[] = (isset($commented[$assessmentid])
+                                                    && $commented[$assessmentid] == 1) ? 4 : 3;
                                             }
                                         } else {
                                             if ($assessment->assessorid == $assessment->studentid) {
-                                                $gradeself = ($commented[$assessmentid] == 1) ? 2 : 1;
+                                                $gradeself = (isset($commented[$assessmentid])
+                                                    && $commented[$assessmentid] == 1) ? 2 : 1;
                                             } else {
-                                                $gradepeeraverage[] = ($commented[$assessmentid] == 1) ? 2 : 1;
+                                                $gradepeeraverage[] = (isset($commented[$assessmentid])
+                                                    && $commented[$assessmentid] == 1) ? 2 : 1;
                                             }
                                         }
                                     }

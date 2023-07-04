@@ -27,27 +27,21 @@ $courseid = required_param('id', PARAM_INT);
 $tid = optional_param('tool', 0, PARAM_INT);
 $sorttool = optional_param('sorttool', '', PARAM_TEXT);        // Course idsortitemid=lastname.
 $edit = optional_param('edit', '', PARAM_ALPHANUM);        // Tool id to be uploaded.
+$confirmdelete = optional_param('confirmdelete', 0, PARAM_INT);        // Tool id to be uploaded.
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-
 require_course_login($course);
-
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
 
-require_once('../configeval.php');
 require_once('../lib.php');
 require_once($CFG->dirroot . '/lib/accesslib.php');
 
-global $OUTPUT, $USER;
-
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/index.php', array('id' => $courseid)));
-$PAGE->set_pagelayout('incourse');
-// Print the header.
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->set_pagelayout('report');
 
 require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
@@ -57,11 +51,20 @@ require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_clie
 require_once($CFG->dirroot . '/blocks/evalcomix/renderer.php');
 
 if ($tid) {
-    $tooldelete = $DB->get_record('block_evalcomix_tools', array('id' => $tid));
-    if ($tooldelete) {
-        $response = block_evalcomix_webservice_client::get_ws_deletetool($tooldelete->idtool);
-        if ($DB->delete_records('block_evalcomix_tools', array('id' => $tooldelete->id))) {
-            $DB->delete_records('block_evalcomix_subdimension', array('toolid' => $tid));
+    if ($tooldelete = $DB->get_record('block_evalcomix_tools', array('id' => $tid))) {
+        if (!$confirmdelete) {
+            $sql = "SELECT a.*
+            FROM {block_evalcomix_assessments} a, {block_evalcomix_modes} m
+            WHERE a.modeid = m.id AND m.toolid = :toolid";
+
+            if ($toolassessments = $DB->get_records_sql($sql, array('toolid' => $tid))) {
+                redirect(new moodle_url($CFG->wwwroot . '/blocks/evalcomix/tool/confirmdelete.php',
+                    array('id' => $courseid, 'tool' => $tid)));
+            }
+        }
+
+        if (block_evalcomix_tool::delete_tool($tid)) {
+            block_evalcomix_webservice_client::get_ws_deletetool($tooldelete->idtool);
             $event = \block_evalcomix\event\tool_deleted::create(array('objectid' => $tid,
                 'courseid' => $course->id, 'context' => $context, 'relateduserid' => $USER->id));
             $event->trigger();
@@ -72,11 +75,14 @@ if ($tid) {
 }
 
 if (isset($edit) && $edit != '' && $edit != 'undefined') {
-    $tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $edit));
-    $response = block_evalcomix_webservice_client::get_ws_list_tool($course->id, $tool->idtool);
-    if ($response != false) {
-        $DB->update_record('block_evalcomix_tools', array('id' => $tool->id, 'evxid' => $tool->evxid, 'title' => $response->title,
-            'type' => $response->type, 'idtool' => $tool->idtool, 'timemodified' => time()));
+    if ($tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $edit))) {
+        $response = block_evalcomix_webservice_client::get_ws_list_tool($course->id, $tool->idtool);
+        if ($response == false && $tool->type == 'tmp') {
+            $DB->delete_records('block_evalcomix_tools', array('idtool' => $edit));
+        } else if ($response != false && $tool->type != 'tmp') {
+            $DB->update_record('block_evalcomix_tools', array('id' => $tool->id, 'evxid' => $tool->evxid,
+                'title' => $response->title, 'type' => $response->type, 'idtool' => $tool->idtool, 'timemodified' => time()));
+        }
     }
 }
 
@@ -98,8 +104,6 @@ if ($tools) {
                         array_push($toollist, $toolupdated);
                     }
                 }
-            } else {
-                $result = $DB->delete_records('block_evalcomix_tools', array('id' => $tool->id));
             }
         } else {
             array_push($toollist, $tool);
@@ -116,8 +120,7 @@ if ($sorttool == 'title') {
 }
 
 $lang = current_language();
-$urlcreate = block_evalcomix_webservice_client::get_ws_createtool(null, $lms = BLOCK_EVALCOMIX_MOODLE_NAME,
-    $course->id, $lang.'_utf8');
+$urlcreate = block_evalcomix_webservice_client::get_ws_createtool(null, $course->id, $lang.'_utf8');
 
 $counttool = count($toollist);
 
@@ -181,7 +184,7 @@ echo '
 if ($editing) { // If the login user is an editing teacher.
     echo '
        <input type="button" value="'. get_string('newtool', 'block_evalcomix') .'"
-       onclick="urledit(\''. $urlcreate .'\', \'wincreate\');">';
+       onclick="urledit(\''. $urlcreate->serverurl .'\', \'win_open\', \'' . $urlcreate->id . '\');">';
 }
 
 echo '
@@ -193,7 +196,7 @@ echo '
 
 foreach ($toollist as $tool) {
     $urlview = '../assessment/assessment_form.php?id='.$course->id.'&t='.$tool->idtool.'&mode=view&vt=1';
-    $urlopen = block_evalcomix_webservice_client::get_ws_createtool($tool->idtool, $lms = BLOCK_EVALCOMIX_MOODLE_NAME,
+    $urlopen = block_evalcomix_webservice_client::get_ws_createtool($tool->idtool,
     $course->id, $lang.'_utf8', 'open');
     echo '
                 <tr>
@@ -210,7 +213,7 @@ foreach ($toollist as $tool) {
         echo ' <input type="image" src="'.
         $CFG->wwwroot.'/blocks/evalcomix/images/edit.png" title="'.
         get_string('open', 'block_evalcomix') .'" alt="'. get_string('open', 'block_evalcomix') .'" width="20"
-        onclick="urledit(\''. $urlopen .'\', \'win_open\', \''.$tool->idtool.'\');">
+        onclick="urledit(\''. $urlopen->serverurl .'\', \'win_open\', \''.$tool->idtool.'\');">
                         <input type="image"src="'.
                         $CFG->wwwroot.'/blocks/evalcomix/images/delete.png" title="'.
                         get_string('delete', 'block_evalcomix').'" alt="'.

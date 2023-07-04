@@ -44,10 +44,9 @@ if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid)
 }
 
 $lang = current_language();
-$lms = BLOCK_EVALCOMIX_MOODLE_NAME;
-$url = block_evalcomix_webservice_client::get_ws_createtool($toolid, $lms, $courseid, $lang.'_utf8', 'open');
+$url = block_evalcomix_webservice_client::get_ws_createtool($toolid, $courseid, $lang.'_utf8', 'open');
 
-$vars = explode('?', $url);
+$vars = explode('?', $url->serverurl);
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
 $curl = new block_evalcomix_curl();

@@ -14,16 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
+require_once('../../../config.php');
+$courseid = required_param('id', PARAM_INT);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+require_course_login($course);
+$context = context_course::instance($course->id);
 
-/*
- * @package    block_evalcomix
- * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
- */
-$plugin->version = 20230704000;
-$plugin->component = 'block_evalcomix';
-$plugin->requires = 2019111801; // Moodle 3.8 is required.
-$plugin->maturity = MATURITY_STABLE; // This is considered as ready for production sites.
-$plugin->release = 'v4.4.2';
+require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+block_evalcomix_get_skill_development_data_ws(array('courses' => array($course), 'individual' => true));

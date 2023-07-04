@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * @package    block_evalcomix
+ * @package       block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author       Daniel Cabeza Sánchez <info@ansaner.net>
  */
 
 require_once('../../../config.php');
@@ -35,10 +35,16 @@ require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
 
 $context = context_course::instance($courseid);
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
-$reportevalcomix->process_data(array('stu' => $studentid, 'cma' => $cmid));
+try {
+    $reportevalcomix->process_data(array('stu' => $studentid, 'cma' => $cmid));
+} catch (Exception $e) {
+    // Processed on a previous call.
+    echo '';
+}
 
 $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
 $module = block_evalcomix_tasks::get_type_task($cmid);
@@ -115,7 +121,7 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
                 'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
             if ($newassessmentid = $DB->insert_record('block_evalcomix_assessments', array('taskid' => $taskid,
                     'assessorid' => $assessorid, 'studentid' => $memberid, 'grade' => $assessment->grade,
-                    'timemodified' => $now, 'idassessment' => $idassessment))) {
+                    'timemodified' => $now, 'idassessment' => $idassessment, 'modeid' => $modeobject->id))) {
                 block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
                 $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
                 $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
@@ -143,25 +149,8 @@ if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid
         }
         if ($duplicateassessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $taskid,
                 'assessorid' => $assessorid, 'studentid' => $memberid))) {
-            if ($DB->delete_records('block_evalcomix_assessments', array('id' => $duplicateassessment->id))) {
-                try {
-                    block_evalcomix_webservice_client::delete_ws_assessment($duplicateassessment);
-                } catch (Exception $e) {
-                    echo '<span class="text-danger">!</span>';
-                }
-                $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
-                $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-                if ($finalgrade == null) {
-                    $DB->delete_records('block_evalcomix_grades', array('userid' => $memberid, 'cmid' => $cmid,
-                        'courseid' => $courseid));
-                }
-                if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $duplicateassessment->idassessment))) {
-                    $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $duplicateassessment->idassessment));
-                }
-                if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $duplicateassessment->idassessment))) {
-                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $duplicateassessment->idassessment));
-                }
-            }
+            block_evalcomix_assessments::delete_assessment(array('where' => array('id' => $duplicateassessment->id),
+                    'courseid' => $courseid, 'cmid' => $task->instanceid));
         }
     }
     $showdetails = true;

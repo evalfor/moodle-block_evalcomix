@@ -65,7 +65,7 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/index.php', array('id' => $courseid)));
 $buttons = false;
 $PAGE->set_pagelayout('incourse');
-$strplural = 'evalcomix';
+$strplural = get_string('pluginname', 'block_evalcomix');
 $PAGE->navbar->add(get_string('courses'), new moodle_url('/course/index.php'));
 $PAGE->navbar->add($course->shortname, new moodle_url("/course/view.php", array('id' => $courseid)));
 $PAGE->navbar->add($strplural, new moodle_url('../assessment/index.php', array('id' => $courseid)));

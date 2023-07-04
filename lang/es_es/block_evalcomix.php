@@ -316,7 +316,7 @@ $string['newcomp'] = 'Nueva competencia';
 $string['newoutcome'] = 'Nuevo resultado de aprendizaje';
 $string['newcomptype'] = 'Nuevo tipo de competencia';
 $string['compreport'] = 'Informe de desarrollo';
-$string['compandout'] = 'Competencias y resultados de aprendizaje';
+$string['compandout'] = 'Resultados de aprendizaje y competencias';
 $string['uploadcompetencies'] = 'Importar competencias y resultados';
 $string['uploadcompetencies_help'] = 'Las competencias y resultados de aprendizaje se pueden cargar a través de un archivo de texto. El formato del archivo debe ser el siguiente:
 

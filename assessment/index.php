@@ -156,8 +156,9 @@ if (has_capability('moodle/block:edit', $context, $USER->id) && ($grd == 1 || $g
         $reportgrader = new grade_report_grader($courseid, null, $context, $ipage, $sortitemid);
         $reportgrader->load_users();
         $reportgrader->load_final_grades();
+        $reportevalcomix->load_users();
 
-        foreach ($reportgrader->users as $userid => $user) {
+        foreach ($reportevalcomix->users as $userid => $user) {
             if ($reportgrader->canviewhidden) {
                 $altered = array();
                 $unknown = array();
@@ -171,34 +172,36 @@ if (has_capability('moodle/block:edit', $context, $USER->id) && ($grd == 1 || $g
 
             foreach ($reportgrader->gtree->items as $itemid => $unused) {
                 $item =& $reportgrader->gtree->items[$itemid];
-                $grade = $reportgrader->grades[$userid][$item->id];
+                if (isset($reportgrader->grades[$userid][$item->id])) {
+                    $grade = $reportgrader->grades[$userid][$item->id];
 
-                // Get the decimal points preference for this item.
-                $decimalpoints = $item->get_decimals();
+                    // Get the decimal points preference for this item.
+                    $decimalpoints = $item->get_decimals();
 
-                if (in_array($itemid, $unknown)) {
-                    $gradeval = null;
-                } else if (array_key_exists($itemid, $altered)) {
-                    $gradeval = $altered[$itemid];
-                } else {
-                    $gradeval = $grade->finalgrade;
-                }
-
-                if ($grade->grade_item->is_external_item()) {
-                    if ($grd == 1 && $evalcomix->sendgradebook == 0) {
-                        require($CFG->dirroot. '/blocks/evalcomix/assessment/gradeevx.php');
-                        $showmessage = true;
+                    if (in_array($itemid, $unknown)) {
+                        $gradeval = null;
+                    } else if (array_key_exists($itemid, $altered)) {
+                        $gradeval = $altered[$itemid];
+                    } else {
+                        $gradeval = $grade->finalgrade;
                     }
-                    if ($grd == 2 && isset($gradeval) && $evalcomix->sendgradebook == 1) {
-                        include($CFG->dirroot . '/blocks/evalcomix/assessment/undone_evx.php');
-                        $showmessage = true;
-                    }
-                    if ($grd == 3) {
-                        if (isset($gradeval)) {
-                            include($CFG->dirroot . '/blocks/evalcomix/assessment/undone_evx.php');
+
+                    if ($grade->grade_item->is_external_item()) {
+                        if ($grd == 1 && $evalcomix->sendgradebook == 0) {
+                            require($CFG->dirroot. '/blocks/evalcomix/assessment/gradeevx.php');
+                            $showmessage = true;
                         }
-                        include($CFG->dirroot. '/blocks/evalcomix/assessment/gradeevx.php');
-                        $showmessage = true;
+                        if ($grd == 2 && isset($gradeval) && $evalcomix->sendgradebook == 1) {
+                            include($CFG->dirroot . '/blocks/evalcomix/assessment/undone_evx.php');
+                            $showmessage = true;
+                        }
+                        if ($grd == 3) {
+                            if (isset($gradeval)) {
+                                include($CFG->dirroot . '/blocks/evalcomix/assessment/undone_evx.php');
+                            }
+                            include($CFG->dirroot. '/blocks/evalcomix/assessment/gradeevx.php');
+                            $showmessage = true;
+                        }
                     }
                 }
             }
@@ -234,7 +237,7 @@ if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_too
             foreach ($tasks as $task) {
                 if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
                     foreach ($assessments as $assessment) {
-                        $assessmentid = block_evalcomix_get_idassessment($assessment);
+                        $assessmentid = block_evalcomix_update_assessmentid($assessment);
                         if (isset($newgrades[$assessmentid])) {
                             if (is_numeric($newgrades[$assessmentid]->grade)) {
                                 $grade = $newgrades[$assessmentid]->grade;
@@ -265,7 +268,7 @@ if (isset($environment->id) && $toollist = $DB->get_records('block_evalcomix_too
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/index.php', array('id' => $courseid)));
 $PAGE->set_pagelayout('incourse');
-$strplural = 'evalcomix';
+$strplural = get_string('pluginname', 'block_evalcomix');
 $PAGE->set_context($context);
 $PAGE->navbar->add($strplural);
 $PAGE->set_title($strplural);

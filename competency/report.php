@@ -54,7 +54,7 @@ $PAGE->set_pagelayout('incourse');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->navbar->add(get_string('compreport', 'block_evalcomix'));
 $PAGE->set_pagelayout('report');
 $PAGE->requires->jquery();
@@ -90,3 +90,8 @@ echo $renderer->display_report_page($courseid, $competencydatas, $outcomedatas, 
 echo html_writer::end_tag('div');
 
 echo $OUTPUT->footer();
+echo '
+<script>
+ajax("'.$CFG->wwwroot . '/blocks/evalcomix/competency/loadcron.php?id='.$courseid.'");
+</script>
+';

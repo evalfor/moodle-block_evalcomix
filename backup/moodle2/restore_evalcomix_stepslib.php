@@ -354,9 +354,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         $assessmentids[] = $object;
                         if (!$assessmentobject = $DB->get_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
                             'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid))) {
+                            $modeobj = $this->get_mapping('block_evalcomix_modes', (int)$assessment->modeid);
+                            $modeobjid = (isset($modeobj->id)) ? $modeobj->id : null;
                             $DB->insert_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
                                 'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid,
-                                'grade' => $assessmentgradeold, 'timemodified' => time(), 'idassessment' => $assessmentidnew));
+                                'grade' => $assessmentgradeold, 'timemodified' => time(), 'idassessment' => $assessmentidnew,
+                                'modeid' => $modeobjid));
                         }
                     }
                     if (isset($task->coordinators[0])) {

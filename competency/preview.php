@@ -98,15 +98,25 @@ class preview extends \html_table {
             }
             $rowcols['status'] = array();
 
-            if (isset($rowcols['idnumber'])) {
-                $outcome = (isset($rowcols['outcome'])) ? $rowcols['outcome'] : 0;
+            $outcome = null;
+            if (isset($rowcols['outcome'])) {
+                if (!is_numeric($rowcols['outcome']) || ((int)$rowcols['outcome'] !== 0 && (int)$rowcols['outcome'] !== 1)) {
+                    $rowcols['status'][] = '<span class="text-danger">'.get_string('invalidoutcome', 'block_evalcomix').'</span>';
+                } else {
+                    $outcome = $rowcols['outcome'];
+                }
+            } else {
+                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingoutcome', 'block_evalcomix').'</span>';
+            }
+
+            if (!empty($rowcols['idnumber'])) {
                 if (mb_strlen($rowcols['idnumber']) > 100) {
                     $rowcols['status'][] = '<span class="text-danger">'.
                     get_string('invalididnumberupload', 'block_evalcomix').'</span>';
                 }
 
-                if ($item = $DB->get_record('block_evalcomix_competencies', array('idnumber' => $rowcols['idnumber'],
-                        'outcome' => $outcome, 'courseid' => $COURSE->id))) {
+                if (isset($outcome) && $item = $DB->get_record('block_evalcomix_competencies',
+                        array('idnumber' => $rowcols['idnumber'], 'outcome' => $outcome, 'courseid' => $COURSE->id))) {
                     $rowcols['status'][] = '<span class="text-danger">'.
                     get_string('idnumberduplicate', 'block_evalcomix').'</span>';
                 }
@@ -114,16 +124,8 @@ class preview extends \html_table {
                 $rowcols['status'][] = '<span class="text-danger">'.get_string('missingidnumber', 'block_evalcomix').'</span>';
             }
 
-            if (isset($rowcols['outcome'])) {
-                if (!is_numeric($rowcols['outcome']) || ((int)$rowcols['outcome'] !== 0 && (int)$rowcols['outcome'] !== 1)) {
-                    $rowcols['status'][] = '<span class="text-danger">'.get_string('invalidoutcome', 'block_evalcomix').'</span>';
-                }
-            } else {
-                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingoutcome', 'block_evalcomix').'</span>';
-            }
-
-            if (!isset($rowcols['shortname'])) {
-                get_string('missingshortname', 'block_evalcomix');
+            if (empty($rowcols['shortname'])) {
+                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingshortname', 'block_evalcomix').'</span>';
             }
             $rowcols['status'] = implode('<br />', $rowcols['status']);
             $data[] = $rowcols;

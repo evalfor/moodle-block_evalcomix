@@ -33,6 +33,19 @@ require_capability('moodle/grade:viewhidden', $context);
 unset($SESSION->tool);
 
 if ($type == 'new') {
+    $environmentid = 0;
+    if (!$environment = $DB->get_record('block_evalcomix', array('courseid' => $courseid))) {
+        $environmentid = $DB->insert_record('block_evalcomix', array('courseid' => $courseid, 'viewmode' => 'evalcomix',
+            'sendgradebook' => '0'));
+    } else {
+        $environmentid = $environment->id;
+    }
+    if (!empty($environmentid) && !$DB->get_record('block_evalcomix_tools', array('evxid' => $environmentid,
+        'idtool' => $id))) {
+        $now = time();
+        $DB->insert_record('block_evalcomix_tools', array('evxid' => $environmentid, 'title' => '-000_1', 'type' => 'tmp',
+            'idtool' => $id, 'timecreated' => $now, 'timemodified' => $now));
+    }
     $SESSION->id = $id;
     unset($SESSION->open);
     $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/editor/selection.php', array('id' => $id, 'type' => $type,
@@ -47,14 +60,13 @@ if ($type == 'new') {
     echo $OUTPUT->header();
     echo '
 <div id="bgmenu">
-    <div>'. get_string('windowselection', 'block_evalcomix') . '</div>
-    <div class="text-center bg-white"><img src="'.$CFG->wwwroot.'/blocks/evalcomix/images/evalcomix.jpg"
-    alt="EvalCOMIX"></div>
+    <div>'. get_string('selecttool', 'block_evalcomix') . '</div>
+    <div class="text-center bg-white"><img src="'.$CFG->wwwroot.'/blocks/evalcomix/images/logoevalcomix.png"
+    alt="EvalCOMIX" width="100" class="my-1"></div>
     <form action="generator.php" method="post">
         <input type="hidden" name="courseid" value="'.$courseid.'">
         <input type="hidden" name="identifier" value="'.$id.'">
         <div id="menu">
-            <div class="mb-3 ml-1">'.get_string('selecttool', 'block_evalcomix').'</div>
                 <ul class="list-group m-1">
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="escala" checked value="escala"/> <label

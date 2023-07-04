@@ -78,7 +78,7 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
 
                 ob_start();
 
-                if ($mod->modname == 'assign' && $USER->id != $user->id and !has_capability('moodle/grade:viewhidden', $context)) {
+                if ($mod->modname == 'assign' && $USER->id != $user->id && !has_capability('moodle/grade:viewhidden', $context)) {
                     require_once($CFG->dirroot . '/mod/assign/locallib.php');
                     $context = context_module::instance($mod->id);
                     $assignment = new assign($context, $mod, $course);

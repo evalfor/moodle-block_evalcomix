@@ -385,4 +385,61 @@ class block_evalcomix_assessments extends block_evalcomix_object {
         $assessments = self::fetch(array('studentid' => $userid, 'taskid' => $taskid));
         return $assessments;
     }
+
+    public static function delete_assessment_by_modeid($modeid) {
+        global $CFG, $DB;
+        $result = true;
+        if ($DB->get_records('block_evalcomix_modes', array('id' => $modeid))) {
+            if ($assessments = $DB->get_records('block_evalcomix_assessments', array('modeid' => $modeid))) {
+                $cms = array();
+                foreach ($assessments as $key => $assessment) {
+                    $taskid = $assessment->taskid;
+                    if (empty($cms[$taskid])) {
+                        if ($task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
+                            if ($cm = $DB->get_record('course_modules', array('id' => $task->instanceid))) {
+                                $cms[$taskid] = $cm;
+                            }
+                        }
+                    }
+                }
+                $result = self::delete_assessment(array('where' => array('modeid' => $modeid), 'cmid' => $cms[$taskid]->id,
+                    'courseid' => $cms[$taskid]->course));
+            }
+        }
+        return $result;
+    }
+
+    public static function delete_assessment($params) {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
+        $result = false;
+        $where = (isset($params['where'])) ? $params['where'] : null;
+        if (!empty($where) && is_array($where) && $assessments = $DB->get_records('block_evalcomix_assessments', $where)) {
+            if ($result = $DB->delete_records('block_evalcomix_assessments', $where)) {
+                $courseid = (isset($params['courseid'])) ? $params['courseid'] : 0;
+                $cmid = (isset($params['cmid'])) ? $params['cmid'] : 0;
+                foreach ($assessments as $assessment) {
+                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment));
+                    $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment));
+                    block_evalcomix_webservice_client::delete_ws_assessment($assessment);
+
+                    if (!empty($courseid) && !empty($cmid)) {
+                        if ($grade = $DB->get_record('block_evalcomix_grades', array('courseid' => $courseid,
+                            'cmid' => $cmid, 'userid' => $assessment->studentid))) {
+                            $finalgrade = block_evalcomix_grades::get_finalgrade_user_task(array('userid' => $assessment->studentid,
+                                'cmid' => $cmid, 'courseid' => $courseid));
+                            if ($finalgrade !== null) {
+                                $DB->update_record('block_evalcomix_grades', array('id' => $grade->id, 'userid' => $grade->userid,
+                                    'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid));
+                            } else {
+                                $DB->delete_records('block_evalcomix_grades', array('id' => $grade->id));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
+    }
 }

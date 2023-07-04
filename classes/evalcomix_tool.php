@@ -347,4 +347,20 @@ class block_evalcomix_tool extends block_evalcomix_object {
         }
         return $result;
     }
+
+    public static function delete_tool($id) {
+        global $CFG, $DB;
+        $result = false;
+        if ($DB->get_record('block_evalcomix_tools', array('id' => $id))) {
+            $DB->delete_records('block_evalcomix_subdimension', array('toolid' => $id));
+            if ($modes = $DB->get_records('block_evalcomix_modes', array('toolid' => $id))) {
+                require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+                foreach ($modes as $mode) {
+                    block_evalcomix_modes::delete_mode($mode->id);
+                }
+            }
+            $result = $DB->delete_records('block_evalcomix_tools', array('id' => $id));
+        }
+        return $result;
+    }
 }

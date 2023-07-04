@@ -211,47 +211,65 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 
-    $courses = get_courses();
+    $courses = (isset($params['courses']) && is_array($params['courses']) && !empty($params['courses'])) ?
+        $params['courses'] : get_courses();
+    $verbosity = (isset($params['verbosity'])) ? (bool)$params['verbosity'] : true;
+    $individual = (isset($params['individual'])) ? (bool)$params['individual'] : false;
+    $maxpending = ($individual === true) ? BLOCK_EVALCOMIX_DR_PENDING / 10 : BLOCK_EVALCOMIX_DR_PENDING;
+    $maxrequests = ($individual === true) ? BLOCK_EVALCOMIX_DR_REQUEST / 10 : BLOCK_EVALCOMIX_DR_REQUEST;
+
     $pindex = 0;
     foreach ($courses as $course) {
-        echo "
+        if ($verbosity) {
+            echo "
         Processing course: $course->fullname PINDEX:$pindex
         ";
-        echo '-------------------------------------
+            echo '-------------------------------------
 ';
+        }
         $courseid = $course->id;
         if ($course->id == 1) {
-            echo "It is not processed
+            if ($verbosity) {
+                echo "It is not processed
 
 ";
+            }
             continue;
         }
         if ($course->visible == 0) {
-            echo "It is not processed because it is not visible
+            if ($verbosity) {
+                echo "It is not processed because it is not visible
 
 ";
+            }
             continue;
         }
 
         $contextcourse = context_course::instance($courseid);
         if (!$DB->get_record('block_instances', array('parentcontextid' => $contextcourse->id, 'blockname' => 'evalcomix'))) {
-            echo "It is not processed because the course does not have the EvalCOMIX block installed
+            if ($verbosity) {
+                echo "It is not processed because the course does not have the EvalCOMIX block installed
 
 ";
+            }
             continue;
         }
 
         if (!$students = block_evalcomix_get_members_course($courseid)) {
-            echo "It is not processed because it does not have students
+            if ($verbosity) {
+                echo "It is not processed because it does not have students
 
 ";
+            }
             continue;
         }
 
         if (!$competencies = $DB->get_records('block_evalcomix_competencies', array('courseid' => $courseid))) {
-            echo "It is not processed because there are no competencies or outcomes
+            if ($verbosity) {
+                echo "It is not processed because there are no competencies or outcomes
 
 ";
+            }
             continue;
         }
 
@@ -264,9 +282,11 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
         FROM {block_evalcomix_tasks}
         WHERE instanceid IN (" . implode(',', $cmids) . ")";
         if (!$tasks = $DB->get_records_sql($sqltask)) {
-            echo "It is not processed because there are no activities configured
+            if ($verbosity) {
+                echo "It is not processed because there are no activities configured
 
 ";
+            }
             continue;
         }
         $taskids = array_keys($tasks);
@@ -277,9 +297,11 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
         ON m.id = mt.modeid
         WHERE m.taskid IN (" . implode(',', $taskids) . ")";
 
-        echo "Managing pending requests
+        if ($verbosity) {
+            echo "Managing pending requests
 
 ";
+        }
         $now = time();
         if ($modes = $DB->get_records_sql($sqlmodes)) {
             $activities = array();
@@ -300,7 +322,7 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
             }
 
             foreach ($activities as $taskid => $activity) {
-                if ($pindex > BLOCK_EVALCOMIX_DR_PENDING) {
+                if ($pindex > $maxpending) {
                     break;
                 }
                 $cmid = $tasks[$taskid]->instanceid;
@@ -322,14 +344,19 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
                         if ($subdimensions = $DB->get_records_sql($sql, array('courseid' => $courseid))) {
                             $tools = array();
                             foreach ($subdimensions as $subdimension) {
-                                echo "Processing the subdimension: $subdimension->subdimensionid  of the tool $subdimension->toolid
+                                if ($verbosity) {
+                                    echo "Processing the subdimension: $subdimension->subdimensionid
+of the tool $subdimension->toolid
 ";
+                                }
                                 $subtoolid = $subdimension->toolid;
                                 $subdimensionid = $subdimension->subdimensionid;
                                 if (!isset($pendingdatas[$subdimensionid])) {
                                     if (!isset($assbytool[$subtoolid])) {
-                                        echo "Calculando assessments del instrumento $subtoolid en cmid $cmid
+                                        if ($verbosity) {
+                                            echo "Calculando assessments del instrumento $subtoolid en cmid $cmid
 ";
+                                        }
                                         $assbytool[$subtoolid] = block_evalcomix_get_student_assessments_by_tool(
                                             array('courseid' => $courseid, 'toolid' => $subtoolid, 'students' => $students,
                                             'cmid' => $cmid));
@@ -363,8 +390,10 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
                                         }
                                     }
                                 }
-                                echo "$i rows inserted in PENDING
+                                if ($verbosity) {
+                                    echo "$i rows inserted in PENDING
 ";
+                                }
                             }
                         }
                     }
@@ -379,14 +408,15 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
             }
         }
     }
-
-    echo "
+    if ($verbosity) {
+        echo "
 Managing grades
 ";
+    }
 
     $sqlgrade = "SELECT *
     FROM {block_evalcomix_dr_pending}
-    LIMIT " . BLOCK_EVALCOMIX_DR_REQUEST;
+    LIMIT " . $maxrequests;
     if ($requests = $DB->get_records_sql($sqlgrade)) {
         $pendingdatas = array();
         foreach ($requests as $request) {
@@ -405,24 +435,28 @@ Managing grades
             foreach ($datas as $data) {
                 if (!empty($data['cmid']) && !empty($data['idsubdimension'])
                         && !empty($data['idassessment']) && !empty($data['modeid'])) {
-                    if (!$grade = $DB->get_record('block_evalcomix_dr_grade', array('idassessment' => $data['idassessment'],
-                            'idsubdimension' => $data['idsubdimension']))) {
-                        $DB->insert_record('block_evalcomix_dr_grade', $data);
-                        $i++;
-                    } else {
-                        if ((int)$grade->grade !== (int)$data['grade']) {
-                            $grade->grade = $data['grade'];
-                            $DB->update_record('block_evalcomix_dr_grade', $grade);
-                            $j++;
+                    if (is_numeric($data['grade'])) {
+                        if (!$grade = $DB->get_record('block_evalcomix_dr_grade', array('idassessment' => $data['idassessment'],
+                                'idsubdimension' => $data['idsubdimension']))) {
+                            $DB->insert_record('block_evalcomix_dr_grade', $data);
+                            $i++;
+                        } else {
+                            if ((int)$grade->grade !== (int)$data['grade']) {
+                                $grade->grade = $data['grade'];
+                                $DB->update_record('block_evalcomix_dr_grade', $grade);
+                                $j++;
+                            }
                         }
                     }
                     $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $data['idassessment'],
                         'idsubdimension' => $data['idsubdimension']));
                 }
             }
-            echo "$i rows inserted and $j rows updated
+            if ($verbosity) {
+                echo "$i rows inserted and $j rows updated
 
 ";
+            }
         }
     }
 }

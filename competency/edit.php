@@ -33,6 +33,24 @@ require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
 
+if (!empty($itemid)) {
+    $exist = false;
+    if ($option == 'type') {
+        if ($DB->get_record('block_evalcomix_comptype', array('id' => $itemid, 'courseid' => $courseid))) {
+            $exist = true;
+        }
+    } else if ($option == 'competency' || $option == 'outcome') {
+        $outcome = ($option == 'outcome') ? 1 : 0;
+        if ($DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'courseid' => $courseid,
+                'outcome' => $outcome))) {
+            $exist = true;
+        }
+    }
+    if (!$exist) {
+        print_error('Incorrect access');
+    }
+}
+
 $url = new moodle_url('/blocks/evalcomix/competency/edit.php', array('id' => $courseid, 'o' => $option));
 $redirect = new moodle_url('/blocks/evalcomix/competency/index.php', array('id' => $courseid, 'o' => $option));
 $PAGE->set_url($url);
@@ -57,36 +75,39 @@ $params['itemid'] = $itemid;
 if (!empty($itemid)) {
     if ($delete === 1) {
         if ($option == 'competency' || $option == 'outcome') {
-            if ($DB->get_record('block_evalcomix_competencies', array('id' => $itemid))) {
-                $DB->delete_records('block_evalcomix_competencies', array('id' => $itemid));
+            if ($DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'courseid' => $courseid))) {
+                $DB->delete_records('block_evalcomix_competencies', array('id' => $itemid, 'courseid' => $courseid));
             }
         } else if ($option == 'type') {
-            if ($t = $DB->get_record('block_evalcomix_comptype', array('id' => $itemid))) {
+            if ($t = $DB->get_record('block_evalcomix_comptype', array('id' => $itemid, 'courseid' => $courseid))) {
                 if ($competencies = $DB->get_records('block_evalcomix_competencies', array('typeid' => $t->id))) {
                     foreach ($competencies as $competency) {
                         $competency->typeid = null;
                         $DB->update_record('block_evalcomix_competencies', $competency);
                     }
                 }
-                $DB->delete_records('block_evalcomix_comptype', array('id' => $itemid));
+                $DB->delete_records('block_evalcomix_comptype', array('id' => $itemid, 'courseid' => $courseid));
             }
         }
-        redirect($redirect);
+        redirect($redirect, get_string('itemdeletedsuccessfully', 'block_evalcomix'), null,
+            \core\output\notification::NOTIFY_SUCCESS);
     }
 
     $datas = null;
     switch ($option) {
         case 'competency': {
-            if ($datas = $DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'outcome' => 0))) {
+            if ($datas = $DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'courseid' => $courseid,
+                    'outcome' => 0))) {
                 $params['code'] = $datas->idnumber;
                 $params['type'] = $datas->typeid;
             }
         }break;
         case 'type': {
-            $datas = $DB->get_record('block_evalcomix_comptype', array('id' => $itemid));
+            $datas = $DB->get_record('block_evalcomix_comptype', array('id' => $itemid, 'courseid' => $courseid));
         }break;
         case 'outcome': {
-            if ($datas = $DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'outcome' => 1))) {
+            if ($datas = $DB->get_record('block_evalcomix_competencies', array('id' => $itemid, 'courseid' => $courseid,
+                    'outcome' => 1))) {
                 $params['code'] = $datas->idnumber;
             }
         }break;
@@ -95,7 +116,7 @@ if (!empty($itemid)) {
     $params['description'] = (isset($datas->description)) ? $datas->description : '';
 }
 if ($option == 'competency') {
-    $types = array();
+    $types = array(0 => get_string('selectcomptype', 'block_evalcomix'));
     $comptypes = $DB->get_records('block_evalcomix_comptype', array('courseid' => $courseid));
     foreach ($comptypes as $comptype) {
         $comptypeid = $comptype->id;
@@ -130,14 +151,17 @@ if ($data = $form->get_data()) {
             $paramsdb['timecreated'] = time();
         }
         $DB->insert_record($table, $paramsdb);
+        redirect($redirect, get_string('itemaddedsuccessfully', 'block_evalcomix'), null,
+            \core\output\notification::NOTIFY_SUCCESS);
     } else if (!empty($data->itemid)) {
         $paramsdb['id'] = $data->itemid;
         if ($option != 'type') {
             $paramsdb['timemodified'] = time();
         }
         $DB->update_record($table, $paramsdb);
+        redirect($redirect, get_string('itemmodifiedsuccessfully', 'block_evalcomix'), null,
+            \core\output\notification::NOTIFY_SUCCESS);
     }
-    redirect($redirect);
 }
 echo $OUTPUT->header();
 echo $form->display();

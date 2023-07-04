@@ -475,3 +475,68 @@ function block_evalcomix_activity_assessed($cm, $studentid = array()) {
 
     return $result;
 }
+
+function block_evalcomix_student_deleted($studentid) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
+
+    // Deleting allowedusers.
+    if ($DB->get_records('block_evalcomix_allowedusers', array('assessorid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_allowedusers', array('assessorid' => $studentid));
+    }
+    if ($DB->get_records('block_evalcomix_allowedusers', array('studentid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_allowedusers', array('studentid' => $studentid));
+    }
+
+    // Deleting coordinators.
+    if ($DB->get_records('block_evalcomix_coordinators', array('userid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_coordinators', array('userid' => $studentid));
+    }
+
+    // Deleting grades.
+    if ($DB->get_records('block_evalcomix_grades', array('userid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_grades', array('userid' => $studentid));
+    }
+
+    // Deleting assessments.
+    if ($assessments1 = $DB->get_records('block_evalcomix_assessments', array('assessorid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_assessments', array('assessorid' => $studentid));
+    }
+    if ($assessments2 = $DB->get_records('block_evalcomix_assessments', array('studentid' => $studentid))) {
+        $DB->delete_records('block_evalcomix_assessments', array('studentid' => $studentid));
+    }
+
+    // Deleting dr_grade.
+    if ($assessments1) {
+        foreach ($assessments1 as $assessment) {
+            block_evalcomix_webservice_client::delete_ws_assessment($assessment);
+            if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment))) {
+                $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment));
+            }
+        }
+    }
+    if ($assessments2) {
+        foreach ($assessments2 as $assessment) {
+            block_evalcomix_webservice_client::delete_ws_assessment($assessment);
+            if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment))) {
+                $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment));
+            }
+        }
+    }
+
+    // Deleting dr_pending.
+    if ($assessments1) {
+        foreach ($assessments1 as $assessment) {
+            if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment))) {
+                $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment));
+            }
+        }
+    }
+    if ($assessments2) {
+        foreach ($assessments2 as $assessment) {
+            if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment))) {
+                $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment));
+            }
+        }
+    }
+}

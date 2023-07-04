@@ -37,6 +37,7 @@ $dataget['eva'] = optional_param('eva', null, PARAM_ALPHANUM);
 if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) && isset($dataget['eva'])) {
     require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
 
     $courseid = $dataget['id'];
     $assessorid = $dataget['eva'];
@@ -46,8 +47,12 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
     $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context, $page);
     $userid = $datapost['stu'];
     $cmid = $datapost['cma'];
-    $reportevalcomix->process_data($datapost);
-
+    try {
+        $reportevalcomix->process_data($datapost);
+    } catch (Exception $e) {
+        // Processed on a previous call.
+        echo '';
+    }
     $event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
         'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $userid));
     $event->trigger();

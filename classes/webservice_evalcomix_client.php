@@ -36,11 +36,10 @@ class block_evalcomix_webservice_client {
      * @param $language as 'es_es_utf8'
      * @param $extra parameters to add to URI
      */
-    public static function get_ws_createtool($id = null, $lms = '', $courseid = 0, $language = 'es_es_utf8', $type = 'new') {
+    public static function get_ws_createtool($id = null, $courseid = 0, $language = 'es_es_utf8', $type = 'new') {
         defined('BLOCK_EVALCOMIX_CLIENT_NEW') || print_error('EvalCOMIX is not configured');
         defined('BLOCK_EVALCOMIX_CLIENT_EDIT') || print_error('EvalCOMIX is not configured');
         global $CFG, $DB;
-        $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_CLIENT_NEW;
         if (!$id && $type == 'new') {
             $id = self::generate_token();
@@ -52,21 +51,11 @@ class block_evalcomix_webservice_client {
 
         $serverurl .= $get;
 
-        $environmentid = 0;
-        if (!$environment = $DB->get_record('block_evalcomix', array('courseid' => $courseid))) {
-            $environmentid = $DB->insert_record('block_evalcomix', array('courseid' => $courseid, 'viewmode' => 'evalcomix',
-                'sendgradebook' => '0'));
-        } else {
-            $environmentid = $environment->id;
-        }
-        if (!empty($environmentid) && !$DB->get_record('block_evalcomix_tools', array('evxid' => $environmentid,
-            'idtool' => $id))) {
-            $now = time();
-            $DB->insert_record('block_evalcomix_tools', array('evxid' => $environmentid, 'title' => '-000_1', 'type' => 'tmp',
-                'idtool' => $id, 'timecreated' => $now, 'timemodified' => $now));
-        }
+        $result = new stdclass();
+        $result->serverurl = $serverurl;
+        $result->id = $id;
 
-        return $serverurl;
+        return $result;
     }
 
     /**
@@ -766,7 +755,8 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
                     $subdimensionid = (string)$subdimensiongrades['subid'];
                     foreach ($subdimensiongrades as $assessment) {
                         $assessmentid = (string)$assessment['id'];
-                        $grade = (int)$assessment;
+                        $grade = (string)$assessment;
+                        $grade = trim($grade);
                         if (isset($params[$subdimensionid][$assessmentid])) {
                             $cmid = $params[$subdimensionid][$assessmentid]->cmid;
                             $modeid = $params[$subdimensionid][$assessmentid]->modeid;
@@ -791,8 +781,8 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
         if (!empty($assessments)) {
             $xml = '<assessments>';
             foreach ($assessments as $assessment) {
-                $assid = block_evalcomix_get_assessmentid($courseid, $assessment);
-                $assid = ($assid == 0) ? '' : $assid;
+                $assid = block_evalcomix_update_assessmentid($assessment);
+                $assid = ($assid === 0) ? '' : $assid;
                 $assessmentid = $assessment->id;
                 $hash[$assid] = $assessmentid;
                 $xml .= '<assessment>'.$assid.'</assessment>';

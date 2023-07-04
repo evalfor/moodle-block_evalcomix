@@ -45,10 +45,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
         $active2 = '';
         $active3 = '';
         switch ($option) {
-            case 'competency':
+            case 'outcome':
                 $active1 = 'active';
             break;
-            case 'outcome':
+            case 'competency':
                 $active2 = 'active';
             break;
             case 'type':
@@ -79,12 +79,12 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
             <div class="mb-3 border-bottom">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <a class="nav-link '.$active1.'" href="#" onclick="ajax(\'loaddata.php?id='.$courseid.'\', \'#change\')">'.
-                        get_string('competencies', 'block_evalcomix').'</a>
+                        <a class="nav-link '.$active1.'" href="#" onclick="ajax(\'loaddata.php?id='.$courseid.
+                        '&o=outcome\', \'#change\')">'. get_string('outcomes', 'block_evalcomix').'</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link '.$active2.'" href="#" onclick="ajax(\'loaddata.php?id='.$courseid.
-                        '&o=outcome\', \'#change\')">'. get_string('outcomes', 'block_evalcomix').'</a>
+                        <a class="nav-link '.$active2.'" href="#" onclick="ajax(\'loaddata.php?id='.$courseid.'\', \'#change\')">'.
+                        get_string('competencies', 'block_evalcomix').'</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link '.$active3.'" href="#" onclick="ajax(\'loaddata.php?id='.$courseid.
@@ -119,7 +119,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
         global $CFG;
         $output = '';
 
-        $paramsbase = array('id' => $courseid);
+        $paramsbase = array('id' => $courseid, 'o' => 'competency');
         if (!empty($search)) {
             $paramsbase['search'] = $search;
         }
@@ -175,6 +175,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                     <td>'. $data->shortname .'</td>
                     <td>'. $data->description .'</td>
                     <td>'. $data->typename .'</td>
+            ';
+
+            if (has_capability('moodle/block:edit', $coursecontext)) {
+                $output .= '
                     <td class="text-right">
                         <input type="image" src="'. $CFG->wwwroot.'/blocks/evalcomix/images/edit.png" title="'.
                         get_string('open', 'block_evalcomix') .'" alt="'. get_string('open', 'block_evalcomix') .'" width="20"
@@ -186,6 +190,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                             location.href=\''. $CFG->wwwroot.'/blocks/evalcomix/competency/edit.php?id='.$courseid.
                             '&o=competency&del=1&iid=' .$data->id.'\';">
                     </td>
+                ';
+            }
+
+            $output .= '
                 </tr>
             ';
         }
@@ -257,6 +265,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                     <td>'. $data->shortname .'</td>
                     <td>'. $data->description .'</td>
                     <td>'. $data->typeid .'</td>
+            ';
+
+            if (has_capability('moodle/block:edit', $coursecontext)) {
+                $output .= '
                     <td class="text-right">
                         <input type="image" src="'. $CFG->wwwroot.'/blocks/evalcomix/images/edit.png" title="'.
                         get_string('open', 'block_evalcomix') .'" alt="'. get_string('open', 'block_evalcomix') .'" width="20"
@@ -267,7 +279,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                         value="" onclick="if (confirm(\''.get_string('confirmdeletetool', 'block_evalcomix').'\'))
                             location.href=\''. $CFG->wwwroot.'/blocks/evalcomix/competency/edit.php?id='.$courseid.
                             '&o=outcome&del=1&iid=' .$data->id.'\';">
-                    </td>
+                    </td>';
+            }
+
+            $output .= '
                 </tr>
             ';
         }
@@ -337,6 +352,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                 <tr>
                     <td>'.$data->shortname.'</td>
                     <td>'.$data->description.'</td>
+            ';
+
+            if (has_capability('moodle/block:edit', $coursecontext)) {
+                $output .= '
                     <td class="text-right">
                         <input type="image" src="'. $CFG->wwwroot.'/blocks/evalcomix/images/edit.png" title="'.
                         get_string('open', 'block_evalcomix') .'" alt="'. get_string('open', 'block_evalcomix') .'" width="20"
@@ -347,7 +366,10 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                         value="" onclick="if (confirm(\''.get_string('confirmdeletetool', 'block_evalcomix').'\'))
                             location.href=\''. $CFG->wwwroot.'/blocks/evalcomix/competency/edit.php?id='.$courseid.'&o=type&iid='
                         .$data->id.'&del=1\';">
-                    </td>
+                    </td>';
+            }
+
+            $output .= '
                 </tr>
             ';
         }
@@ -445,6 +467,8 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                         f.disabled = true;
                         e.getElementsByTagName(\'option\')[0].selected = \'selected\';
                         f.getElementsByTagName(\'option\')[0].selected = \'selected\';
+                        ajax(\''.$CFG->wwwroot.'/blocks/evalcomix/competency/loadreport.php?id='.$courseid.
+                            '&u=-1&g=-1\', \'#bechange\', \'get\', {}, `$(\'#loading\').html(\'<br>\');`);
                         ">
                     <label class="form-check-label" for="beone">
                         '.get_string('onestudent', 'block_evalcomix').'
@@ -475,6 +499,8 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
                         f.disabled = false;
                         e.getElementsByTagName(\'option\')[0].selected = \'selected\';
                         f.getElementsByTagName(\'option\')[0].selected = \'selected\';
+                        ajax(\''.$CFG->wwwroot.'/blocks/evalcomix/competency/loadreport.php?id='.$courseid.
+                            '&u=-1&g=-1\', \'#bechange\', \'get\', {}, `$(\'#loading\').html(\'<br>\');`);
                         ">
                     <label class="form-check-label" for="begroupone">
                         '.get_string('onegroup', 'block_evalcomix').'

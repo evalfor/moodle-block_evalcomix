@@ -135,7 +135,9 @@ if (empty($iid)) {
     $params = array();
     $mform1 = new block_evalcomix_uploadcompetence_form1($url, $params);
 
-    if ($formdata = $mform1->get_data()) {
+    if ($mform1->is_cancelled()) {
+        redirect($CFG->wwwroot . '/blocks/evalcomix/competency/index.php?id='.$courseid);
+    } else if ($formdata = $mform1->get_data()) {
         $iid = csv_import_reader::get_new_iid('uploadcompetence');
         $cir = new csv_import_reader($iid, 'uploadcompetence');
 
@@ -178,7 +180,8 @@ echo html_writer::tag('div', html_writer::table($table), ['class' => 'flexible-w
 
 if ($table->get_no_error()) {
     $SESSION->uploadcompetencies = $table->alldatas;
-    echo '<div class="text-center"><button type="button" onclick="location.href=\''.$url.'&continue=1\'">'.get_string('continue').
+    echo '<div class="text-center"><button type="button" onclick="location.href=\''.$url.'&op=import\'">'.get_string('back').
+    '</button> <button type="button" onclick="location.href=\''.$url.'&continue=1\'">'.get_string('continue').
     '</button></div>';
 } else {
     echo '<div class="text-center"><button type="button" onclick="location.href=\''.$returnurl.'\'">'.get_string('back').

@@ -139,4 +139,61 @@ class block_evalcomix_modes extends block_evalcomix_object {
      */
     public function notify_changed($deleted) {
     }
+
+    public static function delete_mode($id) {
+        global $CFG, $DB;
+        $result = false;
+        if ($mode = $DB->get_record('block_evalcomix_modes', array('id' => $id))) {
+            $taskid = $mode->taskid;
+            $weighing = $mode->weighing;
+            require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
+            if ($DB->get_records('block_evalcomix_modes_extra', array('modeid' => $id))) {
+                $DB->delete_records('block_evalcomix_modes_extra', array('modeid' => $id));
+            }
+            if ($DB->get_record('block_evalcomix_modes_time', array('modeid' => $id))) {
+                $DB->delete_records('block_evalcomix_modes_time', array('modeid' => $id));
+            }
+            block_evalcomix_assessments::delete_assessment_by_modeid($id);
+
+            $result = $DB->delete_records('block_evalcomix_modes', array('id' => $id));
+
+            // Delete allowedusers.
+            if ($mode->modality == 'peer' && $task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
+                $DB->delete_records('block_evalcomix_allowedusers', array('cmid' => $task->instanceid));
+            }
+
+            if ($restofmodes = $DB->get_records('block_evalcomix_modes', array('taskid' => $taskid))) {
+                // Recalculate the weight of the rest of modalities.
+                if ($weighing > 0) {
+                    $count = count($restofmodes);
+                    $newweighing = (int)(100 / $count);
+                    foreach ($restofmodes as $mode) {
+                        $mode->weighing = $newweighing;
+                        $DB->update_record('block_evalcomix_modes', $mode);
+                    }
+                }
+            } else {
+                $DB->delete_records('block_evalcomix_coordinators', array('taskid' => $taskid));
+                $DB->delete_records('block_evalcomix_tasks', array('id' => $taskid));
+            }
+        }
+        return $result;
+    }
+
+    public static function get_mode($assessment) {
+        global $CFG, $DB;
+        $result = 0;
+        if ($task = $DB->get_record('block_evalcomix_tasks', array('id' => $assessment->taskid))) {
+            if ($cm = $DB->get_record('course_modules', array('id' => $task->instanceid))) {
+                require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
+                $modestring = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $cm->course,
+                    $assessment->assessorid);
+                if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
+                        'modality' => $modestring))) {
+                    $result = $mode->id;
+                }
+            }
+        }
+        return $result;
+    }
 }

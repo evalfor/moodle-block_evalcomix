@@ -350,7 +350,7 @@ $string['newcomp'] = 'Add Competency';
 $string['newoutcome'] = 'Add Outcome';
 $string['newcomptype'] = 'Add Type of Competency';
 $string['compreport'] = 'Development report';
-$string['compandout'] = 'Competencies and learning outcomes';
+$string['compandout'] = 'Learning outcomes and competencies';
 $string['uploadcompetencies'] = 'Import competencies and outcomes';
 $string['uploadcompetencies_help'] = 'Competencies and outcomes may be uploaded via text file. The format of the file should be as follows:
 
@@ -410,3 +410,8 @@ $string['crontaskdevdata'] = 'Task to download data for development report';
 $string['reporttimeleft'] = 'The report data is being downloaded in the background. {$a} left for full download';
 $string['reporttimeleftdisabled'] = 'There is data waiting to be downloaded in the background, but the task is disabled. Contact the administrator.';
 $string['inforeporttime'] = 'The report data is downloaded in the background. If when selecting a filter they are not yet available, please be patient.';
+$string['itemaddedsuccessfully'] = 'Item added successfully';
+$string['duplicatevalue'] = 'The entered value is already in use. Please write another';
+$string['itemmodifiedsuccessfully'] = 'Item modified successfully';
+$string['itemdeletedsuccessfully'] = 'Item deleted successfully';
+$string['lastconfirmdeletetool'] = 'WARNING: The following assessment tool has associated {$a} assessments. If you delete it, all associated evaluations will also be deleted. Are you sure you want to continue?';

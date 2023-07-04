@@ -49,4 +49,23 @@ class type_form extends moodleform {
         $grp =& $mform->addElement('group', 'buttonsgrp', '', $objs,
                array(' ', '<br />'), false);
     }
+
+    // Custom validation.
+    public function validation($data, $files) {
+        global $DB, $COURSE;
+        $error = array('shortname' => get_string('duplicatevalue', 'block_evalcomix'));
+        if (empty($data['itemid']) && $item = $DB->get_record('block_evalcomix_comptype',
+                array('courseid' => $COURSE->id, 'shortname' => $data['shortname']))) {
+            return $error;
+        } else if (!empty($data['itemid'])) {
+            $sql = 'SELECT *
+                    FROM {block_evalcomix_comptype} ct
+                    WHERE ct.id != :itemid AND ct.courseid = :courseid AND ct.shortname = :shortname';
+            if ($DB->get_records_sql($sql, array('itemid' => $data['itemid'], 'courseid' => $COURSE->id,
+                    'shortname' => $data['shortname']))) {
+                return $error;
+            }
+        }
+        return array();
+    }
 }

@@ -85,7 +85,7 @@ class block_evalcomix_editor_tool {
             <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
             <html>
                 <head>
-                    <title>EvalCOMIX 4.3</title>
+                    <title>'.get_string('pluginname', 'block_evalcomix').'</title>
 
                     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"

@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * A page to display a list of ratings for a given item
- * @package    block_evalcomix
+ * @package       block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>,
+ * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author       Daniel Cabeza Sánchez <daniel.cabeza@uca.es>,
                Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>,
                Claudia Ortega Gómez <claudia.ortega@uca.es>
  */
@@ -116,28 +116,8 @@ if ($assid && has_capability('moodle/block:edit', $context)) {
             $assessorid = ($stringmode == 'self') ? $member->id : $assessdelete->assessorid;
             if ($assdelete = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
                     'assessorid' => $assessorid, 'studentid' => $member->id))) {
-                $response = block_evalcomix_webservice_client::delete_ws_assessment($assdelete);
-                $DB->delete_records('block_evalcomix_assessments', array('id' => $assdelete->id));
-
-                $params = array('cmid' => $task->instanceid, 'userid' => $member->id, 'courseid' => $course->id);
-                $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-                if ($finalgrade !== null) {
-                    if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
-                        $params['id'] = $gradeobject->id;
-                        $params['finalgrade'] = $finalgrade;
-                        $DB->update_record('block_evalcomix_grades', $params);
-                    }
-                } else {
-                    if ($gradeobject = $DB->get_record('block_evalcomix_grades', $params)) {
-                        $DB->delete_records('block_evalcomix_grades', array('id' => $gradeobject->id));
-                    }
-                }
-                if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assdelete->idassessment))) {
-                    $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assdelete->idassessment));
-                }
-                if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assdelete->idassessment))) {
-                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assdelete->idassessment));
-                }
+                block_evalcomix_assessments::delete_assessment(array('where' => array('id' => $assdelete->id),
+                    'courseid' => $course->id, 'cmid' => $task->instanceid));
             }
         }
     }
@@ -279,7 +259,7 @@ if (!empty($peerassessments) && $tool = block_evalcomix_get_modality_tool($cours
 
             if ($grademethod == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART && !$withteachergrade) {
                 if (block_evalcomix_grades::is_extreme_grade($peergrade->grade, $peergrades)) {
-                    $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_EI_EXTREME  . ' font-weight-bold';
+                    $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_EI_EXTREME    . ' font-weight-bold';
                 } else if (block_evalcomix_grades::is_mild_grade($peergrade->grade, $peergrades)) {
                     $tgrade->color = BLOCK_EVALCOMIX_GRADE_METHOD_COLOR_EI_MILD . ' font-weight-bold';
                     $mainsetofgrades[] = $peergrade->grade;

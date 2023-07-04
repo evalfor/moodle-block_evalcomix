@@ -331,7 +331,7 @@ $string['newcomp'] = 'Nueva competencia';
 $string['newoutcome'] = 'Nuevo resultado de aprendizaje';
 $string['newcomptype'] = 'Nuevo tipo de competencia';
 $string['compreport'] = 'Informe de desarrollo';
-$string['compandout'] = 'Competencias y resultados de aprendizaje';
+$string['compandout'] = 'Resultados de aprendizaje y competencias';
 $string['uploadcompetencies'] = 'Importar competencias y resultados';
 $string['uploadcompetencies_help'] = 'Las competencias y resultados de aprendizaje se pueden cargar a través de un archivo de texto. El formato del archivo debe ser el siguiente:
 
@@ -390,3 +390,8 @@ $string['confirmdisabledworkteams'] = 'En esta actividad ya se han realizado eva
 $string['crontaskdevdata'] = 'Tarea para la descarga de datos de el informe de desarrollo';
 $string['reporttimeleft'] = 'Se están descargando los datos del informe. Faltan {$a} para la descarga completa';
 $string['inforeporttime'] = 'Los datos del informe se descargan en segundo plano. Si al seleccionar un filtro todavía no estuvieran disponibles, por favor, tenga paciencia';
+$string['itemaddedsuccessfully'] = 'Item añadido satisfactoriamente';
+$string['duplicatevalue'] = 'El valor introducido ya está en uso. Por favor, escriba otro';
+$string['itemmodifiedsuccessfully'] = 'Item modificado satisfactoriamente';
+$string['itemdeletedsuccessfully'] = 'Item eliminado satisfactoriamente';
+$string['lastconfirmdeletetool'] = 'ADVERTENCIA: El siguiente instrumento de evaluación tiene asociado {$a} evaluaciones. Si lo elimina todas las evaluaciones asociadas también serán eliminadas. ¿Está seguro de que desea continuar?';

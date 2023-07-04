@@ -33,4 +33,8 @@ $observers = array(
         'eventname' => '\core\event\group_deleted',
         'callback' => 'block_evalcomix_observer::group_deleted',
     ),
+    array(
+        'eventname' => '\core\event\user_deleted',
+        'callback' => 'block_evalcomix_observer::student_deleted',
+    ),
 );

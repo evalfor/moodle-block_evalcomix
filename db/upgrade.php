@@ -442,11 +442,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         // Conditionally launch add field idassessment.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
-
-            global $CFG;
-            require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
-            block_evalcomix_fill_assessmentid();
-
         }
 
         // Evalcomix savepoint reached.
@@ -506,6 +501,21 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
 
         // Evalcomix savepoint reached.
         upgrade_block_savepoint(true, 2023031800, 'evalcomix');
+    }
+
+    if ($oldversion < 2023042400) {
+
+        // Define field modeid to be added to block_evalcomix_assessments.
+        $table = new xmldb_table('block_evalcomix_assessments');
+        $field = new xmldb_field('modeid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'taskid');
+
+        // Conditionally launch add field modeid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Evalcomix savepoint reached.
+        upgrade_block_savepoint(true, 2023042400, 'evalcomix');
     }
 
     return $result;

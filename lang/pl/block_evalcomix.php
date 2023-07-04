@@ -292,7 +292,7 @@ $string['newcomp'] = 'Nowa kompozycja';
 $string['newoutcome'] = 'Nowy efekt uczenia się';
 $string['newcomptype'] = 'Nowy typ kompilacji';
 $string['compreport'] = 'Raport z rozwoju';
-$string['compandout'] = 'Kompetencje i wyniki nauki';
+$string['compandout'] = 'Wyniki nauki i kompetencje';
 $string['uploadcompetencies'] = 'Importuj kompetencje i wyniki';
 $string['uploadcompetencies_help'] = 'Kompetencje i efekty uczenia się można przesłać za pomocą pliku tekstowego. Format pliku powinien być następujący:
 
@@ -334,3 +334,8 @@ $string['alertnogroup'] = 'W kursie nie utworzono jeszcze żadnych grup. Aby je 
 $string['activityassessed'] = 'Wyłączony, ponieważ uczeń został już oceniony';
 $string['coordinatorassessed'] = 'Obecnie są koordynatorzy, którzy otrzymali już pewną ocenę. Tych, którzy otrzymali ocenę, nie można zastąpić. Jeśli chcesz je zastąpić, musisz najpierw usunąć recenzje.';
 $string['confirmdisabledworkteams'] = 'W ramach tego działania przeprowadzono już oceny. Jeśli wyłączysz tę opcję i zapiszesz zmiany, wszystkie takie oceny zostaną usunięte i nie będzie można ich odzyskać. Czy na pewno chcesz wyłączyć tę opcję?';
+$string['itemaddedsuccessfully'] = 'Przedmiot dodany pomyślnie';
+$string['duplicatevalue'] = 'Zduplikowana wartość';
+$string['itemmodifiedsuccessfully'] = 'Przedmiot zmodyfikowany pomyślnie';
+$string['itemdeletedsuccessfully'] = 'Element pomyślnie usunięty';
+$string['lastconfirmdeletetool'] = 'OSTRZEŻENIE: Z następującym narzędziem do oceny są powiązane oceny {$a}. Jeśli go usuniesz, wszystkie powiązane oceny również zostaną usunięte. Jesteś pewien, że chcesz kontynuować?';

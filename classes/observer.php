@@ -51,4 +51,13 @@ class block_evalcomix_observer {
             $DB->delete_records('block_evalcomix_coordinators', array('groupid' => $groupid));
         }
     }
+
+    public static function student_deleted(\core\event\user_deleted $event) {
+        global $CFG;
+        require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
+        if ($event->objecttable == 'user') {
+            $studentid = $event->objectid;
+            block_evalcomix_student_deleted($studentid);
+        }
+    }
 }

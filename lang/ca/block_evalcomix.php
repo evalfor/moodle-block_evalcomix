@@ -277,7 +277,7 @@ $string['newcomp'] = 'Nova competència';
 $string['newoutcome'] = 'Nou resultat d\'aprenentatge';
 $string['newcomptype'] = 'Nou tipus de competència';
 $string['compreport'] = 'Informe de desenvolupament';
-$string['compandout'] = 'Competències i resultats d\'aprenentatge';
+$string['compandout'] = 'Resultats d\'aprenentatge i competències';
 $string['uploadcompetencies'] = 'Importar competències i resultats';
 $string['uploadcompetencies_help'] = 'Les competències i els resultats d\'aprenentatge es poden carregar mitjançant un fitxer de text. El format del fitxer ha de ser el següent:
 
@@ -319,3 +319,8 @@ $string['alertnogroup'] = 'Encara no s\'han creat grups al curs. Per crear-los h
 $string['activityassessed'] = 'Deshabilitat pel fet que ja s\'ha avaluat algun estudiant';
 $string['coordinatorassessed'] = 'Actualment hi ha coordinadors que ja han rebut alguna avaluació. Aquells que hagin rebut alguna avaluació no podran ser reemplaçats';
 $string['confirmdisabledworkteams'] = 'En aquesta activitat ja s\'han fet avaluacions. Si desactiva aquesta opció i desa els canvis, s\'eliminaran totes aquestes avaluacions i no es podran recuperar. Confirmeu que voleu desactivar l\'opció?';
+$string['itemaddedsuccessfully'] = 'Element afegit amb èxit';
+$string['duplicatevalue'] = 'Valor duplicat';
+$string['itemmodifiedsuccessfully'] = 'Element modificat amb èxit';
+$string['itemdeletedsuccessfully'] = 'L\'element s\'ha eliminat correctament';
+$string['lastconfirmdeletetool'] = 'ADVERTÈNCIA: El següent instrument d\'avaluació té associat {$a} avaluacions. Si ho elimina totes les avaluacions associades també seran eliminades. Esteu segur que voleu continuar?';

@@ -212,13 +212,23 @@ function block_evalcomix_fill_assessmentid() {
 }
 
 function block_evalcomix_update_assessmentid($assessment) {
-    global $DB;
-
+    global $CFG, $DB;
+    $update = false;
     if (isset($assessment->idassessment) && $assessment->idassessment === '0') {
         $assessment->idassessment = block_evalcomix_get_existing_assessmentid($assessment);
         if ($assessment->idassessment !== '0') {
-            $DB->update_record('block_evalcomix_assessments', $assessment);
+            $update = true;
         }
+    }
+    if (empty($assessment->modeid)) {
+        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+        if ($modeid = block_evalcomix_modes::get_mode($assessment)) {
+            $assessment->modeid = $modeid;
+            $update = true;
+        }
+    }
+    if ($update) {
+        $DB->update_record('block_evalcomix_assessments', $assessment);
     }
 
     return $assessment->idassessment;

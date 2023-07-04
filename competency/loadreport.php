@@ -32,10 +32,14 @@ require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
 
-require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
-$datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
-$competencydatas = $datas->competency;
-$outcomedatas = $datas->outcome;
+$competencydatas = array();
+$outcomedatas = array();
+if ($studentid >= 0) {
+    require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+    $datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
+    $competencydatas = $datas->competency;
+    $outcomedatas = $datas->outcome;
+}
 
 require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 $students = block_evalcomix_get_members_course($courseid, $groupid);

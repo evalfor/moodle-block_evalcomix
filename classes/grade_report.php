@@ -89,7 +89,7 @@ class block_evalcomix_grade_report extends grade_report {
     /**
      * @var int $studentsperpage
      */
-    public $studentsperpage = 50;
+    public $studentsperpage = 100;
 
     /**
      * Capability check caching
@@ -108,6 +108,8 @@ class block_evalcomix_grade_report extends grade_report {
     public $coursegroupings = array();
 
     public $groupwheresql;
+
+    public $users;
 
     /**
      * Constructor. Sets local copies of user preferences and initialises grade_tree.
@@ -135,7 +137,6 @@ class block_evalcomix_grade_report extends grade_report {
         // Base url for sorting by first/last name.
 
         $this->baseurl = new moodle_url('index.php', array('id' => $this->courseid));
-        $this->studentsperpage = $this->get_pref('studentsperpage');
         $studentsperpage = $this->studentsperpage;
         if (!empty($studentsperpage)) {
             $this->baseurl->params(array('perpage' => $studentsperpage, 'page' => $this->page));
@@ -280,6 +281,8 @@ class block_evalcomix_grade_report extends grade_report {
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
+        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
+        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
 
         $saveconfact = 0;
 
@@ -325,7 +328,6 @@ class block_evalcomix_grade_report extends grade_report {
         }
 
         if (isset($data['save']) && $data['save'] == get_string('save', 'block_evalcomix')) {
-            require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_time.php');
             require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_extra.php');
             $dataexists = false;
@@ -382,17 +384,7 @@ class block_evalcomix_grade_report extends grade_report {
                             $DB->delete_records('block_evalcomix_coordinators', array('id' => $gc->id));
                         }
                         if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $taskid))) {
-                            $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
-                            $module = block_evalcomix_tasks::get_type_task($task->instanceid);
-                            foreach ($assessments as $assessment) {
-                                $mode = self::get_type_evaluation($assessment->studentid, $COURSE->id, $assessment->assessorid);
-                                try {
-                                    block_evalcomix_webservice_client::delete_ws_assessment($assessment);
-                                } catch (Exception $e) {
-                                    continue;
-                                }
-                            }
-                            $DB->delete_records('block_evalcomix_assessments', array('taskid' => $taskid));
+                            block_evalcomix_assessments::delete_assessment(array('where' => array('taskid' => $taskid)));
                         }
                     }
                 }
@@ -624,17 +616,7 @@ class block_evalcomix_grade_report extends grade_report {
                         $params['id'] = $evxassessmentobject->id;
                         $DB->update_record('block_evalcomix_assessments', $params);
                     } else { // If the grade is null.
-                        $DB->delete_records('block_evalcomix_assessments', array('id' => $evxassessmentobject->id));
-                        if ($DB->get_records('block_evalcomix_dr_grade',
-                                array('idassessment' => $evxassessmentobject->idassessment))) {
-                            $DB->delete_records('block_evalcomix_dr_grade',
-                                array('idassessment' => $evxassessmentobject->idassessment));
-                        }
-                        if ($DB->get_records('block_evalcomix_dr_pending',
-                                array('idassessment' => $evxassessmentobject->idassessment))) {
-                            $DB->delete_records('block_evalcomix_dr_pending',
-                                array('idassessment' => $evxassessmentobject->idassessment));
-                        }
+                        block_evalcomix_assessments::delete_assessment(array('where' => array('id' => $evxassessmentobject->id)));
                     }
                 } else if ($evalcomixassessment->grade != -1) { // If it does not exist and the grade is not null inserts it.
                     $assessment = array('taskid' => $evalcomixassessment->taskid,
@@ -643,6 +625,9 @@ class block_evalcomix_grade_report extends grade_report {
                     $assessment = (object)$assessment;
                     if ($idassessment = block_evalcomix_get_existing_assessmentid($assessment)) {
                         $assessment->idassessment = $idassessment;
+                    }
+                    if ($modeid = block_evalcomix_modes::get_mode($assessment)) {
+                        $assessment->modeid = $modeid;
                     }
                     $assessmentid = $DB->insert_record('block_evalcomix_assessments', $assessment);
                 }
@@ -1844,10 +1829,10 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
         global $OUTPUT;
         $arrows = array();
 
-        $strsortasc = $this->get_lang_string('sortasc', 'grades');
-        $strsortdesc = $this->get_lang_string('sortdesc', 'grades');
-        $strfirstname = $this->get_lang_string('firstname');
-        $strlastname = $this->get_lang_string('lastname');
+        $strsortasc = get_string('sortasc', 'grades');
+        $strsortdesc = get_string('sortdesc', 'grades');
+        $strfirstname = get_string('firstname');
+        $strlastname = get_string('lastname');
 
         $firstlink = html_writer::link(new moodle_url($this->baseurl, array('sortitemid' => 'firstname')), $strfirstname);
         $lastlink = html_writer::link(new moodle_url($this->baseurl, array('sortitemid' => 'lastname')), $strlastname);

@@ -24,7 +24,7 @@
 require_once('../../../config.php');
 
 $courseid = required_param('id', PARAM_INT);
-$option = optional_param('o', 'competency', PARAM_ALPHA);
+$option = optional_param('o', 'outcome', PARAM_ALPHA);
 $itemid = optional_param('item', 0, PARAM_INT);
 $export = optional_param('e', '0', PARAM_INT);
 $sort = optional_param('sort', '', PARAM_ALPHA);
@@ -41,7 +41,7 @@ $PAGE->set_pagelayout('incourse');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->navbar->add(get_string('handlerofco', 'block_evalcomix'));
 $PAGE->set_pagelayout('report');
 $PAGE->requires->jquery();

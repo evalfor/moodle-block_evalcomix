@@ -38,7 +38,7 @@ $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
 
 // Print the header.
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->jquery();
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/blocks/evalcomix/ajax.js'));

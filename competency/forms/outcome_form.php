@@ -40,7 +40,7 @@ class outcome_form extends moodleform {
         $mform->setDefault('code', $code);
         $mform->addRule('code', null, 'required', '', 'client');
 
-        $mform->addElement('text', 'shortname', get_string('compshortname', 'block_evalcomix'), 'maxlength="20" size="30"');
+        $mform->addElement('text', 'shortname', get_string('compshortname', 'block_evalcomix'), 'maxlength="50" size="30"');
         $mform->setType('shortname', PARAM_TEXT);
         $mform->setDefault('shortname', $shortname);
         $mform->addRule('shortname', null, 'required', '', 'client');
@@ -54,5 +54,24 @@ class outcome_form extends moodleform {
         $objs[] =& $mform->createElement('cancel');
         $grp =& $mform->addElement('group', 'buttonsgrp', '', $objs,
                array(' ', '<br />'), false);
+    }
+
+    // Custom validation.
+    public function validation($data, $files) {
+        global $DB, $COURSE;
+        $error = array('code' => get_string('duplicatevalue', 'block_evalcomix'));
+        if (empty($data['itemid']) && $item = $DB->get_record('block_evalcomix_competencies', array('courseid' => $COURSE->id,
+                'idnumber' => $data['code'], 'outcome' => '1'))) {
+            return $error;
+        } else if (!empty($data['itemid'])) {
+            $sql = 'SELECT *
+                    FROM {block_evalcomix_competencies} c
+                    WHERE c.id != :itemid AND courseid = :courseid AND c.idnumber = :idnumber AND outcome = 1';
+            if ($DB->get_records_sql($sql, array('itemid' => $data['itemid'], 'courseid' => $COURSE->id,
+                    'idnumber' => $data['code']))) {
+                return $error;
+            }
+        }
+        return array();
     }
 }

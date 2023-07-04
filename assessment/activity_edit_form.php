@@ -155,7 +155,7 @@ $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
 $PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
 $PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
 $PAGE->set_pagelayout('report');
 $PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
@@ -165,7 +165,6 @@ echo '<center>
 <div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
 onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>
 </center>';
-
 
 echo '
         <script>
@@ -256,11 +255,14 @@ echo '
                 var elementAE = document.getElementById("id_toolAE");
                 var elementEI = document.getElementById("toolEI");
                 var elementGM = document.getElementById("grademethod");
+                var elementWT = document.getElementById("workteams");
 
                 if (elementEP.value > 0 || elementAE.value > 0 || elementEI.value > 0) {
                     elementGM.disabled = false;
+                    elementWT.disabled = false;
                 } else {
                     elementGM.disabled = true;
+                    elementWT.disabled = true;
                 }
             }
 
@@ -573,7 +575,7 @@ echo '
                             <td class="pt-3 text-right">' . get_string('workteamsassessments', 'block_evalcomix').
                                 $OUTPUT->help_icon('workteamsassessments', 'block_evalcomix') . '</td>
                             <td class="pt-3">
-                                <input type="checkbox" ' . $wtchecked . ' '.$wtdisabled.' onchange="
+                                <input type="checkbox" ' . $wtchecked . ' '.$wtdisabled.' '.$gmdisabled. ' onchange="
                                     if (this.checked == true) {
                                         document.getElementById(\'assigncoordinators\').disabled=false;
                                         document.getElementById(\'specificstudents_EI\').disabled = true;
