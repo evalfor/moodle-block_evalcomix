@@ -211,48 +211,42 @@ class block_evalcomix_grade_report extends grade_report {
         }
     }
 
-    /**
+     /**
      * Setting the sort order, this depends on last state
      * all this should be in the new table class that we might need to use
      * for displaying grades.
+
+     * @param string $sort sorting direction
      */
-    private function setup_sortitemid() {
+    private function setup_sortitemid(string $sort = '') {
 
         global $SESSION;
 
+        if (!isset($SESSION->gradeuserreport)) {
+            $SESSION->gradeuserreport = new stdClass();
+        }
+
         if ($this->sortitemid) {
             if (!isset($SESSION->gradeuserreport->sort)) {
-                if ($this->sortitemid == 'firstname' || $this->sortitemid == 'lastname') {
-                    $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
-                } else {
-                    $this->sortorder = $SESSION->gradeuserreport->sort = 'DESC';
-                }
-            } else {
-                // This is the first sort, i.e. by last name.
+                $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
+            } else if (!$sort) {
+                // this is the first sort, i.e. by last name
                 if (!isset($SESSION->gradeuserreport->sortitemid)) {
-                    if ($this->sortitemid == 'firstname' || $this->sortitemid == 'lastname') {
-                        $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
-                    } else {
-                        $this->sortorder = $SESSION->gradeuserreport->sort = 'DESC';
-                    }
+                    $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
                 } else if ($SESSION->gradeuserreport->sortitemid == $this->sortitemid) {
-                    // Same as last sort.
+                    // same as last sort
                     if ($SESSION->gradeuserreport->sort == 'ASC') {
                         $this->sortorder = $SESSION->gradeuserreport->sort = 'DESC';
                     } else {
                         $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
                     }
                 } else {
-                    if ($this->sortitemid == 'firstname' || $this->sortitemid == 'lastname') {
-                        $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
-                    } else {
-                        $this->sortorder = $SESSION->gradeuserreport->sort = 'DESC';
-                    }
+                    $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
                 }
             }
             $SESSION->gradeuserreport->sortitemid = $this->sortitemid;
         } else {
-            // Not requesting sort, use last setting (for paging).
+            // not requesting sort, use last setting (for paging)
 
             if (isset($SESSION->gradeuserreport->sortitemid)) {
                 $this->sortitemid = $SESSION->gradeuserreport->sortitemid;
@@ -265,6 +259,12 @@ class block_evalcomix_grade_report extends grade_report {
             } else {
                 $this->sortorder = 'ASC';
             }
+        }
+
+        // If explicit sorting direction exists.
+        if ($sort) {
+            $this->sortorder = $sort;
+            $SESSION->gradeuserreport->sort = $sort;
         }
     }
 

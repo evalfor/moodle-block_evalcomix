@@ -74,11 +74,8 @@ function htmllize_tree(assign_files $tree, $dir) {
     $result = array();
     foreach ($dir['files'] as $file) {
         $filename = $file->get_filename();
-
-        $arg = explode('pluginfile.php/', ltrim($file->fileurl));
-        $aux = explode('/', $arg[1]);
-        $aux2 = explode ('?', $aux[4]);
-        $args = array($aux[3], $filename);
+        $itemid = $file->get_itemid();
+        $args = array($itemid, $filename);
         $result[] = $args;
     }
 
