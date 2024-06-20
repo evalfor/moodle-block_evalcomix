@@ -28,10 +28,10 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
-            'user' => CAP_ALLOW
+            'user' => CAP_ALLOW,
         ),
 
-        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+        'clonepermissionsfrom' => 'moodle/my:manageblocks',
     ),
 
     'block/evalcomix:view' => array(
@@ -42,16 +42,16 @@ $capabilities = array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW
-        )
+            'coursecreator' => CAP_ALLOW,
+        ),
     ),
 
     'block/evalcomix:assessed' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
-            'student' => CAP_ALLOW
-        )
+            'student' => CAP_ALLOW,
+        ),
     ),
 
     'block/evalcomix:edit' => array(
@@ -61,8 +61,8 @@ $capabilities = array(
         'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW
-        )
+            'coursecreator' => CAP_ALLOW,
+        ),
     ),
 
     'block/evalcomix:addinstance' => array(
@@ -72,10 +72,10 @@ $capabilities = array(
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ),
 
-        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+        'clonepermissionsfrom' => 'moodle/site:manageblocks',
     ),
 
 );

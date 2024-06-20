@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/grade/report/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_expert_db_block.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_time.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
@@ -110,7 +109,7 @@ function block_evalcomix_get_activity_data($cm) {
     $modname = $cm->modname;
     $activity = null;
     if (!$activity = $DB->get_record($modname, array('id' => $cm->instance))) {
-        print_error('invalidid', $modname);
+        throw new \moodle_exception('invalidid', $modname);
     }
     return $activity;
 }
@@ -187,11 +186,11 @@ function block_evalcomix_get_evalcomix_modality_extra($courseid, $taskid, $modal
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
-        print_error('noevalcomixtaskid');
+        throw new \moodle_exception('noevalcomixtaskid');
     }
 
     if ($modality != 'teacher' && $modality != 'self' && $modality != 'peer') {
-        print_error('No modality');
+        throw new \moodle_exception('No modality');
     }
 
     $result = array();
@@ -218,11 +217,11 @@ function block_evalcomix_get_evalcomix_modality_time($courseid, $taskid, $modali
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
-        print_error('noevalcomixtaskid');
+        throw new \moodle_exception('noevalcomixtaskid');
     }
 
     if ($modality != 'teacher' && $modality != 'self' && $modality != 'peer') {
-        print_error('No modality');
+        throw new \moodle_exception('No modality');
     }
 
     $result = array();
@@ -247,11 +246,11 @@ function block_evalcomix_get_evalcomix_modality_weighing($courseid, $taskid, $mo
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
     if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
-        print_error('noevalcomixtaskid');
+        throw new \moodle_exception('noevalcomixtaskid');
     }
 
     if ($modality != 'teacher' && $modality != 'self' && $modality != 'peer') {
-        print_error('No modality');
+        throw new \moodle_exception('No modality');
     }
 
     $result = array();
@@ -267,7 +266,7 @@ function block_evalcomix_get_modality_tool($courseid, $taskid, $modality) {
     global $DB;
 
     if ($modality != 'teacher' && $modality != 'self' && $modality != 'peer') {
-        print_error('No modality');
+        throw new \moodle_exception('No modality');
     }
 
     $result = array();
@@ -298,48 +297,6 @@ function block_evalcomix_update_tool_list($evxid, $webtools) {
             $DB->update_record('block_evalcomix_tools', $params);
         }
     }
-
-    // If there are duplicate instruments from a restore, the activities are removed and configured properly.
-    if ($oldtoolsrestored = $DB->get_records('block_evalcomix_tools', array('evxid' => $evxid, 'timemodified' => '-1'))) {
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-
-        $activities = $DB->get_records('course_modules', array('course' => $COURSE->id));
-
-        foreach ($activities as $activity) {
-            if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $activity->id))) {
-                $module = block_evalcomix_tasks::get_type_task($task->instanceid);
-                $xml = block_evalcomix_webservice_client::get_instrument($COURSE->id, $module, $task->instanceid,
-                    BLOCK_EVALCOMIX_MOODLE_NAME);
-
-                if (isset($xml->evaluacion->teacher) && $xml->evaluacion->teacher != null) {
-                    if ($tool = $DB->get_record('block_evalcomix_tools', array('evxid' => $evxid,
-                        'idtool' => $xml->evaluacion->teacher))) {
-                        $modes = $DB->update_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => 'teacher',
-                            'toolid' => $tool->id));
-                    }
-                }
-                if (isset($xml->evaluacion->self) && $xml->evaluacion->self != null) {
-                    if ($tool = $DB->get_record('block_evalcomix_tools', array('evxid' => $evxid,
-                        'idtool' => $xml->evaluacion->self))) {
-                        $modes = $DB->update_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => 'self',
-                            'toolid' => $tool->id));
-                    }
-                }
-                if (isset($xml->evaluacion->peer) && $xml->evaluacion->peer != null) {
-                    if ($tool = $DB->get_record('block_evalcomix_tools', array('evxid' => $evxid,
-                        'idtool' => $xml->evaluacion->peer))) {
-                        $modes = $DB->update_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => 'peer',
-                            'toolid' => $tool->id));
-                    }
-                }
-            }
-        }
-        // Delete old restored tools.
-        foreach ($oldtoolsrestored as $tool) {
-            $DB->delete_records('block_evalcomix_tools', array('id' => $tool->id));
-        }
-    }
 }
 
 /**
@@ -359,53 +316,6 @@ function block_evalcomix_cmp_title_tool($a, $b) {
 function block_evalcomix_cmp_type_tool($a, $b) {
     $value = strcmp(strtolower(get_string($a->type, 'block_evalcomix')), strtolower(get_string($b->type, 'block_evalcomix')));
     return $value;
-}
-
-/**
- * It gets course activities
- * @param array $params['courseid']
- * @param array $params['context']
- * @param array $params['modality'] ['teacher' | 'self' | 'peer']
- * @return array $elements[cmid] or false
- */
-function block_evalcomix_get_elements_course($params) {
-    global $CFG, $DB;
-    require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-    if (isset($params['courseid']) && isset($params['context']) && isset($params['modality'])) {
-        $courseid = $params['courseid'];
-        $context = $params['context'];
-        $modality = $params['modality'];
-    } else {
-        return false;
-    }
-
-    $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
-
-    $levels = $reportevalcomix->gtree->get_levels();
-    $selfusers = array();
-    $elements = array();
-    foreach ($levels as $row) {
-        foreach ($row as $element) {
-            if ($element['type'] == 'item' || $element['type'] == 'categoryitem') {
-                $itemtype = $element['object']->itemtype;
-                $itemmodule = $element['object']->itemmodule;
-                $iteminstance = $element['object']->iteminstance;
-
-                if ($itemtype == 'mod' && $iteminstance && $itemmodule) {
-                    if ($cm = get_coursemodule_from_instance($itemmodule, $iteminstance, $courseid)) {
-                        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
-                            if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id,
-                                'modality' => $modality))) {
-                                $cmid = $cm->id;
-                                $elements[$cmid] = $element;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return $elements;
 }
 
 function block_evalcomix_recalculate_grades() {

@@ -30,57 +30,6 @@ require_once('icalculator.php');
  */
 class block_evalcomix_calculator_average implements block_evalcomix_icalculator {
     /**
-     * It works out the average between elements of array $grades1 and $grades2
-     * $activities and $users to travel the element arrays
-     * @param array $grades1 --> moodle grades
-     * @param array $grades2 --> evalcomix grades
-     * @param array $activities
-     * @param array $users it contains users' objects
-     * @return array averages
-     */
-    public function calculate($grades1, $grades2, $activities, $users) {
-        global $DB;
-        $averages = array();
-        // Obtains the weighing to calculate the average foreach activity.
-        for ($i = 0; $i < count($activities['id']); $i++) {
-
-            $task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $activities['id'][$i]));
-
-            // Si la actividad esta configurada en evalcomix.
-            if ($task) {
-                $grade1weighing = (100 - $task->weighing) / 100;
-                $grade2weighing = $task->weighing / 100;
-            } else { // Si no existe.
-                $grade1weighing = 100;
-                $grade2weighing = 0;
-            }
-
-            foreach ($users as $user) {
-                // Calculates average foreach user.
-
-                // Si existen las notas de moodle y evalcomix.
-                if (isset($grades1[$activities['id'][$i]][$user->id]) && isset($grades2[$activities['id'][$i]][$user->id])) {
-                    $grade1 = $grades1[$activities['id'][$i]][$user->id] * $grade1weighing;
-                    $grade2 = $grades2[$activities['id'][$i]][$user->id] * $grade2weighing;
-                    $average = $grade1 + $grade2;
-                    $averages[$activities['id'][$i]][$user->id] = round($average, 2, PHP_ROUND_HALF_UP);
-                } else if (isset($grades1[$activities['id'][$i]][$user->id])
-                    && !isset($grades2[$activities['id'][$i]][$user->id])) {
-                    // Si existe nota de moodle y no existe nota de evalcomix.
-                    $average = $grades1[$activities['id'][$i]][$user->id];
-                    $averages[$activities['id'][$i]][$user->id] = round($average, 2, PHP_ROUND_HALF_UP);
-                } else if (!isset($grades1[$activities['id'][$i]][$user->id])
-                    && isset($grades2[$activities['id'][$i]][$user->id])) {
-                    // Si no existe nota de moodle y existe nota de evalcomix.
-                    $average = $grades2[$activities['id'][$i]][$user->id];
-                    $averages[$activities['id'][$i]][$user->id] = round($average, 2, PHP_ROUND_HALF_UP);
-                }
-            }
-        }
-        return $averages;
-    }
-
-    /**
      * It works out the average between elements of array $grades
      * @param array $grades
      * @return float average

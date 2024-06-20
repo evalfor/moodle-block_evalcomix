@@ -483,7 +483,7 @@ class block_evalcomix_editor_toolmix {
         $language = '';
         $titulo = get_string('title', 'block_evalcomix');
         list($usec, $sec) = explode(' ', microtime());
-        $seed = (float)$sec + ((float)$usec * 100000);
+        $seed = (int)$sec + ((int)$usec * 100000);
         mt_srand($seed);
         $dim = mt_rand();
         $numdim[$id] = 1;
@@ -662,14 +662,6 @@ class block_evalcomix_editor_toolmix {
         ';
     }
 
-    public function display_dimension($dim, $data, $id) {
-        $this->listtool[$id]->display_dimension($dim, $data);
-    }
-
-    public function display_subdimension($dim, $subdim, $data, $id) {
-        $this->listtool[$id]->display_subdimension($dim, $subdim, $data);
-    }
-
     /*
     @param $array
     @param $i índice del elemento a eliminar en $array
@@ -740,11 +732,11 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/mixtool http://avanza
             $rootend = '</MixTool>';
         }
 
-        $xml = $root . ' id="'. $idtool .'" name="' . htmlspecialchars($this->titulo) . '" instruments="' .
+        $xml = $root . ' id="'. $idtool .'" name="' . htmlspecialchars($this->titulo, ENT_QUOTES) . '" instruments="' .
         count($this->listtool) .'">';
 
         if (isset($this->observation)) {
-            $xml .= '<Description>' . htmlspecialchars($this->observation) . '</Description>
+            $xml .= '<Description>' . htmlspecialchars($this->observation, ENT_QUOTES) . '</Description>
 ';
         }
 
@@ -756,51 +748,9 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/mixtool http://avanza
         return $xml;
     }
 
-    public function display_body_view($data) {
-        if (isset($data['titulo'])) {
-            $this->titulo = stripslashes($data['titulo']);
-        }
-
-        echo '
-        <div id="cuerpomix">
-                <label for="titulo">'.get_string('mix', 'block_evalcomix').'</label>
-                <span class="labelcampo">
-                    <span class="titulovista">'.$this->titulo.'</span>
-                </span>
-        ';
-        foreach ($this->listtool as $id => $value) {
-            echo '
-                <div class="bordertool">
-            ';
-
-            $value->display_body_view($data, $id, $this->toolpor[$id]);;
-
-            echo '<br>
-                </div>';
-        }
-
-        if (isset($data['observation0'])) {
-            $this->observation = stripslashes($data['observation0']);
-        }
-
-        echo '
-                <div id="comentario">
-                    <div id="marco">
-                        <label for="observation0">' . get_string('observation', 'block_evalcomix'). ':</label>
-                        <textarea id="observation0" style="width:100%" rows="4" cols="200">' . $this->observation . '</textarea>
-                    </div>
-                </div>
-            ';
-
-        echo '
-
-        </div>
-        ';
-    }
-
     public function print_tool($root = '') {
         foreach ($this->listtool as $tool) {
-            $tool->print_tool();
+            $tool->print_tool(null);
             echo '<br><br><br>';
         }
     }

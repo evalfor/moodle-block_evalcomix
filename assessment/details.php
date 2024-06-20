@@ -59,7 +59,7 @@ require_once($CFG->dirroot .'/blocks/evalcomix/javascript/popup.php');
 global $DB, $USER;
 
 if (!has_capability('moodle/grade:viewhidden', $context) && $userid != $USER->id) {
-    print_error('You do not have permission to view the content');
+    throw new \moodle_exception('You do not have permission to view the content');
 }
 
 $renderer = $PAGE->get_renderer('block_evalcomix');
@@ -67,7 +67,7 @@ $renderer = $PAGE->get_renderer('block_evalcomix');
 // Getting datas.
 $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $itemid))) {
-    print_error('Wrong parameters');
+    throw new \moodle_exception('Wrong parameters');
 }
 
 if ($modeei = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => 'peer'))) {

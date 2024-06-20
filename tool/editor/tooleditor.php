@@ -108,14 +108,6 @@ class block_evalcomix_editor {
         return $result;
     }
 
-    public function get_allcompetencies() {
-        return $this->allcompetencies;
-    }
-
-    public function get_alloutcomes() {
-        return $this->alloutcomes;
-    }
-
     public function get_subdimensionsid() {
         return $this->subdimensionsid[$this->id];
     }
@@ -171,14 +163,6 @@ class block_evalcomix_editor {
 
     public function set_outcome($outcome) {
         $this->outcome = $outcome;
-    }
-
-    public function set_allcompetencies($allcompetencies) {
-        $this->allcompetencies = $allcompetencies;
-    }
-
-    public function set_alloutcomes($alloutcomes) {
-        $this->alloutcomes = $alloutcomes;
     }
 
     public function set_subdimensionsid($subdimensionsid, $id = '') {
@@ -269,6 +253,83 @@ class block_evalcomix_editor {
             }
         }
         return $arrayaux;
+    }
+
+    public function up_block($params) {
+        require_once('array.class.php');
+        $id = $this->id;
+
+        $instancename = $params['instanceName'];
+        $blockdata = $params['blockData'];
+        $blockindex = $params['blockIndex'];
+        $blockname = $params['blockName'];
+        if (isset($params['dim'])) {
+            $dim = $params['dim'];
+        }
+        if (isset($params['subdim'])) {
+            $subdim = $params['subdim'];
+        }
+
+        if (isset($blockdata)) {
+            $previousindex = block_evalcomix_array_util::get_previous_item($blockdata, $blockindex);
+            if ($previousindex !== false) {
+                $elem['nombre'] = $instancename;
+                $blockdata = $this->array_remove($blockdata, $blockindex);
+                $blockdata = block_evalcomix_array_util::array_add_left($blockdata, $previousindex, $elem, $blockindex);
+            }
+        }
+        switch ($blockname) {
+            case 'dimension':{
+                $this->dimension[$id] = $blockdata;
+            }break;
+            case 'subdimension':{
+                $this->subdimension[$id][$dim] = $blockdata;
+            }break;
+            case 'atributo':{
+                $this->atributo[$id][$dim][$subdim] = $blockdata;
+            }
+        }
+    }
+
+    public function down_block($params) {
+        require_once('array.class.php');
+        $id = $this->id;
+
+        $instancename = $params['instanceName'];
+        $blockdata = $params['blockData'];
+        $blockindex = $params['blockIndex'];
+        $blockname = $params['blockName'];
+        $dim = null;
+        if (isset($params['dim'])) {
+            $dim = $params['dim'];
+        }
+        $subdim = null;
+        if (isset($params['subdim'])) {
+            $subdim = $params['subdim'];
+        }
+        if (isset($blockdata)) {
+            $nextindex = block_evalcomix_array_util::get_next_item($blockdata, $blockindex);
+            if ($nextindex !== false) {
+                $elem['nombre'] = $instancename;
+                $blockdata = $this->array_remove($blockdata, $blockindex);
+                $blockdata = block_evalcomix_array_util::array_add_rigth($blockdata, $nextindex, $elem, $blockindex);
+            }
+        }
+        switch ($blockname) {
+            case 'dimension':{
+                $this->dimension[$id] = $blockdata;
+            }break;
+            case 'subdimension':{
+                if ($dim !== null) {
+                    $this->subdimension[$id][$dim] = $blockdata;
+                }
+            }break;
+            case 'atributo':{
+                if ($dim !== null && $subdim !== null) {
+                    $this->atributo[$id][$dim][$subdim] = $blockdata;
+                }
+            }
+        }
     }
 
     public function add_competency($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey = null) {
@@ -370,6 +431,21 @@ class block_evalcomix_editor {
         return 1;
     }
 
+    public function remove_attribute($dim, $subdim, $atrib) {
+        $id = $this->id;
+        if (isset($this->atributo[$id][$dim][$subdim][$atrib])) {
+            if ($this->numatr[$id][$dim][$subdim] > 1) {
+                $this->numatr[$id][$dim][$subdim]--;
+
+                $this->atributo[$id][$dim][$subdim] = $this->array_remove($this->atributo[$id][$dim][$subdim], $atrib);
+                $this->atribpor[$id][$dim][$subdim] = $this->array_remove($this->atribpor[$id][$dim][$subdim], $atrib);
+            } else {
+                echo '<span class="mensaje">'.get_string('alertatrib', 'block_evalcomix').'</span>';
+            }
+        }
+        return 1;
+    }
+
     public function display_competencies($dim, $subdim, $mix = '', $label = 'subdimension') {
         $id = $this->id;
         echo '
@@ -445,7 +521,7 @@ class block_evalcomix_editor {
         echo '
                           <div class="modal-body">
                             <h6>'.get_string('subdimension', 'block_evalcomix').' '.
-                            htmlentities($this->subdimension[$id][$dim][$subdim]['nombre']).'</h6><hr>
+                            htmlentities($this->subdimension[$id][$dim][$subdim]['nombre'], ENT_QUOTES).'</h6><hr>
 
                             <div class="row">
                                 <div class="col-md-6">

@@ -42,7 +42,6 @@ $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
 
 global $OUTPUT, $CFG;
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/users_form.php', array('id' => $courseid, 'a' => $cm->id)));

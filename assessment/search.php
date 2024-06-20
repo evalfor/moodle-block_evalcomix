@@ -26,12 +26,11 @@ $courseid = required_param('id', PARAM_INT);
 require_course_login($courseid);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $search = required_param('search', PARAM_RAW);
 $id = required_param('a', PARAM_INT);
-$type = optional_param('t', 0, PARAM_INT);
+$type = optional_param('t', 0, PARAM_ALPHA);
 $assessorid = optional_param('as', 0, PARAM_INT);
 
 if ($id) {
@@ -39,8 +38,8 @@ if ($id) {
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 }
 
-if (!empty($assesorid) && !$assessor = $DB->get_record('user', array('id' => $assessorid))) {
-    print_error('Wrong user');
+if (!empty($assessorid) && !$assessor = $DB->get_record('user', array('id' => $assessorid))) {
+    throw new \moodle_exception('Wrong user');
 }
 
 $context = context_course::instance($courseid);

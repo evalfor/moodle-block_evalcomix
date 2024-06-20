@@ -111,134 +111,6 @@ class block_evalcomix_assessments extends block_evalcomix_object {
     }
 
     /**
-     * Updates this object in the Database, based on its object variables. ID must be set.
-     * @param string $source from where was the object updated (mod/forum, manual, etc.)
-     * @return boolean success
-     */
-    public function update() {
-        global $DB;
-
-        if (empty($this->id)) {
-            debugging('Can not update assessment object, no id!');
-            return false;
-        }
-        $this->timemodified = time();
-
-        $data = $this->get_record_data();
-
-        $DB->update_record($this->table, $data);
-
-        $this->notify_changed(false);
-        return true;
-    }
-
-    /**
-     * Calculate evalcomix final grade.
-     * @static abstract
-     * @param array $users
-     * @param int $courseid
-     * @return array $finalgrades with two dimensions [$taskinstance][$userid] that contains the finalgrades.
-     */
-    public static function get_final_grade($courseid, $users) {
-        global $CFG, $COURSE, $DB;
-        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
-
-        $coursecontext = context_course::instance($courseid);
-
-        $finalgrades = array();
-
-        $tasks = block_evalcomix_tasks::get_tasks_by_courseid($courseid);
-        $now = time();
-
-        foreach ($tasks as $task) {
-            $teacherweight = 0;
-            $selfweight = 0;
-            $peerweight = 0;
-
-            $params = array('taskid' => $task->id);
-            $modes = $DB->get_records('block_evalcomix_modes', $params);
-            if ($modes) {
-                $inperiod = false;
-                // Obtains activity´s weights.
-                foreach ($modes as $mode) {
-                    switch ($mode->modality) {
-                        case 'teacher': $teacherweight = $mode->weighing;
-                        break;
-                        case 'self': $selfweight = $mode->weighing;
-                        break;
-                        case 'peer':{
-                            $peerweight = $mode->weighing;
-                            $modeeitime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $mode->id));
-                            if ($modeeitime && $now >= $modeeitime->timeavailable && $now <= $modeeitime->timedue) {
-                                $inperiod = true;
-                            }
-                        }
-                        break;
-                        default:
-                    }
-                }
-
-                foreach ($users as $user) {
-                    // It obtains assignments for each task and user.
-                    $params2 = array('taskid' => $task->id, 'studentid' => $user->id);
-                    $assessments = $DB->get_records('block_evalcomix_assessments', $params2);
-                    if ($assessments) {
-                        $selfgrade = -1;
-                        $teachergrade = 0;
-                        $numteachers = 0;
-                        $peergrade = 0;
-                        $numpeers = 0;
-                        $grade = 0;
-                        foreach ($assessments as $assessment) {
-                            // If it is a self assessment.
-                            if ($assessment->studentid == $assessment->assessorid && $selfweight) {
-                                $selfgrade = $assessment->grade;
-                            } else if (has_capability('moodle/grade:viewhidden', $coursecontext,
-                                $assessment->assessorid) && $teacherweight) {
-                                // If it is a teacher assessment.
-                                $teachergrade += $assessment->grade;
-                                $numteachers++;
-                            } else { // If it is a peer assessment.
-                                // Only gets grades when the assessment period in the task is finished.
-                                if (!$inperiod) {
-                                    $peergrade += $assessment->grade;
-                                    $numpeers++;
-                                }
-                            }
-                        }
-
-                        // Calculates peergrade.
-                        if ($numpeers > 0) {
-                            $peergrade = round($peergrade / $numpeers, 2);
-                        }
-                        // Calculates teachergrade.
-                        if ($numteachers > 0) {
-                            $teachergrade = round($teachergrade / $numteachers, 2);
-                        }
-                        // Calcultes the total grade.
-                        if ($numteachers > 0 || $numpeers > 0 || $selfgrade != -1) {
-                            if ($selfgrade == -1) {
-                                $selfgrade = 0;
-                            }
-                            $totalgrade = $selfgrade * ($selfweight / 100) + $teachergrade * ($teacherweight / 100)
-                                + $peergrade * ($peerweight / 100);
-                            // Add grade to array final grades.
-                            $finalgrades[$task->instanceid][$user->id] = $totalgrade;
-                        } else {
-                            // There is peer assessments but assessment period hasn't finished.
-                            $finalgrades[$task->instanceid][$user->id] = -1;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $finalgrades;
-    }
-
-
-    /**
      * Finds and returns all evalcomix_assessments instances.
      * @static abstract
      * @param array $params
@@ -246,26 +118,6 @@ class block_evalcomix_assessments extends block_evalcomix_object {
      */
     public static function fetch_all($params) {
         return block_evalcomix_object::fetch_all_helper('block_evalcomix_assessments', 'block_evalcomix_assessments', $params);
-    }
-
-    /**
-     * Finds and returns one evalcomix_tool instances.
-     * @static abstract
-     * @param array $params
-     * @return an object instance or false if not found
-     */
-    public static function fetch($params) {
-        return block_evalcomix_object::fetch_helper('block_evalcomix_assessments', 'block_evalcomix_assessments', $params);
-    }
-
-    /**
-     * Called immediately after the object data has been inserted, updated, or
-     * deleted in the database. Default does nothing, can be overridden to
-     * hook in special behaviour.
-     *
-     * @param bool $deleted
-     */
-    public function notify_changed($deleted) {
     }
 
     /**
@@ -324,10 +176,6 @@ class block_evalcomix_assessments extends block_evalcomix_object {
         return false;
     }
 
-    public static function get_assessments_by_modality_helper() {
-
-    }
-
     /**
      * @param array $assessments array of evalcomix_assessments objects
      * @return double|false result of current implementation of icalculator interface of false if $assessment is empty
@@ -374,16 +222,6 @@ class block_evalcomix_assessments extends block_evalcomix_object {
             return $result;
         }
         return false;
-    }
-
-    /**
-     * @param int $taskid
-     * @param int $userid
-     * @return object with assessment of student $userid in $taskid
-     */
-    public static function get_grade_by_user_task($taskid, $userid) {
-        $assessments = self::fetch(array('studentid' => $userid, 'taskid' => $taskid));
-        return $assessments;
     }
 
     public static function delete_assessment_by_modeid($modeid) {

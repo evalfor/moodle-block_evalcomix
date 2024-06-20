@@ -29,7 +29,7 @@ $string['instruments'] = 'Tool Management';
 $string['evaluation'] = 'Assess Activities';
 $string['evalcomix:view'] = 'View EvalCOMIX';
 $string['evalcomix:edit'] = 'Edit EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.For more information you can consult the <a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>';
+$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.';
 $string['selfmodality'] = 'Self Assessment - SA ';
 $string['peermodality'] = 'Peer Assessment - PA ';
 $string['teachermodality'] = 'Teacher Assessment - TA ';
@@ -129,8 +129,8 @@ $string['timedue_EI_help'] = 'Deadline until which students will be able to eval
 $string['anonymous_EI_help'] = 'It indicates if the students will can know which peers have assess them.';
 $string['whatis_help'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>
 The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.
-For more information you can consult the <a href="../manual.pdf">Manual</a>';
-$string['selinstrument_help'] = 'Refer to the <a href="../manual.pdf">Manual</a> for more information about setting an EvalCOMIX activity.';
+For more information you can consult the Manual';
+$string['selinstrument_help'] = 'Refer to the Manual for more information about setting an EvalCOMIX activity.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Chart task by student';
 $string['profile_task_by_group'] = 'Chart task by group';

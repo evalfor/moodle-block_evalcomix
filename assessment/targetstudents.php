@@ -30,12 +30,11 @@ require_capability('moodle/block:edit', $context);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 
 $id = required_param('a', PARAM_INT);
 $assessorid = required_param('u', PARAM_INT);
 if (!$user = $DB->get_record('user', array('id' => $assessorid))) {
-    print_error('Wrong user');
+    throw new \moodle_exception('Wrong user');
 }
 
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);

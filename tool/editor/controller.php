@@ -48,10 +48,6 @@ switch($op) {
             header("Location: download.php?fic=".$filename.'&courseid='.$courseid);
         }
     }break;
-    case 'import':{
-        $tool->display_dialog();
-        exit;
-    }break;
     case 'view':{
         if (!isset($id)) {
             $id = null;

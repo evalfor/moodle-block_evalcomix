@@ -33,6 +33,10 @@ require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
 
+if ($option != 'competency' && $option != 'outcome' && $option != 'type') {
+    $option = 'competency';
+}
+
 if (!empty($itemid)) {
     $exist = false;
     if ($option == 'type') {
@@ -47,7 +51,7 @@ if (!empty($itemid)) {
         }
     }
     if (!$exist) {
-        print_error('Incorrect access');
+        throw new \moodle_exception('Incorrect access');
     }
 }
 
@@ -62,10 +66,6 @@ $PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$co
 $PAGE->navbar->add(get_string('handlerofco', 'block_evalcomix'), $redirect);
 $PAGE->navbar->add(get_string('edit'));
 $PAGE->set_pagelayout('report');
-
-if ($option != 'competency' && $option != 'outcome' && $option != 'type') {
-    $option = 'competency';
-}
 
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/forms/'.$option.'_form.php');
 

@@ -18,7 +18,7 @@
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ * @author    Daniel Cabeza Sánchez <info@ansaner.net>
  */
 
 class block_evalcomix_competency_renderer extends plugin_renderer_base {
@@ -223,7 +223,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
         $columns = array(
             'idnumber' => get_string('compidnumber', 'block_evalcomix'),
             'shortname' => get_string('compshortname', 'block_evalcomix'),
-            'description' => get_string('compdescription', 'block_evalcomix')
+            'description' => get_string('compdescription', 'block_evalcomix'),
         );
 
         $requiredcolumns = array('idnumber', 'shortname');
@@ -311,7 +311,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
         // These columns are always shown in the users list.
         $columns = array(
             'shortname' => get_string('compshortname', 'block_evalcomix'),
-            'description' => get_string('compdescription', 'block_evalcomix')
+            'description' => get_string('compdescription', 'block_evalcomix'),
         );
 
         $requiredcolumns = array('shortname');
@@ -692,13 +692,5 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
 
     public static function cmp_shortname_datas_desc($a, $b) {
         return strcmp(strtolower($b->shortname), strtolower($a->shortname));
-    }
-
-    public static function cmp_type_datas_asc($a, $b) {
-        return strcmp(strtolower($a->typename), strtolower($b->typename));
-    }
-
-    public static function cmp_type_datas_desc($a, $b) {
-        return strcmp(strtolower($b->typename), strtolower($a->typename));
     }
 }

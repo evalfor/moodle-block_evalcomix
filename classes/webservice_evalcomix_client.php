@@ -37,8 +37,8 @@ class block_evalcomix_webservice_client {
      * @param $extra parameters to add to URI
      */
     public static function get_ws_createtool($id = null, $courseid = 0, $language = 'es_es_utf8', $type = 'new') {
-        defined('BLOCK_EVALCOMIX_CLIENT_NEW') || print_error('EvalCOMIX is not configured');
-        defined('BLOCK_EVALCOMIX_CLIENT_EDIT') || print_error('EvalCOMIX is not configured');
+        defined('BLOCK_EVALCOMIX_CLIENT_NEW') || throw new \moodle_exception('EvalCOMIX is not configured');
+        defined('BLOCK_EVALCOMIX_CLIENT_EDIT') || throw new \moodle_exception('EvalCOMIX is not configured');
         global $CFG, $DB;
         $serverurl = BLOCK_EVALCOMIX_CLIENT_NEW;
         if (!$id && $type == 'new') {
@@ -78,7 +78,7 @@ class block_evalcomix_webservice_client {
         if (self::check_url($serverurl)) {
             return $serverurl;
         } else {
-            print_error('Evalcomix: invalid URL');
+            throw new \moodle_exception('Evalcomix: invalid URL');
         }
     }
 
@@ -129,7 +129,7 @@ class block_evalcomix_webservice_client {
                 $params['assessorid'], $params['mode'])) {
             $assessmentid = block_evalcomix_get_assessmentid($params);
         } else {
-            print_error('EvalCOMIX: invalid assessment');
+            throw new \moodle_exception('EvalCOMIX: invalid assessment');
         }
 
         $token = self::get_token();
@@ -141,7 +141,7 @@ class block_evalcomix_webservice_client {
         if (self::check_url($serverurl)) {
             return $serverurl;
         } else {
-            print_error('Evalcomix: invalid URL');
+            throw new \moodle_exception('Evalcomix: invalid URL');
         }
     }
 
@@ -163,8 +163,9 @@ class block_evalcomix_webservice_client {
 
         $assessmentid = block_evalcomix_update_assessmentid($assessment);
 
+        $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_DELETE_ASSESS;
-        $serverurl .= $assessmentid;
+        $serverurl .= $assessmentid . '?token='.$token;
 
         require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
 
@@ -176,10 +177,10 @@ class block_evalcomix_webservice_client {
                 if ((string)$xml->status == 'Success' ) {
                     return $serverurl;
                 } else {
-                    print_error('XML Document invalid');
+                    throw new \moodle_exception('XML Document invalid');
                 }
             } else {
-                print_error('XML Document invalid');
+                throw new \moodle_exception('XML Document invalid');
             }
         } else {
             echo $assessementid . ': ';
@@ -285,7 +286,7 @@ class block_evalcomix_webservice_client {
             $student = $params['studentid'];
         } else {
             var_dump($params);
-            print_error('EvalCOMIX: invalid assessment');
+            throw new \moodle_exception('EvalCOMIX: invalid assessment');
         }
         $token = self::get_token();
         $serverurl = BLOCK_EVALCOMIX_GRADE_EVALCOMIX;
@@ -363,23 +364,6 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
             return false;
         }
     }
-    /**
-     * @param string $get parameters separated by '&'
-     * @param string $key for encryption
-     * @return string parameters encrypted
-     */
-    public static function encrypt_params($get, $key, $long = 0) {
-        global $CFG;
-        require_once($CFG->dirroot . '/blocks/'.blockname.'/classes/5cr.php');
-        $variables = $get;
-        $encript = new block_evalcomix_E5CR($key);
-        $encript->encriptar($variables, 1); // OJO uno(1) es para encriptar variables para URL.
-        $lash = '';
-        if ($long == 1) {
-            $lash = md5(microtime());
-        }
-        return $variables . $lash;
-    }
 
     /**
      * @param string $url file url starting with http(s)://
@@ -432,67 +416,6 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
 
     public static function generate_token() {
         return md5(uniqid());
-    }
-
-    /**
-     * @param string $params['courseid']
-     * @param array $params['module'] module names
-     * @param array $params['activity'] activity IDs
-     * @param array $params['student'] student IDs
-     * @param array $params['assessor'] assessor IDs
-     * @param array $params['mode'] [teacher | self | peer]
-     * @param string $params['lms'] lms name
-     * @return xml document with data assessments
-     */
-    public static function get_ws_xml_tools($params = array()) {
-        defined('BLOCK_EVALCOMIX_GET_TOOLS') || die('EvalCOMIX is not configured');
-        global $CFG;
-
-        $token = $token = self::get_token();
-        $serverurl = BLOCK_EVALCOMIX_GET_TOOLS . '?token='.$token;
-
-        if (!isset($params['courseid']) || !isset($params['module']) || !isset($params['activity'])
-            || !isset($params['student']) || !isset($params['assessor']) || !isset($params['mode'])
-            || !isset($params['lms'])) {
-
-            throw new Exception('Missing Params');
-        }
-        $countmodules = count($params['module']);
-        $countactivities = count($params['activity']);
-        $countstudents = count($params['student']);
-        $countassessors = count($params['mode']);
-        if ($countmodules != $countactivities || $countstudents != $countassessors) {
-            throw new Exception('Wrong Params');
-        }
-
-        $xml = '<assessments>';
-        $courseid = $params['courseid'];
-        $lms = $params['lms'];
-        for ($i = 0; $i < $countmodules; ++$i) {
-            $xml .= '<assessmentid>';
-            $module = $params['module'][$i];
-            $activity = $params['activity'][$i];
-            $student = $params['student'][$i];
-            $assessor = $params['assessor'][$i];
-            $mode = $params['mode'][$i];
-            $str = $courseid . '_' . $module . '_' . $activity . '_' . $student . '_' . $assessor . '_' . $mode . '_' . $lms;
-            $assessmentid = md5($str);
-            $xml .= $assessmentid;
-            $xml .= '</assessmentid>';
-        }
-        $xml .= '</assessments>';
-
-        require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
-
-        $curl = new block_evalcomix_curl();
-        $response = $curl->post($serverurl, $xml);
-
-        if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
-            $result = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NSCLEAN);
-            return $result;
-        } else {
-            throw new Exception('Page: Bad Response');
-        }
     }
 
     public static function verify($url) {
@@ -663,8 +586,8 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
             if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
                 $xml = simplexml_load_string($response);
                 if (isset($xml->status) && $xml->status == 'Success') {
-                    $xmlresult = current($xml->description);
-                    foreach ($xmlresult->assessment as $assessment) {
+                    $xmlresult = $xml->description;
+                    foreach ($xmlresult->assessments->assessment as $assessment) {
                         $assid = (string)$assessment['id'];
                         $newgrade = (string)$assessment->grade;
                         $maxgrade = (string)$assessment->maxgrade;

@@ -22,7 +22,7 @@
 
 define('BLOCK_EVALCOMIX_COMPETENCY', 0);
 define('BLOCK_EVALCOMIX_OUTCOME', 1);
-define('BLOCK_EVALCOMIX_DR_REQUEST', 200);
+define('BLOCK_EVALCOMIX_DR_REQUEST', 150);
 define('BLOCK_EVALCOMIX_DR_PENDING', 5000);
 
 function block_evalcomix_get_development_datas($courseid, $groupid = 0, $studentid = 0, $grades = true) {
@@ -213,7 +213,7 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
 
     $courses = (isset($params['courses']) && is_array($params['courses']) && !empty($params['courses'])) ?
         $params['courses'] : get_courses();
-    $verbosity = (isset($params['verbosity'])) ? (bool)$params['verbosity'] : true;
+    $verbosity = debugging('', DEBUG_MINIMAL);
     $individual = (isset($params['individual'])) ? (bool)$params['individual'] : false;
     $maxpending = ($individual === true) ? BLOCK_EVALCOMIX_DR_PENDING / 10 : BLOCK_EVALCOMIX_DR_PENDING;
     $maxrequests = ($individual === true) ? BLOCK_EVALCOMIX_DR_REQUEST / 10 : BLOCK_EVALCOMIX_DR_REQUEST;
@@ -429,6 +429,7 @@ Managing grades
                 $pendingdatas[$idsubdimension][$idassessment] = $cmidobj;
             }
         }
+
         if ($datas = block_evalcomix_webservice_client::get_grade_subdimension($pendingdatas)) {
             $i = 0;
             $j = 0;
@@ -438,11 +439,12 @@ Managing grades
                     if (is_numeric($data['grade'])) {
                         if (!$grade = $DB->get_record('block_evalcomix_dr_grade', array('idassessment' => $data['idassessment'],
                                 'idsubdimension' => $data['idsubdimension']))) {
+                            $data['grade'] = round($data['grade']);
                             $DB->insert_record('block_evalcomix_dr_grade', $data);
                             $i++;
                         } else {
                             if ((int)$grade->grade !== (int)$data['grade']) {
-                                $grade->grade = $data['grade'];
+                                $grade->grade = round($data['grade']);
                                 $DB->update_record('block_evalcomix_dr_grade', $grade);
                                 $j++;
                             }
@@ -470,7 +472,6 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
     $toolid = (isset($params['toolid'])) ? $params['toolid'] : 0;
     $students = (isset($params['students'])) ? $params['students'] : array();
     $cmid = (isset($params['cmid'])) ? $params['cmid'] : 0;
-    $modality = (isset($params['modality'])) ? $params['modality'] : '';
 
     $cmids = array();
     if (!empty($cmid)) {
@@ -503,9 +504,7 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
             FROM {block_evalcomix_modes}
             WHERE toolid = :toolid AND taskid IN ('.implode(',', $tasksids).')';
             $modeparams = array('toolid' => $toolid);
-            if (!empty($modality)) {
-                $modeparams['modality'] = $modality;
-            }
+
             if ($modes = $DB->get_records_sql($sqlmode, $modeparams)) {
                 $modestr = array();
                 foreach ($modes as $mode) {

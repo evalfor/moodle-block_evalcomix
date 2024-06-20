@@ -40,7 +40,7 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
 if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
-    print_error('EvalCOMIX: No tool enabled');
+    throw new \moodle_exception('EvalCOMIX: No tool enabled');
 }
 
 $lang = current_language();
@@ -54,5 +54,5 @@ $response = $curl->post($vars[0], $vars[1]);
 if ($response && $curl->getHttpCode() >= 200 && $curl->getHttpCode() < 400) {
     echo $response;
 } else {
-    print_error('EvalCOMIX cannot get datas');
+    throw new \moodle_exception('EvalCOMIX cannot get datas');
 }

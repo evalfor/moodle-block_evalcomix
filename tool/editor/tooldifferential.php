@@ -270,12 +270,6 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
         }
     }
 
-    public function add_values($dim, $key) {
-        $id = $this->id;
-        $this->numvalores[$id][$dim]++;
-        $this->valores[$id][$dim][$key]['nombre'] = get_string('titlevalue', 'block_evalcomix').$this->numvalores[$id][$dim];
-    }
-
     public function remove_dimension($dim, $id = 0) {
     }
 
@@ -293,96 +287,6 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
             }
         }
         return 1;
-    }
-
-    public function remove_values($dim, $grado) {
-        $id = $this->id;
-        if ($this->numvalores[$id][$dim] > 2) {
-            $this->numvalores[$id][$dim]--;
-            $this->valores[$id][$dim] = $this->array_remove($this->valores[$id][$dim], $grado);
-        }
-    }
-
-    public function display_header() {
-        echo '
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-            <html>
-                <head>
-                    <link href="style/copia.css" type="text/css" rel="stylesheet">
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <script type="text/javascript" src="javascript/tamaño.js"></script>
-                    <script type="text/javascript" src="javascript/rollover.js"></script>
-                    <script type="text/javascript" src="javascript/ajax.js"></script>
-                    <script type="text/javascript" src="javascript/check.js"></script>
-                    <script language="JavaScript" type="text/javascript">
-
-                        document.onkeydown = public function() {
-                            if (window.event && window.event.keyCode == 116) {
-                                window.event.keyCode = 505;
-                            }
-                            if (window.event && window.event.keyCode == 505) {
-                                return false;
-                                // window.frame(main).location.reload(True);
-                            }
-                        }
-                        document.onkeyup = function(e) {
-                            if (e.which == 116) {
-                                e.which = 505;
-                            }
-                            if (e.which == 505) {
-                                return false;
-                                // window.frame(main).location.reload(True);
-                            }
-
-
-                        }
-
-                        document.oncontextmenu=function() {return false;}
-
-                        function validar(e) {
-                            tecla = (document.all) ? e.keyCode : e.which;
-                            if (tecla==8 || tecla==37 || tecla==39) return true;
-                                //patron =/[A-Za-zñÑ\s/./-/_/:/;]/;
-                                patron = /\d/;
-                            te = String.fromCharCode(tecla);
-                            return patron.test(te);
-                        }
-                    </script>
-                </head>
-
-                <body id="body" class="cuerpo">
-                    <div id="cabecera">
-                        <div id="menu">
-                            <img id="guardar" src="images/guardar.png"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/guardarhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/guardar.png\');"
-                            alt="Guardar" title="Guardar"/>
-                            <img id="importar" src="images/importar.png" alt="Importar" title="Importar"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/importarhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/importar.png\');"/>
-                            <img id="exportar" src="images/exportar.png" alt="Exportar" title="Exportar"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/exportarhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/exportar.png\');"/>
-                            <a onClick="MasTxt(\'cuerpo\');" href=#><img id="aumentar" src="images/aumentar.png"
-                            alt="Aumentar" title="Aumentar tamaño de fuente"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/aumentarhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/aumentar.png\');"/></a>
-                            <a onClick="MenosTxt(\'cuerpo\');" href=#><img id="disminuir" src="images/disminuir.png"
-                            alt="Disminuir" title="Disminuir tamaño de fuente"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/disminuirhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/disminuir.png\');"/></a>
-                            <img id="imprimir" src="images/imprimir.png" alt="Imprimir" title="Imprimir"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/imprimirhover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/imprimir.png\');"/>
-                            <img id="ayudar" src="images/ayuda.png" alt="Ayuda" title="Ayuda"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/ayudahover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/ayuda.png\');"/>
-                            <img id="acerca" src="images/acerca.png" alt="Acerca de" title="Acerca de"
-                            onmouseover="javascript:cAmbiaOver(this.id, \'images/acercahover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \'images/acerca.png\');"/>
-                        </div>
-                    </div>';
-        flush();
     }
 
     public function up_block($params) {
@@ -409,53 +313,11 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
             }
         }
         switch ($blockname) {
-            case 'dimension':{
-                $this->dimension[$id] = $blockdata;
-            }break;
-            case 'subdimension':{
-                $this->subdimension[$id][$dim] = $blockdata;
-            }break;
             case 'atributo':{
                 $this->atributo[$id][$dim][$subdim] = $blockdata;
             }
             case 'atributopos':{
                 $this->atributopos[$id][$dim][$subdim] = $blockdata;
-            }
-        }
-    }
-
-    public function down_block($params) {
-        require_once('array.class.php');
-        $id = $this->id;
-
-        $instancename = $params['instanceName'];
-        $blockdata = $params['blockData'];
-        $blockindex = $params['blockIndex'];
-        $blockname = $params['blockName'];
-        if (isset($params['dim'])) {
-            $dim = $params['dim'];
-        }
-        if (isset($params['subdim'])) {
-            $subdim = $params['subdim'];
-        }
-
-        if (isset($blockdata)) {
-            $previousindex = block_evalcomix_array_util::get_next_item($blockdata, $blockindex);
-            if ($previousindex !== false) {
-                $elem['nombre'] = $instancename;
-                $blockdata = $this->array_remove($blockdata, $blockindex);
-                $blockdata = block_evalcomix_array_util::array_add_rigth($blockdata, $previousindex, $elem, $blockindex);
-            }
-        }
-        switch ($blockname) {
-            case 'dimension':{
-                $this->dimension[$id] = $blockdata;
-            }break;
-            case 'subdimension':{
-                $this->subdimension[$id][$dim] = $blockdata;
-            }break;
-            case 'atributo':{
-                $this->atributo[$id][$dim][$subdim] = $blockdata;
             }
         }
     }
@@ -472,12 +334,6 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
                 echo '</div>';
             }
         }
-    }
-
-    public function display_footer() {
-        echo '
-            </body>
-        </html>';
     }
 
     public function display_dimension($dim, $data, $id=0, $mix='') {
@@ -765,14 +621,14 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
                 $numvalues = (isset($this->numvalores[$id][$dim])) ? $this->numvalores[$id][$dim] : '';
                 $xml = $root . ' id="'.
                     $idtool .'" name="' .
-                    htmlspecialchars($this->titulo) . '" attributes="' .
+                    htmlspecialchars($this->titulo, ENT_QUOTES) . '" attributes="' .
                     $numatr .'" values="' .
                     $numvalues . '" ' .
                     $percentage1 . '>
 ';
 
                 if (isset($this->observation[$id])) {
-                    $xml .= '<Description>' . htmlspecialchars($this->observation[$id]) . '</Description>
+                    $xml .= '<Description>' . htmlspecialchars($this->observation[$id], ENT_QUOTES) . '</Description>
 ';
                 }
 
@@ -805,8 +661,8 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
                     $xml .= '<Attribute idNeg="'.
                         $atribid .'" idPos="'.
                         $atribposid .'" nameN="'
-                        . htmlspecialchars($namen) . '" nameP="' .
-                        htmlspecialchars($namep) . '" comment="'.
+                        . htmlspecialchars($namen, ENT_QUOTES) . '" nameP="' .
+                        htmlspecialchars($namep, ENT_QUOTES) . '" comment="'.
                         $comment .'" percentage="' .
                         $atribpor . '">0</Attribute>
 ';
@@ -817,145 +673,6 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
         $xml .= $rootend;
 
         return $xml;
-    }
-
-    public function display_body_view($data, $mix='', $porcentage='') {
-        $id = $this->id;
-        if ($porcentage != '') {
-            $this->porcentage = $porcentage;
-        }
-        foreach ($this->dimension[$id] as $dim => $elemdim) {
-            foreach ($this->subdimension[$id][$dim] as $subdim => $elemsubdim) {
-                echo '<div id="subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'">';
-                $this->display_subdimension_view($dim, $subdim, $data, $id, $mix);
-                echo '</div>';
-            }
-        }
-    }
-
-    public function display_dimension_view($dim, $data, $id=0, $mix='') {
-    }
-
-    public function display_subdimension_view($dim, $subdim, $data, $id=0, $mix='') {
-        $id = $this->id;
-        if (isset($data['titulo'.$this->id])) {
-            $this->titulo = stripslashes($data['titulo'.$this->id]);
-        }
-        if (isset($data['numvalores'.$id.'_'.$dim]) && $data['numvalores'.$id.'_'.$dim] > 0) {
-            $this->numvalores[$id][$dim] = stripslashes($data['numvalores'.$id.'_'.$dim]);
-        }
-
-        $checked = '';
-        $disabled = 'disabled';
-
-        $numdimen = 1;
-
-        $id = $this->id;
-
-        echo '
-            <div id="cuerpo'.$id.'">
-                <label for="titulo'.$id.'">'.get_string('differentail', 'block_evalcomix').':</label><span class="labelcampo">
-                    <span class="titulovista">'.$this->titulo.'</span>
-                </span>
-        ';
-
-        if (isset($mix) && is_numeric($mix)) {
-            echo '
-            <span class="labelcampo">
-                <label for="toolpor_'.$id.'">'.get_string('porvalue', 'block_evalcomix').'</label>
-                <input class="porcentaje" type="text" name="toolpor_'.$id.'" id="toolpor_'.$id.'"
-                value="'.$this->porcentage.'" onkeyup=\'javascript:if (document.getElementById("toolpor_'.
-                $id.'").value > 100)document.getElementById("toolpor_'.$id.'").value = 100;\'
-                onkeypress=\'javascript:return validar(event);\'/></span>
-                <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("body", "id='.
-                $id.'&toolpor_'.$id.'="+document.getElementById("toolpor_'.$id.'").value+"&addtool'.$id.'=1", "mainform0");\'>
-            </span>';
-        }
-
-        echo '<br/><br/>';
-
-        if (isset($data['subdimension'.$id.'_'.$dim.'_'.$subdim])) {
-            $this->subdimension[$id][$dim][$subdim]['nombre'] = stripslashes($data['subdimension'.$id.'_'.$dim.'_'.$subdim]);
-        }
-
-        echo '
-                <div class="margin">
-                    <table class="maintable">
-                        <th/><th/>
-                        <th style="background-color:#BFE4AB;text-align:right;">'.get_string('novalue', 'block_evalcomix').'</th>
-                    ';
-        $inicio = (int)($this->numvalores[$id][$dim] / 2);
-        for ($i = 0; $i < $this->numvalores[$id][$dim]; $i++) {
-            echo '<th class="grado" style="background-color:#BFE4AB;">'.((-1) * $inicio + $i).'</th>
-            ';
-        }
-        echo '<th style="text-align:left;background-color:#BFE4AB;">'.get_string('yesvalue', 'block_evalcomix').'</th>';
-
-        $numattribute = count($this->atributo[$id][$dim][$subdim]);
-        if (isset($this->atributo[$id][$dim][$subdim])) {
-            foreach ($this->atributo[$id][$dim][$subdim] as $atrib => $elematrib) {
-                if (isset($data['atributo'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib])) {
-                    $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] = stripslashes($data['atributo'.$id.'_'.
-                        $dim.'_'.$subdim.'_'.$atrib]);
-                }
-                if (isset($data['atributopos'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib])) {
-                    $this->atributopos[$id][$dim][$subdim][$atrib]['nombre'] = stripslashes($data['atributopos'.$id.
-                        '_'.$dim.'_'.$subdim.'_'.$atrib]);
-                }
-                echo '  <tr>
-                            <td style="">
-                ';
-                if ($this->view == 'design') {
-                    echo '
-                                <div style="margin-bottom:2em;">
-                                    <input type="button" class="delete" onclick=\'javascript:sendPost("subdimensiontag'.
-                                    $id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.'&addAtr='.$dim.'_'.$subdim.
-                                    '&dt='.$atrib.'", "mainform0");\'>
-                                        </div>
-                                        <div style="margin-top:2em;">
-                                            <input type="button" class="add" onclick=\'javascript:sendPost("subdimensiontag'.
-                                            $id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.'&addAtr='.$dim.'_'.$subdim.
-                                            '&at='.$atrib.'", "mainform0");\'>
-                                                </div>
-                    ';
-                }
-                echo '
-                                        </td>
-
-                                        <td><input class="porcentaje" type="text"
-                                        onkeyup=\'javascript:if (document.getElementById("atribpor'.
-                                        $id.'_'.$dim.'_'.$subdim.'_'.$atrib.'").value > 100)
-                                        document.getElementById("atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'").value = 100;\'
-                                        onkeypress=\'javascript:return validar(event);\'  maxlength="3"
-                                        name="atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'"
-                                        id="atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'"
-                                        value="'.$this->atribpor[$id][$dim][$subdim][$atrib].'"/></span>
-                                        <input class="botonporcentaje" type="button"
-                                        onclick=\'javascript:sendPost("subdimensiontag'.$id.'_'.$dim.'_'.$subdim.
-                                        '", "mix='.$mix.'&id='.$id.'&atribpor="+document.getElementById("atribpor'.
-                                        $id.'_'.$dim.'_'.$subdim.'_'.$atrib.'").value+"&api='.$atrib.'&addAtr='.
-                                        $dim.'_'.$subdim.'", "mainform0");\'></td>
-                                        <td><span class="font"><span class="atributovista">'.
-                                        $this->atributo[$id][$dim][$subdim][$atrib]['nombre'].'</span></span></td>
-                ';
-
-                for ($i = 0; $i < $this->numvalores[$id][$dim]; $i++) {
-                    echo '<td><input type="radio" name="radio'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'" /></td>
-                    ';
-                }
-                echo '                  <td><span class="font">
-                <span class="atributovista">'.$this->atributopos[$id][$dim][$subdim][$atrib]['nombre'].'</span>
-                    </span></td>';
-                echo '</tr>';
-            }
-        }
-        echo '</table>
-            </div>
-        ';
-
-        echo '</div>
-        ';
-        flush();
     }
 
     public function get_subdimensionid_from_xml($toolid) {
@@ -985,7 +702,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
 
         echo '
                                 <tr>
-                                   <th colspan="'.($colspan + 3) .'">'.htmlspecialchars($this->titulo).'</th>
+                                   <th colspan="'.($colspan + 3) .'">'.htmlspecialchars($this->titulo, ENT_QUOTES).'</th>
                                 </tr>
 
                                 <tr>
@@ -1008,7 +725,8 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
             ';
             foreach ($this->valores[$this->id][$dim] as $grado => $elemvalue) {
                 echo '
-                                    <td class="td">'.htmlspecialchars($this->valores[$this->id][$dim][$grado]['nombre']).'</td>
+                                    <td class="td">'.
+                                    htmlspecialchars($this->valores[$this->id][$dim][$grado]['nombre'], ENT_QUOTES).'</td>
                 ';
             }
 
@@ -1032,7 +750,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
                                 <tr rowspan=0>
                                     <td class="atribpor">'.$this->atribpor[$this->id][$dim][$subdim][$atrib].'%</td>
                                     <td colspan="'.($colspan - $colspandim + 1) .'">'.
-                                    htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre']).'</td>
+                                    htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre'], ENT_QUOTES).'</td>
                         ';
 
                         $k = 1;
@@ -1048,12 +766,12 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
                             ';
                             ++$k;
                         }
-                        echo '<td>'.htmlspecialchars($this->atributopos[$id][$dim][$subdim][$atrib]['nombre']).'</td>';
+                        echo '<td>'.htmlspecialchars($this->atributopos[$id][$dim][$subdim][$atrib]['nombre'], ENT_QUOTES).'</td>';
                         echo '
                                 </tr>
                         ';
-                        if (isset($this->commentAtr[$id][$dim][$subdim][$atrib])
-                                && $this->commentAtr[$id][$dim][$subdim][$atrib] == 'visible') {
+                        if (isset($this->commentatr[$id][$dim][$subdim][$atrib])
+                                && $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible') {
                             $vcomment = '';
                             if (isset($this->valuecommentAtr[$id][$dim][$subdim][$atrib])) {
                                 $vcomment = $this->valuecommentAtr[$id][$dim][$subdim][$atrib];
@@ -1092,7 +810,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
             ';
 
             foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
-                echo '<th>'.htmlspecialchars($this->valorestotal[$id][$grado]['nombre']).'</th>
+                echo '<th>'.htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES).'</th>
                 ';
             }
 

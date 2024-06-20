@@ -81,7 +81,7 @@ class block_evalcomix_modes extends block_evalcomix_object {
             $this->id = intval($id);
             $this->modality = addslashes($modality);
             if ($weighing < 0 || $weighing > 100) {
-                print_error("weighing wrong");
+                throw new \moodle_exception("weighing wrong");
             }
             $this->weighing = $weighing;
             $taskobject = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid), '*', MUST_EXIST);
@@ -92,52 +92,9 @@ class block_evalcomix_modes extends block_evalcomix_object {
                 $this->toolid = $toolobject->id;
             }
             if ($this->modality != 'teacher' && $this->modality != 'peer' && $this->modality != 'self') {
-                print_error('The assessment modality is wrong');
+                throw new \moodle_exception('The assessment modality is wrong');
             }
         }
-    }
-
-    /**
-     * @return bool|int if exist return ID else return 0
-     */
-    public function exist() {
-        global $DB;
-        if (!$data = $DB->get_record($this->table, array('taskid' => $this->taskid, 'modality' => $this->modality))) {
-            return 0;
-        }
-        $this->id = $data->id;
-        return $data->id;
-    }
-
-    /**
-     * Finds and returns all evalcomix_tool instances.
-     * @static abstract
-     *
-     * @return array array of evalcomix_tool instances or false if none found.
-     */
-    public static function fetch_all($params) {
-        return block_evalcomix_object::fetch_all_helper('block_evalcomix_modes', 'block_evalcomix_modes', $params);
-    }
-
-    /**
-     * Finds and returns a evalcomix_modes instance based on params.
-     * @static
-     *
-     * @param array $params associative arrays varname=>value
-     * @return object grade_item instance or false if none found.
-     */
-    public static function fetch($params) {
-        return block_evalcomix_object::fetch_helper('block_evalcomix_modes', 'block_evalcomix_modes', $params);
-    }
-
-    /**
-     * Called immediately after the object data has been inserted, updated, or
-     * deleted in the database. Default does nothing, can be overridden to
-     * hook in special behaviour.
-     *
-     * @param bool $deleted
-     */
-    public function notify_changed($deleted) {
     }
 
     public static function delete_mode($id) {

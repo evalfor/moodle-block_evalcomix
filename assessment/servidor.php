@@ -88,7 +88,6 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
-        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
 
@@ -114,6 +113,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
 
         // Evaluate, Delete and Details buttons.
         $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'"
+            id="ass_'.$cmid.'_'.$userid.'" name="ass_'.$cmid.'_'.$userid.'"
             title="'.get_string('evaluate', 'block_evalcomix').'"
             class="block_evalcomix_w_16" src="../images/evaluar.png" onclick="javascript:url(\'' . $urlinstrument . '\',\''.
         $userid . '\',\'' . $cmid . '\',\'' .
@@ -122,6 +122,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
             'assessorid' => $assessorid, 'studentid' => $userid))) {
 
             $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'"
+                id="ass_'.$cmid.'_'.$userid.'" name="ass_'.$cmid.'_'.$userid.'"
                 title="'.get_string('evaluate', 'block_evalcomix').'"
                 class="block_evalcomix_w_16" src="../images/evaluar2.png" onclick="javascript:url(\'' .
                 $urlinstrument . '\',\'' . $userid . '\',\'' .
@@ -129,6 +130,7 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         }
         if ($showdetails) {
             $details = '<input type="image" value="'.get_string('details', 'block_evalcomix').'"
+            id="det_'.$cmid.'_'.$userid.'" name="det_'.$cmid.'_'.$userid.'"
             class="block_evalcomix_w_16" title='.
             get_string('details', 'block_evalcomix').' src="../images/lupa.png"
             onclick="javascript:urlDetalles(\''. $CFG->wwwroot.
@@ -141,12 +143,13 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
         // Show user's works.
         $title = get_string('studentwork1', 'block_evalcomix').get_string('studentwork2', 'block_evalcomix'). $cmid;
         echo ' <input type="image" value="'.$title.'"
+            id="tas_'.$cmid.'_'.$userid.'" name="tas_'.$cmid.'_'.$userid.'"
             title="'.$title.'" src="../images/task.png"
             onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/assessment/user_activity.php?id='.
             $userid.'&course='.
             $courseid.'&mod='.$cmid.'\');"/>';
 
-        // If the $USER isn�t a teacher or admin evaluate if it should show Evaluate and Details buttons.
+        // If the $USER is not a teacher or admin evaluate if it should show Evaluate and Details buttons.
         if ($mode == 'self' || $mode == 'peer') {
             // Obtains the groupmode of the activity.
             $cm = $DB->get_record('course_modules', array('id' => $cmid));
@@ -208,14 +211,8 @@ if (isset($datapost['stu']) && isset($datapost['cma']) && isset($dataget['id']) 
 
                     if ($mode == 'self') { // Details always are shown in selfassessment.
                         echo $details;
-                    } else if ($nowtimestamp >= $due && $mode == 'peer' && $showdetails == true) {
-                        $urlpeerinstrument = block_evalcomix_webservice_client::get_ws_view_assessment($courseid,
-                        $typeinstrument, $cmid, $assessorid, $userid, 'peer', BLOCK_EVALCOMIX_MOODLE_NAME);
-                        echo '<input type="image" value="'.get_string('details', 'block_evalcomix').
-                        '" class="block_evalcomix_w_16" title='.
-                        get_string('details', 'block_evalcomix').' src="../images/lupa.png"
-                        onclick="javascript:urlDetalles(\''. $urlpeerinstrument .'\');"/>';
                     }
+
                     // Show the buttons if they must be availables.
                     if ($nowtimestamp >= $available && $nowtimestamp < $due) {
                         echo $evaluate;

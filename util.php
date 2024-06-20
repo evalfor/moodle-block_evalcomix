@@ -101,7 +101,7 @@ class block_evalcomix_export_assessment {
             array(3, get_string('donewithinrange', 'block_evalcomix')),
             array(4, get_string('donewithinrangecomments', 'block_evalcomix')),
             array(''),
-            array('')
+            array(''),
         );
 
         $rows = array();
@@ -304,7 +304,7 @@ function block_evalcomix_export_development_report($params) {
     $header = array(
             array($title),
             array(''),
-            array(get_string('course').':', $course->fullname)
+            array(get_string('course').':', $course->fullname),
     );
 
     if ($group = $DB->get_record('groups', array('id' => $groupid))) {
@@ -378,12 +378,12 @@ function block_evalcomix_get_file_columns($cir) {
     if (empty($columns)) {
         $cir->close();
         $cir->cleanup();
-        print_error('cannotreadtmpfile', 'error');
+        throw new \moodle_exception('cannotreadtmpfile', 'error');
     }
     if (count($columns) < 3) {
         $cir->close();
         $cir->cleanup();
-        print_error('csvfewcolumns', 'error');
+        throw new \moodle_exception('csvfewcolumns', 'error');
     }
 
     // Test columns.
@@ -397,19 +397,19 @@ function block_evalcomix_get_file_columns($cir) {
         } else {
             $cir->close();
             $cir->cleanup();
-            print_error('invalidfieldname', 'error', $returnurl, $field);
+            throw new \moodle_exception('invalidfieldname', 'error', $returnurl, $field);
         }
         if (in_array($newfield, $processed)) {
             $cir->close();
             $cir->cleanup();
-            print_error('duplicatefieldname', 'error', $returnurl, $newfield);
+            throw new \moodle_exception('duplicatefieldname', 'error', $returnurl, $newfield);
         }
         $processed[$key] = $newfield;
     }
 
     foreach ($requiredfields as $field) {
         if (!in_array($field, $processed)) {
-            print_error('A required field is missing', 'error');
+            throw new \moodle_exception('A required field is missing', 'error');
         }
     }
 

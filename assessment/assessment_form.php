@@ -45,11 +45,11 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
 if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
-    print_error('EvalCOMIX: No tool enabled');
+    throw new \moodle_exception('EvalCOMIX: No tool enabled');
 }
 
 if ($perspective != 'assess' && $perspective != 'view') {
-    print_error('EvalCOMIX: the mode param is wrong');
+    throw new \moodle_exception('EvalCOMIX: the mode param is wrong');
 }
 
 $lang = current_language();
@@ -77,7 +77,7 @@ if ($viewtemplate == '0') {
         $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
         if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
             if (!$modefetch = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $mode))) {
-                print_error('EvalCOMIX: No permissions');
+                throw new \moodle_exception('EvalCOMIX: No permissions');
             }
             if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
                 'assessorid' => $USER->id, 'studentid' => $studentid))) {
@@ -90,7 +90,7 @@ if ($viewtemplate == '0') {
                     'assessorid' => $assessor, 'mode' => $mode));
             }
         } else {
-            print_error('EvalCOMIX: The activity is not configured with EvalCOMIX');
+            throw new \moodle_exception('EvalCOMIX: The activity is not configured with EvalCOMIX');
         }
 
     } else if ($perspective == 'view') {
@@ -104,13 +104,13 @@ if ($viewtemplate == '0') {
             } else if (has_capability('block/evalcomix:assessed', $context, $assessorid)) {
                 $mode = 'peer';
             } else {
-                print_error('EvalCOMIX: Wrong User');
+                throw new \moodle_exception('EvalCOMIX: Wrong User');
             }
         }
 
         if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
             if (!$modefetch = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $mode))) {
-                print_error('EvalCOMIX: No permissions');
+                throw new \moodle_exception('EvalCOMIX: No permissions');
             }
             if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
                 'assessorid' => $assessorid, 'studentid' => $studentid))) {
@@ -118,7 +118,7 @@ if ($viewtemplate == '0') {
                     $title);
             }
         } else {
-            print_error('EvalCOMIX: The activity is not configured with EvalCOMIX');
+            throw new \moodle_exception('EvalCOMIX: The activity is not configured with EvalCOMIX');
         }
     }
 } else if ($viewtemplate == '1') {
@@ -135,7 +135,7 @@ $response = $curl->get($vars[0], $query);
 if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
     echo $response;
 } else {
-    print_error('EvalCOMIX cannot get datas');
+    throw new \moodle_exception('EvalCOMIX cannot get datas');
 }
 
 if ($viewtemplate == 0) {

@@ -52,7 +52,6 @@ class block_evalcomix_object {
         // Set all object properties from real db data.
         $this->update_from_db();
 
-        $this->notify_changed(false);
         return $this->id;
     }
 
@@ -73,7 +72,6 @@ class block_evalcomix_object {
 
         $DB->update_record($this->table, $data);
 
-        $this->notify_changed(false);
         return true;
     }
 
@@ -93,7 +91,6 @@ class block_evalcomix_object {
         $data = $this->get_record_data();
 
         if ($DB->delete_records($this->table, array('id' => $this->id))) {
-            $this->notify_changed(true);
             return true;
 
         } else {
@@ -165,7 +162,7 @@ class block_evalcomix_object {
         if ($instances = self::fetch_all_helper($table, $classname, $params)) {
             if (count($instances) > 1) {
                 // We should not tolerate any errors here - problems might appear later.
-                print_error('morethanonerecordinfetch', 'debug');
+                throw new \moodle_exception('morethanonerecordinfetch', 'debug');
             }
             return reset($instances);
         } else {

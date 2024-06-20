@@ -214,7 +214,6 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
-        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 
         $settings = $this->task->get_info()->root_settings;
 
@@ -318,7 +317,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
 
                 if ($settings['users'] == 1) {
                     foreach ($task->assessments[0] as $assessment) {
-                        $assessmentidold = (string)$assessment['id'];
+                        $assessmentidold = (string)$assessment->idassessment;
                         $assessmentassessoridold = (int)$assessment->assessorid;
                         $assessmentstudentidold = (int)$assessment->studentid;
                         $assessmentgradeold = (string)$assessment->grade;
@@ -339,11 +338,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                             $mode = 'peer';
                         }
 
-                        $assessmentidold = block_evalcomix_get_assessmentid(array('courseid' => $courseidold,
-                            'module' => $modulename,
-                            'cmid' => $taskinstanceidold, 'studentid' => $assessmentstudentidold,
-                            'assessorid' => $assessmentassessoridold, 'mode' => $mode, 'lms' => $moodlenameold));
-
+                        if (empty($assessmentidold)) {
+                            $assessmentidold = block_evalcomix_get_assessmentid(array('courseid' => (int)$courseidold,
+                                'module' => $modulename,
+                                'cmid' => $taskinstanceidold, 'studentid' => $assessmentstudentidold,
+                                'assessorid' => $assessmentassessoridold, 'mode' => $mode, 'lms' => (string)$moodlenameold));
+                        }
                         $assessmentidnew = block_evalcomix_get_assessmentid(array('courseid' => $courseidnew,
                             'module' => $modulename,
                             'cmid' => $newcmid, 'studentid' => $studentuser->newitemid,
@@ -417,8 +417,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         'cmid' => $newcmid);
 
                     if (!$allowedusersobject = $DB->get_record('block_evalcomix_allowedusers', $params)) {
-                        $allowedusersobject = new block_evalcomix_allowedusers($params);
-                        $newid = $allowedusersobject->insert();
+                        $newid = $DB->insert_record('block_evalcomix_allowedusers', $params);
                     }
                 }
             }

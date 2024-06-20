@@ -90,7 +90,7 @@ class block_evalcomix_editor_tool {
                     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
                     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-                    <link href="'. $CFG->wwwroot . '/blocks/evalcomix/style/copia.css" type="text/css" rel="stylesheet">
+                    <link href="'. $CFG->wwwroot . '/blocks/evalcomix/style/copia.css" type="text/css" rel="stylesheet" media="all">
                     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
                     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
                     crossorigin="anonymous"></script>
@@ -1165,99 +1165,6 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         return $instrument;
     }
 
-    public function display_view() {
-            $id = '';
-            echo '
-            <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-            <html>
-                <head>
-                    <title>EvalCOMIX 4.2</title>
-                    <link href="style/copia.css" type="text/css" rel="stylesheet">
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <script type="text/javascript" src="javascript/size.js"></script>
-                    <script type="text/javascript" src="javascript/rollover.js"></script>
-                    <script type="text/javascript" src="javascript/ajax.js"></script>
-                    <script type="text/javascript" src="javascript/check.js"></script>
-                    <script type="text/javascript" src="javascript/valida.js"></script>
-                    <script type="text/javascript" src="javascript/ventana-modal.js"></script>
-                    <script language="JavaScript" type="text/javascript">
-
-                        document.onkeydown = function() {
-                            if (window.event && window.event.keyCode == 116) {
-                                window.event.keyCode = 505;
-                            }
-                            if (window.event && window.event.keyCode == 505) {
-                                return false;
-                                // window.frame(main).location.reload(True);
-                            }
-                        }
-                        document.onkeydown = function(e) {
-                            var key;
-                            var evento;
-                            if (window.event) {
-                                if (window.event && window.event.keyCode == 116) {
-                                    window.event.keyCode = 505;
-                                }
-                                if (window.event && window.event.keyCode == 505) {
-                                    return false;
-                                    // window.frame(main).location.reload(True);
-                                }
-                            }
-                            else {
-                                evento = e;
-                                key = e.which; // Firefox
-                                if (evento && key == 116) {
-                                    key = 505;
-                                }
-                                if (evento && key == 505) {
-                                    return false;
-                                    // window.frame(main).location.reload(True);
-                                }
-                            }
-                        }
-                        function imprimir(que) {
-                            var ventana = window.open("", "", "");
-                            var contenido = "<html><head><link href=\'style/copia.css\' type=\'text/css\'
-                            rel=\'stylesheet\'></head><body onload=\'window.print();window.close();\'>";
-                            contenido = contenido + document.getElementById(que).innerHTML + "</body></html>";
-                            ventana.document.open();
-                            ventana.document.write(contenido);
-                            ventana.document.close();
-                        }
-
-                        document.oncontextmenu=function() {return false;}
-
-                    </script>
-                    <style type="text/css">
-                        #mainform0{
-                            border: 1px solid #00f;
-                        }
-                        .dimension, .valoracionglobal, .valoraciontotal, #comentario{
-                            border: 2px solid #6B8F6B
-;
-                        }
-                        .subdimension{
-                            background-color: #F1F2F1;
-                            margin: 0.7em 2em 0em 2em;
-                            overflow:visible
-                        }
-                    </style>
-                </head>
-
-                <body id="body" onload=\'javascript:window.print();location.href="generator.php"\'>
-
-                    <form id="mainform0" name="mainform'.$id.'" method="POST" action="generator.php">
-        ';
-    }
-    public function display_body_view($data, $mix='', $porcentage='') {
-        return $this->object->display_body_view($data, $mix, $porcentage);
-    }
-    public function display_dimension_view($dim, $data, $id=0, $mix='') {
-        return $this->object->display_dimension_view($dim, $data, $id, $mix);
-    }
-    public function display_subdimension_view($dim, $subdim, $data, $id=0, $mix='') {
-        return $this->object->display_subdimension_view($dim, $data, $id, $mix);
-    }
     public function print_tool() {
         return $this->object->print_tool();
     }
@@ -1269,39 +1176,13 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
 
                     <head>
                         <title>EVALCOMIX</title>
-                        <style>
-body {color:#333;background-color: #fff;font-family: "arial";font-size: 0.72em;     margin:0; }
-p{margin:0; }  form{margin:0; }  h1,h2,h3,h4,h5,h6{color: #146C84; } #linea{height: 5px;background-color: #f5751a; }
-#titulo{font-size: 1em;color:#146C84;font-weight: bold;font-style:italic;margin-top: -2em;margin-left:5em;margin-bottom: 1em; }
-#cabecera{border-bottom: 1px solid #000; }  /*campos1------------------------------------*/
-#ca1_env{float: right;margin-bottom: 1em; } /*-------------------------------------------*/
-#crear{padding-left: 0.5em; }#dim{background-color: #146C84;color: #fff; }
-.planmenu{text-decoration:none;border-right: 1px solid #fff;padding: 0.8em 1em 0.7em 0;color:#fff; }
-/*.planmenu:hover{text-decoration:none;color: #fff;background-color: #00aaff;border-right: 1px solid #000000;
-padding-right: 1em; }*/  .tam{width: 85%; }  .fields{margin-bottom: 1em; }  .fields legend{color: #146C84;font-weight: bold; }
-.tabla{width: 100%;background-color: #E5F0FD;font-family: "arial";  margin:0;   padding:0; /*   font-size: 1em;*/ }
-.tabla th{background-color: #146C84;color: #fff; }  .td{    font-size: 0.8em;font-weight: bold;text-align:center; }
-.rub{width: 12em; }  .eval{margin:0;    padding:0; }  .global{text-align:right;font-style: italic;font-weight: bold; }
-.boton_est{text-decoration:none;color: #0000ff;font-weight:bold;padding: 0.3em 0.8em 0.3 0.8em;
-background-color: #a3a3a3;border-right: 1px solid #000;border-bottom: 1px solid #000;border-top: 1px solid #fff;
-border-left: 1px solid #fff; }  .botones{padding-bottom: 2em; }  .boton{float:right; }  .table_rubrica{width: 90%; }
-._rubrica textarea{width:100%; }  .arubric{padding: 5% 40% 5% 40%;background-color:#fff;text-decoration:none; }
-.float{margin-left: 1em;float:left; }  .obligatorio{font-size: 0.7em;font-weight: bold; }  .bold{font-weight: bold; }
-.subdim{font-style:italic;font-weight:bold; }  .rango{text-align:center; }
-.search_menu{text-decoration:none;color:#146f8f;padding:0.1em 0.2em 0.1em 0.2em;background-color:#e3e3e3;
-border: 1px solid #a3a3a3;font-weight: bold; }  .clear{clear:both; }  .pordim{  font-weight: bold;  witdh: 3em;  }
-.subdimpor{     font-style:italic;  font-weight:bold;   text-align:center;  font-size: 0.9em; }
-.atribpor{  text-align:right;   font-size:0.8em }  .showcomment,
-.showcomment:hover{     background-image: url("../images/editar.gif");  width: 19px;    height: 16px;   border:0;
-background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 1px solid #434343;   }
-.showcomment:hover{     border: 2px solid #0076C1; }
-.custom-radio{width:15px;height:15px;cursor: pointer;}
-                        </style>
                         ';
 
     }
 
     public function view_tool($root = '', $grade = '', $print='view', $title = '') {
+        global $COURSE;
+
         $wprint = '';
         if ($print == 'print') {
             $wprint = 'onload="window.print()"';
@@ -1333,21 +1214,58 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
                             }
                         }
                     </script>
+                    <script language="Javascript">
+                        function imprSelec(nombre) {
+                          var ficha = document.getElementById(nombre);
+                          var ventimp = window.open(" ", "popimpr");
+                          ventimp.document.write( ficha.innerHTML );
+                          ventimp.document.close();
+                          ventimp.print( );
+                          ventimp.close();
+                        }
+                    </script>
                 </head>
                     <body '. $wprint .'>
                     <div class="clear"></div>
+                    <div class="boton" style="margin-right: 1em;">
+                        <input type="button" style="width:10em" value="'.get_string('back', 'block_evalcomix').
+            '" onclick=\'javascript:location.href="generator.php?op=design&courseid='.$COURSE->id.'"\'>
+                        <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
+                        style="width:8em" onclick="javascript:imprSelec(\'evalid\')">
+                    </div>
                     <div class="eval" id="evalid">
+                    <style>
+body {color:#333;background-color: #fff;font-family: "arial";font-size: 0.72em;     margin:0; }
+p{margin:0; }  form{margin:0; }  h1,h2,h3,h4,h5,h6{color: #146C84; } #linea{height: 5px;background-color: #f5751a; }
+#titulo{font-size: 1em;color:#146C84;font-weight: bold;font-style:italic;margin-top: -2em;margin-left:5em;margin-bottom: 1em; }
+#cabecera{border-bottom: 1px solid #000; }  /*campos1------------------------------------*/
+#ca1_env{float: right;margin-bottom: 1em; } /*-------------------------------------------*/
+#crear{padding-left: 0.5em; }#dim{background-color: #146C84;color: #fff; }
+.planmenu{text-decoration:none;border-right: 1px solid #fff;padding: 0.8em 1em 0.7em 0;color:#fff; }
+/*.planmenu:hover{text-decoration:none;color: #fff;background-color: #00aaff;border-right: 1px solid #000000;
+padding-right: 1em; }*/  .tam{width: 85%; }  .fields{margin-bottom: 1em; }  .fields legend{color: #146C84;font-weight: bold; }
+.tabla{width: 100%;background-color: #E5F0FD;font-family: "arial";  margin:0;   padding:0; /*   font-size: 1em;*/ }
+.tabla th{background-color: #146C84;color: #fff; }  .td{    font-size: 0.8em;font-weight: bold;text-align:center; }
+.rub{width: 12em; }  .eval{margin:0;    padding:0; }  .global{text-align:right;font-style: italic;font-weight: bold; }
+.boton_est{text-decoration:none;color: #0000ff;font-weight:bold;padding: 0.3em 0.8em 0.3 0.8em;
+background-color: #a3a3a3;border-right: 1px solid #000;border-bottom: 1px solid #000;border-top: 1px solid #fff;
+border-left: 1px solid #fff; }  .botones{padding-bottom: 2em; }  .boton{float:right; }  .table_rubrica{width: 90%; }
+._rubrica textarea{width:100%; }  .arubric{padding: 5% 40% 5% 40%;background-color:#fff;text-decoration:none; }
+.float{margin-left: 1em;float:left; }  .obligatorio{font-size: 0.7em;font-weight: bold; }  .bold{font-weight: bold; }
+.subdim{font-style:italic;font-weight:bold; }  .rango{text-align:center; }
+.search_menu{text-decoration:none;color:#146f8f;padding:0.1em 0.2em 0.1em 0.2em;background-color:#e3e3e3;
+border: 1px solid #a3a3a3;font-weight: bold; }  .clear{clear:both; }  .pordim{  font-weight: bold;  witdh: 3em;  }
+.subdimpor{     font-style:italic;  font-weight:bold;   text-align:center;  font-size: 0.9em; }
+.atribpor{  text-align:right;   font-size:0.8em }  .showcomment,
+.showcomment:hover{     background-image: url("../images/editar.gif");  width: 19px;    height: 16px;   border:0;
+background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 1px solid #434343;   }
+.showcomment:hover{     border: 2px solid #0076C1; }
+.custom-radio{width:15px;height:15px;cursor: pointer;}
+                     </style>
                     <h2>'.$title.'</h2>
                         <form name="mainform" method="post" action="">
         ';
         echo '
-                <div class="boton" style="margin-right: 1em;">
-                <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                onclick="javascript:
-                var ficha = document.getElementById(\'evalid\');
-                var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                ventimp.document.close();ventimp.print();ventimp.close();">
-            </div>
             <div class="clear"></div>';
 
         $this->object->print_tool();
@@ -1382,357 +1300,13 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
 window.print().window.close();"> -->
 
                             <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                            onclick="javascript:
-                            var ficha = document.getElementById(\'evalid\');
-                            var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();">
+                            style="width:8em" onclick="javascript:imprSelec(\'evalid\')">
 
                 </div>
                 <div class="clear"></div>
 
                 <div class="clear"></div>
                 <br>
-                </body>
-
-            </html>
-        ';
-    }
-
-    public function assessment_tool($root = '', $assessmentid = 0, $idtool = 0, $grade = '', $saved = '', $title = '') {
-        require('lang/'. $this->language . '/evalcomix.php');
-        $action = $root . '/assessment/saveassess.php?ass=' . $assessmentid . '&tool='.$idtool;
-        $this->view_assessment_header();
-        echo '  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-                    <script type="text/javascript" src="'.$root.'/client/javascript/ajax.js"></script>
-                    <script>
-                        function limpiar_mainform() {
-                            if (confirm(\'¿Confirma que desea borrar todas las calificaciones asignadas al instrumentos?\'))
-                                for (i=0;i<document.mainform.elements.length;i++) {
-                                    if (document.mainform.elements[i].type == "radio"
-                                    && document.mainform.elements[i].checked == true)
-                                      document.mainform.elements[i].checked=false;
-                                    else if (document.mainform.elements[i].type == "textarea")
-                                        document.mainform.elements[i].value = "";
-                            }
-                        }
-
-                        function muestra_oculta(id) {
-                            if (document.getElementById) { //se obtiene el id
-                                var el = document.getElementById(id); //se define la variable "el" igual a nuestro div
-                                if (el.style.display == "none") {
-                                    el.style.display = "block";
-                                    el.disabled = false;
-                                }
-                                else {
-                                    el.style.display = "none";
-                                    el.disabled = true;
-                                }
-                                //el.style.display = (el.style.display == "none") ? "block" : "none";
-                                //damos un atributo display:none que oculta el div
-                            }
-                        }
-                        window.onload = function() {
-                            var valores=document.getElementsByName("comAtrib");
-                            for (var i=0; i<valores.length; i++) {
-                                valores[i].style.display = "none";
-
-                            }
-                        }
-
-                    </script>
-                </head>
-                    <body>
-                    <div class="clear"></div>
-        ';
-
-        echo '
-                    <div class="eval" id="evalid">
-                        <h2>'.$title.'</h2>
-
-                        <form id="mainform" name="mainform" method="post" action="'.$action.'">
-                            <div class="boton" style="margin-right: 1em;">
-                            <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                            onclick="javascript:
-                            var ficha = document.getElementById(\'evalid\');
-                            var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();">
-                            </div>
-        ';
-        echo "<input type='button' name='".get_string('TSave', 'block_evalcomix')."' value='".
-        get_string('TSave', 'block_evalcomix')."' onclick='sendPostAssess(\"totalgrade\",\"uno=1\",\"mainform\",\"".
-        $action."\");alert(\"".get_string('alertsave', 'block_evalcomix')."\");'>";
-        $type = get_class($this->object);
-        if ($type == 'toolargument' && $grade != '') {
-            $gradeexploded = explode('/', $grade);
-            $score = $gradeexploded[0];
-            echo "
-                    <div class='eval' id='evalid'>
-                        <div style='text-align:right; font-size:1.5em;'>
-                            <label for='grade'>".get_string('grade', 'block_evalcomix') .": </label>
-                            <select id='grade' name='grade'>
-                                <option value='-1'>".get_string('nograde', 'block_evalcomix')."</option><br>
-            ";
-
-            for ($i = 100; $i >= 0; --$i) {
-                $selected = '';
-                if (is_numeric($score) && $score == $i) {
-                    $selected = 'selected';
-                }
-                echo "<option value='$i' $selected>$i</option><br>";
-            }
-            echo "
-                            </select>
-                        </div>";
-        }
-
-        $this->object->print_tool();
-
-        echo "<input type='button' name='".get_string('TSave', 'block_evalcomix')."' value='".
-        get_string('TSave', 'block_evalcomix')."' onclick='sendPostAssess(\"totalgrade\",\"uno=1\",\"mainform\",\"".
-        $action."\");alert(\"".get_string('alertsave', 'block_evalcomix')."\");'>";
-
-        echo "<input type='button' onclick=\"javascript:limpiar_mainform()\" value='Reset'>";
-
-        echo "<div style='text-align:right;font-size:1.7em'><span>".get_string('grade', 'block_evalcomix').
-        ": </span><span id='totalgrade'>" . $grade . "</span></div>";
-
-        echo '
-                    </form>
-            </div>
-        ';
-
-        if ($saved == 'saved') {
-            echo '<script type="text/javascript" language="javascript">alert("'.
-            get_string('alertsave', 'block_evalcomix').'");</script>';
-        }
-
-        echo '
-        <hr>
-        <div class="botones">
-            <div class="boton" style="margin-right: 1em;">
-                <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                onclick="javascript:
-                var ficha = document.getElementById(\'evalid\');
-                var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                ventimp.document.close();ventimp.print();ventimp.close();">
-        </div>
-        </div>';
-        echo '
-            <div class="clear"></div>
-
-                <div class="clear"></div>
-
-                </body>
-
-            </html>
-        ';
-    }
-
-    public function assessment_tool_mixed($root = '', $assessmentid = 0, $idtool = '', $grade = '', $saved = '',
-            $tools = array(), $title = '') {
-        require('lang/'. $this->language . '/evalcomix.php');
-        $action = $root . '/assessment/saveassess.php?ass=' . $assessmentid . '&tool='.$idtool;
-        $this->view_assessment_header();
-        echo '
-                    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-                        <script type="text/javascript" src="'.$root.'/client/javascript/ajax.js"></script>
-                        <script>
-                            function limpiar_mainform(form) {
-                                if (confirm(\'¿Confirma que desea borrar todas las calificaciones asignadas al instrumentos?\'))
-                                    for (i=0;i<form.elements.length;i++) {
-                                        if (form.elements[i].type == "radio" && form.elements[i].checked == true)
-                                          form.elements[i].checked=false;
-                                        else if (form.elements[i].type == "textarea") form.elements[i].value = "";
-                                }
-                            }
-                        </script>
-                    </head>
-
-                    <body>
-                        <div class="clear"></div>
-                        <div class="eval" id="evalid">
-                        <h2>'.$title.'</h2>
-        ';
-
-        $listtool = $this->object->get_tools();
-        $countlisttool = count($listtool) - 1;
-        $i = 0;
-        foreach ($listtool as $tool) {
-            $type = get_class($tool);
-            $idsingle = '';
-            foreach ($tools as $key => $item) {
-                $object = $item->object;
-                if (get_class($object) == $type  && $object->get_titulo() == $tool->get_titulo()
-                        && $object->get_dimension() == $tool->get_dimension()
-                        && $object->get_subdimension() == $tool->get_subdimension()
-                        && $object->get_valores() == $tool->get_valores()
-                        && $object->get_atributo() == $tool->get_atributo()
-                        && $object->get_commentatr() == $tool->get_commentatr()) {
-                    if ($type != 'toollist') {
-                        if ($object->get_valglobal() == $tool->get_valglobal()
-                            && $object->get_valtotal() == $tool->get_valtotal()) {
-                            if ($type == 'toolrubric') {
-                                $getrango1 = $object->get_rango();
-                                $getrango2 = $tool->get_rango();
-                                list(, $objectrango) = current($getrango1);
-                                list(, $toolrango) = current($getrango2);
-                                if ($objectrango == $toolrango) {
-                                    $idsingle = $key;
-                                    break;
-                                }
-                            } else {
-                                $idsingle = $key;
-                                break;
-                            }
-                        }
-                    } else {
-                        $idsingle = $key;
-                        break;
-                    }
-                }
-            }
-            if ($idsingle == '') {
-                break;
-            }
-            unset($tools[$idsingle]);
-            echo '
-                        <form name="form'. $i .'" id="form'. $i .'" method="post" action="'.$action.'">
-                            <!-- <input type="hidden" id="cod" name="cod" value="'.$idsingle.'"> -->
-                            <input type="hidden" id="cod_form'. $i .'" name="cod_form'. $i .'" value="'.$idsingle.'">
-                            <div class="boton" style="margin-right: 1em;">
-                            <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                            onclick="javascript:
-                            var ficha = document.getElementById(\'evalid\');
-                            var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();">
-                            </div>
-                            <!-- <input type="submit" name="submit" value="'.get_string('TSave', 'block_evalcomix').'"> -->
-            ';
-
-            echo "<input type='button' name='".get_string('TSave', 'block_evalcomix')."'
-            value='".get_string('TSave', 'block_evalcomix')."'
-            onclick='sendPostAssess(\"totalgrade\",\"uno=1\",\"form".$i."\",\"".$action."\");alert(\"".
-            get_string('alertsave', 'block_evalcomix')."\");'>";
-            $globalcomment = 'none';
-            if ($i == $countlisttool) {
-                $globalcomment = 'globalcomment';
-            }
-            $tool->print_tool($globalcomment);
-
-            echo "
-                            </div>
-                            <!-- <input type='submit' name='".get_string('TSave', 'block_evalcomix')."'
-                            value='".get_string('TSave', 'block_evalcomix')."'> -->
-                            <input type='button' name='".get_string('TSave', 'block_evalcomix')."'
-                            value='".get_string('TSave', 'block_evalcomix')."'
-                            onclick='sendPostAssess(\"totalgrade\",\"uno=1\",\"form".$i."\",\"".$action."\");
-                            alert(\"".get_string('alertsave', 'block_evalcomix')."\");'>
-                            <input type='button' onclick=\"javascript:limpiar_mainform(form".$i.")\" value='Reset'>
-                            <div class='boton' style='margin-right: 1em;'>
-                            <input type='button' name='imprimir' value='".get_string('TPrint', 'block_evalcomix')."'
-                            onclick=\"javascript:
-                            var ficha = document.getElementById('evalid');
-                            var ventimp=window.open('','popimpr');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();\">
-                            </div>
-
-                        </form>
-
-                        </div><br><br><hr>
-            ";
-            ++$i;
-        }
-        echo "<div style='text-align:right;font-size:1.7em'><span>".get_string('grade', 'block_evalcomix').
-        ": </span><span id='totalgrade'>" . $grade . "</span></div>";
-
-        if ($saved == 'saved') {
-            echo '<script type="text/javascript" language="javascript">
-            alert("'.get_string('alertsave', 'block_evalcomix').'");</script>';
-        }
-
-        echo '
-            <div class="clear"></div>
-
-                <div class="clear"></div>
-
-                </body>
-
-            </html>
-        ';
-    }
-
-    public function view_tool_mixed($root = '', $grade = '', $title = '') {
-        require('lang/'. $this->language . '/evalcomix.php');
-        $action = '';
-        $this->view_assessment_header();
-        echo '
-                    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-                    <script>
-                        function limpiar_mainform(form) {
-                            if (confirm(\'¿Confirma que desea borrar todas las calificaciones asignadas al instrumentos?\'))
-                                for (i=0;i<form.elements.length;i++) {
-                                    if (form.elements[i].type == "radio" && form.elements[i].checked == true)
-                                      form.elements[i].checked=false;
-                                    else if (form.elements[i].type == "textarea") form.elements[i].value = "";
-                            }
-                        }
-                    </script>
-                </head>
-                    <body>
-                    <div class="clear"></div>
-                    <div class="boton" style="margin-right: 1em;">
-                        <!-- <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                        onclick="window.print();"> -->
-                        <input type="button" name="imprimir" value="Imprimir" onclick="javascript:
-                            var ficha = document.getElementById(\'evalid\');
-                            var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();">
-                    </div>
-                    <div class="eval" id="evalid">
-                    <h2>'.$title.'</h2>
-        ';
-
-        $listtool = $this->object->get_tools();
-        $countlisttool = count($listtool) - 1;
-        $i = 0;
-        foreach ($listtool as $tool) {
-            echo '
-                        <form name="form'. $i .'" method="post" action="'.$action.'">
-            ';
-
-            $globalcomment = 'none';
-            if ($i == $countlisttool) {
-                $globalcomment = 'globalcomment';
-            }
-            $tool->print_tool($globalcomment);
-
-            echo "
-                        </form>
-
-                        </div><br><br><br><hr>
-            ";
-            ++$i;
-        }
-
-        echo "<div style='text-align:right;font-size:1.7em'><span>".get_string('grade', 'block_evalcomix').": " .
-        $grade . "</span></div>";
-
-        echo '<div class="botones">
-                    <div class="boton" style="margin-right: 1em;">
-                        <!-- <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
-                        onclick="window.print();"> -->
-                        <input type="button" name="imprimir" value="Imprimir" onclick="javascript:
-                            var ficha = document.getElementById(\'evalid\');
-                            var ventimp=window.open(\'\',\'popimpr\');ventimp.document.write(ficha.innerHTML);
-                            ventimp.document.close();ventimp.print();ventimp.close();">
-                    </div>
-                </div>';
-
-        echo '
-            <div class="clear"></div>
-
-                <div class="clear"></div>
-
                 </body>
 
             </html>

@@ -48,7 +48,7 @@ if (!empty($hide)) {
             'weighing' => $taskhide->weighing, 'timemodified' => time(), 'visible' => 0);
         $DB->update_record('block_evalcomix_tasks', $paramtask);
     } else {
-        print_error('Parameter "Hide" is wrong');
+        throw new \moodle_exception('Parameter "Hide" is wrong');
     }
 } else if (!empty($show)) {
     if ($taskshow = $DB->get_record('block_evalcomix_tasks', array('id' => $show))) {
@@ -57,7 +57,7 @@ if (!empty($hide)) {
             'weighing' => $taskshow->weighing, 'timemodified' => time(), 'visible' => 1);
         $DB->update_record('block_evalcomix_tasks', $paramtask);
     } else {
-        print_error('Parameter "Show" is wrong');
+        throw new \moodle_exception('Parameter "Show" is wrong');
     }
 }
 

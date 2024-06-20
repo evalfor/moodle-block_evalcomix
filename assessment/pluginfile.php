@@ -27,7 +27,7 @@ $relativepath = get_file_argument();
 $args = explode('/', ltrim($relativepath, '/'));
 
 if (count($args) < 3) { // Always at least context, component and filearea.
-    print_error('invalidarguments');
+    throw new \moodle_exception('invalidarguments');
 }
 
 $contextid = (int)array_shift($args);
@@ -45,7 +45,7 @@ if ($mode == 'teacher' || (($mode == 'self' || $mode == 'peer'))) {
     if ($canseeactivity) {
         $fs = get_file_storage();
         if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
-            if ($component == 'assignsubmission_file' || $component == 'workshop') {
+            if ($component == 'assignsubmission_file' || $component == 'mod_workshop') {
                 $dir = core_component::get_component_directory($component);
                 if (!file_exists("$dir/lib.php")) {
                     send_file_not_found();
@@ -62,6 +62,6 @@ if ($mode == 'teacher' || (($mode == 'self' || $mode == 'peer'))) {
             }
         }
     } else {
-        print_error('You cannot access this file');
+        throw new \moodle_exception('You cannot access this file');
     }
 }

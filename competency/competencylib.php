@@ -96,9 +96,7 @@ class block_evalcomix_competencies {
             }
         }
         $datas = $DB->get_records_sql($sql, array('courseid' => $courseid));
-        if (empty($datas) && empty($search)) {
-            $datas = $DB->get_records('block_evalcomix_comptype', array('courseid' => $courseid));
-        }
+
         return $datas;
     }
 }

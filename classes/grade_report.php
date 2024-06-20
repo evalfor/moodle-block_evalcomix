@@ -129,7 +129,6 @@ class block_evalcomix_grade_report extends grade_report {
         $this->gtree = new grade_tree($this->courseid, false, false);
         $this->add_activities_to_gtree();
 
-        $this->gradeviewer = new block_evalcomix_grade_expert_db_block();
         $this->calculator = new block_evalcomix_calculator_average();
 
         $this->sortitemid = $sortitemid;
@@ -211,15 +210,12 @@ class block_evalcomix_grade_report extends grade_report {
         }
     }
 
-     /**
+    /**
      * Setting the sort order, this depends on last state
      * all this should be in the new table class that we might need to use
      * for displaying grades.
-
-     * @param string $sort sorting direction
      */
     private function setup_sortitemid(string $sort = '') {
-
         global $SESSION;
 
         if (!isset($SESSION->gradeuserreport)) {
@@ -230,11 +226,11 @@ class block_evalcomix_grade_report extends grade_report {
             if (!isset($SESSION->gradeuserreport->sort)) {
                 $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
             } else if (!$sort) {
-                // this is the first sort, i.e. by last name
+                // This is the first sort, i.e. by last name.
                 if (!isset($SESSION->gradeuserreport->sortitemid)) {
                     $this->sortorder = $SESSION->gradeuserreport->sort = 'ASC';
                 } else if ($SESSION->gradeuserreport->sortitemid == $this->sortitemid) {
-                    // same as last sort
+                    // Same as last sort.
                     if ($SESSION->gradeuserreport->sort == 'ASC') {
                         $this->sortorder = $SESSION->gradeuserreport->sort = 'DESC';
                     } else {
@@ -246,7 +242,7 @@ class block_evalcomix_grade_report extends grade_report {
             }
             $SESSION->gradeuserreport->sortitemid = $this->sortitemid;
         } else {
-            // not requesting sort, use last setting (for paging)
+            // Not requesting sort, use last setting (for paging).
 
             if (isset($SESSION->gradeuserreport->sortitemid)) {
                 $this->sortitemid = $SESSION->gradeuserreport->sortitemid;
@@ -268,6 +264,9 @@ class block_evalcomix_grade_report extends grade_report {
         }
     }
 
+    public function process_action($target, $action) {
+        return 1;
+    }
 
     /**
      * Processes the data sent by the form (grades and feedbacks).
@@ -676,25 +675,6 @@ class block_evalcomix_grade_report extends grade_report {
     }
 
     /**
-     * Processes a single action against a category, grade_item or grade.
-     * @param string $target eid ({type}{id}, e.g. c4 for category4)
-     * @param string $action Which action to take (edit, delete etc...)
-     * @return
-     */
-    public function process_action($target, $action) {
-        // Véase método grade_report_grader::process_action();.
-    }
-
-    /**
-     * Returns whether or not to display fixed students column.
-     * Includes a browser check, because IE6 doesn't support the scrollbar.
-     *
-     * @return bool
-     */
-    public function is_fixed_students() {
-    }
-
-    /**
      * Checks if the $USER is an editing permits user (admin or teacher)
      * @return bool
      */
@@ -749,7 +729,6 @@ class block_evalcomix_grade_report extends grade_report {
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
-        require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 
         $context = context_course::instance($this->courseid);
         $table = '
@@ -1045,7 +1024,8 @@ class block_evalcomix_grade_report extends grade_report {
                             }
                         }
                         $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'" title="'.
-                        get_string('evaluate', 'block_evalcomix').'" class="block_evalcomix_w_16"
+                        get_string('evaluate', 'block_evalcomix').'"
+                        id="ass_'.$cmid.'_'.$user->id.'" name="ass_'.$cmid.'_'.$user->id.'" class="block_evalcomix_w_16"
                         src="../images/evaluar.png"
                         onclick="javascript:url(\'' . $urlinstrument . '\',\'' . $user->id . '\',\'' .
                         $this->activities['id'][$i] . '\',\'' .
@@ -1055,6 +1035,7 @@ class block_evalcomix_grade_report extends grade_report {
                         if (isset($assessments[$taskid][$assessorid][$studentid])) {
                             $evaluate = '<input type="image" value="'.get_string('evaluate', 'block_evalcomix').'" title="'.
                             get_string('evaluate', 'block_evalcomix').'" class="block_evalcomix_w_16"
+                            id="ass_'.$cmid.'_'.$user->id.'" name="ass_'.$cmid.'_'.$user->id.'"
                             src="../images/evaluar2.png" onclick="javascript:url(\'' . $urlinstrument . '\',\'' .
                             $user->id . '\',\'' .
                             $this->activities['id'][$i] . '\', \'' . $this->page . '\',\'' . $this->courseid .
@@ -1065,6 +1046,7 @@ class block_evalcomix_grade_report extends grade_report {
                     if ($showdetails) {
                         $paramsurlpopup = 'cid='.$context->id.'&itemid='.$tasksarray[$cmid]->id.'&userid='.$user->id . '&popup=1';
                         $details = '<input  type="image" value="'.get_string('details', 'block_evalcomix').'"
+                        id="det_'.$cmid.'_'.$user->id.'" name="det_'.$cmid.'_'.$user->id.'"
                         class="block_evalcomix_w_16" title='.get_string('details', 'block_evalcomix').'
                         src="../images/lupa.png"
 onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment/details.php?'.$paramsurlpopup.'\');"/>';
@@ -1078,6 +1060,7 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                     get_string('studentwork2', 'block_evalcomix'). $this->activities['name'][$i];
                     $documents = ' <input type="image" value="'.$title.'"
                     title="'.$title. '" src="../images/task.png"
+                    id="tas_'.$cmid.'_'.$user->id.'" name="tas_'.$cmid.'_'.$user->id.'"
                     onclick="javascript:urlDetalles(\''. $CFG->wwwroot. '/blocks/evalcomix/'.$paramsurlpopup. '\');"/>';
                     // If the $USER isn´t a teacher or admin evaluate if it should show Evaluate and Details buttons.
                     if ($mode == 'self' || $mode == 'peer') {
@@ -1114,18 +1097,10 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                                     $this->activities['name'][$i];
                                     $table .= ' <input type="image" value="'.$title.'"
                                     title="'.$title.'" src="../images/task.png"
+id="tas_'.$cmid.'_'.$user->id.'" name="tas_'.$cmid.'_'.$user->id.'"
 onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment/user_activity.php?'.$paramsurlactivity.'\');"/>';
                                 }
 
-                                if ($nowtimestamp >= $due && $mode == 'peer' && $showdetails == true) {
-                                    $urlpeerinstrument = block_evalcomix_webservice_client::get_ws_view_assessment($this->courseid,
-                                        $typeinstrument[$cmid], $this->activities['id'][$i], $USER->id, $user->id, 'peer',
-                                        BLOCK_EVALCOMIX_MOODLE_NAME);
-                                    $table .= '<input type="image" value="'.get_string('details', 'block_evalcomix').'"
-                                    class="block_evalcomix_w_16"
-                                    title='.get_string('details', 'block_evalcomix').' src="../images/lupa.png"
-                                    onclick="javascript:urlDetalles(\''. $urlpeerinstrument .'\');"/>';
-                                }
                                 // Show the buttons if they must be availables.
                                 if ($nowtimestamp >= $available && $nowtimestamp < $due) {
                                     if ($mode == 'self') {
@@ -1189,24 +1164,6 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
 
     /**
      * Return a modes_time object
-     * @param $cmid
-     * @param $modality
-     * @return object evalcomix_modes_time
-     */
-    public function get_modes_time($cmid, $modality) {
-        global $DB;
-        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
-            if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $modality))) {
-                if ($modetime = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $mode->id))) {
-                    return $modetime;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Return a modes_time object
      * @param $taskid
      * @param $modality
      * @return object evalcomix_modes_time
@@ -1221,45 +1178,7 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
 
         return false;
     }
-    /**
-     * Return the groupmode of a course module
-     * 0: No groups
-     * 1: Separated groups
-     * 2: Visible groups
-     * @param $cmid
-     * @return int groupmode
-     */
-    public function get_groupmode($cmid) {
-        global $DB;
 
-        $cm = $DB->get_record('course_modules', array('id' => $cmid));
-
-        if ($cm) {
-            return $cm->groupmode;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Return the groupmode of a course module
-     * 0: No groups
-     * 1: Separated groups
-     * 2: Visible groups
-     * @param $cmid
-     * @return int groupmode
-     */
-    public function get_cm($cmid) {
-        global $DB;
-
-        $cm = $DB->get_record('course_modules', array('id' => $cmid));
-
-        if ($cm) {
-            return $cm;
-        } else {
-            return 0;
-        }
-    }
     /**
      * Return the groupids of an user or -1 if doesn´t exist a group for that user
      * @param $userid
@@ -1315,32 +1234,6 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
             }
         }
         return $this->coursegroups;
-    }
-    /**
-     * Return true if there is a grouping between two groups in one activity
-     * @param $gid1
-     * @param $gid2
-     * @param $cmid
-     * @return bool
-     */
-    public function same_grouping($gid1, $gid2, $cm) {
-        global $DB;
-
-        // If it exists.
-        if ($cm) {
-            // If that activity has a grouping.
-            if ($cm->groupingid != 0) {
-                $grouping1 = $DB->get_record('groupings_groups', array('groupingid' => $cm->groupingid, 'groupid' => $gid1));
-                $grouping2 = $DB->get_record('groupings_groups', array('groupingid' => $cm->groupingid, 'groupid' => $gid2));
-
-                // If those groups are in the same grouping of the activity.
-                if ($grouping1 && $grouping2) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     public function same_group($uid1, $uid2) {
@@ -1614,59 +1507,6 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
      */
     public function get_activities() {
         return $this->activities;
-    }
-
-
-    /**
-     * It gets grades involved in the report.
-     * @param string $mode indicates source of grades: Only EvalCOMIX ('evalcomix') or a
-     *                     combination of Moodle and EvalCOMIX grades ('moodleevx').
-     * @return array|object Grades of the report.
-     */
-    public function get_grades($mode = 'evalcomix') {
-        $evalcomixgrades = $this->get_evalcomix_grades();
-        if ($mode == 'evalcomix') {
-            $grades = $evalcomixgrades;
-        } else if ($mode == 'moodleevx') {
-            $moodlegrades = $this->get_moodle_grades();
-            $grades = $this->calculator->calculate($moodlegrades, $evalcomixgrades, $this->activities, $this->users);
-        }
-
-        return $grades;
-    }
-
-    /**
-     * It gets EvalCOMIX grades
-     * @return array grades
-     */
-    public function get_evalcomix_grades() {
-        return $this->gradeviewer->get_grades($this->courseid, $this->users);
-    }
-
-    /**
-     * we supply the userids in this query, and get all the grades
-     * pulls out all the grades, this does not need to worry about paging
-     */
-    public function get_moodle_grades() {
-        global $DB;
-        $moodlegrades = array();
-
-        // Looking for activities that have been evaluated.
-        $items = $DB->get_records('grade_items', array('courseid' => $this->courseid, 'itemtype' => 'mod'));
-
-        foreach ($items as $item) {
-            // Looking for grades of the activities that have been evaluated.
-            $grades = $DB->get_records('grade_grades', array('itemid' => $item->id));
-            foreach ($grades as $grade) {
-                // Looking for cmid of the activities that have been evaluated.
-                $cm = $DB->get_record('course_modules', array('course' => $this->courseid, 'instance' => $item->iteminstance));
-                if (isset($cm)) {
-                    $moodlegrades[$cm->id][$grade->userid] = $grade->finalgrade;
-                }
-            }
-        }
-
-        return $moodlegrades;
     }
 
     /**

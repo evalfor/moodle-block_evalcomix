@@ -41,7 +41,7 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
 require_once($CFG->dirroot .'/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
-if ($export && has_capability('moodle/block:edit', $context, $USER->id)) {
+if ($export && has_capability('moodle/site:viewreports', $context, $USER->id)) {
     require_once($CFG->dirroot . '/blocks/evalcomix/util.php');
     block_evalcomix_export_assessment::export($course);
     exit;

@@ -33,7 +33,7 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
+        'month' => '*',
     ),
     array(
         'classname' => 'block_evalcomix\task\get_skill_develpment_data',
@@ -42,6 +42,6 @@ $tasks = array(
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    )
+        'month' => '*',
+    ),
 );

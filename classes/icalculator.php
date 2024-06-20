@@ -23,20 +23,9 @@
  */
 
 /**
- * Interface of class calcultator
+ * Interface of class calculator
  */
 interface block_evalcomix_icalculator {
-    /**
-     * It applies a mathematical operation to $elements1 and $elements2
-     * $activities and $users to travel the element arrays
-     * @param array $elements1
-     * @param array $elements2
-     * @param array $activities
-     * @param array $users
-     * @return array result of the operation
-     */
-    public function calculate($elements1, $elements2, $activities, $users);
-
     /**
      * It applies a mathematical operation to $elements
      * @param array $elements

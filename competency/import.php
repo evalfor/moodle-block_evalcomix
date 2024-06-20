@@ -148,7 +148,7 @@ if (empty($iid)) {
         unset($content);
 
         if (!is_null($csvloaderror)) {
-            print_error('csvloaderror', '', $returnurl, $csvloaderror);
+            throw new \moodle_exception('csvloaderror', '', $returnurl, $csvloaderror);
         }
     } else {
         echo $OUTPUT->header();

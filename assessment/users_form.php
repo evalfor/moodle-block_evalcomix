@@ -53,7 +53,6 @@ $options = '';
 
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
-require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_allowedusers.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $activity = block_evalcomix_get_activity_data($cm);

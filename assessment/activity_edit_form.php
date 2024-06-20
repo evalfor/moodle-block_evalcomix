@@ -28,7 +28,7 @@
 require_once('../../../config.php');
 $courseid = required_param('id', PARAM_INT);        // Course id.
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('nocourseid');
+    throw new \moodle_exception('nocourseid');
 }
 require_course_login($course);
 

@@ -115,39 +115,6 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                             echo '</ul>';
                         }
                     }
-                } else if ($mod->modname == 'assignment') {
-                    require_once($CFG->dirroot . '/mod/assignment/locallib.php');
-                    $context = context_module::instance($mod->id);
-                    $assignment = new assignment_base($mod->id);
-                    $type = $assignment->assignment->assignmenttype;
-
-                    $submission = block_evalcomix_get_user_submission_old($assignment, $user->id);
-                    if (isset($submission->id)) {
-                        $fs = get_file_storage();
-
-                        if ($files = $fs->get_area_files($context->id, 'mod_assignment', 'submission',
-                            $submission->id, "timemodified", false)) {
-                            $countfiles = count($files)." ".get_string("uploadedfiles", "assignment");
-                            $output = '';
-                            foreach ($files as $file) {
-                                $countfiles .= "; ".$file->get_filename();
-                                $filename = $file->get_filename();
-                                $mimetype = $file->get_mimetype();
-                                $path = file_encode_url('pluginfile.php', '/'.$context->id.'/mod_assignment/submission/'.
-                                    $submission->id.'/'.$filename);
-                                $output .= '<a href="'.$path.'" >'.$OUTPUT->pix_icon(file_file_icon($file),
-                                    get_mimetype_description($file),
-                                'moodle', array('class' => 'icon')).s($filename).'</a><br>';
-                            }
-                            echo $output;
-                        }
-                    }
-                    $type = $assignment->assignment->assignmenttype;
-                    if ($type == 'online') {
-                        require_once("$CFG->dirroot/mod/assignment/type/online/assignment.class.php");
-                        $assignmentonline = new assignment_online($modid);
-                        echo $assignmentonline->get_submission($userid)->data1;
-                    }
                 } else if ($mod->modname == 'workshop') {
                     $context = context_module::instance($mod->id);
                     require_once($CFG->dirroot . '/mod/workshop/locallib.php');
@@ -204,10 +171,10 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
         echo '</div>';  // Content.
         echo '</div>';  // Section.
     } else {
-        print_error('You cannot see this content');
+        throw new \moodle_exception('You cannot see this content');
     }
 } else {
-    print_error('You cannot see this content');
+    throw new \moodle_exception('You cannot see this content');
 }
 echo $OUTPUT->close_window_button();
 echo $OUTPUT->footer();

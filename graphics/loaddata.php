@@ -123,7 +123,7 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 's
                 $arrayteacher,
                 $arrayself,
                 $arraypeer,
-            )
+            ),
         );
     } else {
         $result = array(
@@ -133,8 +133,8 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 's
                 'max' => 100,
                 'xlabels' => 'no datas',
                 'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix'), 0)
-                )
+                    array(get_string('no_datas', 'block_evalcomix'), 0),
+                ),
             );
     }
     $jsondata['status'] = (count($result) > 0);
@@ -196,7 +196,7 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
                         $tgrades,
                         $sgrades,
                         $pgrades,
-                    )
+                    ),
                 );
     } else {
         $result = array(
@@ -206,8 +206,8 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
                 'max' => 100,
                 'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
                 'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix'))
-                )
+                    array(get_string('no_datas', 'block_evalcomix')),
+                ),
             );
     }
     $jsondata['status'] = (count($result) > 0);
@@ -257,7 +257,7 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
                         $tgrades,
                         $sgrades,
                         $pgrades,
-                    )
+                    ),
                 );
     } else {
         $result = array(
@@ -267,8 +267,8 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
                 'max' => 100,
                 'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
                 'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix'))
-                )
+                    array(get_string('no_datas', 'block_evalcomix')),
+                ),
             );
     }
     $jsondata['status'] = (count($result) > 0);
@@ -297,7 +297,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => $xlabels,
-                'datas' => $teachergrades
+                'datas' => $teachergrades,
                 );
         } else {
             $result = array(
@@ -306,7 +306,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => $xlabels,
-                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0))
+                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
                 );
         }
     } else {
@@ -316,7 +316,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0))
+                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
                 );
     }
 
@@ -345,7 +345,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'p
                     'min' => 0,
                     'max' => 100,
                     'xlabels' => $xlabels,
-                    'datas' => $peergrades
+                    'datas' => $peergrades,
                 );
     } else {
         $result = array(
@@ -354,7 +354,7 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'p
                     'min' => 0,
                     'max' => 100,
                     'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                    'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0))
+                    'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
                 );
     }
 

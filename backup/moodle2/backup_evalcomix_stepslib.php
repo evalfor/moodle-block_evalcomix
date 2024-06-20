@@ -35,7 +35,7 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
             array('instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod', 'workteams'));
         $evalcomixassessments = new backup_nested_element('assessments');
         $evalcomixassessment = new backup_nested_element('assessment', array('id'),
-            array('assessorid', 'studentid', 'grade', 'timemodified'));
+            array('assessorid', 'studentid', 'grade', 'timemodified', 'idassessment'));
         $evalcomixmodes = new backup_nested_element('modes');
         $evalcomixmode = new backup_nested_element('mode', array('id'), array('toolid', 'modality', 'weighing'));
         $evalcomixmodestime = new backup_nested_element('mode_time', array('id'), array('timeavailable', 'timedue'));

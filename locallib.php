@@ -82,73 +82,15 @@ function htmllize_tree(assign_files $tree, $dir) {
     return $result;
 }
 
-function block_evalcomix_get_user_submission_old($assignment, $userid) {
-    global $DB, $USER;
-
-    if (!$userid) {
-        $userid = $USER->id;
-    }
-    // If the userid is not null then use userid.
-    $submission = $DB->get_record('assignment_submissions', array('assignment' => $assignment->assignment->id,
-        'userid' => $userid));
-
-    if ($submission) {
-        return $submission;
-    }
-
-    return false;
-}
-
-function block_evalcomix_get_members_course($courseid, $groupid = 0, $page = '0', $search = '') {
+function block_evalcomix_get_members_course($courseid, $groupid = 0, $page = '0') {
     global $DB;
 
     $members = array();
     if ($course = $DB->get_record('course', array('id' => $courseid))) {
         $contextcourse = context_course::instance($courseid);
-        $conditions = '';
-        if (!empty($search)) {
-            $words = explode(' ', $search);
-            foreach ($words as $word) {
-                $conditions .= ' AND (u.firstname LIKE "%'. $word .'%" OR u.lastname LIKE "%'. $word .'%") ';
-            }
-            $joins = $where = '';
-            $params = array();
-            $params['contextid'] = $contextcourse->id;
-            $sql = 'SELECT u.*
-            FROM {user} u
-            '.$joins.'
-            WHERE 1 '. $conditions .' AND u.id IN (
-                SELECT ra.userid
-                FROM {role} r, {role_assignments} ra
-                WHERE ra.userid = u.id AND ra.roleid = r.id AND r.shortname="student" AND ra.contextid = :contextid)
-                '.$where;
-            $members = $DB->get_records_sql($sql, $params);
-        } else if ($groupid !== 'nogroup' && is_numeric($groupid)) {
+        if ($groupid !== 'nogroup' && is_numeric($groupid)) {
             $members = get_enrolled_users($contextcourse, 'moodle/course:isincompletionreports', $groupid, 'u.*',
                 'u.firstname ASC');
-        } else if ($groupid === 'nogroup') {
-            $joins = $where = '';
-            $params = array();
-            $params['courseid'] = $courseid;
-            $params['contextid'] = $contextcourse->id;
-            $sql = 'SELECT u.*
-            FROM {user} u
-            '.$joins.'
-            WHERE u.deleted = 0 AND u.id IN (
-                SELECT ra.userid
-                FROM {role} r, {role_assignments} ra
-                WHERE ra.userid = u.id AND ra.roleid = r.id AND r.shortname="student" AND ra.contextid = :contextid)
-            AND u.id NOT IN (
-                SELECT gm.userid
-                FROM {groups} g, {groups_members} gm
-                WHERE g.courseid = :courseid AND g.id = gm.groupid)
-            ' . $where;
-            $members = $DB->get_records_sql($sql, $params);
-        } else if ($groupid === 'all') {
-            list($esql, $params) = get_enrolled_sql($contextcourse, 'moodle/course:isincompletionreports');
-            $sql = '';
-
-            $members = get_enrolled_users($contextcourse, 'moodle/course:isincompletionreports', 0, 'u.*', 'u.firstname ASC');
         }
     }
 
@@ -190,21 +132,6 @@ function block_evalcomix_get_existing_assessmentid($assessment) {
                 'cmid' => $cmid, 'studentid' => $studentid, 'assessorid' => $assessorid, 'mode' => $mode));
         }
     }
-    return $result;
-}
-
-function block_evalcomix_fill_assessmentid() {
-    global $CFG, $DB;
-    $result = array();
-
-    if ($assessments = $DB->get_records('block_evalcomix_assessments', array())) {
-        foreach ($assessments as $assessment) {
-            $assessmentid = $assessment->id;
-            $idassessment = block_evalcomix_update_assessmentid($assessment);
-            $result[$assessmentid] = $idassessment;
-        }
-    }
-
     return $result;
 }
 

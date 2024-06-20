@@ -76,7 +76,7 @@ class block_evalcomix_class extends block_evalcomix_object {
             $course = $DB->get_record('course', array('id' => $this->courseid), '*', MUST_EXIST);
             // Adding to control viewmode.
             if ($this->viewmode != 'evalcomix' && $this->viewmode != 'evalmoodle') {
-                print_error('The view mode is wrong');
+                throw new \moodle_exception('The view mode is wrong');
             }
         }
     }
@@ -90,25 +90,5 @@ class block_evalcomix_class extends block_evalcomix_object {
      */
     public static function fetch($params) {
         return block_evalcomix_object::fetch_helper('block_evalcomix', 'block_evalcomix_class', $params);
-    }
-
-     /**
-      * Finds and returns all evalcomix_tool instances.
-      * @static abstract
-      *
-      * @return array array of evalcomix_tool instances or false if none found.
-      */
-    public static function fetch_all($params) {
-        return self::fetch_all_helper('block_evalcomix', 'block_evalcomix_class', $params);
-    }
-
-    /**
-     * Called immediately after the object data has been inserted, updated, or
-     * deleted in the database. Default does nothing, can be overridden to
-     * hook in special behaviour.
-     *
-     * @param bool $deleted
-     */
-    public function notify_changed($deleted) {
     }
 }

@@ -24,10 +24,10 @@
 namespace block_evalcomix\privacy;
 
 use core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
+use core_privacy\local\request\contextlist;
 use core_privacy\local\request\transform;
 use core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_contextlist;
 
 class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
 

@@ -82,47 +82,4 @@ class block_evalcomix_modes_extra extends block_evalcomix_modes {
             $this->whoassesses = intval($whoassesses);
         }
     }
-
-    /**
-     * Finds and returns a evalcomix_modes_extra instance based on params.
-     * @static
-     *
-     * @param array $params associative arrays varname=>value
-     * @return object grade_item instance or false if none found.
-     */
-    public static function fetch($params) {
-        return block_evalcomix_object::fetch_helper('block_evalcomix_modes_extra', 'block_evalcomix_modes_extra', $params);
-    }
-
-    /**
-     * Finds and returns all evalcomix_tool instances.
-     * @static abstract
-     *
-     * @return array array of evalcomix_tool instances or false if none found.
-     */
-    public static function fetch_all($params) {
-        return block_evalcomix_object::fetch_all_helper('block_evalcomix_modes_extra', 'block_evalcomix_modes_extra', $params);
-    }
-
-    /**
-     * @return bool|int if exist return ID else return 0
-     */
-    public function exist() {
-        global $DB;
-        if (!$data = $DB->get_record($this->table, array('modeid' => $this->modeid))) {
-            return 0;
-        }
-        $this->id = $data->id;
-        return $data->id;
-    }
-
-    /**
-     * Called immediately after the object data has been inserted, updated, or
-     * deleted in the database. Default does nothing, can be overridden to
-     * hook in special behaviour.
-     *
-     * @param bool $deleted
-     */
-    public function notify_changed($deleted) {
-    }
 }

@@ -29,7 +29,7 @@ $string['instruments'] = 'Xestión de instrumentos';
 $string['evaluation'] = 'Avaliación de actividades';
 $string['evalcomix:view'] = 'Consulta EvalCOMIX';
 $string['evalcomix:edit'] = 'Edición EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o<a href="' . $CFG->wwwroot.'/lib/evalcomix/manual.pdf">Manual</a>.';
+$string['whatis'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o Manual.';
 $string['selfmodality'] = 'Autoavaliación do/a Estudante - AE ';
 $string['peermodality'] = 'Avaliación entre Iguais - AI ';
 $string['teachermodality'] = 'Avaliación do Profesorado - AP';
@@ -126,8 +126,8 @@ $string['timedue_AE_help'] = 'Data límite até a cal os e as estudantes poderá
 $string['availabledate_EI_help'] = 'Data a partir da cal os e as estudantes poderán avaliar a actividade realizada polos compañeiros e polas compañeiras.';
 $string['timedue_EI_help'] = 'Data límite ata a cal os e as estudantes poderán avaliar os compañeiros e compañeiras.';
 $string['anonymous_EI_help'] = 'Indica se o estudantado poderá coñecer os compañeiros e compañeiras que o cualificaron.';
-$string['whatis_help'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o <a href="../manual.pdf">Manual</a>.';
-$string['selinstrument_help'] = 'Consulte o <a href="../manual.pdf">Manual</a> para obter unha maior información sobre como configurar unha actividade de EvalCOMIX.';
+$string['whatis_help'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o manual.';
+$string['selinstrument_help'] = 'Consulte o manual para obter unha maior información sobre como configurar unha actividade de EvalCOMIX.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Gráfica tarefa por alumno/a';
 $string['profile_task_by_group'] = 'Gráfica tarefa por grupo';
