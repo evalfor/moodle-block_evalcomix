@@ -30,7 +30,7 @@ class block_evalcomix_editor_toolargument extends block_evalcomix_editor {
     private $view;
     private $commentatr;
     private $valuecommentatr;
-    private $dimensionsid;
+    private $dimensionsId;
     private $atributosid;
 
     public function get_tool($id) {

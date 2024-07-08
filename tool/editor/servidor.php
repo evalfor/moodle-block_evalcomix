@@ -48,14 +48,14 @@ if (isset($print)) {
     $extension = explode(".", $_FILES[$namefile]['name']);
     $num = count($extension) - 1;
     if (!$_FILES[$namefile]['name'] || ($extension[$num] != "evx")) {
-        print '<br style="color:#f00">' . $string['ErrorFormato'] . '<br>
+        print '<br style="color:#f00">' . get_string('ErrorFormato', 'block_evalcomix') . '<br>
         <input type="button" style="width:5em" value="Volver" name="vover" onclick=\'javascript:history.back(-1)\'>';
         exit;
     }
 
     $xmlstring = file_get_contents($_FILES[$namefile]['tmp_name']);
     if (!($xml = simplexml_load_string($xmlstring))) {
-        echo $string['ErrorAcceso'];
+        echo get_string('ErrorAcceso', 'block_evalcomix');
         exit;
     }
     $tool->import($xml);
@@ -135,14 +135,14 @@ if (isset($print)) {
 
         $error = false;
         if (!isset($postcleaned['titulo'.$componentid]) || trim($postcleaned['titulo'.$componentid]) == '') {
-            echo "<script type='text/javascript'>alert('". $string['ErrorSaveTitle'] ."');</script>";
+            echo "<script type='text/javascript'>alert('". get_string('ErrorSaveTitle', 'block_evalcomix') ."');</script>";
             echo "<script type='text/javascript'>location.href = 'generator.php';</script>";$tool->display_footer();
             $error = true;
         }
         if (isset($postcleaned['seltool'])) {
             $numtool = $tool->get_numtool();
             if ($numtool == 0) {
-                echo "<script type='text/javascript'>alert('". $string['ErrorSaveTools'] ."');</script>";
+                echo "<script type='text/javascript'>alert('". get_string('ErrorSaveTools', 'block_evalcomix') ."');</script>";
                 echo "<script type='text/javascript'>location.href = 'generator.php';</script>";$tool->display_footer();
                 $error = true;
             }

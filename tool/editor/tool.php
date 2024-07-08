@@ -1035,7 +1035,6 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                     $grado = 0;
                     foreach ($dimen->ControlListValues[0] as $values) {
                         $valoreslista[$id][$dim][$grado]['nombre'] = (string)$values;
-                        $this->valoreslista[$id][$dim][$grado]['nombre'] = (string)$values;
                         $valoreslistaid[$id][$dim][$grado] = (string)$values['id'];
                         $grado++;
                     }

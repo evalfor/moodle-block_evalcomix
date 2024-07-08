@@ -28,7 +28,7 @@ class block_evalcomix_editor_toolmix {
     private $toolpor;
     private $view;
     private $observation;
-    private $plantillasid;
+    private $plantillasId;
 
     public function __construct($lang='es_utf8', $titulo = '', $observation = '', $params = array()) {
         $this->titulo = $titulo;

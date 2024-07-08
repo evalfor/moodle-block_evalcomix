@@ -35,12 +35,12 @@ class block_evalcomix_editor_toollist extends block_evalcomix_editor {
     private $observation;
     private $view;
     private $commentatr;
-    private $valueattribute;
     private $valuecommentatr;
     private $dimensionsid;
     private $atributosid;
     private $valoresid;
     private $valorestotalesid;
+	private $valueglobaldim;
 
     public function get_tool($id) {
     }

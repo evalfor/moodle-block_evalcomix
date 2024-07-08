@@ -1345,9 +1345,8 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                             if (property_exists($cm, 'availability')) {
                                 $grey = false;
                                 $hide = false;
-                                global $USER;
-                                $this->modinfo = new course_modinfo($course, $USER->id);
-                                $instances = $this->modinfo->get_instances_of($element['object']->itemmodule);
+                                $modinfo = new course_modinfo($course, $USER->id);
+                                $instances = $modinfo->get_instances_of($element['object']->itemmodule);
                                 if (!empty($instances[$element['object']->iteminstance])) {
                                     $cminfo = $instances[$element['object']->iteminstance];
                                     if (!$cminfo->uservisible) {
@@ -1460,8 +1459,8 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
                 $grey = false;
                 if (property_exists($cm, 'availability')) {
                     global $USER;
-                    $this->modinfo = new course_modinfo($course, $USER->id);
-                    $instances = $this->modinfo->get_instances_of($element['object']->itemmodule);
+                    $modinfo = new course_modinfo($course, $USER->id);
+                    $instances = $modinfo->get_instances_of($element['object']->itemmodule);
                     if (!empty($instances[$element['object']->iteminstance])) {
                         $cminfo = $instances[$element['object']->iteminstance];
                         if (!$cminfo->uservisible) {
@@ -1631,11 +1630,9 @@ onclick="javascript:urlDetalles(\''.$CFG->wwwroot. '/blocks/evalcomix/assessment
         if (empty($this->users)) {
             $this->userselect = '';
             $this->users = array();
-            $this->userselect_params = array();
         } else {
             list($usql, $uparams) = $DB->get_in_or_equal(array_keys($this->users), SQL_PARAMS_NAMED, 'usid0');
             $this->userselect = "AND g.userid $usql";
-            $this->userselect_params = $uparams;
 
             // Add a flag to each user indicating whether their enrolment is active.
             $sql = "SELECT ue.userid

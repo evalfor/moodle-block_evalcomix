@@ -40,6 +40,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
     private $atributosposid;
     private $valoresid;
     public $subdimensionsid;
+	private $valuecommentatr;
 
     public function get_tool($id) {
     }
@@ -119,7 +120,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
     }
 
     public function get_atributosposid() {
-        return $this->atributosposId[$this->id];
+        return $this->atributosposid[$this->id];
     }
 
 
@@ -180,7 +181,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
     }
 
     public function set_atributosposid($atributo, $id) {
-        $this->atributosposId[$this->id] = $atributo;
+        $this->atributosposid[$this->id] = $atributo;
     }
 
 
@@ -241,7 +242,7 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
             $this->atributosid = $params['atributosid'];
         }
         if (!empty($params['atributosposid'])) {
-            $this->atributosposId = $params['atributosposid'];
+            $this->atributosposid = $params['atributosposid'];
         }
         if (!empty($params['valoresid'])) {
             $this->valoresid = $params['valoresid'];
@@ -649,8 +650,8 @@ class block_evalcomix_editor_tooldifferential extends block_evalcomix_editor {
 
                     $atribid = (isset($this->atributosid[$id][$dim][$subdim][$atrib]))
                         ? $this->atributosid[$id][$dim][$subdim][$atrib] : '';
-                    $atribposid = (isset($this->atributosposId[$id][$dim][$subdim][$atrib]))
-                        ? $this->atributosposId[$id][$dim][$subdim][$atrib] : '';
+                    $atribposid = (isset($this->atributosposid[$id][$dim][$subdim][$atrib]))
+                        ? $this->atributosposid[$id][$dim][$subdim][$atrib] : '';
                     $namen = (isset($this->atributo[$id][$dim][$subdim][$atrib]['nombre']))
                         ? $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] : '';
                     $namep = (isset($this->atributopos[$this->id][$dim][$subdim][$atrib]['nombre']))

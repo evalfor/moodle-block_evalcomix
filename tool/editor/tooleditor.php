@@ -38,6 +38,7 @@ class block_evalcomix_editor {
     public $allcompetencies;
     public $alloutcomes;
     public $subdimensionsid;
+	public $valueattribute;
 
     public function get_id() {
         return $this->id;

@@ -256,7 +256,7 @@ class block_evalcomix_graphic_renderer {
             <div class="block_evalcomix_filter_block">
                 <label for="selectactivity">'.get_string('activity', 'block_evalcomix').'</label>
                 <div>
-                    <select id="selectactivity" name="selectactivity"
+                    <select id="selectactivity" name="selectactivity" style="max-width:20em"
                     onchange="var e=document.getElementById(\'block_evalcomix_filter_student_modality\');
                         if (e) {
                             e.style.display = \'inline\';

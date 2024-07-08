@@ -126,7 +126,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
 
         $baseurl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/competency/index.php', $paramsbase);
         if (!empty($sort) && !empty($dir)) {
-            uasort($datas, 'self::cmp_'.$sort.'_datas_'.strtolower($dir));
+            uasort($datas, 'block_evalcomix_competency_renderer::cmp_'.$sort.'_datas_'.strtolower($dir));
         }
         // These columns are always shown in the users list.
         $columns = array(
@@ -217,7 +217,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
 
         $baseurl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/competency/index.php', $paramsbase);
         if (!empty($sort) && !empty($dir)) {
-            uasort($datas, 'self::cmp_'.$sort.'_datas_'.strtolower($dir));
+            uasort($datas, 'block_evalcomix_competency_renderer::cmp_'.$sort.'_datas_'.strtolower($dir));
         }
         // These columns are always shown in the users list.
         $columns = array(
@@ -306,7 +306,7 @@ class block_evalcomix_competency_renderer extends plugin_renderer_base {
 
         $baseurl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/competency/index.php', $paramsbase);
         if (!empty($sort) && !empty($dir)) {
-            uasort($datas, 'self::cmp_'.$sort.'_datas_'.strtolower($dir));
+            uasort($datas, 'block_evalcomix_competency_renderer::cmp_'.$sort.'_datas_'.strtolower($dir));
         }
         // These columns are always shown in the users list.
         $columns = array(

@@ -539,8 +539,8 @@ xsi:schemaLocation='https://circe.uca.es/evalcomixserver430/xsd/DuplicateAssessm
         if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) {
             $result = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NSCLEAN);
             if (isset($result->status) && (string)$result->status == 'Success' && isset($result->description)) {
-                $xmlresult = current($result->description);
-
+				$aux = get_mangled_object_vars($result->description);
+				$xmlresult = current($aux);
                 return (string)$xmlresult['id'];
             } else {
                 return false;

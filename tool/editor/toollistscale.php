@@ -45,6 +45,8 @@ class block_evalcomix_editor_toollistscale extends block_evalcomix_editor {
     private $valorestotalesid;
     private $valoreslistaid;
     private $comment;
+	private $valueglobaldim;
+	private $valuetotalvalue;
 
     public function get_tool($id) {
     }

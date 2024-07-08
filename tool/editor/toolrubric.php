@@ -45,6 +45,8 @@ class block_evalcomix_editor_toolrubric extends block_evalcomix_editor {
     private $atributosid;
     private $valoresid;
     private $valorestotalesid;
+	private $valueglobaldim;
+	private $valuetotalvalue;
 
     public $rangoid;
 
