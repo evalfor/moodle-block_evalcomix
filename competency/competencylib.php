@@ -15,24 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * block_evalcomix_competencies
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
-
 class block_evalcomix_competencies {
+    /**
+     * get_competencies
+     */
     public static function get_competencies($courseid, $search = '', $outcome = 0) {
         global $DB;
 
-        $typenames = array();
+        $typenames = [];
         $comptypesql = '
         SELECT *
         FROM {block_evalcomix_comptype}
         WHERE courseid = ?
         ';
 
-        if ($types = $DB->get_records_sql($comptypesql, array('courseid' => $courseid))) {
+        if ($types = $DB->get_records_sql($comptypesql, ['courseid' => $courseid])) {
             foreach ($types as $type) {
                 $typeid = $type->id;
                 $typenames[$typeid] = $type->shortname;
@@ -44,16 +47,16 @@ class block_evalcomix_competencies {
             FROM {block_evalcomix_competencies}
             WHERE courseid = :courseid AND outcome = :outcome
         ';
-        $words = array();
+        $words = [];
         if (!empty($search)) {
             $words = explode(' ', $search);
             foreach ($words as $word) {
                 $lowerword = strtolower($word);
-                $compsql .= ' AND (LOWER(shortname) LIKE \'%'. $lowerword .'%\' OR LOWER(idnumber) LIKE \'%'. $lowerword .
-                '%\' OR LOWER(description) LIKE \'%'. $lowerword . '%\') ';
+                $compsql .= ' AND (LOWER(shortname) LIKE \'%' . $lowerword . '%\' OR LOWER(idnumber) LIKE \'%' . $lowerword .
+                '%\' OR LOWER(description) LIKE \'%' . $lowerword . '%\') ';
             }
         }
-        if ($datas = $DB->get_records_sql($compsql, array('courseid' => $courseid, 'outcome' => $outcome))) {
+        if ($datas = $DB->get_records_sql($compsql, ['courseid' => $courseid, 'outcome' => $outcome])) {
             foreach ($datas as $data) {
                 $data->typename = '';
                 if (!empty($data->typeid)) {
@@ -64,7 +67,7 @@ class block_evalcomix_competencies {
                 }
             }
         } else if (empty($search)) {
-            if ($datas = $DB->get_records('block_evalcomix_competencies', array('courseid' => $courseid, 'outcome' => 0))) {
+            if ($datas = $DB->get_records('block_evalcomix_competencies', ['courseid' => $courseid, 'outcome' => 0])) {
                 foreach ($datas as $data) {
                     $data->typename = '';
                     if (!empty($data->typeid)) {
@@ -79,6 +82,9 @@ class block_evalcomix_competencies {
         return $datas;
     }
 
+    /**
+     * get_competencytypes
+     */
     public static function get_competencytypes($courseid, $search = '') {
         global $DB;
 
@@ -87,15 +93,16 @@ class block_evalcomix_competencies {
             FROM {block_evalcomix_comptype}
             WHERE courseid = :courseid
         ';
-        $words = array();
+        $words = [];
         if (!empty($search)) {
             $words = explode(' ', $search);
             foreach ($words as $word) {
                 $lowerword = strtolower($word);
-                $sql .= ' AND (LOWER(shortname) LIKE \'%'. $lowerword .'%\' OR LOWER(description) LIKE \'%'. $lowerword . '%\') ';
+                $sql .= ' AND (LOWER(shortname) LIKE \'%' . $lowerword . '%\' OR LOWER(description) LIKE \'%' .
+                    $lowerword . '%\') ';
             }
         }
-        $datas = $DB->get_records_sql($sql, array('courseid' => $courseid));
+        $datas = $DB->get_records_sql($sql, ['courseid' => $courseid]);
 
         return $datas;
     }

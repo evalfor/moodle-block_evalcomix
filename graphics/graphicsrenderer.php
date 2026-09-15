@@ -21,9 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
  */
-
 class block_evalcomix_graphic_renderer {
-
     /**
      * This function shows graphics
      * @param int $courseid
@@ -40,8 +38,8 @@ class block_evalcomix_graphic_renderer {
             $studentselected = 'block_evalcomix_tab_selected';
         }
 
-        $taskurl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/graphics/index.php', array('id' => $courseid, 'mode' => 1));
-        $studenturl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/graphics/index.php', array('id' => $courseid, 'mode' => 2));
+        $taskurl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/graphics/index.php', ['id' => $courseid, 'mode' => 1]);
+        $studenturl = new moodle_url($CFG->wwwroot . '/blocks/evalcomix/graphics/index.php', ['id' => $courseid, 'mode' => 2]);
 
         $output = '
         <script>
@@ -73,13 +71,13 @@ class block_evalcomix_graphic_renderer {
                 var params = "";
                 // Graphic: task-student.
                 if (mode == 1 && taskid && studentmod.checked && studentid) {
-                    params = "requestgraphic=box&id='.$courseid.'&mode='.$mode.'&modality=student&task="+taskid+"&user="+studentid;
+                    params = "requestgraphic=box&id=' . $courseid . '&mode=' . $mode . '&modality=student&task="+taskid+"&user="+studentid;
                 }
 
                 // Graphic: task-group.
                 if (mode == 1 && taskid && groupmod.checked && groupid) {
-                    params = "requestgraphic=box&id='.$courseid.'&mode='.$mode
-                        .'&modality=group&task="+taskid+"&group="+groupid.value;
+                    params = "requestgraphic=box&id=' . $courseid . '&mode=' . $mode
+                        . '&modality=group&task="+taskid+"&group="+groupid.value;
                     if (flag == 1) {
                         params = params + "&check=1";
                     }
@@ -90,24 +88,24 @@ class block_evalcomix_graphic_renderer {
 
                 // Graphic: task-class.
                 if (mode == 1 && taskid && classmod.checked) {
-                    params = "requestgraphic=box&id='.$courseid.'&mode='.$mode.'&modality=class&task="+taskid;
+                    params = "requestgraphic=box&id=' . $courseid . '&mode=' . $mode . '&modality=class&task="+taskid;
                 }
 
                 // Graphic: student-teacher.
                 if (mode == 2 &&taskid && teachermod.checked && studentid) {
-                    params = "requestgraphic=bar&id='.$courseid.'&mode='.$mode.'&modality=teacher&task="+taskid+"&user="+studentid;
+                    params = "requestgraphic=bar&id=' . $courseid . '&mode=' . $mode . '&modality=teacher&task="+taskid+"&user="+studentid;
                 }
 
                 // Graphic: student-peer.
                 if ( mode == 2 &&taskid && peermod.checked && studentid) {
-                    params = "requestgraphic=bar&id='.$courseid.'&mode='.$mode.'&modality=peer&task="+taskid+"&user="+studentid;
+                    params = "requestgraphic=bar&id=' . $courseid . '&mode=' . $mode . '&modality=peer&task="+taskid+"&user="+studentid;
                 }
 
                 $.ajax({
                     data: params,
                     type: "GET",
                     dataType: "json",
-                    url: "'.$CFG->wwwroot.'/blocks/evalcomix/graphics/loaddata.php",
+                    url: "' . $CFG->wwwroot . '/blocks/evalcomix/graphics/loaddata.php",
                     success: function(response){
                         if(response.status){
                             update_grafica(response.result);
@@ -191,21 +189,21 @@ class block_evalcomix_graphic_renderer {
             document.addEventListener("DOMContentLoaded", load_groupmod, false);
         </script>
 
-        <input type="hidden" id="courseid" name="courseid" value="'.$courseid.'">
-        <input type="hidden" id="mode" name="mode" value="'.$mode.'">
+        <input type="hidden" id="courseid" name="courseid" value="' . $courseid . '">
+        <input type="hidden" id="mode" name="mode" value="' . $mode . '">
         <div id="changeable">
             <div>
-                <span class="block_evalcomix_graphic_tab '.$taskselected.'">
-                <a href="'.$taskurl.'">'.get_string('taskgraphic', 'block_evalcomix').'</a></span>
-                <span class="block_evalcomix_graphic_tab '.$studentselected.'">
-                <a href="'.$studenturl.'">'.get_string('studentgraphic', 'block_evalcomix').'</a></span>
+                <span class="block_evalcomix_graphic_tab ' . $taskselected . '">
+                <a href="' . $taskurl . '">' . get_string('taskgraphic', 'block_evalcomix') . '</a></span>
+                <span class="block_evalcomix_graphic_tab ' . $studentselected . '">
+                <a href="' . $studenturl . '">' . get_string('studentgraphic', 'block_evalcomix') . '</a></span>
             </div>
             <div class="w-100 border border-secondary">
                 <table class="w-100" cellpadding="5">
                     <tr>
                         <td class="block_evalcomix_table_filter align-top">
                             <div id="block_evalcomix_filters">
-                        '. $this->display_graphics_filters($courseid, $mode).'
+                        ' . $this->display_graphics_filters($courseid, $mode) . '
                             </div>
                         </td>
                         <td class="block_evalcomix_table_graphic">
@@ -254,7 +252,7 @@ class block_evalcomix_graphic_renderer {
         $tasks = block_evalcomix_tasks::get_moodle_course_tasks($courseid);
         $output = '
             <div class="block_evalcomix_filter_block">
-                <label for="selectactivity">'.get_string('activity', 'block_evalcomix').'</label>
+                <label for="selectactivity">' . get_string('activity', 'block_evalcomix') . '</label>
                 <div>
                     <select id="selectactivity" name="selectactivity" style="max-width:20em"
                     onchange="var e=document.getElementById(\'block_evalcomix_filter_student_modality\');
@@ -302,10 +300,10 @@ class block_evalcomix_graphic_renderer {
                             }
                         }
                     ">
-                        <option value="0">'.get_string('selectactivity', 'block_evalcomix').'</option>
+                        <option value="0">' . get_string('selectactivity', 'block_evalcomix') . '</option>
         ';
         foreach ($tasks as $task) {
-            $output .= '<option value="'.$task['id'].'">'.$task['nombre'].'</option>';
+            $output .= '<option value="' . $task['id'] . '">' . $task['nombre'] . '</option>';
         }
         $output .= '
                     </select>
@@ -340,7 +338,7 @@ class block_evalcomix_graphic_renderer {
         <div id="block_evalcomix_filter_task_modality" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
                 <div>
-                    <input type="radio" name="modality" id="studentmod" value="student" '.$studentchecked.'
+                    <input type="radio" name="modality" id="studentmod" value="student" ' . $studentchecked . '
                     onclick="var e=document.getElementById(\'block_evalcomix_filter_task_students\');
                         e.style.display = \'inline\';
                     var f=document.getElementById(\'selectactivity\');
@@ -352,21 +350,21 @@ class block_evalcomix_graphic_renderer {
                     }
                     var c=document.getElementById(\'block_evalcomix_checks\');
                     c.style.display = \'none\';
-                    doWork(\'selectstudent\', \''.$CFG->wwwroot.'/blocks/evalcomix/graphics/loaddata.php\',
-                        \'requestgraphic=getstudents&id='.$courseid.'&mode='.$mode.
-                        '&task=\'+f.options[f.selectedIndex].value+\'&modality=student\');"><label for="studentmod">'.
-                        get_string('studentmod', 'block_evalcomix').'</label>
+                    doWork(\'selectstudent\', \'' . $CFG->wwwroot . '/blocks/evalcomix/graphics/loaddata.php\',
+                        \'requestgraphic=getstudents&id=' . $courseid . '&mode=' . $mode .
+                        '&task=\'+f.options[f.selectedIndex].value+\'&modality=student\');"><label for="studentmod">' .
+                        get_string('studentmod', 'block_evalcomix') . '</label>
                 </div>
                 <div>
-                    <input type="radio" name="modality" id="groupmod" value="group" '.$groupchecked.'
+                    <input type="radio" name="modality" id="groupmod" value="group" ' . $groupchecked . '
                     onclick="var e=document.getElementById(\'block_evalcomix_filter_task_students\');
                     e.style.display = \'none\';
                     var f=document.getElementById(\'block_evalcomix_filter_task_group\');
                     f.style.display = \'inline\'"><label for="groupmod">'
-                    .get_string('groupmod', 'block_evalcomix').'</label>
+                    . get_string('groupmod', 'block_evalcomix') . '</label>
                 </div>
                 <div>
-                    <input type="radio" name="modality" id="classmod" value="class" '.$classchecked.'
+                    <input type="radio" name="modality" id="classmod" value="class" ' . $classchecked . '
                     onclick="var e=document.getElementById(\'block_evalcomix_filter_task_students\');
                     e.style.display = \'none\';
                     var f=document.getElementById(\'block_evalcomix_filter_task_group\');
@@ -377,24 +375,24 @@ class block_evalcomix_graphic_renderer {
                     }
                     var c=document.getElementById(\'block_evalcomix_checks\');
                     c.style.display = \'none\';"><label for="classmod">'
-                    .get_string('classmod', 'block_evalcomix').'</label>
+                    . get_string('classmod', 'block_evalcomix') . '</label>
                 </div>
             </div>
         </div>
 
         <div id="block_evalcomix_filter_task_students" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
-                <label for="selectstudent">'.get_string('studentmod', 'block_evalcomix').'</label>
+                <label for="selectstudent">' . get_string('studentmod', 'block_evalcomix') . '</label>
                 <div>
                     <select id="selectstudent" name="selectstudent">
-                        <option value="0">'.get_string('selectstudent', 'block_evalcomix').'</option>
+                        <option value="0">' . get_string('selectstudent', 'block_evalcomix') . '</option>
                     </select>
                 </div>
             </div>
         </div>
         <div id="block_evalcomix_filter_task_group" class="block_evalcomix_display_none">
             <div class="block_evalcomix_filter_block">
-                <label for="selectstudent">'.get_string('groupmod', 'block_evalcomix').'</label>
+                <label for="selectstudent">' . get_string('groupmod', 'block_evalcomix') . '</label>
                 <div>
                     <select id="selectgroup" name="selectgroup"
                         onchange="var f = document.getElementById(\'selectgroup\');
@@ -411,14 +409,14 @@ class block_evalcomix_graphic_renderer {
                                 }
                             }
                         }
-                        doWork(\'block_evalcomix_checks\', \''.$CFG->wwwroot.'/blocks/evalcomix/graphics/loaddata.php\',
-                                \'requestgraphic=getstudentsgroup&id='.$courseid.'&mode='.$mode.
+                        doWork(\'block_evalcomix_checks\', \'' . $CFG->wwwroot . '/blocks/evalcomix/graphics/loaddata.php\',
+                                \'requestgraphic=getstudentsgroup&id=' . $courseid . '&mode=' . $mode .
                                 '&task=\'+taskid+\'&modality=group&group=\'+f.options[f.selectedIndex].value);">
-                        <option value="0">'.get_string('selectgroup', 'block_evalcomix').'</option>
+                        <option value="0">' . get_string('selectgroup', 'block_evalcomix') . '</option>
         ';
-        if ($groups = $DB->get_records('groups', array('courseid' => $courseid))) {
+        if ($groups = $DB->get_records('groups', ['courseid' => $courseid])) {
             foreach ($groups as $group) {
-                $output .= '<option value="'.$group->id.'">'. $group->name . '</option>';
+                $output .= '<option value="' . $group->id . '">' . $group->name . '</option>';
             }
         }
         $output .= '
@@ -450,35 +448,35 @@ class block_evalcomix_graphic_renderer {
             <div id="block_evalcomix_filter_student_modality" class="block_evalcomix_display_none">
                 <div class="block_evalcomix_filter_block">
                     <div>
-                        <input type="radio" name="modality" id="teachermod" value="teacher" '.$teacherchecked.'
+                        <input type="radio" name="modality" id="teachermod" value="teacher" ' . $teacherchecked . '
                             onclick="var e=document.getElementById(\'block_evalcomix_filter_student_select\');
                             e.style.display = \'inline\';
                             var f=document.getElementById(\'selectactivity\');
-                            doWork(\'selectstudent\', \''.$CFG->wwwroot.'/blocks/evalcomix/graphics/loaddata.php\',
-                            \'requestgraphic=getstudents&id='.$courseid.'&mode='.$mode.
+                            doWork(\'selectstudent\', \'' . $CFG->wwwroot . '/blocks/evalcomix/graphics/loaddata.php\',
+                            \'requestgraphic=getstudents&id=' . $courseid . '&mode=' . $mode .
                             '&task=\'+f.options[f.selectedIndex].value+\'&modality=teacher\');
-                            "><label for="teachermod">'.
-                            get_string('teachermod', 'block_evalcomix').'</label>
+                            "><label for="teachermod">' .
+                            get_string('teachermod', 'block_evalcomix') . '</label>
                     </div>
                     <div>
-                        <input type="radio" name="modality" id="peermod" value="peer" '.$peerchecked.'
+                        <input type="radio" name="modality" id="peermod" value="peer" ' . $peerchecked . '
                         onclick="var e=document.getElementById(\'block_evalcomix_filter_student_select\');
                             e.style.display = \'inline\';
                             var f=document.getElementById(\'selectactivity\');
-                            doWork(\'selectstudent\', \''.$CFG->wwwroot.'/blocks/evalcomix/graphics/loaddata.php\',
-                            \'requestgraphic=getstudents&id='.$courseid.'&mode='.$mode.
+                            doWork(\'selectstudent\', \'' . $CFG->wwwroot . '/blocks/evalcomix/graphics/loaddata.php\',
+                            \'requestgraphic=getstudents&id=' . $courseid . '&mode=' . $mode .
                             '&task=\'+f.options[f.selectedIndex].value+\'&modality=peer\');
                             "><label for="peermod">'
-                        .get_string('peermod', 'block_evalcomix').'</label>
+                        . get_string('peermod', 'block_evalcomix') . '</label>
                     </div>
                 </div>
             </div>
             <div class="block_evalcomix_filter_block">
                 <div id="block_evalcomix_filter_student_select" class="block_evalcomix_display_none">
-                    <label for="selectstudent">'.get_string('studentmod', 'block_evalcomix').'</label>
+                    <label for="selectstudent">' . get_string('studentmod', 'block_evalcomix') . '</label>
                     <div>
                         <select id="selectstudent" name="selectstudent">
-                            <option value="0">'.get_string('selectstudent', 'block_evalcomix').'</option>
+                            <option value="0">' . get_string('selectstudent', 'block_evalcomix') . '</option>
                         </select>
                     </div>
                 </div>

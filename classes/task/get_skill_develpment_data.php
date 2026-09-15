@@ -25,11 +25,29 @@
 
 namespace block_evalcomix\task;
 
+/**
+ * Class get_skill_develpment_data
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ */
 class get_skill_develpment_data extends \core\task\scheduled_task {
+    /**
+     * Get name
+     *
+     * @return string name
+     */
     public function get_name() {
         return get_string('crontaskdevdata', 'block_evalcomix');
     }
 
+    /**
+     * Execute
+     *
+     * @return void
+     */
     public function execute() {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');

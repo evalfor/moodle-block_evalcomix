@@ -13,29 +13,57 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Define all the restore steps that will be used by the restore_evalcomix_block_task
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
+/**
+ * Define the complete evalcomix structure for restore, with file and id annotations
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 class restore_evalcomix_block_structure_step extends restore_structure_step {
+     /**
+      * Define the structure of the restore workflow.
+      *
+      * @return restore_path_element $structure
+      */
     protected function define_structure() {
-        $paths = array();
+        $paths = [];
 
         $paths[] = new restore_path_element('evalcomix', '/block/evalcomix');
         $paths[] = new restore_path_element('evalcomix_tool', '/block/evalcomix/tools/tool');
-        $paths[] = new restore_path_element('evalcomix_comptype',
-        '/block/evalcomix/competencysection/competencytypes/competencytype');
-        $paths[] = new restore_path_element('evalcomix_competency',
-        '/block/evalcomix/competencysection/competencies/competency');
-        $paths[] = new restore_path_element('evalcomix_subdimension',
-        '/block/evalcomix/competencysection/subdimensions/subdimension');
+        $paths[] = new restore_path_element(
+            'evalcomix_comptype',
+            '/block/evalcomix/competencysection/competencytypes/competencytype'
+        );
+        $paths[] = new restore_path_element(
+            'evalcomix_competency',
+            '/block/evalcomix/competencysection/competencies/competency'
+        );
+        $paths[] = new restore_path_element(
+            'evalcomix_subdimension',
+            '/block/evalcomix/competencysection/subdimensions/subdimension'
+        );
 
         return $paths;
     }
 
+    /**
+     * Process an block restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     public function process_evalcomix($data) {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
@@ -44,7 +72,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         $oldid = $data->id;
 
         $data->courseid = $this->get_courseid();
-        if (!$DB->get_record('block_evalcomix', array('courseid' => $data->courseid))) {
+        if (!$DB->get_record('block_evalcomix', ['courseid' => $data->courseid])) {
             $newitemid = $DB->insert_record('block_evalcomix', $data);
             $this->set_mapping('evalcomix', $oldid, $newitemid);
         } else {
@@ -52,6 +80,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    /**
+     * Process an tool restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     public function process_evalcomix_tool($data) {
         global $DB, $CFG;
 
@@ -71,16 +105,16 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                     $xml = $data->code;
                     if ($xmlobject = simplexml_load_string($xml)) {
                         try {
-                            $newidtool = block_evalcomix_webservice_client::post_ws_xml_tools(array('toolxml' => $data->code));
+                            $newidtool = block_evalcomix_webservice_client::post_ws_xml_tools(['toolxml' => $data->code]);
                             $data->idtool = (string)$newidtool;
                         } catch (Exception $e) {
                             echo "EvalCOMIX no configured correctly";
                         }
                     } else {
-                        echo "No tool id ". $data->idtool;
+                        echo "No tool id " . $data->idtool;
                     }
                 } else {
-                    echo "No tool id ". $data->idtool;
+                    echo "No tool id " . $data->idtool;
                 }
             }
             if ($newidtool) {
@@ -90,6 +124,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    /**
+     * Process a comptype restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     public function process_evalcomix_comptype($data) {
         global $DB, $CFG;
 
@@ -97,7 +137,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         $oldid = $data->id;
 
         $data->courseid = $this->get_courseid();
-        if (!$DB->get_record('block_evalcomix_comptype', array('courseid' => $data->courseid, 'shortname' => $data->shortname))) {
+        if (!$DB->get_record('block_evalcomix_comptype', ['courseid' => $data->courseid, 'shortname' => $data->shortname])) {
             $newitemid = $DB->insert_record('block_evalcomix_comptype', $data);
             $this->set_mapping('evalcomix_comptype', $oldid, $newitemid);
         } else {
@@ -105,6 +145,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    /**
+     * Process a competency restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     public function process_evalcomix_competency($data) {
         global $DB, $CFG;
 
@@ -112,8 +158,10 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         $oldid = $data->id;
 
         $data->courseid = $this->get_courseid();
-        if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $data->courseid,
-                'idnumber' => $data->idnumber, 'outcome' => $data->outcome))) {
+        if (
+            !$DB->get_record('block_evalcomix_competencies', ['courseid' => $data->courseid,
+                'idnumber' => $data->idnumber, 'outcome' => $data->outcome])
+        ) {
             if (isset($data->typeid)) {
                 $oldtypeid = $data->typeid;
                 $newtypeid = $this->get_mapping('evalcomix_comptype', $oldtypeid);
@@ -126,6 +174,12 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    /**
+     * Process a subdimension restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     public function process_evalcomix_subdimension($data) {
         global $DB, $CFG;
 
@@ -160,10 +214,16 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
     }
 
+    /**
+     * Get subdimension ids
+     *
+     * @param int $toolid
+     * @return array subdimensions
+     */
     private function get_subdimensionids($toolid) {
         global $CFG, $DB;
-        $result = array();
-        $tool = $DB->get_record('block_evalcomix_tools', array('id' => $toolid));
+        $result = [];
+        $tool = $DB->get_record('block_evalcomix_tools', ['id' => $toolid]);
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         if ($xmlstring = block_evalcomix_webservice_client::get_tool($tool->idtool)) {
             $xml = simplexml_load_string($xmlstring);
@@ -181,8 +241,14 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         return $result;
     }
 
+    /**
+     * Get subdimensions from xml
+     *
+     * @param string $xml
+     * @return array subdimension ids
+     */
     private function get_subdimensionids_from_xml($xml) {
-        $result = array();
+        $result = [];
         $tagname = dom_import_simplexml($xml)->tagName;
         $typetool = '';
         if ($tagname[2] == ':') {
@@ -204,6 +270,11 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         return $result;
     }
 
+    /**
+     * Process after restore.
+     *
+     * @return void
+     */
     public function after_restore() {
         global $DB, $COURSE, $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
@@ -247,11 +318,11 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
 
         $courseidnew = $this->get_courseid();
         $moodlenamenew = BLOCK_EVALCOMIX_MOODLE_NAME;
-        $blockevalcomix = $DB->get_record('block_evalcomix', array('courseid' => $courseidnew));
+        $blockevalcomix = $DB->get_record('block_evalcomix', ['courseid' => $courseidnew]);
         $coursecontext = context_course::instance($courseidnew);
 
         $tasksid = '';
-        $assessmentids = array();
+        $assessmentids = [];
         if (isset($xml->evalcomix->tasks[0])) {
             foreach ($xml->evalcomix->tasks[0] as $task) {
                 $taskidold = (int)$task['id'];
@@ -260,7 +331,7 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                 $taskweighingold = (string)$task->weighing;
                 $grademethodold = (int)$task->grademethod;
                 $workteamsold = (int)$task->workteams;
-                $cm = $DB->get_record('block_evalcomix', array('courseid' => $courseidnew));
+                $cm = $DB->get_record('block_evalcomix', ['courseid' => $courseidnew]);
                 $cmmapping = $this->get_mapping('course_module', $taskinstanceidold);
                 $newcmid = $cmmapping->newitemid;
                 $visibletask = '1';
@@ -268,9 +339,17 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                     $visibletask = (string)$task->visible;
                 }
 
-                if (!$taskfetch = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $newcmid))) {
-                    $taskobject = new block_evalcomix_tasks('', $newcmid, $taskmaxgradeold, $taskweighingold, '',
-                        $visibletask, $grademethodold, $workteamsold);
+                if (!$taskfetch = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $newcmid])) {
+                    $taskobject = new block_evalcomix_tasks(
+                        '',
+                        $newcmid,
+                        $taskmaxgradeold,
+                        $taskweighingold,
+                        '',
+                        $visibletask,
+                        $grademethodold,
+                        $workteamsold
+                    );
                     $newtaskid = $taskobject->insert();
                     $tasksid .= $taskinstanceidold . '-' . $newcmid . ',';
                     foreach ($task->modes[0] as $mode) {
@@ -281,19 +360,30 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
 
                         $toolmapping = $this->get_mapping('evalcomix_tool', $modetoolidold);
                         if (!empty($toolmapping) && $newtoolid = $toolmapping->newitemid) {
-                            if (!$modeobject = $DB->get_record('block_evalcomix_modes', array('taskid' => $newtaskid,
-                                'toolid' => $newtoolid, 'modality' => $modemodalityold))) {
-                                $modeobject = new block_evalcomix_modes('', $newtaskid, $newtoolid, $modemodalityold,
-                                    $modeweighingold);
+                            if (
+                                !$modeobject = $DB->get_record('block_evalcomix_modes', ['taskid' => $newtaskid,
+                                'toolid' => $newtoolid, 'modality' => $modemodalityold])
+                            ) {
+                                $modeobject = new block_evalcomix_modes(
+                                    '',
+                                    $newtaskid,
+                                    $newtoolid,
+                                    $modemodalityold,
+                                    $modeweighingold
+                                );
                                 $newmodeid = $modeobject->insert();
 
                                 if (isset($mode->mode_time['id'])) {
                                     $modetimeidold = (string)$mode->mode_time['id'];
                                     $modetimetimeavailableold = (string)$mode->mode_time->timeavailable;
                                     $modetimetimedueold = (string)$mode->mode_time->timedue;
-                                    if (!$DB->get_record('block_evalcomix_modes_time', array('modeid' => $newmodeid))) {
-                                        $modetimeobject = new block_evalcomix_modes_time('', $newmodeid,
-                                            $modetimetimeavailableold, $modetimetimedueold);
+                                    if (!$DB->get_record('block_evalcomix_modes_time', ['modeid' => $newmodeid])) {
+                                        $modetimeobject = new block_evalcomix_modes_time(
+                                            '',
+                                            $newmodeid,
+                                            $modetimetimeavailableold,
+                                            $modetimetimedueold
+                                        );
                                         $modetimeobject->insert();
                                     }
                                 }
@@ -303,10 +393,19 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                                     $modeextratimeavailableold = (string)$mode->mode_extra->anonymous;
                                     $modeextravisible = $mode->mode_extra->visible;
                                     $modeextrawhoassesses = $mode->mode_extra->whoassesses;
-                                    if (!$modeextraobject = $DB->get_record('block_evalcomix_modes_extra',
-                                            array('modeid' => $newmodeid))) {
-                                        $modeextraobject = new block_evalcomix_modes_extra('', $newmodeid,
-                                            $modeextratimeavailableold, $modeextravisible, $modeextrawhoassesses);
+                                    if (
+                                        !$modeextraobject = $DB->get_record(
+                                            'block_evalcomix_modes_extra',
+                                            ['modeid' => $newmodeid]
+                                        )
+                                    ) {
+                                        $modeextraobject = new block_evalcomix_modes_extra(
+                                            '',
+                                            $newmodeid,
+                                            $modeextratimeavailableold,
+                                            $modeextravisible,
+                                            $modeextrawhoassesses
+                                        );
                                         $modeextraobject->insert();
                                     }
                                 }
@@ -339,27 +438,29 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                         }
 
                         if (empty($assessmentidold)) {
-                            $assessmentidold = block_evalcomix_get_assessmentid(array('courseid' => (int)$courseidold,
+                            $assessmentidold = block_evalcomix_get_assessmentid(['courseid' => (int)$courseidold,
                                 'module' => $modulename,
                                 'cmid' => $taskinstanceidold, 'studentid' => $assessmentstudentidold,
-                                'assessorid' => $assessmentassessoridold, 'mode' => $mode, 'lms' => (string)$moodlenameold));
+                                'assessorid' => $assessmentassessoridold, 'mode' => $mode, 'lms' => (string)$moodlenameold]);
                         }
-                        $assessmentidnew = block_evalcomix_get_assessmentid(array('courseid' => $courseidnew,
+                        $assessmentidnew = block_evalcomix_get_assessmentid(['courseid' => $courseidnew,
                             'module' => $modulename,
                             'cmid' => $newcmid, 'studentid' => $studentuser->newitemid,
-                            'assessorid' => $assessoruser->newitemid, 'mode' => $mode, 'lms' => $moodlenamenew));
+                            'assessorid' => $assessoruser->newitemid, 'mode' => $mode, 'lms' => $moodlenamenew]);
                         $object = new stdClass();
                         $object->oldid = $assessmentidold;
                         $object->newid = $assessmentidnew;
                         $assessmentids[] = $object;
-                        if (!$assessmentobject = $DB->get_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
-                            'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid))) {
+                        if (
+                            !$assessmentobject = $DB->get_record('block_evalcomix_assessments', ['taskid' => $newtaskid,
+                            'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid])
+                        ) {
                             $modeobj = $this->get_mapping('block_evalcomix_modes', (int)$assessment->modeid);
                             $modeobjid = (isset($modeobj->id)) ? $modeobj->id : null;
-                            $DB->insert_record('block_evalcomix_assessments', array('taskid' => $newtaskid,
+                            $DB->insert_record('block_evalcomix_assessments', ['taskid' => $newtaskid,
                                 'assessorid' => $assessoruser->newitemid, 'studentid' => $studentuser->newitemid,
                                 'grade' => $assessmentgradeold, 'timemodified' => time(), 'idassessment' => $assessmentidnew,
-                                'modeid' => $modeobjid));
+                                'modeid' => $modeobjid]);
                         }
                     }
                     if (isset($task->coordinators[0])) {
@@ -369,8 +470,8 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                                 if ($groupid) {
                                     if ($coordinator->userid > 0) {
                                         $coordinatorid = $this->get_mappingid('user', (int)$coordinator->userid);
-                                        $DB->insert_record('block_evalcomix_coordinators', array('taskid' => $newtaskid,
-                                        'groupid' => $groupid, 'userid' => $coordinatorid));
+                                        $DB->insert_record('block_evalcomix_coordinators', ['taskid' => $newtaskid,
+                                        'groupid' => $groupid, 'userid' => $coordinatorid]);
                                     }
                                 }
                             }
@@ -393,11 +494,15 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                     if (!isset($student->newitemid)) {
                         continue;
                     }
-                    $params = array('finalgrade' => (float)$grade->finalgrade, 'courseid' => $courseidnew,
-                        'cmid' => $newcmid, 'userid' => $student->newitemid);
+                    $params = ['finalgrade' => (float)$grade->finalgrade, 'courseid' => $courseidnew,
+                        'cmid' => $newcmid, 'userid' => $student->newitemid];
 
-                    if (!$gradeobject = $DB->get_record('block_evalcomix_grades',
-                        array('courseid' => $courseidnew, 'cmid' => $newcmid, 'userid' => $student->newitemid))) {
+                    if (
+                        !$gradeobject = $DB->get_record(
+                            'block_evalcomix_grades',
+                            ['courseid' => $courseidnew, 'cmid' => $newcmid, 'userid' => $student->newitemid]
+                        )
+                    ) {
                         $gradeobject = new block_evalcomix_grades($params);
                         $newgradeid = $gradeobject->insert();
                     }
@@ -413,8 +518,8 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
                     if (!isset($student->newitemid) || !isset($assessor->newitemid)) {
                         continue;
                     }
-                    $params = array('assessorid' => (int)$assessor->newitemid, 'studentid' => $student->newitemid,
-                        'cmid' => $newcmid);
+                    $params = ['assessorid' => (int)$assessor->newitemid, 'studentid' => $student->newitemid,
+                        'cmid' => $newcmid];
 
                     if (!$allowedusersobject = $DB->get_record('block_evalcomix_allowedusers', $params)) {
                         $newid = $DB->insert_record('block_evalcomix_allowedusers', $params);
@@ -424,14 +529,14 @@ class restore_evalcomix_block_structure_step extends restore_structure_step {
         }
 
         if (isset($xml->evalcomix->tools[0])) {
-            $hashtools = array();
+            $hashtools = [];
             foreach ($xml->evalcomix->tools[0] as $tool) {
                 if ((string)$tool->type == 'tmp') {
                     continue;
                 }
                 $idtoolold = (string)$tool->idtool;
                 $toolmapping = $this->get_mapping('evalcomix_tool', (string)$tool['id']);
-                $toolnew = block_evalcomix_tool::fetch(array('id' => $toolmapping->newitemid));
+                $toolnew = block_evalcomix_tool::fetch(['id' => $toolmapping->newitemid]);
                 $idtoolnew = $toolnew->idtool;
                 $object = new stdClass();
                 $object->oldid = $idtoolold;

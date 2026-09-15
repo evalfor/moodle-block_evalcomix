@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Display user activity
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,19 +28,19 @@ require('../../../config.php');
 $courseid = required_param('course', PARAM_INT);
 require_course_login($courseid);
 
-if (file_exists($CFG->dirroot.'/report/outline/locallib.php')) {
-    require_once($CFG->dirroot.'/report/outline/locallib.php');
+if (file_exists($CFG->dirroot . '/report/outline/locallib.php')) {
+    require_once($CFG->dirroot . '/report/outline/locallib.php');
 }
-require_once($CFG->dirroot.'/course/lib.php');
-require_once($CFG->dirroot.'/blocks/evalcomix/locallib.php');
+require_once($CFG->dirroot . '/course/lib.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 
 $userid = required_param('id', PARAM_INT);
 $modid = required_param('mod', PARAM_INT);
 
-$user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0), '*', MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = $DB->get_record('course_modules', array('id' => $modid), '*', MUST_EXIST);
-$url = new moodle_url('/blocks/evalcomix/assessment/user_activity.php', array('userid' => $userid, 'courseid' => $courseid));
+$user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0], '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+$cm = $DB->get_record('course_modules', ['id' => $modid], '*', MUST_EXIST);
+$url = new moodle_url('/blocks/evalcomix/assessment/user_activity.php', ['userid' => $userid, 'courseid' => $courseid]);
 $contextcourse = context_course::instance($course->id);
 $PAGE->set_url($url);
 $PAGE->set_context($contextcourse);
@@ -54,27 +57,27 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
     $canseeactivity = $gradereport->student_can_assess($user, $cm);
 
     if ($mode == 'teacher' || $canseeactivity) {
-        $title = fullname($user) .get_string('studentwork2', 'block_evalcomix'). $mod->name;
+        $title = fullname($user) . get_string('studentwork2', 'block_evalcomix') . $mod->name;
         $PAGE->set_title($title);
 
         echo $OUTPUT->header();
 
-        echo '<h1>'. $title.'</h1>';
+        echo '<h1>' . $title . '</h1>';
 
-        $instance = $DB->get_record("$mod->modname", array("id" => $mod->instance));
+        $instance = $DB->get_record("$mod->modname", ["id" => $mod->instance]);
         $libfile = "$CFG->dirroot/mod/$mod->modname/lib.php";
 
         if (file_exists($libfile)) {
             require_once($libfile);
 
-            $usercomplete = $mod->modname."_user_complete";
+            $usercomplete = $mod->modname . "_user_complete";
             if (function_exists($usercomplete)) {
                 $context = context_module::instance($mod->id);
 
-                $image = $OUTPUT->pix_icon('icon', $mod->modfullname, 'mod_'.$mod->modname, array('class' => 'icon'));
-                echo "<h3>$image $mod->modfullname: ".
-                     "<a href=\"$CFG->wwwroot/mod/$mod->modname/view.php?id=$mod->id\">".
-                     format_string($instance->name, true)."</a></h3>";
+                $image = $OUTPUT->pix_icon('icon', $mod->modfullname, 'mod_' . $mod->modname, ['class' => 'icon']);
+                echo "<h3>$image $mod->modfullname: " .
+                     "<a href=\"$CFG->wwwroot/mod/$mod->modname/view.php?id=$mod->id\">" .
+                     format_string($instance->name, true) . "</a></h3>";
 
                 ob_start();
 
@@ -97,9 +100,14 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                     }
 
                     if (isset($sid)) {
-                        if ($onlinetext = $DB->get_record('assignsubmission_onlinetext',
-                                array('assignment' => $assignment->get_instance()->id, 'submission' => $sid))) {
-                            echo '<br><b>'.get_string('enabled', 'assignsubmission_onlinetext').':</b> '. $onlinetext->onlinetext;
+                        if (
+                            $onlinetext = $DB->get_record(
+                                'assignsubmission_onlinetext',
+                                ['assignment' => $assignment->get_instance()->id, 'submission' => $sid]
+                            )
+                        ) {
+                            echo '<br><b>' . get_string('enabled', 'assignsubmission_onlinetext') . ':</b> ' .
+                            $onlinetext->onlinetext;
                             echo '<br>';
                         }
                         $tree = new assign_files($context, $sid, 'submission_files', 'assignsubmission_file');
@@ -107,10 +115,16 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                         if (isset($args) && !empty($args)) {
                             echo '<ul>';
                             foreach ($args as $arg) {
-                                $relativepath = block_evalcomix_assignsubmission_file_pluginfile($course, $tree->cm,
-                                    $tree->context, 'submission_files', $arg, 1);
+                                $relativepath = block_evalcomix_assignsubmission_file_pluginfile(
+                                    $course,
+                                    $tree->cm,
+                                    $tree->context,
+                                    'submission_files',
+                                    $arg,
+                                    1
+                                );
                                 $fullpath = 'pluginfile.php' . $relativepath . '?forcedownload=1';
-                                echo '<li><div><a href="'. $fullpath . '">'. $arg[1] .'</a></div></li>';
+                                echo '<li><div><a href="' . $fullpath . '">' . $arg[1] . '</a></div></li>';
                             }
                             echo '</ul>';
                         }
@@ -122,9 +136,15 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
                     $submission = $workshop->get_submission_by_author($user->id);
 
                     if (is_object($submission)) {
-                        $content = format_text($submission->content, $submission->contentformat, array('overflowdiv' => true));
-                        $content = file_rewrite_pluginfile_urls($content, 'pluginfile.php', $context->id,
-                                                                'mod_workshop', 'submission_content', $submission->id);
+                        $content = format_text($submission->content, $submission->contentformat, ['overflowdiv' => true]);
+                        $content = file_rewrite_pluginfile_urls(
+                            $content,
+                            'pluginfile.php',
+                            $context->id,
+                            'mod_workshop',
+                            'submission_content',
+                            $submission->id
+                        );
 
                         $fs = get_file_storage();
                         $ctx = $context;
@@ -137,9 +157,12 @@ if ($mode == 'teacher' || $mode == 'self' || $mode == 'peer') {
 
                             $filepath = $file->get_filepath();
                             $filename = $file->get_filename();
-                            $fileurl = file_encode_url($CFG->wwwroot . '/blocks/evalcomix/assessment/pluginfile.php',
-                                            '/' . $ctx->id . '/mod_workshop/submission_attachment/' . $submission->id .
-                                            $filepath . $filename, false);
+                            $fileurl = file_encode_url(
+                                $CFG->wwwroot . '/blocks/evalcomix/assessment/pluginfile.php',
+                                '/' . $ctx->id . '/mod_workshop/submission_attachment/' . $submission->id .
+                                $filepath . $filename,
+                                false
+                            );
 
                             $type = $file->get_mimetype();
 

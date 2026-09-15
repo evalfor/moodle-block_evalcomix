@@ -13,7 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * lib.php
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -30,19 +32,22 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_time.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
 
+/**
+ * block_evalcomix_add_select_range
+ */
 function block_evalcomix_add_select_range($name, $ibegin, $iend, $iselected, $extra) {
     $ibegin = intval($ibegin);
     $iend = intval($iend);
     $iselected = intval($iselected);
 
-    $result = '<select id = "'. $name . '" name = "'. $name . '" '. $extra. '>';
+    $result = '<select id = "' . $name . '" name = "' . $name . '" ' . $extra . '>';
     for ($i = $ibegin; $i <= $iend; $i++) {
         $selected = '';
         if ($i == $iselected) {
             $selected = 'selected="selected"';
         }
         $result .= '
-                <option value="'. $i . '" ' . $selected .'>'. $i . '</option>
+                <option value="' . $i . '" ' . $selected . '>' . $i . '</option>
         ';
     }
     $result .= '
@@ -51,16 +56,19 @@ function block_evalcomix_add_select_range($name, $ibegin, $iend, $iselected, $ex
     return $result;
 }
 
+/**
+ * block_evalcomix_add_select
+ */
 function block_evalcomix_add_select($name, $options, $iselected, $extra) {
     $tam = count($options);
-    $result = '<select id = "'. $name . '" name = "'. $name . '" '. $extra. '>';
+    $result = '<select id = "' . $name . '" name = "' . $name . '" ' . $extra . '>';
     foreach ($options as $key => $value) {
         $selected = '';
         if ($key == $iselected) {
             $selected = 'selected="selected"';
         }
         $result .= '
-                <option value="'. $key . '" ' . $selected .'>'. $value . '</option>
+                <option value="' . $key . '" ' . $selected . '>' . $value . '</option>
         ';
     }
     $result .= '
@@ -69,6 +77,9 @@ function block_evalcomix_add_select($name, $options, $iselected, $extra) {
     return $result;
 }
 
+/**
+ * block_evalcomix_add_date_time_selector
+ */
 function block_evalcomix_add_date_time_selector($name, $timestamp, $extra) {
     if (!isset($timestamp) && !is_number($timestamp)) {
         $timestamp = time();
@@ -81,23 +92,22 @@ function block_evalcomix_add_date_time_selector($name, $timestamp, $extra) {
     if ($min = $minute % 5 != 0) {
         $minute -= $min;
     }
-    $months = array(1 => '"'.get_string('january', 'block_evalcomix').'"', 2 => '"'.
-        get_string('february', 'block_evalcomix').'"',
-        3 => '"'.get_string('march', 'block_evalcomix').'"', 4 => '"'.get_string('april', 'block_evalcomix').'"',
-        5 => '"'.get_string('may', 'block_evalcomix').'"', 6 => '"'.get_string('june', 'block_evalcomix').'"', 7 => '"'.
-        get_string('july', 'block_evalcomix').'"', 8 => '"'.get_string('august', 'block_evalcomix').'"', 9 => '"'.
-        get_string('september', 'block_evalcomix').'"', 10 => '"'.get_string('october', 'block_evalcomix').'"', 11 => '"'.
-        get_string('november', 'block_evalcomix').'"', 12 => '"'.get_string('december', 'block_evalcomix') . '"');
-    $result = block_evalcomix_add_select_range('day_'. $name, 1, 31, $day, $extra);
-    $result .= block_evalcomix_add_select('month_'. $name, $months, $month, $extra);
-    $result .= block_evalcomix_add_select_range('year_'. $name, 2020, 2030, $year, $extra);
-    $result .= block_evalcomix_add_select_range('hour_'. $name, 0, 23, $hour, $extra);
-    $minutes = array(0 => '00', 5 => '05', 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35,
-        40 => 40, 45 => 45, 50 => 50, 55 => 55);
-    $result .= block_evalcomix_add_select('minute_'. $name, $minutes, $minute, $extra);
+    $months = [1 => '"' . get_string('january', 'block_evalcomix') . '"', 2 => '"' .
+        get_string('february', 'block_evalcomix') . '"',
+        3 => '"' . get_string('march', 'block_evalcomix') . '"', 4 => '"' . get_string('april', 'block_evalcomix') . '"',
+        5 => '"' . get_string('may', 'block_evalcomix') . '"', 6 => '"' . get_string('june', 'block_evalcomix') . '"', 7 => '"' .
+        get_string('july', 'block_evalcomix') . '"', 8 => '"' . get_string('august', 'block_evalcomix') . '"', 9 => '"' .
+        get_string('september', 'block_evalcomix') . '"', 10 => '"' . get_string('october', 'block_evalcomix') . '"', 11 => '"' .
+        get_string('november', 'block_evalcomix') . '"', 12 => '"' . get_string('december', 'block_evalcomix') . '"'];
+    $result = block_evalcomix_add_select_range('day_' . $name, 1, 31, $day, $extra);
+    $result .= block_evalcomix_add_select('month_' . $name, $months, $month, $extra);
+    $result .= block_evalcomix_add_select_range('year_' . $name, 2020, 2030, $year, $extra);
+    $result .= block_evalcomix_add_select_range('hour_' . $name, 0, 23, $hour, $extra);
+    $minutes = [0 => '00', 5 => '05', 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35,
+        40 => 40, 45 => 45, 50 => 50, 55 => 55];
+    $result .= block_evalcomix_add_select('minute_' . $name, $minutes, $minute, $extra);
     return $result;
 }
-
 
 /**
  * Get activity datas
@@ -108,13 +118,14 @@ function block_evalcomix_get_activity_data($cm) {
     global $DB;
     $modname = $cm->modname;
     $activity = null;
-    if (!$activity = $DB->get_record($modname, array('id' => $cm->instance))) {
+    if (!$activity = $DB->get_record($modname, ['id' => $cm->instance])) {
         throw new \moodle_exception('invalidid', $modname);
     }
     return $activity;
 }
 
 /**
+ * Get activity data
  * @param int $courseid
  * @param object $cm course module ID
  * @return array datas of assessment modalities
@@ -122,15 +133,15 @@ function block_evalcomix_get_activity_data($cm) {
 function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
     global $DB, $CFG;
 
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-    $result = array();
-    if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+    $result = [];
+    if ($task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cm->id])) {
         $result['grademethod'] = $task->grademethod;
         $result['threshold'] = $task->threshold;
         $result['workteams'] = $task->workteams;
         if ($task->workteams == 1) {
-            if ($groupcoordinators = $DB->get_records('block_evalcomix_coordinators', array('taskid' => $task->id))) {
-                $coordinators = array();
+            if ($groupcoordinators = $DB->get_records('block_evalcomix_coordinators', ['taskid' => $task->id])) {
+                $coordinators = [];
                 foreach ($groupcoordinators as $gc) {
                     $gcgroupid = $gc->groupid;
                     $coordinators[$gcgroupid] = $gc->userid;
@@ -175,17 +186,18 @@ function block_evalcomix_get_evalcomix_activity_data($courseid, $cm) {
 }
 
 /**
+ * Get mode extra data
  * @param int $courseid
  * @param int $taskid evalcomix task ID
  * @return array datas of assessment modalities time
  */
 function block_evalcomix_get_evalcomix_modality_extra($courseid, $taskid, $modality) {
     global $DB, $CFG;
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_extra.php');
-    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_extra.php');
+    $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
-    if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
+    if (!$task = $DB->get_record('block_evalcomix_tasks', ['id' => $taskid])) {
         throw new \moodle_exception('noevalcomixtaskid');
     }
 
@@ -193,9 +205,9 @@ function block_evalcomix_get_evalcomix_modality_extra($courseid, $taskid, $modal
         throw new \moodle_exception('No modality');
     }
 
-    $result = array();
-    if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $modality))) {
-        if ($extra = $DB->get_record('block_evalcomix_modes_extra', array('modeid' => $mode->id))) {
+    $result = [];
+    if ($mode = $DB->get_record('block_evalcomix_modes', ['taskid' => $task->id, 'modality' => $modality])) {
+        if ($extra = $DB->get_record('block_evalcomix_modes_extra', ['modeid' => $mode->id])) {
             $result['anonymous'] = $extra->anonymous;
             $result['visible'] = $extra->visible;
             $result['whoassesses'] = $extra->whoassesses;
@@ -206,17 +218,18 @@ function block_evalcomix_get_evalcomix_modality_extra($courseid, $taskid, $modal
 }
 
 /**
+ * Get mode_time
  * @param int $courseid
  * @param int $taskid evalcomix task ID
  * @return array datas of assessment modalities time
  */
 function block_evalcomix_get_evalcomix_modality_time($courseid, $taskid, $modality) {
     global $DB, $CFG;
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes_time.php');
-    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_time.php');
+    $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
-    if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
+    if (!$task = $DB->get_record('block_evalcomix_tasks', ['id' => $taskid])) {
         throw new \moodle_exception('noevalcomixtaskid');
     }
 
@@ -224,28 +237,28 @@ function block_evalcomix_get_evalcomix_modality_time($courseid, $taskid, $modali
         throw new \moodle_exception('No modality');
     }
 
-    $result = array();
-    if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $modality))) {
-        $time = $DB->get_record('block_evalcomix_modes_time', array('modeid' => $mode->id));
+    $result = [];
+    if ($mode = $DB->get_record('block_evalcomix_modes', ['taskid' => $task->id, 'modality' => $modality])) {
+        $time = $DB->get_record('block_evalcomix_modes_time', ['modeid' => $mode->id]);
         $result['available'] = $time->timeavailable;
         $result['timedue'] = $time->timedue;
         return $result;
     }
     return false;
-
 }
 
 /**
+ * Get modality weight
  * @param int $courseid
  * @param int $taskid evalcomix task ID
  * @return array datas of assessment modalities weighing
  */
 function block_evalcomix_get_evalcomix_modality_weighing($courseid, $taskid, $modality) {
     global $DB, $CFG;
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+    $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
-    if (!$task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
+    if (!$task = $DB->get_record('block_evalcomix_tasks', ['id' => $taskid])) {
         throw new \moodle_exception('noevalcomixtaskid');
     }
 
@@ -253,15 +266,20 @@ function block_evalcomix_get_evalcomix_modality_weighing($courseid, $taskid, $mo
         throw new \moodle_exception('No modality');
     }
 
-    $result = array();
-    if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $modality))) {
+    $result = [];
+    if ($mode = $DB->get_record('block_evalcomix_modes', ['taskid' => $task->id, 'modality' => $modality])) {
         return $mode->weighing;
     }
     return false;
-
 }
 
-
+/**
+ * Get modality tool
+ * @param int $courseid
+ * @param int $taskid evalcomix task ID
+ * @param string $modality
+ * @return array datas of assessment modalities weighing
+ */
 function block_evalcomix_get_modality_tool($courseid, $taskid, $modality) {
     global $DB;
 
@@ -269,9 +287,9 @@ function block_evalcomix_get_modality_tool($courseid, $taskid, $modality) {
         throw new \moodle_exception('No modality');
     }
 
-    $result = array();
-    if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => $modality))) {
-        if ($tool = $DB->get_record('block_evalcomix_tools', array('id' => $mode->toolid))) {
+    $result = [];
+    if ($mode = $DB->get_record('block_evalcomix_modes', ['taskid' => $taskid, 'modality' => $modality])) {
+        if ($tool = $DB->get_record('block_evalcomix_tools', ['id' => $mode->toolid])) {
             return $tool;
         }
     }
@@ -287,19 +305,20 @@ function block_evalcomix_update_tool_list($evxid, $webtools) {
     global $CFG, $DB, $COURSE;
 
     foreach ($webtools as $tool) {
-        if (!$toolupdate = $DB->get_record('block_evalcomix_tools', array('evxid' => $evxid, 'idtool' => $tool->idtool))) {
+        if (!$toolupdate = $DB->get_record('block_evalcomix_tools', ['evxid' => $evxid, 'idtool' => $tool->idtool])) {
             $now = time();
-            $DB->insert_record('block_evalcomix_tools', array('evxid' => $evxid, 'title' => $tool->title, 'type' => $tool->type,
-                'idtool' => (string)$tool->idtool, 'timecreated' => $now, 'timemodified' => $now));
+            $DB->insert_record('block_evalcomix_tools', ['evxid' => $evxid, 'title' => $tool->title, 'type' => $tool->type,
+                'idtool' => (string)$tool->idtool, 'timecreated' => $now, 'timemodified' => $now]);
         } else {
-            $params = array('id' => $tool->id, 'evxid' => $evxid, 'title' => $tool->title, 'type' => $tool->type,
-                'idtool' => (string)$tool->idtool, 'timemodified' => time());
+            $params = ['id' => $tool->id, 'evxid' => $evxid, 'title' => $tool->title, 'type' => $tool->type,
+                'idtool' => (string)$tool->idtool, 'timemodified' => time()];
             $DB->update_record('block_evalcomix_tools', $params);
         }
     }
 }
 
 /**
+ * Order by title
  * @param object $a tool object
  * @param object $b tool object
  * return relative position between objects depending on title tool
@@ -309,6 +328,7 @@ function block_evalcomix_cmp_title_tool($a, $b) {
 }
 
 /**
+ * Order by type
  * @param object $a tool object
  * @param object $b tool object
  * return relative position between objects depending on type tool
@@ -318,21 +338,24 @@ function block_evalcomix_cmp_type_tool($a, $b) {
     return $value;
 }
 
+/**
+ * block_evalcomix_recalculate_grades
+ */
 function block_evalcomix_recalculate_grades() {
     global $CFG, $DB;
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
-    if ($grades = $DB->get_records('block_evalcomix_grades', array())) {
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
+    if ($grades = $DB->get_records('block_evalcomix_grades', [])) {
         foreach ($grades as $grade) {
             $userid = $grade->userid;
             $cmid = $grade->cmid;
             $courseid = $grade->courseid;
 
-            if ($cm = $DB->get_record('course_modules', array('id' => $cmid))) {
-                $params = array('cmid' => $cmid, 'userid' => $userid, 'courseid' => $courseid);
+            if ($cm = $DB->get_record('course_modules', ['id' => $cmid])) {
+                $params = ['cmid' => $cmid, 'userid' => $userid, 'courseid' => $courseid];
                 $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
                 if ($finalgrade !== null && (int)$finalgrade > -1 && (int)$finalgrade !== (int)$grade->finalgrade) {
-                    $DB->update_record('block_evalcomix_grades', array('id' => $grade->id, 'userid' => $grade->userid,
-                        'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid));
+                    $DB->update_record('block_evalcomix_grades', ['id' => $grade->id, 'userid' => $grade->userid,
+                        'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid]);
                 }
             }
         }
@@ -340,13 +363,16 @@ function block_evalcomix_recalculate_grades() {
     return true;
 }
 
-function block_evalcomix_activity_assessed($cm, $studentid = array()) {
+/**
+ * block_evalcomix_activity_assessed
+ */
+function block_evalcomix_activity_assessed($cm, $studentid = []) {
     global $DB;
     $result = false;
 
-    if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
-        if ($modes = $DB->get_records('block_evalcomix_modes', array('taskid' => $task->id))) {
-            $modetypes = array();
+    if ($task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cm->id])) {
+        if ($modes = $DB->get_records('block_evalcomix_modes', ['taskid' => $task->id])) {
+            $modetypes = [];
             foreach ($modes as $mode) {
                 $modality = $mode->modality;
                 $modetypes[$modality] = $modality;
@@ -355,9 +381,9 @@ function block_evalcomix_activity_assessed($cm, $studentid = array()) {
             FROM {block_evalcomix_assessments}
             WHERE taskid = ?';
             if (!empty($studentid)) {
-                $sql .= ' AND studentid IN ('.implode(',', $studentid).')';
+                $sql .= ' AND studentid IN (' . implode(',', $studentid) . ')';
             }
-            if ($assessments = $DB->get_records_sql($sql, array('taskid' => $task->id))) {
+            if ($assessments = $DB->get_records_sql($sql, ['taskid' => $task->id])) {
                 $context = context_course::instance($cm->course);
                 foreach ($assessments as $assessment) {
                     if ($assessment->studentid == $assessment->assessorid) {
@@ -386,50 +412,53 @@ function block_evalcomix_activity_assessed($cm, $studentid = array()) {
     return $result;
 }
 
+/**
+ * block_evalcomix_student_deleted
+ */
 function block_evalcomix_student_deleted($studentid) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 
     // Deleting allowedusers.
-    if ($DB->get_records('block_evalcomix_allowedusers', array('assessorid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_allowedusers', array('assessorid' => $studentid));
+    if ($DB->get_records('block_evalcomix_allowedusers', ['assessorid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_allowedusers', ['assessorid' => $studentid]);
     }
-    if ($DB->get_records('block_evalcomix_allowedusers', array('studentid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_allowedusers', array('studentid' => $studentid));
+    if ($DB->get_records('block_evalcomix_allowedusers', ['studentid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_allowedusers', ['studentid' => $studentid]);
     }
 
     // Deleting coordinators.
-    if ($DB->get_records('block_evalcomix_coordinators', array('userid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_coordinators', array('userid' => $studentid));
+    if ($DB->get_records('block_evalcomix_coordinators', ['userid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_coordinators', ['userid' => $studentid]);
     }
 
     // Deleting grades.
-    if ($DB->get_records('block_evalcomix_grades', array('userid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_grades', array('userid' => $studentid));
+    if ($DB->get_records('block_evalcomix_grades', ['userid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_grades', ['userid' => $studentid]);
     }
 
     // Deleting assessments.
-    if ($assessments1 = $DB->get_records('block_evalcomix_assessments', array('assessorid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_assessments', array('assessorid' => $studentid));
+    if ($assessments1 = $DB->get_records('block_evalcomix_assessments', ['assessorid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_assessments', ['assessorid' => $studentid]);
     }
-    if ($assessments2 = $DB->get_records('block_evalcomix_assessments', array('studentid' => $studentid))) {
-        $DB->delete_records('block_evalcomix_assessments', array('studentid' => $studentid));
+    if ($assessments2 = $DB->get_records('block_evalcomix_assessments', ['studentid' => $studentid])) {
+        $DB->delete_records('block_evalcomix_assessments', ['studentid' => $studentid]);
     }
 
     // Deleting dr_grade.
     if ($assessments1) {
         foreach ($assessments1 as $assessment) {
             block_evalcomix_webservice_client::delete_ws_assessment($assessment);
-            if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment))) {
-                $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment));
+            if ($DB->get_records('block_evalcomix_dr_grade', ['idassessment' => $assessment->idassessment])) {
+                $DB->delete_records('block_evalcomix_dr_grade', ['idassessment' => $assessment->idassessment]);
             }
         }
     }
     if ($assessments2) {
         foreach ($assessments2 as $assessment) {
             block_evalcomix_webservice_client::delete_ws_assessment($assessment);
-            if ($DB->get_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment))) {
-                $DB->delete_records('block_evalcomix_dr_grade', array('idassessment' => $assessment->idassessment));
+            if ($DB->get_records('block_evalcomix_dr_grade', ['idassessment' => $assessment->idassessment])) {
+                $DB->delete_records('block_evalcomix_dr_grade', ['idassessment' => $assessment->idassessment]);
             }
         }
     }
@@ -437,15 +466,15 @@ function block_evalcomix_student_deleted($studentid) {
     // Deleting dr_pending.
     if ($assessments1) {
         foreach ($assessments1 as $assessment) {
-            if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment))) {
-                $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment));
+            if ($DB->get_records('block_evalcomix_dr_pending', ['idassessment' => $assessment->idassessment])) {
+                $DB->delete_records('block_evalcomix_dr_pending', ['idassessment' => $assessment->idassessment]);
             }
         }
     }
     if ($assessments2) {
         foreach ($assessments2 as $assessment) {
-            if ($DB->get_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment))) {
-                $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $assessment->idassessment));
+            if ($DB->get_records('block_evalcomix_dr_pending', ['idassessment' => $assessment->idassessment])) {
+                $DB->delete_records('block_evalcomix_dr_pending', ['idassessment' => $assessment->idassessment]);
             }
         }
     }

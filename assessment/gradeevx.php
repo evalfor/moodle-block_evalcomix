@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Calculate grade for gradebook
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -21,10 +24,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot."/blocks/evalcomix/configeval.php");
-require_once($CFG->dirroot."/blocks/evalcomix/classes/evalcomix_tasks.php");
-require_once($CFG->dirroot."/blocks/evalcomix/classes/evalcomix_assessments.php");
-require_once($CFG->dirroot."/blocks/evalcomix/classes/evalcomix_modes.php");
+require_once($CFG->dirroot . "/blocks/evalcomix/configeval.php");
+require_once($CFG->dirroot . "/blocks/evalcomix/classes/evalcomix_tasks.php");
+require_once($CFG->dirroot . "/blocks/evalcomix/classes/evalcomix_assessments.php");
+require_once($CFG->dirroot . "/blocks/evalcomix/classes/evalcomix_modes.php");
 global $DB;
 
 if (isset($grade->grade_item)) {
@@ -42,8 +45,10 @@ if (isset($grade->grade_item)) {
             $evalcomixable = true;
         }
 
-        if (!$gradeitem = grade_item::fetch(array('iteminstance' => $grade->grade_item->iteminstance,
-            'itemmodule' => $module, 'courseid' => $courseid, 'itemnumber' => '0'))) {
+        if (
+            !$gradeitem = grade_item::fetch(['iteminstance' => $grade->grade_item->iteminstance,
+            'itemmodule' => $module, 'courseid' => $courseid, 'itemnumber' => '0'])
+        ) {
             error('Can not find grade_item 1');
         }
         $multfactor = $gradeitem->multfactor;
@@ -53,7 +58,7 @@ if (isset($grade->grade_item)) {
             $finalgrade = $finalgrade * $maxgrade / 100;
 
             if ($gradeval != '-' && $gradeval != '' && is_numeric($gradeval)) {
-                $gradeold = new grade_grade(array('itemid' => $gradeitem->id, 'userid' => $student));
+                $gradeold = new grade_grade(['itemid' => $gradeitem->id, 'userid' => $student]);
                 $gradeoriginal = $gradeold->rawgrade;
                 $gradeval = ($finalgrade + $gradeoriginal) / 2;
                 $gradeval *= $multfactor;
@@ -78,7 +83,7 @@ if (isset($grade->grade_item)) {
                     $gradeval = $gradeitem->grademin;
                 }
             } else if (($gradeval == '-' || $gradeval == '')) {
-                $gradeold = new grade_grade(array('itemid' => $gradeitem->id, 'userid' => $student));
+                $gradeold = new grade_grade(['itemid' => $gradeitem->id, 'userid' => $student]);
                 $gradeval = $finalgrade;
                 $gradeval *= $multfactor;
                 $gradeval += $plusfactor;
@@ -90,9 +95,10 @@ if (isset($grade->grade_item)) {
             if (!$gradeitem->scaleid && $grade->grade_item->itemnumber == 0) {
                 $overridden = $gradeold->overridden;
                 $gradeitem->update_final_grade($student, $gradeval, 'evalcomixAdd');
-                $grade = new grade_grade(array('itemid' => $gradeitem->id, 'userid' => $student));
+                $grade = new grade_grade(['itemid' => $gradeitem->id, 'userid' => $student]);
                 $grade->overridden = $overridden;
                 $grade->update('EvalcomixUpdate');
+                $updated = true;
             }
         }
     }

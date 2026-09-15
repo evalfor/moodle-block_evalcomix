@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <info@ansaner.net>
  */
+
 require_once('../../../config.php');
 
 $requestgraphic = optional_param('requestgraphic', '', PARAM_RAW);
@@ -33,7 +34,7 @@ $mode = required_param('mode', PARAM_INT);
 $taskid = optional_param('task', 0, PARAM_INT);
 $courseid = required_param('id', PARAM_INT);
 $check = optional_param('check', 0, PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
 require_course_login($course);
 
@@ -46,13 +47,13 @@ $renderer = new block_evalcomix_graphic_renderer();
 if ($requestgraphic == 'getstudents' && !empty($taskid)) {
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
     if (!empty($taskid) && !$users = block_evalcomix_assessments::get_students_assessed($taskid)) {
-        echo '<option style="color:#f00">'.get_string('nostudents', 'block_evalcomix').'</option>';
+        echo '<option style="color:#f00">' . get_string('nostudents', 'block_evalcomix') . '</option>';
     }
     if (!empty($users)) {
-        echo '<option value="0">'.get_string('selectstudent', 'block_evalcomix').'</option>';
+        echo '<option value="0">' . get_string('selectstudent', 'block_evalcomix') . '</option>';
         foreach ($users as $userid) {
-            if ($user = $DB->get_record('user', array('id' => $userid, 'deleted' => '0'))) {
-                echo '<option value="'.$userid.'" >'.$user->lastname . ', ' . $user->firstname.'</option>';
+            if ($user = $DB->get_record('user', ['id' => $userid, 'deleted' => '0'])) {
+                echo '<option value="' . $userid . '" >' . $user->lastname . ', ' . $user->firstname . '</option>';
             }
         }
     }
@@ -61,39 +62,39 @@ if ($requestgraphic == 'getstudents' && !empty($taskid)) {
 // Get students of a group.
 if ($requestgraphic == 'getstudentsgroup' && !empty($taskid) && $mode == 1 && !empty($groupid)) {
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/graphics/graphicslib.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/graphics/graphicslib.php');
 
     if ($arraystudents = get_group_members_evaluated($groupid, $taskid)) {
         foreach ($arraystudents as $student) {
             $studentid = $student->id;
             echo '
-            <div><input type="checkbox" name="stu-'.$studentid.'" id="stu-'.$studentid.'" checked value="'.$studentid.'"
+            <div><input type="checkbox" name="stu-' . $studentid . '" id="stu-' . $studentid . '" checked value="' . $studentid . '"
                 onclick="modify_graphic(1);
-                "><label for="stu-'.$studentid.'">'
-                .$student->lastname . ', ' . $student->firstname.'</label></div>
+                "><label for="stu-' . $studentid . '">'
+                . $student->lastname . ', ' . $student->firstname . '</label></div>
             ';
         }
     } else {
-        echo '<div style="color:#f00">'.get_string('nostudentsgroup', 'block_evalcomix').'</div>';
+        echo '<div style="color:#f00">' . get_string('nostudentsgroup', 'block_evalcomix') . '</div>';
     }
 }
 
-$xlabels = array();
+$xlabels = [];
 // Datas for graphic task-student.
 if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'student' && !empty($users)) {
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/calculator_average.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
     $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
-    $result = array();
-    $arrayself = array();
-    $arraypeer = array();
-    $arrayteacher = array();
+    $result = [];
+    $arrayself = [];
+    $arraypeer = [];
+    $arrayteacher = [];
     if ($assessments) {
         $teachergrades = block_evalcomix_assessments::calculate_grades($assessments->teacherassessments);
         $peergrades = block_evalcomix_assessments::calculate_grades($assessments->peerassessments);
 
-        $xlabels[] = array(get_string('teachermod', 'block_evalcomix'));
+        $xlabels[] = [get_string('teachermod', 'block_evalcomix')];
         if ($teachergrades) {
             foreach ($teachergrades as $teachergrade) {
                 $arrayteacher[] = (int)$teachergrade;
@@ -101,41 +102,41 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 's
         }
 
         $selfassessment = $assessments->selfassessment;
-        $xlabels[] = array(get_string('selfmod', 'block_evalcomix'));
+        $xlabels[] = [get_string('selfmod', 'block_evalcomix')];
         if ($selfassessment) {
             $arrayself[] = (int)$selfassessment->grade;
         }
 
-        $xlabels[] = array(get_string('peermod', 'block_evalcomix'));
+        $xlabels[] = [get_string('peermod', 'block_evalcomix')];
         if ($peergrades) {
             foreach ($peergrades as $peergrade) {
                 $arraypeer[] = (int)$peergrade;
             }
         }
 
-        $result = array(
+        $result = [
             'type' => 'box',
-            'title' => array(get_string('profile_task_by_student', 'block_evalcomix')),
+            'title' => [get_string('profile_task_by_student', 'block_evalcomix')],
             'min' => 0,
             'max' => 100,
             'xlabels' => $xlabels,
-            'datas' => array(
+            'datas' => [
                 $arrayteacher,
                 $arrayself,
                 $arraypeer,
-            ),
-        );
+            ],
+        ];
     } else {
-        $result = array(
+        $result = [
                 'type' => 'box',
-                'title' => array(get_string('profile_task_by_student', 'block_evalcomix')),
+                'title' => [get_string('profile_task_by_student', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => 'no datas',
-                'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix'), 0),
-                ),
-            );
+                'datas' => [
+                    [get_string('no_datas', 'block_evalcomix'), 0],
+                ],
+            ];
     }
     $jsondata['status'] = (count($result) > 0);
     $jsondata['result'] = $result;
@@ -144,17 +145,17 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 's
 
 // Datas for graphic task-group.
 if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'group' && !empty($groupid)) {
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/calculator_average.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/graphics/graphicslib.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/graphics/graphicslib.php');
 
-    $arraystudents = array();
+    $arraystudents = [];
     if (empty($users) && empty($check)) {
         $arraystudents = get_group_members_evaluated($groupid, $taskid);
     } else {
         $studentids = explode('-', $users);
         foreach ($studentids as $studentid) {
-            if (!empty($studentid) && $user = $DB->get_record('user', array('id' => $studentid))) {
+            if (!empty($studentid) && $user = $DB->get_record('user', ['id' => $studentid])) {
                 $arraystudents[$user->id] = $user;
             }
         }
@@ -164,9 +165,9 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
         $xlabels[0] = get_string('teachermod', 'block_evalcomix');
         $xlabels[1] = get_string('selfmod', 'block_evalcomix');
         $xlabels[2] = get_string('peermod', 'block_evalcomix');
-        $tgrades = array();
-        $pgrades = array();
-        $sgrades = array();
+        $tgrades = [];
+        $pgrades = [];
+        $sgrades = [];
         foreach ($arraystudents as $student) {
             $studentid = $student->id;
             $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, (int)$studentid);
@@ -186,29 +187,29 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
                 }
             }
         }
-        $result = array(
+        $result = [
                     'type' => 'box',
-                    'title' => array(get_string('profile_task_by_group', 'block_evalcomix')),
+                    'title' => [get_string('profile_task_by_group', 'block_evalcomix')],
                     'min' => 0,
                     'max' => 100,
                     'xlabels' => $xlabels,
-                    'datas' => array(
+                    'datas' => [
                         $tgrades,
                         $sgrades,
                         $pgrades,
-                    ),
-                );
+                    ],
+                ];
     } else {
-        $result = array(
+        $result = [
                 'type' => 'box',
-                'title' => array(get_string('profile_task_by_group', 'block_evalcomix')),
+                'title' => [get_string('profile_task_by_group', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
-                'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix')),
-                ),
-            );
+                'xlabels' => [get_string('no_datas', 'block_evalcomix')],
+                'datas' => [
+                    [get_string('no_datas', 'block_evalcomix')],
+                ],
+            ];
     }
     $jsondata['status'] = (count($result) > 0);
     $jsondata['result'] = $result;
@@ -217,18 +218,18 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'g
 
 // Datas for graphic task-class.
 if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'class') {
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/calculator_average.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/calculator_average.php');
     $students = block_evalcomix_assessments::get_students_assessed($taskid);
     if ($students) {
         $xlabels[0] = get_string('teachermod', 'block_evalcomix');
         $xlabels[1] = get_string('selfmod', 'block_evalcomix');
         $xlabels[2] = get_string('peermod', 'block_evalcomix');
-        $tgrades = array();
-        $pgrades = array();
-        $sgrades = array();
+        $tgrades = [];
+        $pgrades = [];
+        $sgrades = [];
         foreach ($students as $student) {
-            if ($DB->get_record('user', array('id' => $student, 'deleted' => '0'))) {
+            if ($DB->get_record('user', ['id' => $student, 'deleted' => '0'])) {
                 $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $student);
                 if (!empty($assessments->teacherassessments)) {
                     $tgrade = block_evalcomix_assessments::calculate_gradearray($assessments->teacherassessments);
@@ -247,29 +248,29 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
                 }
             }
         }
-        $result = array(
+        $result = [
                     'type' => 'box',
-                    'title' => array(get_string('profile_task_by_course', 'block_evalcomix')),
+                    'title' => [get_string('profile_task_by_course', 'block_evalcomix')],
                     'min' => 0,
                     'max' => 100,
                     'xlabels' => $xlabels,
-                    'datas' => array(
+                    'datas' => [
                         $tgrades,
                         $sgrades,
                         $pgrades,
-                    ),
-                );
+                    ],
+                ];
     } else {
-        $result = array(
+        $result = [
                 'type' => 'box',
-                'title' => array(get_string('profile_task_by_course', 'block_evalcomix')),
+                'title' => [get_string('profile_task_by_course', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
-                'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                'datas' => array(
-                    array(get_string('no_datas', 'block_evalcomix')),
-                ),
-            );
+                'xlabels' => [get_string('no_datas', 'block_evalcomix')],
+                'datas' => [
+                    [get_string('no_datas', 'block_evalcomix')],
+                ],
+            ];
     }
     $jsondata['status'] = (count($result) > 0);
     $jsondata['result'] = $result;
@@ -278,12 +279,12 @@ if ($requestgraphic == 'box' && $mode == 1 && !empty($taskid) && $modality == 'c
 
 // Datas for graphic student-teacher.
 if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'teacher' && !empty($users)) {
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
     $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
-    $teachergrades = array();
+    $teachergrades = [];
     if (!empty($assessments->teacherassessments)) {
         foreach ($assessments->teacherassessments as $tassessment) {
-            if ($teacher = $DB->get_record('user', array('id' => $tassessment->assessorid))) {
+            if ($teacher = $DB->get_record('user', ['id' => $tassessment->assessorid])) {
                 if (is_numeric($tassessment->grade)) {
                     $xlabels[] = $teacher->lastname . ', ' . $teacher->firstname;
                     $teachergrades[] = $tassessment->grade;
@@ -291,33 +292,33 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
             }
         }
         if (!empty($teachergrades)) {
-            $result = array(
+            $result = [
                 'type' => 'bar',
-                'title' => array(get_string('profile_student_by_teacher', 'block_evalcomix')),
+                'title' => [get_string('profile_student_by_teacher', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => $xlabels,
                 'datas' => $teachergrades,
-                );
+                ];
         } else {
-            $result = array(
+            $result = [
                 'type' => 'bar',
-                'title' => array(get_string('profile_student_by_teacher', 'block_evalcomix')),
+                'title' => [get_string('profile_student_by_teacher', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
                 'xlabels' => $xlabels,
-                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
-                );
+                'datas' => [[get_string('no_datas', 'block_evalcomix'), 0]],
+                ];
         }
     } else {
-        $result = array(
+        $result = [
                 'type' => 'bar',
-                'title' => array(get_string('profile_student_by_teacher', 'block_evalcomix')),
+                'title' => [get_string('profile_student_by_teacher', 'block_evalcomix')],
                 'min' => 0,
                 'max' => 100,
-                'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
-                );
+                'xlabels' => [get_string('no_datas', 'block_evalcomix')],
+                'datas' => [[get_string('no_datas', 'block_evalcomix'), 0]],
+                ];
     }
 
     $jsondata['status'] = (count($result) > 0);
@@ -327,35 +328,35 @@ if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 't
 
 // Datas for graphic student-peer.
 if ($requestgraphic == 'bar' && $mode == 2 && !empty($taskid) && $modality == 'peer' && !empty($users)) {
-    require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_assessments.php');
+    require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
     $assessments = block_evalcomix_assessments::get_assessments_by_modality($taskid, $users);
-    $peergrades = array();
+    $peergrades = [];
     if (!empty($assessments->peerassessments)) {
         foreach ($assessments->peerassessments as $passessment) {
-            if ($peer = $DB->get_record('user', array('id' => $passessment->assessorid))) {
+            if ($peer = $DB->get_record('user', ['id' => $passessment->assessorid])) {
                 if (is_numeric($passessment->grade)) {
                     $xlabels[] = $peer->lastname . ', ' . $peer->firstname;
                     $peergrades[] = $passessment->grade;
                 }
             }
         }
-        $result = array(
+        $result = [
                     'type' => 'bar',
-                    'title' => array(get_string('profile_student_by_group', 'block_evalcomix')),
+                    'title' => [get_string('profile_student_by_group', 'block_evalcomix')],
                     'min' => 0,
                     'max' => 100,
                     'xlabels' => $xlabels,
                     'datas' => $peergrades,
-                );
+                ];
     } else {
-        $result = array(
+        $result = [
                     'type' => 'bar',
-                    'title' => array(get_string('profile_student_by_group', 'block_evalcomix')),
+                    'title' => [get_string('profile_student_by_group', 'block_evalcomix')],
                     'min' => 0,
                     'max' => 100,
-                    'xlabels' => array(get_string('no_datas', 'block_evalcomix')),
-                    'datas' => array(array(get_string('no_datas', 'block_evalcomix'), 0)),
-                );
+                    'xlabels' => [get_string('no_datas', 'block_evalcomix')],
+                    'datas' => [[get_string('no_datas', 'block_evalcomix'), 0]],
+                ];
     }
 
     $jsondata['status'] = (count($result) > 0);

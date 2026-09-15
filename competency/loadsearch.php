@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * loadsearch
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,7 +30,7 @@ $sort = optional_param('sort', '', PARAM_ALPHA);
 $dir = optional_param('dir', 'ASC', PARAM_ALPHA);
 $search = optional_param('search', '', PARAM_RAW);
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
@@ -39,16 +40,16 @@ $renderer = $PAGE->get_renderer('block_evalcomix', 'competency');
 $datas = null;
 
 switch ($option) {
-    case 'competency': {
+    case 'competency':
         $datas = block_evalcomix_competencies::get_competencies($courseid, $search);
         echo $renderer->display_competencies_table($courseid, $datas, $sort, $dir, $search);
-    }break;
-    case 'type': {
+        break;
+    case 'type':
         $datas = block_evalcomix_competencies::get_competencytypes($courseid, $search);
         echo $renderer->display_competencytypes_table($courseid, $datas, $sort, $dir, $search);
-    }break;
-    case 'outcome': {
+        break;
+    case 'outcome':
         $datas = block_evalcomix_competencies::get_competencies($courseid, $search, 1);
         echo $renderer->display_outcomes_table($courseid, $datas, $sort, $dir, $search);
-    }break;
+        break;
 }

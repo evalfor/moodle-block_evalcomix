@@ -13,107 +13,100 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * it
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX - FLOASS';
-$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['anonymous_EI'] = 'Anonimo - PA';
+$string['anonymous_EI_help'] = 'Indica se gli studenti potranno sapere quali compagni li hanno valutati.';
+$string['april'] = 'Aprile';
+$string['argumentset'] = 'Valutazione argomentativa';
+$string['assess'] = 'Valuta';
+$string['assesssection'] = 'Valutazione attività';
+$string['august'] = 'Agosto';
+$string['availabledate_AE'] = 'SA - disponibile da: ';
+$string['availabledate_AE_help'] = '';
+$string['availabledate_EI'] = 'PA - disponibile da: ';
+$string['availabledate_EI_help'] = '';
 $string['blocksettings'] = 'Configurazione';
 $string['blockstring'] = 'EvalCOMIX contenuti';
-$string['instruments'] = 'Gestione degli strumenti';
-$string['evaluation'] = 'Valuta le Attività';
-$string['evalcomix:view'] = 'Visualizzare EvalCOMIX';
-$string['evalcomix:edit'] = 'Modificare EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX consente la progettazione e la gestione di strumenti di valutazione (scale di valutazione, rubriche, etc. da utilizzare per valutare forum, glossari, database, wiki, e attività.<br>La valutazione attraverso questi strumenti può essere effettuata dagli insegnanti (valutazione degli insegnanti) o dagli studenti (autovalutazione, valutazione fra pari). Per maggiori informazioni, consultare il manuale.';
-$string['selfmodality'] = 'Autovalutazione - SA ';
-$string['peermodality'] = 'Valutazione fra pari - PA ';
-$string['teachermodality'] = 'Valutazione degli insegnanti - TA ';
-$string['selfmod'] = 'Autovalutazione';
-$string['peermod'] = 'Valutazione fra pari';
-$string['teachermod'] = 'Valutazione degli insegnanti';
-$string['nuloption'] = 'Selezione dello strumento di valutazione';
-$string['grades'] = 'Voto: ';
-$string['selinstrument'] = 'Piano di valutazione';
-$string['pon_EP'] = 'Peso - TA';
-$string['pon_AE'] = 'Peso - SA';
-$string['pon_EI'] = 'Peso - PA';
-$string['availabledate_EI'] = 'PA - disponibile da: ';
-$string['availabledate_AE'] = 'SA - disponibile da: ';
-$string['ratingsforitem'] = 'Ripartizione del voto';
-$string['modality'] = 'Modalità';
-$string['grade'] = 'Voto';
-$string['weighingfinalgrade'] = 'Peso nella votazione finale';
-$string['finalgrade'] = 'Voto finale';
-$string['nograde'] = 'Nessun Voto';
-$string['timeopen'] = 'Il periodo della valutazione non è terminato';
-$string['designsection'] = 'Progettazione e gestione dello strumento di valutazione';
-$string['assesssection'] = 'Valutazione attività';
-$string['counttool'] = 'Conteggio degli strumenti';
-$string['newtool'] = 'Nuovo strumento';
-$string['open'] = 'Apri';
-$string['view'] = 'Visualizza';
-$string['delete'] = 'Cancella';
-$string['title'] = 'Titolo';
-$string['type'] = 'Genere';
-$string['anonymous_EI'] = 'Anonimo - PA';
-$string['details'] = 'Dettagli';
-$string['assess'] = 'Valuta';
-$string['set'] = 'Imposta';
-$string['ratingsforitem'] = 'valutazione';
-$string['modality'] = 'Modalità';
-$string['grade'] = 'Voto';
-$string['weighingfinalgrade'] = 'Peso nella votazione finale';
-$string['evalcomixgrade'] = 'Voto EvalCOMIX';
-$string['moodlegrade'] = 'Voto Moodle';
-$string['graphics'] = 'Grafici';
-$string['timedue_AE'] = 'SA - scadenza';
-$string['timedue_EI'] = 'PA - scadenza';
-$string['january'] = 'Gennaio';
-$string['february'] = 'Febbraio';
-$string['march'] = 'Marzo';
-$string['april'] = 'Aprile';
-$string['may'] = 'Maggio';
-$string['june'] = 'Giugno';
-$string['july'] = 'Luglio';
-$string['august'] = 'Agosto';
-$string['september'] = 'Settembre';
-$string['october'] = 'Ottobre';
-$string['november'] = 'Novembre';
-$string['december'] = 'Dicembre';
-$string['save'] = 'Salva';
 $string['cancel'] = 'Cancella';
+$string['counttool'] = 'Conteggio degli strumenti';
+$string['december'] = 'Dicembre';
+$string['delete'] = 'Cancella';
+$string['designsection'] = 'Progettazione e gestione dello strumento di valutazione';
+$string['details'] = 'Dettagli';
+$string['differential'] = 'Valutazione differenziale';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix:edit'] = 'Modificare EvalCOMIX';
+$string['evalcomix:view'] = 'Visualizzare EvalCOMIX';
+$string['evalcomixgrade'] = 'Voto EvalCOMIX';
+$string['evalcomixgrade_help'] = 'Media ponderata delle valutazioni di evalcomix';
 $string['evaluate'] = 'Valutazione';
-$string['scale'] = 'Scala';
+$string['evaluation'] = 'Valuta le Attività';
+$string['february'] = 'Febbraio';
+$string['finalgrade'] = 'Voto finale';
+$string['finalgrade_help'] = 'Media aritmetica di EvalCOMIX voto finale e voto finale di Moodle';
+$string['gradeof'] = 'Voto di ';
+$string['grades'] = 'Voto: ';
+$string['graphics'] = 'Grafici';
+$string['instruments'] = 'Gestione degli strumenti';
+$string['january'] = 'Gennaio';
+$string['july'] = 'Luglio';
+$string['june'] = 'Giugno';
 $string['list'] = 'Check list';
 $string['listscale'] = 'Listscale';
-$string['rubric'] = 'Rubrica';
+$string['march'] = 'Marzo';
+$string['may'] = 'Maggio';
 $string['mixed'] = 'Valutazione mista';
-$string['differential'] = 'Valutazione differenziale';
-$string['argumentset'] = 'Valutazione argomentativa';
-$string['whatis'] = 'Gestione strumenti di valutazione';
-$string['gradeof'] = 'Voto di ';
-/* ----------------------------- AIUTO ----------------------------- */
-$string['timeopen_help'] = 'La valutazione fra pari non è inclusa nel voto EvalCOMIX perché il periodo di valutazione non è ancora terminato.';
-$string['evalcomixgrade_help'] = 'Media ponderata delle valutazioni di evalcomix';
+$string['modality'] = 'Modalità';
+$string['moodlegrade'] = 'Voto Moodle';
 $string['moodlegrade_help'] = 'Voto asseganto da Moodle';
-$string['finalgrade_help'] = 'Media aritmetica di EvalCOMIX voto finale e voto finale di Moodle';
-$string['teachermodality_help'] = 'Questo strumento sarà lo strumento di valutazione usato dagli insegnanti per valutare gli studenti in questa attività.';
-$string['pon_EP_help'] = 'Questa è la percentuale del voto ottenuto tramite lo strumento di valutazione degli insegnanti nel voto finale.';
-$string['selfmodality_help'] = 'Questo è lo strumento di autovalutazione usato dagli studenti per valutare e dare un voto al loro compito.';
-$string['pon_AE_help'] = 'Questa è la percentuale del voto ottenuto dallo strumento di autovalutazione nel voto finale.';
+$string['newtool'] = 'Nuovo strumento';
+$string['november'] = 'Novembre';
+$string['nuloption'] = 'Selezione dello strumento di valutazione';
+$string['october'] = 'Ottobre';
+$string['open'] = 'Apri';
+$string['peermod'] = 'Valutazione fra pari';
+$string['peermodality'] = 'Valutazione fra pari - PA ';
 $string['peermodality_help'] = 'Questp è lo strumento di valutazione usato dagli studenti per valutare le attività dei loro compagni.';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['pon_AE'] = 'Peso - SA';
+$string['pon_AE_help'] = 'Questa è la percentuale del voto ottenuto dallo strumento di autovalutazione nel voto finale.';
+$string['pon_EI'] = 'Peso - PA';
 $string['pon_EI_help'] = 'Questa è la percentuale del voto ottenuto dallo strumento di valutazione fra pari nel voto finale.';
-$string['availabledate_AE_help'] = '';
-$string['timedue_AE_help'] = '';
-$string['availabledate_EI_help'] = '';
-$string['timedue_EI_help'] = '';
-$string['anonymous_EI_help'] = 'Indica se gli studenti potranno sapere quali compagni li hanno valutati.';
-$string['whatis_help'] = 'EvalCOMIX consente di progettare e gestire strumenti di valutazione (scale di valutazione, rubriche, ecc.) Da utilizzare per valutare forum, glossari, database, wiki e attività.<br>La valutazione con questi strumenti può essere effettuata da insegnanti (valutazione degli insegnanti) o studenti (autovalutazione, valutazione fra pari). Per maggiori informazioni, consultare il manuale. Per maggiori informazioni consultare Manuale';
+$string['pon_EP'] = 'Peso - TA';
+$string['pon_EP_help'] = 'Questa è la percentuale del voto ottenuto tramite lo strumento di valutazione degli insegnanti nel voto finale.';
+$string['ratingsforitem'] = 'valutazione';
+$string['rubric'] = 'Rubrica';
+$string['save'] = 'Salva';
+$string['scale'] = 'Scala';
+$string['selfmod'] = 'Autovalutazione';
+$string['selfmodality'] = 'Autovalutazione - SA ';
+$string['selfmodality_help'] = 'Questo è lo strumento di autovalutazione usato dagli studenti per valutare e dare un voto al loro compito.';
+$string['selinstrument'] = 'Piano di valutazione';
 $string['selinstrument_help'] = 'Riferimento a Manuale per ulteriori informazioni su come impostare delle attività con EvalCOMIX.';
+$string['september'] = 'Settembre';
+$string['set'] = 'Imposta';
+$string['teachermod'] = 'Valutazione degli insegnanti';
+$string['teachermodality'] = 'Valutazione degli insegnanti - TA ';
+$string['teachermodality_help'] = 'Questo strumento sarà lo strumento di valutazione usato dagli insegnanti per valutare gli studenti in questa attività.';
+$string['timedue_AE'] = 'SA - scadenza';
+$string['timedue_AE_help'] = '';
+$string['timedue_EI'] = 'PA - scadenza';
+$string['timedue_EI_help'] = '';
+$string['timeopen'] = 'Il periodo della valutazione non è terminato';
+$string['timeopen_help'] = 'La valutazione fra pari non è inclusa nel voto EvalCOMIX perché il periodo di valutazione non è ancora terminato.';
+$string['type'] = 'Genere';
+$string['view'] = 'Visualizza';
+$string['weighingfinalgrade'] = 'Peso nella votazione finale';
+$string['whatis'] = 'EvalCOMIX consente la progettazione e la gestione di strumenti di valutazione (scale di valutazione, rubriche, etc. da utilizzare per valutare forum, glossari, database, wiki, e attività.<br>La valutazione attraverso questi strumenti può essere effettuata dagli insegnanti (valutazione degli insegnanti) o dagli studenti (autovalutazione, valutazione fra pari). Per maggiori informazioni, consultare il manuale.';
+$string['whatis_help'] = 'EvalCOMIX consente di progettare e gestire strumenti di valutazione (scale di valutazione, rubriche, ecc.) Da utilizzare per valutare forum, glossari, database, wiki e attività.<br>La valutazione con questi strumenti può essere effettuata da insegnanti (valutazione degli insegnanti) o studenti (autovalutazione, valutazione fra pari). Per maggiori informazioni, consultare il manuale. Per maggiori informazioni consultare Manuale';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Grafico delle attività degli studenti';
 $string['profile_task_by_group'] = 'Grafico delle attività di grppo';
@@ -177,7 +170,6 @@ $string['whoassesses_EI'] = 'Chi valuta';
 $string['anystudent_EI'] = 'Qualisiasi studente';
 $string['groups_EI'] = 'Gruppi';
 $string['specificstudents_EI'] = 'Studente specifico';
-$string['whoassesses_EI_help'] = '';
 $string['assignstudents_EI'] = 'Attività studenti';
 $string['assess_students'] = 'Valuta studenti';
 $string['studentstoassess'] = 'Studenti da valutare';
@@ -214,7 +206,6 @@ $string['add_comments'] = 'Cambia commento';
 $string['checklist'] = 'Lista di controllo';
 $string['ratescale'] = 'Scala di valutazione';
 $string['listrate'] = 'Lista di controllo + Scala di valutazione';
-$string['rubric'] = 'Rubrica';
 $string['differentail'] = 'Differenziale semantico';
 $string['mix'] = 'Strumento misto';
 $string['argument'] = 'Valutazione argomentativa';
@@ -248,12 +239,10 @@ $string['titlevalue'] = 'Valore';
 $string['no'] = 'No';
 $string['yes'] = 'Sì';
 $string['observation'] = 'Commenti';
-$string['view'] = 'Chiudi visualizzazione precedente';
 
 $string['windowselection'] = 'Seleziona finestra';
 $string['selectfile'] = 'Seleziona file';
 $string['upfile'] = 'Carica file';
-$string['cancel'] = 'Cancella';
 
 $string['savedsaccessfully'] = 'Questo strumento è stato salvato con successo';
 $string['ADimension'] = 'Questo campo non può essere lasciato vuoto. \"Nº delle Dimensioni\" Deve essere un numero maggiore di 0 e \"Nº dei Valori\" un numero maggiore o uguale a 2';
@@ -325,7 +314,7 @@ Se c\'è **Teacher Evaluation - EP**, gli insegnanti potranno valutare solo i co
 
 Se c\'è **Autovalutazione – ​​AE**, solo il coordinatore può effettuare l\'autovalutazione e la sua valutazione sarà assegnata a ciascun membro del suo gruppo.
 
-In presenza di **Peer Assessment – ​​​​EI**, gli studenti potranno valutare solo i coordinatori di ciascun gruppo e ogni valutazione sarà assegnata a ciascun componente del gruppo.
+In presenza di **Peer Assessment – ​​​​EI**, gli studenti potranno valutare solo i coordinatori di ciascun gruppo e ogni valutazione sarà assegnata a ciascun componente del gruppo. Questo comportamento può essere modificato selezionando l\'opzione "Studenti specifici" e assegnando chi valuta chi.
 
 Gli studenti che non fanno parte di alcun gruppo non riceveranno una valutazione. I gruppi che non hanno un coordinatore assegnato non riceveranno alcuna valutazione e non potranno valutare.';
 $string['selectcoordinator'] = 'scegli il coordinatore';

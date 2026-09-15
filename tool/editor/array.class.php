@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * block_evalcomix_array_util
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
  */
-
 class block_evalcomix_array_util {
     /**
      * This function adds $elem to @array before $keyelement.
@@ -31,7 +31,7 @@ class block_evalcomix_array_util {
      * @return $array with the new element
      */
     public static function array_add_left($array, $keyelement, $element, $index) {
-        $arrayaux = array();
+        $arrayaux = [];
         $keyleft = null;
         $flag = false;
         $i = 0;
@@ -61,8 +61,16 @@ class block_evalcomix_array_util {
         return $arrayaux;
     }
 
+    /**
+     * This function adds $elem to @array after $keyelement.
+     * @param array $array
+     * @param string $keyelement key of the element from which to insert the element $elem in $array
+     * @param object $element new element to add
+     * @param $index key of the new element.
+     * @return $array with the new element
+     */
     public static function array_add_rigth($array, $keyelement, $element, $index) {
-        $arrayaux = array();
+        $arrayaux = [];
         $flag = false;
         if (is_array($array)) {
             foreach ($array as $key => $value) {
@@ -83,6 +91,12 @@ class block_evalcomix_array_util {
         return $arrayaux;
     }
 
+    /**
+     * This function get the item before $element.
+     * @param array $array
+     * @param object $element new element to add
+     * @return element
+     */
     public static function get_previous_item($array, $element) {
         $i = 0;
         $arrayaux[$i] = 'null';
@@ -103,6 +117,12 @@ class block_evalcomix_array_util {
         return false;
     }
 
+    /**
+     * This function get the item following $element.
+     * @param array $array
+     * @param object $element new element to add
+     * @return element
+     */
     public static function get_next_item($array, $key) {
         if (is_array($array) && isset($array[$key])) {
             $flag = false;

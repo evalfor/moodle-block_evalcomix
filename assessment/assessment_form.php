@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Form to select a student assessor
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,11 +29,11 @@ $courseid = required_param('id', PARAM_INT);        // Course id.
 require_course_login($courseid);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/grade_report.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $toolid = required_param('t', PARAM_ALPHANUM);
 $perspective = required_param('mode', PARAM_ALPHA);
@@ -39,12 +42,11 @@ $viewtemplate = optional_param('vt', '0', PARAM_INT);
 
 $context = context_course::instance($courseid);
 
-$url = new moodle_url('/blocks/evalcomix/assessment/assessment_form.php',
-array('courseid' => $courseid, 't' => $toolid));
+$url = new moodle_url('/blocks/evalcomix/assessment/assessment_form.php', ['courseid' => $courseid, 't' => $toolid]);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
-if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
+if (!$tool = $DB->get_record('block_evalcomix_tools', ['idtool' => $toolid])) {
     throw new \moodle_exception('EvalCOMIX: No tool enabled');
 }
 
@@ -64,35 +66,45 @@ if ($viewtemplate == '0') {
 
     $module = block_evalcomix_tasks::get_type_task($cmid);
 
-    $user = $DB->get_record('user', array('id' => $studentid));
+    $user = $DB->get_record('user', ['id' => $studentid]);
     if ($user) {
         $modinfo = get_fast_modinfo($courseid);
         $mods = $modinfo->get_cms();
         $mod = $mods[$cmid];
-        $title = fullname($user) .get_string('studentwork2', 'block_evalcomix'). $mod->name;
+        $title = fullname($user) . get_string('studentwork2', 'block_evalcomix') . $mod->name;
     }
 
     $urlinstrument = '';
     if ($perspective == 'assess') {
         $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
-        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
-            if (!$modefetch = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $mode))) {
+        if ($task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cmid])) {
+            if (!$modefetch = $DB->get_record('block_evalcomix_modes', ['taskid' => $task->id, 'modality' => $mode])) {
                 throw new \moodle_exception('EvalCOMIX: No permissions');
             }
-            if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
-                'assessorid' => $USER->id, 'studentid' => $studentid))) {
-                $urlinstrument = block_evalcomix_webservice_client::get_ws_assessment_form($toolid, $assessment,
-                    $lang.'_utf8', $title);
+            $assessment = $DB->get_record('block_evalcomix_assessments', ['taskid' => $task->id,
+                    'assessorid' => $USER->id, 'studentid' => $studentid]);
+            if ($assessment) {
+                $urlinstrument = block_evalcomix_webservice_client::get_ws_assessment_form(
+                    $toolid,
+                    $assessment,
+                    $lang . '_utf8',
+                    $title
+                );
             } else {
                 $assessor = $USER->id;
-                $urlinstrument = block_evalcomix_webservice_client::get_ws_assessment_form($toolid, null, $lang.'_utf8',
-                    $title, array('courseid' => $courseid, 'module' => $module, 'cmid' => $cmid, 'studentid' => $studentid,
-                    'assessorid' => $assessor, 'mode' => $mode));
+                $urlinstrument = block_evalcomix_webservice_client::get_ws_assessment_form(
+                    $toolid,
+                    null,
+                    $lang . '_utf8',
+                    $title,
+                    ['courseid' => $courseid, 'module' => $module, 'cmid' => $cmid, 'studentid' => $studentid,
+                    'assessorid' => $assessor,
+                    'mode' => $mode]
+                );
             }
         } else {
             throw new \moodle_exception('EvalCOMIX: The activity is not configured with EvalCOMIX');
         }
-
     } else if ($perspective == 'view') {
         $assessorid = required_param('as', PARAM_INT);
 
@@ -108,14 +120,20 @@ if ($viewtemplate == '0') {
             }
         }
 
-        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
-            if (!$modefetch = $DB->get_record('block_evalcomix_modes', array('taskid' => $task->id, 'modality' => $mode))) {
+        if ($task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cmid])) {
+            if (!$modefetch = $DB->get_record('block_evalcomix_modes', ['taskid' => $task->id, 'modality' => $mode])) {
                 throw new \moodle_exception('EvalCOMIX: No permissions');
             }
-            if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $task->id,
-                'assessorid' => $assessorid, 'studentid' => $studentid))) {
-                $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool($toolid, $assessment, $lang.'_utf8',
-                    $title);
+            if (
+                $assessment = $DB->get_record('block_evalcomix_assessments', ['taskid' => $task->id,
+                'assessorid' => $assessorid, 'studentid' => $studentid])
+            ) {
+                $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool(
+                    $toolid,
+                    $assessment,
+                    $lang . '_utf8',
+                    $title
+                );
             }
         } else {
             throw new \moodle_exception('EvalCOMIX: The activity is not configured with EvalCOMIX');
@@ -123,11 +141,11 @@ if ($viewtemplate == '0') {
     }
 } else if ($viewtemplate == '1') {
     require_capability('moodle/grade:viewhidden', $context, $USER->id);
-    $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool($toolid, null, $lang.'_utf8');
+    $urlinstrument = block_evalcomix_webservice_client::get_ws_viewtool($toolid, null, $lang . '_utf8');
 }
 
 $vars = explode('?', $urlinstrument);
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/curl.class.php');
 
 $curl = new block_evalcomix_curl();
 parse_str($vars[1], $query);
@@ -139,19 +157,18 @@ if ($response && $curl->get_http_code() >= 200 && $curl->get_http_code() < 400) 
 }
 
 if ($viewtemplate == 0) {
-
     echo "<script>
 
     window.opener.onunload=function() {
-        doWork('evalcomixtablegrade', 'servidor.php?id=".$courseid."&eva=".$USER->id."',
-        'courseid=".$courseid."&page=&stu=".$studentid."&cma=".$cmid."');
+        doWork('evalcomixtablegrade', 'servidor.php?id=" . $courseid . "&eva=" . $USER->id . "',
+        'courseid=" . $courseid . "&page=&stu=" . $studentid . "&cma=" . $cmid . "');
         setTimeout(close, 1000);
 
     };
 
     /*window.opener.onbeforeunload() {
-        doWork('evalcomixtablegrade', 'servidor.php?id=".$courseid."&eva=".$USER->id."',
-        'courseid=".$courseid."&page=&stu=".$studentid."&cma=".$cmid."');
+        doWork('evalcomixtablegrade', 'servidor.php?id=" . $courseid . "&eva=" . $USER->id . "',
+        'courseid=" . $courseid . "&page=&stu=" . $studentid . "&cma=" . $cmid . "');
         close();
     };*/
 
@@ -161,8 +178,8 @@ if ($viewtemplate == 0) {
         }
         else {
             alert('Parent closed/does not exist.');
-            doWork('evalcomixtablegrade', 'servidor.php?id=".$courseid."&eva=".$USER->id."',
-            'courseid=".$courseid."&page=&stu=".$studentid."&cma=".$cmid."');
+            doWork('evalcomixtablegrade', 'servidor.php?id=" . $courseid . "&eva=" . $USER->id . "',
+            'courseid=" . $courseid . "&page=&stu=" . $studentid . "&cma=" . $cmid . "');
             window.close();
         }
 }

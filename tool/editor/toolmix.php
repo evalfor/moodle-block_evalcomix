@@ -14,256 +14,453 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * block_evalcomix_editor_toolmix
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
  */
 
+/**
+ * block_evalcomix_editor_toolmix
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
+ */
 class block_evalcomix_editor_toolmix {
+    /** @var string*/
     private $titulo;
-    private $listtool = array();
+    /** @var array*/
+    private $listtool = [];
+    /** @var int*/
     private $index;
+    /** @var array*/
     private $toolpor;
+    /** @var string*/
     private $view;
+    /** @var string*/
     private $observation;
-    private $plantillasId;
+    /** @var array*/
+    private $plantillasid;
 
-    public function __construct($lang='es_utf8', $titulo = '', $observation = '', $params = array()) {
+    /**
+     * Construct
+     */
+    public function __construct($lang = 'es_utf8', $titulo = '', $observation = '', $params = []) {
         $this->titulo = $titulo;
         $this->index = 0;
-        $this->toolpor = array();
+        $this->toolpor = [];
         $this->observation = $observation;
         $this->view = 'design';
         if (isset($params['plantillasId'])) {
-            $this->plantillasId = $params['plantillasId'];
+            $this->plantillasid = $params['plantillasId'];
         }
     }
 
+    /**
+     * Method
+     */
     public function get_toolpor() {
         return $this->toolpor;
     }
 
+    /**
+     * Method
+     */
     public function get_tool($id) {
         return $this->listtool[$id];
     }
 
+    /**
+     * Method
+     */
     public function get_tools() {
         return $this->listtool;
     }
 
+    /**
+     * Method
+     */
     public function get_numtool() {
         return count($this->listtool);
     }
 
+    /**
+     * Method
+     */
     public function get_titulo($id = 0) {
         return $this->titulo;
     }
 
+    /**
+     * Method
+     */
     public function get_dimension($id = 0) {
         return $this->listtool[$id]->get_dimension();
     }
 
+    /**
+     * Method
+     */
     public function get_numdim($id = 0) {
         return $this->listtool[$id]->get_numdim();
     }
 
+    /**
+     * Method
+     */
     public function get_subdimension($id = 0) {
         return $this->listtool[$id]->get_subdimension();
     }
 
+    /**
+     * Method
+     */
     public function get_numsubdim($id = 0) {
         return $this->listtool[$id]->get_numsubdim();
     }
 
+    /**
+     * Method
+     */
     public function get_atributo($id = 0) {
         return $this->listtool[$id]->get_atributo();
     }
 
+    /**
+     * Method
+     */
     public function get_numatr($id = 0) {
         return $this->listtool[$id]->get_numatr();
     }
 
+    /**
+     * Method
+     */
     public function get_valores($id = 0) {
         return $this->listtool[$id]->get_valores();
     }
 
+    /**
+     * Method
+     */
     public function get_numvalores($id = 0) {
         return $this->listtool[$id]->get_numvalores();
     }
 
+    /**
+     * Method
+     */
     public function get_valtotal($id = 0) {
         return $this->listtool[$id]->get_valtotal();
     }
 
+    /**
+     * Method
+     */
     public function get_numtotal($id = 0) {
         return $this->listtool[$id]->get_numtotal();
     }
 
+    /**
+     * Method
+     */
     public function get_valtotalpor($id = 0) {
         return $this->listtool[$id]->get_valtotalpor();
     }
 
+    /**
+     * Method
+     */
     public function get_valorestotal($id = 0) {
         return $this->listtool[$id]->get_valorestotal();
     }
 
+    /**
+     * Method
+     */
     public function get_valglobal($id = 0) {
         return $this->listtool[$id]->get_valglobal();
     }
 
+    /**
+     * Method
+     */
     public function get_valglobalpor($id = 0) {
         return $this->listtool[$id]->get_valglobalpor();
     }
 
+    /**
+     * Method
+     */
     public function get_dimpor($id = 0) {
         return $this->listtool[$id]->get_dimpor();
     }
 
+    /**
+     * Method
+     */
     public function get_subdimpor($id = 0) {
         return $this->listtool[$id]->get_subdimpor();
     }
 
+    /**
+     * Method
+     */
     public function get_atribpor($id = 0) {
         return $this->listtool[$id]->get_atribpor();
     }
 
+    /**
+     * Method
+     */
     public function get_numrango($id = 0) {
-        return $this->listtool[$id]->get_numrango();;
+        return $this->listtool[$id]->get_numrango();
+        ;
     }
 
+    /**
+     * Method
+     */
     public function get_rango($id = 0) {
         return $this->listtool[$id]->get_rango();
     }
 
+    /**
+     * Method
+     */
     public function get_dimensionsid() {
-        return array();
+        return [];
     }
 
+    /**
+     * Method
+     */
     public function get_subdimensionsid() {
-        $result = array();
+        $result = [];
         foreach ($this->listtool as $id => $tool) {
             $result[$id] = $tool->get_subdimensionsid();
         }
         return $result;
     }
 
+    /**
+     * Method
+     */
     public function get_atributosid() {
-        return array();
+        return [];
     }
 
+    /**
+     * Method
+     */
     public function get_valoresid() {
-        return array();
+        return [];
     }
 
+    /**
+     * Method
+     */
     public function get_valorestotalesid() {
-        return array();
+        return [];
     }
 
+    /**
+     * Method
+     */
     public function get_plantillasid($id = 0) {
-        return $this->plantillasId;
+        return $this->plantillasid;
     }
 
+    /**
+     * Method
+     */
     public function get_competency_string($id, $dim, $subdim) {
         return $this->listtool[$id]->get_competency_string($id, $dim, $subdim);
     }
 
+    /**
+     * Method
+     */
     public function set_titulo($titulo, $id = 0) {
         $this->listtool[$id]->set_titulo($titulo);
     }
 
+    /**
+     * Method
+     */
     public function set_dimension($dimension, $id = 0) {
         $this->listtool[$id]->set_dimension($dimension);
     }
 
+    /**
+     * Method
+     */
     public function set_numdim($numdim, $id = 0) {
         $this->listtool[$id]->set_numdim($numdim);
     }
 
+    /**
+     * Method
+     */
     public function set_subdimension($subdimension, $id = 0) {
         $this->listtool[$id]->set_subdimension($subdimension);
     }
 
+    /**
+     * Method
+     */
     public function set_numsubdim($numsubdim, $id = 0) {
         $this->listtool[$id]->set_numsubdim($numsubdim);
     }
 
+    /**
+     * Method
+     */
     public function set_atributo($atributo, $id = 0) {
         $this->listtool[$id]->set_atributo($atributo);
     }
 
+    /**
+     * Method
+     */
     public function set_numatr($numatr, $id = 0) {
         $this->listtool[$id]->set_numatr($numatr);
     }
 
+    /**
+     * Method
+     */
     public function set_valores($valores, $id = 0) {
         $this->listtool[$id]->set_valores($valores);
     }
 
+    /**
+     * Method
+     */
     public function set_numvalores($numvalores, $id = 0) {
         $this->listtool[$id]->set_numvalores($numvalores);
     }
 
+    /**
+     * Method
+     */
     public function set_valtotal($valtotal, $id = 0) {
         $this->listtool[$id]->set_valtotal($valtotal);
     }
 
+    /**
+     * Method
+     */
     public function set_numtotal($numtotal, $id = 0) {
         $this->listtool[$id]->set_numtotal($numtotal);
     }
 
+    /**
+     * Method
+     */
     public function set_valtotalpor($valtotalpor, $id = 0) {
         $this->listtool[$id]->set_valtotalpor($valtotalpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valorestotal($valorestotal, $id = 0) {
         $this->listtool[$id]->set_valorestotal($valorestotal);
     }
 
+    /**
+     * Method
+     */
     public function set_valglobal($valglobal, $id = 0) {
         $this->listtool[$id]->set_valglobal($valglobal);
     }
 
+    /**
+     * Method
+     */
     public function set_valglobalpor($valglobalpor, $id = 0) {
         $this->listtool[$id]->set_valglobalpor($valglobalpor);
     }
 
+    /**
+     * Method
+     */
     public function set_dimpor($dimpor, $id) {
         $this->listtool[$id]->set_dimpor($dimpor, $id);
     }
 
-    public function set_subdimpor($subdimpor, $id=0) {
+    /**
+     * Method
+     */
+    public function set_subdimpor($subdimpor, $id = 0) {
         $this->listtool[$id]->set_subdimpor($subdimpor);
     }
 
+    /**
+     * Method
+     */
     public function set_atribpor($atribpor, $id = 0) {
         $this->listtool[$id]->set_atribpor($atribpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_rango($rango, $id = 0) {
         $this->listtool[$id]->set_rango($rango);
     }
 
+    /**
+     * Method
+     */
     public function set_dimensionsid($dimensionsid, $id = '') {
     }
+
+    /**
+     * Method
+     */
     public function set_subdimensionsid($subdimensionsid, $id = '') {
     }
+
+    /**
+     * Method
+     */
     public function set_atributosid($atributosid, $id = '') {
     }
+
+    /**
+     * Method
+     */
     public function set_valoresid($valoresid, $id = '') {
     }
+
+    /**
+     * Method
+     */
     public function set_valorestotalesid($valoresid, $id = '') {
     }
+
+    /**
+     * Method
+     */
     public function set_plantillasid($plantillas, $id = '') {
-        $this->plantillasId = $plantillas;
+        $this->plantillasid = $plantillas;
     }
 
-
+    /**
+     * Method
+     */
     public function set_toolpor($porcentages) {
         $this->toolpor = $porcentages;
     }
 
+    /**
+     * Method
+     */
     public function set_tools($listtool) {
         $this->listtool = $listtool;
         foreach ($listtool as $id => $tool) {
@@ -273,83 +470,141 @@ class block_evalcomix_editor_toolmix {
         $this->index++;
     }
 
-    public function set_view($view, $id='') {
+    /**
+     * Method
+     */
+    public function set_view($view, $id = '') {
         $this->view = $view;
         foreach ($this->listtool as $key => $tool) {
             $this->listtool[$key]->set_view($view, $id);
         }
     }
 
+    /**
+     * Method
+     */
     public function add_dimension($dim, $key, $id) {
         $this->listtool[$id]->add_dimension($dim, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function remove_dimension($dim, $id = 0) {
         return $this->listtool[$id]->remove_dimension($dim, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_subdimension($dim, $subdim, $key, $id = 0) {
         return $this->listtool[$id]->add_subdimension($dim, $subdim, $key, $id);
     }
 
-    public function remove_subdimension($dim, $subdim, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_subdimension($dim, $subdim, $id = 0) {
         return $this->listtool[$id]->remove_subdimension($dim, $subdim, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_values($dim, $key, $id) {
         return $this->listtool[$id]->add_values($dim, $key, $id);
     }
 
-    public function remove_values($dim, $grado, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_values($dim, $grado, $id = 0) {
         return $this->listtool[$id]->remove_values($dim, $grado, $id);
     }
+
+    /**
+     * Method
+     */
     public function add_attribute($dim, $subdim, $atrib, $key, $id = 0) {
         return $this->listtool[$id]->add_attribute($dim, $subdim, $atrib, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function remove_attribute($dim, $subdim, $atrib, $id) {
         return $this->listtool[$id]->remove_attribute($dim, $subdim, $atrib, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_total_values($key, $id) {
         return $this->listtool[$id]->add_total_values($key, $id);
     }
 
+    /**
+     * Method
+     */
     public function remove_total_values($grado, $id) {
         return $this->listtool[$id]->remove_total_values($grado, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_range($dim, $grado, $key, $id) {
         return $this->listtool[$id]->add_range($dim, $grado, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function remove_range($dim, $grado, $key, $id) {
         return $this->listtool[$id]->remove_range($dim, $grado, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_competency($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey) {
         return $this->listtool[$id]->add_competency($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function remove_competency($id, $dimkey, $subdimkey, $compkey) {
         return $this->listtool[$id]->remove_competency($id, $dimkey, $subdimkey, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function add_outcome($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey) {
         return $this->listtool[$id]->add_outcome($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function remove_outcome($id, $dimkey, $subdimkey, $compkey) {
         return $this->listtool[$id]->remove_outcome($id, $dimkey, $subdimkey, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function display_competencies_modal($id, $dim, $subdim, $mix = '') {
         return $this->listtool[$id]->display_competencies_modal($id, $dim, $subdim, $mix);
     }
 
+    /**
+     * Method
+     */
     public function get_subdimensionid_from_xml($toolid, $identifier = 0) {
         global $CFG;
-        $result = array();
+        $result = [];
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 
         if ($xmlstring = block_evalcomix_webservice_client::get_tool($toolid)) {
@@ -362,7 +617,8 @@ class block_evalcomix_editor_toolmix {
                 $id = key($this->listtool);
                 if ($tooldata = current($this->listtool)) {
                     next($this->listtool);
-                }echo "holaaaaaaa";echo $id;
+                }echo "holaaaaaaa";
+                echo $id;
                 if (isset($this->listtool[$id])) {
                     $dimensions = $this->listtool[$id]->get_dimension();
                     $subdimensions = $this->listtool[$id]->get_subdimension();
@@ -404,8 +660,11 @@ class block_evalcomix_editor_toolmix {
         return $result;
     }
 
+    /**
+     * Method
+     */
     public function get_competency($id = 0) {
-        $result = array();
+        $result = [];
         if (empty($id)) {
             foreach ($this->listtool as $key => $tool) {
                 $result[$key] = $tool->get_competency($key);
@@ -416,8 +675,11 @@ class block_evalcomix_editor_toolmix {
         return $result;
     }
 
+    /**
+     * Method
+     */
     public function get_outcome($id = 0) {
-        $result = array();
+        $result = [];
         if (empty($id)) {
             foreach ($this->listtool as $id => $tool) {
                 $result[$id] = $tool->get_outcome($id);
@@ -428,6 +690,9 @@ class block_evalcomix_editor_toolmix {
         return $result;
     }
 
+    /**
+     * Method
+     */
     public function up_block($params) {
         require_once('array.class.php');
 
@@ -452,6 +717,9 @@ class block_evalcomix_editor_toolmix {
         $this->listtool = $blockdata;
     }
 
+    /**
+     * Method
+     */
     public function down_block($params) {
         require_once('array.class.php');
 
@@ -477,12 +745,15 @@ class block_evalcomix_editor_toolmix {
         $this->listtool = $blockdata;
     }
 
+    /**
+     * Method
+     */
     public function add($type, $index = null) {
         $id = $this->index;
 
         $language = '';
         $titulo = get_string('title', 'block_evalcomix');
-        list($usec, $sec) = explode(' ', microtime());
+        [$usec, $sec] = explode(' ', microtime());
         $seed = (int)$sec + ((int)$usec * 100000);
         mt_srand($seed);
         $dim = mt_rand();
@@ -505,49 +776,148 @@ class block_evalcomix_editor_toolmix {
         $atribpor[$id][$dim][$subdim][$atrib] = 100;
 
         $numvalores[$id][$dim] = 2;
-        $valores[$id][$dim][0]['nombre'] = get_string('titlevalue', 'block_evalcomix').'1';
-        $valores[$id][$dim][1]['nombre'] = get_string('titlevalue', 'block_evalcomix').'2';
+        $valores[$id][$dim][0]['nombre'] = get_string('titlevalue', 'block_evalcomix') . '1';
+        $valores[$id][$dim][1]['nombre'] = get_string('titlevalue', 'block_evalcomix') . '2';
         if ($type == 'lista') {
             $valores[$id][$dim][0]['nombre'] = get_string('no', 'block_evalcomix');
             $valores[$id][$dim][1]['nombre'] = get_string('yes', 'block_evalcomix');
         }
 
-        $competency[$dim][$subdim] = array();
-        $outcome[$dim][$subdim] = array();
+        $competency[$dim][$subdim] = [];
+        $outcome[$dim][$subdim] = [];
 
-        $numtotal = array($id => 0);
-        $valorestotal = array();
+        $numtotal = [$id => 0];
+        $valorestotal = [];
         $valtotal = null;
         $tool;
         switch ($type) {
-            case 'lista':{
-                $tool = new block_evalcomix_editor_toollist($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $id);
-            }break;
-            case 'escala':{
-                $tool = new block_evalcomix_editor_toolscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id);
-            }break;
-            case 'listaescala':{
-                $tool = new block_evalcomix_editor_toollistscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id);
-            }break;
-            case 'diferencial':{
-                $tool = new block_evalcomix_editor_tooldifferential($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $id, 1);
-            }break;
-            case 'rubrica':{
-                $tool = new block_evalcomix_editor_toolrubric($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id);
-            }break;
-            case 'mixta':{
+            case 'lista':
+                $tool = new block_evalcomix_editor_toollist(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $id
+                );
+                break;
+            case 'escala':
+                $tool = new block_evalcomix_editor_toolscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id
+                );
+                break;
+            case 'listaescala':
+                $tool = new block_evalcomix_editor_toollistscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id
+                );
+                break;
+            case 'diferencial':
+                $tool = new block_evalcomix_editor_tooldifferential(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $id,
+                    1
+                );
+                break;
+            case 'rubrica':
+                $tool = new block_evalcomix_editor_toolrubric(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id
+                );
+                break;
+            case 'mixta':
                 $tool = new block_evalcomix_editor_toolmix($language, $titulo);
-            }break;
+                break;
         }
         $tool->set_competency($competency);
         $tool->set_outcome($outcome);
@@ -560,23 +930,29 @@ class block_evalcomix_editor_toolmix {
         }
     }
 
+    /**
+     * Method
+     */
     public function remove($index) {
         $this->listtool = $this->array_remove($this->listtool, $index);
     }
 
+    /**
+     * Method
+     */
     public function display_body($data) {
         if ($this->view == 'view') {
-            echo '<input type="button" style="width:10em" value="'.get_string('view', 'block_evalcomix').'"
-                onclick=\'javascript:location.href="generator.php?op=design&courseid='.$data['courseid'].'"\'><br>';
+            echo '<input type="button" style="width:10em" value="' . get_string('closeview', 'block_evalcomix') . '"
+                onclick=\'javascript:location.href="generator.php?op=design&courseid=' . $data['courseid'] . '"\'><br>';
         }
         if (isset($data['titulo'])) {
             $this->titulo = stripslashes($data['titulo']);
         }
         echo '
         <div id="cuerpomix">
-                <label for="titulo">'.get_string('mix', 'block_evalcomix').'</label>
+                <label for="titulo">' . get_string('mix', 'block_evalcomix') . '</label>
                 <span class="labelcampo">
-                    <textarea class="width" id="titulo" name="titulo" rows="3" cols="10">'.$this->titulo.'</textarea>
+                    <textarea class="width" id="titulo" name="titulo" rows="3" cols="10">' . $this->titulo . '</textarea>
                 </span>
         ';
         if ($this->view == 'design') {
@@ -584,12 +960,12 @@ class block_evalcomix_editor_toolmix {
                 <select id="seltool" name="seltool" onchange=\'javascript:
                     sendPost("body", "nopor=1&observation0="+document.getElementById("observation0").value +
                     "&titulo="+document.getElementById("titulo").value+"&at=1&addtool="+this.value+"", "mainform0");\'>
-                    <option value="0">'.get_string('addtool', 'block_evalcomix').'</option>
-                    <option value="escala">'.get_string('ratescale', 'block_evalcomix').'</option>
-                    <option value="listaescala">'.get_string('listrate', 'block_evalcomix').'</option>
-                    <option value="lista">'.get_string('checklist', 'block_evalcomix').'</option>
-                    <option value="rubrica">'.get_string('rubric', 'block_evalcomix').'</option>
-                    <option value="diferencial">'.get_string('differentail', 'block_evalcomix').'</option>
+                    <option value="0">' . get_string('addtool', 'block_evalcomix') . '</option>
+                    <option value="escala">' . get_string('ratescale', 'block_evalcomix') . '</option>
+                    <option value="listaescala">' . get_string('listrate', 'block_evalcomix') . '</option>
+                    <option value="lista">' . get_string('checklist', 'block_evalcomix') . '</option>
+                    <option value="rubrica">' . get_string('rubric', 'block_evalcomix') . '</option>
+                    <option value="diferencial">' . get_string('differentail', 'block_evalcomix') . '</option>
                 </select>
                 <input type="hidden" id="sumpor" value=""/>
             ';
@@ -602,11 +978,11 @@ class block_evalcomix_editor_toolmix {
             if ($this->view == 'design') {
                 echo '
                     <div>
-                        <input type="button" class="delete" onclick=\'javascript:sendPost("body","nopor=1&mix='.$mix.
-                        '&amp;id='.$id.'&amp;titulo="+document.getElementById("titulo").value+"&amp;addtool'.$id.
+                        <input type="button" class="delete" onclick=\'javascript:sendPost("body","nopor=1&mix=' . $mix .
+                        '&amp;id=' . $id . '&amp;titulo="+document.getElementById("titulo").value+"&amp;addtool' . $id .
                         '=1&amp;observation0="+document.getElementById("observation0").value + "&amp;dt=1", "mainform0");\'>
-                        <input type="button" class="up" onclick=\'javascript:sendPost("body","nopor=1&mix='.$mix.
-                        '&amp;id='.$id.'&amp;titulo="+document.getElementById("titulo").value+"&amp;tUp='.$id.
+                        <input type="button" class="up" onclick=\'javascript:sendPost("body","nopor=1&mix=' . $mix .
+                        '&amp;id=' . $id . '&amp;titulo="+document.getElementById("titulo").value+"&amp;tUp=' . $id .
                         '&amp;observation0="+document.getElementById("observation0").value + "&amp;moveTool=1", "mainform0");\'>
                         <br>
                     </div>
@@ -617,26 +993,26 @@ class block_evalcomix_editor_toolmix {
             if ($this->view == 'design') {
                 echo '
                     <div>
-                        <input type="button" class="add" onclick=\'javascript:mostrar("newtool'.$id.'")\'>
-                        <span id="newtool'.$id.'">
-                            <select id="seltool'.$id.'" name="addtool'.$id.'"
-                            onchange=\'javascript:sendPost("body", "nopor=1&id='.$id.
+                        <input type="button" class="add" onclick=\'javascript:mostrar("newtool' . $id . '")\'>
+                        <span id="newtool' . $id . '">
+                            <select id="seltool' . $id . '" name="addtool' . $id . '"
+                            onchange=\'javascript:sendPost("body", "nopor=1&id=' . $id .
                                 '&observation0="+document.getElementById("observation0").value +
-                                "&at=1&titulo="+document.getElementById("titulo").value+"&addtool'.$id.
+                                "&at=1&titulo="+document.getElementById("titulo").value+"&addtool' . $id .
                                 '="+this.value+"", "mainform0");\'>
-                                <option value="0">'.get_string('addtool', 'block_evalcomix').'</option>
-                                <option value="escala">'.get_string('ratescale', 'block_evalcomix').'</option>
-                                <option value="listaescala">'.get_string('listrate', 'block_evalcomix').'</option>
-                                <option value="lista">'.get_string('checklist', 'block_evalcomix').'</option>
-                                <option value="rubrica">'.get_string('rubric', 'block_evalcomix').'</option>
-                                <option value="diferencial">'.get_string('differentail', 'block_evalcomix').'</option>
+                                <option value="0">' . get_string('addtool', 'block_evalcomix') . '</option>
+                                <option value="escala">' . get_string('ratescale', 'block_evalcomix') . '</option>
+                                <option value="listaescala">' . get_string('listrate', 'block_evalcomix') . '</option>
+                                <option value="lista">' . get_string('checklist', 'block_evalcomix') . '</option>
+                                <option value="rubrica">' . get_string('rubric', 'block_evalcomix') . '</option>
+                                <option value="diferencial">' . get_string('differentail', 'block_evalcomix') . '</option>
                             </select>
                         </span>
                     </div>
                     <div>
-                        <input type="button" class="down" onclick=\'javascript:sendPost("body","nopor=1&mix='.
-                        $mix.'&amp;id='.$id.'&amp;titulo="+document.getElementById("titulo").value+"&amp;tDown='.
-                        $id.'&amp;observation0="+document.getElementById("observation0").value+"&amp;moveTool=1", "mainform0");\'>
+                        <input type="button" class="down" onclick=\'javascript:sendPost("body","nopor=1&mix=' .
+                        $mix . '&amp;id=' . $id . '&amp;titulo="+document.getElementById("titulo").value+"&amp;tDown=' .
+                        $id . '&amp;observation0="+document.getElementById("observation0").value+"&amp;moveTool=1", "mainform0");\'>
                     </div>
                 ';
             }
@@ -650,26 +1026,27 @@ class block_evalcomix_editor_toolmix {
         echo '
                 <div id="comentario">
                     <div id="marco">
-                        <label for="observation0">' . get_string('observation', 'block_evalcomix'). ':</label>
+                        <label for="observation0">' . get_string('observation', 'block_evalcomix') . ':</label>
                         <textarea id="observation0" style="width:100%" rows="4" cols="200">' . $this->observation . '</textarea>
                     </div>
                 </div>
             ';
 
         echo '
-            <input type="hidden" name="courseid" id="courseid" value="'.$data['courseid'].'">
+            <input type="hidden" name="courseid" id="courseid" value="' . $data['courseid'] . '">
         </div>
         ';
     }
 
-    /*
-    @param $array
-    @param $i índice del elemento a eliminar en $array
-    @return $array sin el elemento
-    Elimina de @array el elemento $i
-    */
+    /**
+     * array remove
+     * @param $array
+     * @param $i índice del elemento a eliminar en $array
+     * @return $array sin el elemento
+     * Elimina de @array el elemento $i
+     */
     public function array_remove($array, $i) {
-        $arrayaux = array();
+        $arrayaux = [];
         if (is_array($array)) {
             foreach ($array as $key => $value) {
                 if ($key != $i) {
@@ -680,16 +1057,17 @@ class block_evalcomix_editor_toolmix {
         return $arrayaux;
     }
 
-    /*
-    @param $array - array o tabla hash
-    @param $i índice del elemento a partir del que introducirá el elemento $elem en $array
-    @param $elem nuevo elemento a añadir
-    @param $index indice del nuevo elemento. Si no se especifica, el nuevo índice será $i+1
-    @return $array con el nuevo elemento
-    Añade $elem a @array a continuación de $i.
-    */
+    /**
+     * array_add
+     * @param $array - array o tabla hash
+     * @param $i índice del elemento a partir del que introducirá el elemento $elem en $array
+     * @param $elem nuevo elemento a añadir
+     * @param $index indice del nuevo elemento. Si no se especifica, el nuevo índice será $i+1
+     * @return $array con el nuevo elemento
+     * Añade $elem a @array a continuación de $i.
+     */
     public function array_add($array, $i, $elem, $index) {
-        $arrayaux = array();
+        $arrayaux = [];
         $flag = false;
         if (is_array($array)) {
             foreach ($array as $key => $value) {
@@ -710,7 +1088,10 @@ class block_evalcomix_editor_toolmix {
         return $arrayaux;
     }
 
-    public function export($params = array()) {
+    /**
+     * Method
+     */
+    public function export($params = []) {
         $mixed = 0;
         if (isset($params['mixed'])) {
             $mixed = $params['mixed'];
@@ -732,8 +1113,8 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/mixtool http://avanza
             $rootend = '</MixTool>';
         }
 
-        $xml = $root . ' id="'. $idtool .'" name="' . htmlspecialchars($this->titulo, ENT_QUOTES) . '" instruments="' .
-        count($this->listtool) .'">';
+        $xml = $root . ' id="' . $idtool . '" name="' . htmlspecialchars($this->titulo, ENT_QUOTES) . '" instruments="' .
+        count($this->listtool) . '">';
 
         if (isset($this->observation)) {
             $xml .= '<Description>' . htmlspecialchars($this->observation, ENT_QUOTES) . '</Description>
@@ -741,13 +1122,16 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/mixtool http://avanza
         }
 
         foreach ($this->listtool as $id => $value) {
-            $tid = (isset($this->plantillasId[$id])) ? $this->plantillasId[$id] : '';
-            $xml .= $this->listtool[$id]->export(array('mixed' => '1', 'id' => $tid));
+            $tid = (isset($this->plantillasid[$id])) ? $this->plantillasid[$id] : '';
+            $xml .= $this->listtool[$id]->export(['mixed' => '1', 'id' => $tid]);
         }
         $xml .= $rootend;
         return $xml;
     }
 
+    /**
+     * Method
+     */
     public function print_tool($root = '') {
         foreach ($this->listtool as $tool) {
             $tool->print_tool(null);

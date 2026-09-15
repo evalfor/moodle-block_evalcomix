@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * configeval.php
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -47,7 +48,7 @@ if (isset($config->serverurl)) {
 
     // EvalCOMIX API.
     if (!defined('BLOCK_EVALCOMIX_GRADE_EVALCOMIX')) {
-        define('BLOCK_EVALCOMIX_GRADE_EVALCOMIX', BLOCK_EVALCOMIX_DIREVALCOMIX .'/app.php/api/grade/');
+        define('BLOCK_EVALCOMIX_GRADE_EVALCOMIX', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/grade/');
     }
 
     if (!defined('BLOCK_EVALCOMIX_DISPLAY_TOOL')) {
@@ -74,7 +75,7 @@ if (isset($config->serverurl)) {
     }
 
     if (!defined('BLOCK_EVALCOMIX_DELETE')) {
-        define('BLOCK_EVALCOMIX_DELETE', BLOCK_EVALCOMIX_DIREVALCOMIX .'/app.php/api/tool/');
+        define('BLOCK_EVALCOMIX_DELETE', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/tool/');
     }
 
     if (!defined('BLOCK_EVALCOMIX_GET_TOOL')) {
@@ -118,6 +119,9 @@ if (isset($config->serverurl)) {
     }
     if (!defined('BLOCK_EVALCOMIX_ASSESSMENT_COMMENTED')) {
         define('BLOCK_EVALCOMIX_ASSESSMENT_COMMENTED', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/assessment/commented');
+    }
+    if (!defined('BLOCK_EVALCOMIX_DELETE_ASSESSES')) {
+        define('BLOCK_EVALCOMIX_DELETE_ASSESSES', BLOCK_EVALCOMIX_DIREVALCOMIX . '/app.php/api/assessments');
     }
 }
 if (isset($config->token)) {

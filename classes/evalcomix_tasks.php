@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * block_evalcomix_tasks
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -31,20 +32,24 @@ require_once('evalcomix_object.php');
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  */
 class block_evalcomix_tasks extends block_evalcomix_object {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix_tasks';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod',
-                            'workteams');
+    public $requiredfields = ['id', 'instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod',
+                            'workteams'];
 
     /**
      * Array of optional table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * course_module ID associated
@@ -76,8 +81,15 @@ class block_evalcomix_tasks extends block_evalcomix_object {
      */
     public $visible;
 
+    /**
+     * It indicates the grade method
+     * @var int $grademethod
+     */
     public $grademethod;
 
+    /**
+     * @var int $workteams
+     */
     public $workteams;
 
     /**
@@ -89,12 +101,20 @@ class block_evalcomix_tasks extends block_evalcomix_object {
      * @param int $weighing of EvalCOMIX grade respect Moodle grade
      * @param int $timemodified
      */
-    public function __construct($id = '', $instanceid = '0', $maxgrade = '100', $weighing = '50',
-        $timemodified = '0', $visible = '1', $grademethod = '1', $workteams = '0') {
+    public function __construct(
+        $id = '',
+        $instanceid = '0',
+        $maxgrade = '100',
+        $weighing = '50',
+        $timemodified = '0',
+        $visible = '1',
+        $grademethod = '1',
+        $workteams = '0'
+    ) {
         if ($instanceid != '0') {
             global $DB;
             $this->id = intval($id);
-            $cm = $DB->get_record('course_modules', array('id' => $instanceid), '*', MUST_EXIST);
+            $cm = $DB->get_record('course_modules', ['id' => $instanceid], '*', MUST_EXIST);
             $this->instanceid = $cm->id;
             $this->maxgrade = intval($maxgrade);
             $this->weighing = intval($weighing);
@@ -112,13 +132,13 @@ class block_evalcomix_tasks extends block_evalcomix_object {
      */
     public static function get_tasks_by_courseid($courseid) {
         global $DB;
-        $tasks = array();
+        $tasks = [];
         $task = null;
         $i = 0;
 
-        $cm = $DB->get_records('course_modules', array('course' => $courseid));
+        $cm = $DB->get_records('course_modules', ['course' => $courseid]);
         foreach ($cm as $value) {
-            $params = array('instanceid' => $value->id);
+            $params = ['instanceid' => $value->id];
             $task = $DB->get_record('block_evalcomix_tasks', $params);
             if ($task) {
                 $cmid = $value->id;
@@ -129,6 +149,7 @@ class block_evalcomix_tasks extends block_evalcomix_object {
     }
 
     /**
+     * get_moodle_course_tasks
      * @param int $courseid
      * @return mixed array of moodle activities configurated by evalcomix.
      * Array key is evalcomix_tasks ID and Array value is activity name
@@ -136,27 +157,28 @@ class block_evalcomix_tasks extends block_evalcomix_object {
     public static function get_moodle_course_tasks($courseid) {
         global $DB;
         $evalcomixtasks = self::get_tasks_by_courseid($courseid);
-        $result = array();
+        $result = [];
         foreach ($evalcomixtasks as $task) {
-            $cm = $DB->get_record('course_modules', array('id' => $task->instanceid));
+            $cm = $DB->get_record('course_modules', ['id' => $task->instanceid]);
             if ($cm) {
                 $module = self::get_type_task($cm->id);
-                $taskmoodle = $DB->get_record($module, array('id' => $cm->instance));
+                $taskmoodle = $DB->get_record($module, ['id' => $cm->instance]);
                 $cmid = $cm->id;
-                $result[$cmid] = array('id' => $task->id, 'nombre' => $taskmoodle->name);
+                $result[$cmid] = ['id' => $task->id, 'nombre' => $taskmoodle->name];
             }
         }
         return $result;
     }
 
     /**
+     * get_type_task
      * @param int $instanceid
      * @return string with the task's type.
      */
     public static function get_type_task($instanceid) {
         global $DB;
-        $cm = $DB->get_record('course_modules', array('id' => $instanceid));
-        $module = $DB->get_record('modules', array('id' => $cm->module));
+        $cm = $DB->get_record('course_modules', ['id' => $instanceid]);
+        $module = $DB->get_record('modules', ['id' => $cm->module]);
         return $module->name;
     }
 }

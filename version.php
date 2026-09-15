@@ -14,16 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
-/*
+/**
+ * version.php
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
  */
-$plugin->version = 2024070800;
+
+defined('MOODLE_INTERNAL') || die;
+
+$plugin->version = 2026071500;
 $plugin->component = 'block_evalcomix';
 $plugin->requires = 2019111801; // Moodle 3.8 is required.
 $plugin->maturity = MATURITY_STABLE; // This is considered as ready for production sites.
-$plugin->release = 'v4.4.4.1';
+$plugin->release = 'v4.4.4.2';

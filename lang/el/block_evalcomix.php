@@ -13,107 +13,99 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * el
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX - FLOASS';
-$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['anonymous_EI'] = 'Ανώνυμο - ΑΙ';
+$string['anonymous_EI_help'] = 'Δείχνει αν οι μαθητές θα γνωρίζουν ποιοι συμμαθητές τους, τους αξιολόγησαν.';
+$string['april'] = 'Απρίλιος';
+$string['argumentset'] = 'Αξιολόγηση με κείμενα πειθούς';
+$string['assess'] = 'Αξιολογήστε';
+$string['assesssection'] = 'Αξιολόγηση δραστηριοτήτων';
+$string['august'] = 'Αύγουστος';
+$string['availabledate_AE'] = 'ΑΑ - διαθέσιμη από: ';
+$string['availabledate_AE_help'] = '';
+$string['availabledate_EI'] = 'ΑΙ - διαθέσιμη από: ';
+$string['availabledate_EI_help'] = '';
 $string['blocksettings'] = 'Ρύθμιση παραμέτρων συστήματος';
 $string['blockstring'] = 'Περιεχόμενο EvalCOMIX';
-$string['instruments'] = 'Διαχείριση εργαλείου';
-$string['evaluation'] = 'Αξιολόγηση Δραστηριοτήτων';
-$string['evalcomix:view'] = 'Προβολή EvalCOMIX';
-$string['evalcomix:edit'] = 'Επεξεργασία EvalCOMIX';
-$string['whatis'] = 'Το EvalCOMIX επιτρέπει τον σχεδιασμό και τη διαχείριση εργαλείων αξιολόγησης (κλίμακες αξιολόγησης, ρουμπρίκες, κ.λπ.) που θα χρησιμοποιηθούν για την αξιολόγηση ομάδων συζήτησης (forum), για γλωσσάρια, βάσεις δεδομένων, wikis και δραστηριότητες.<br> Η αξιολόγηση με τη χρήση αυτών των εργαλείων μπορεί να λάβει χώρα από εκπαιδευτικούς (Αξιολόγηση εκπαιδευτικού), ή μαθητές (αυτοαξιολόγηση, αξιολόγηση από ομότιμους). Για περισσότερες πληροφορίες, παρακαλήστε να συμβουλευτείτε τον Οδηγό Χρήσης. Περισσότερες πληροφορίες για βρείτε στο Manual';
-$string['selfmodality'] = 'Αυτοαξιολόγηση - ΑΑ ';
-$string['peermodality'] = 'Αξιολόγηση από Ισότιμους - ΑΙ ';
-$string['teachermodality'] = 'Αξιολόγηση από Εκπαιδευτικούς - ΑΕ';
-$string['selfmod'] = 'Αυτοαξιολόγηση';
-$string['peermod'] = 'Αξιολόγηση από ισότιμους';
-$string['teachermod'] = 'Αξιολόγηση από εκπαιδευτικούς';
-$string['nuloption'] = 'Επιλογή εργαλείου αξιολόγησης';
-$string['grades'] = 'Βαθμολογία: ';
-$string['selinstrument'] = 'Σχεδιασμός αξιολόγησης';
-$string['pon_EP'] = 'Βαρύτητα - ΑΕ';
-$string['pon_AE'] = 'Βαρύτητα - ΑΑ';
-$string['pon_EI'] = 'Βαρύτητα - ΑΙ';
-$string['availabledate_EI'] = 'ΑΙ - διαθέσιμη από: ';
-$string['availabledate_AE'] = 'ΑΑ - διαθέσιμη από: ';
-$string['ratingsforitem'] = 'Κατανομή της βαθμολογίας';
-$string['modality'] = 'Μορφή';
-$string['grade'] = 'Βαθμολογία';
-$string['weighingfinalgrade'] = 'Βαρύτητα στον τελικό βαθμό';
-$string['finalgrade'] = 'Τελικός βαθμός';
-$string['nograde'] = 'Καμία βαθμολογία';
-$string['timeopen'] = 'Η περίοδος της αξιολόγησης δεν τελείωσε.';
-$string['designsection'] = 'Σχεδιασμός και διαχείριση του εργαλείου αξιολόγησης';
-$string['assesssection'] = 'Αξιολόγηση δραστηριοτήτων';
-$string['counttool'] = 'Αρίθμηση εργαλείων';
-$string['newtool'] = 'Νέο εργαλείο';
-$string['open'] = 'Άνοιγμα';
-$string['view'] = 'Προβολή';
-$string['delete'] = 'Διαγραφή';
-$string['title'] = 'Τίτλος';
-$string['type'] = 'Είδος';
-$string['anonymous_EI'] = 'Ανώνυμο - ΑΙ';
-$string['details'] = 'Λεπτομέρειες';
-$string['assess'] = 'Αξιολογήστε';
-$string['set'] = 'Καθορισμός';
-$string['ratingsforitem'] = 'Βαθμολογίες';
-$string['modality'] = 'Μορφή';
-$string['grade'] = 'Βαθμολογία';
-$string['weighingfinalgrade'] = 'Βαρύτητα της τελικής βαθμολογίας';
-$string['evalcomixgrade'] = 'Βαθμολογία EvalCOMIX';
-$string['moodlegrade'] = 'Βαθμολογία Moodle';
-$string['graphics'] = 'Γραφήματα';
-$string['timedue_AE'] = 'ΑΑ - καταληκτική ημερομηνία';
-$string['timedue_EI'] = 'ΑΙ - καταληκτική ημερομηνία';
-$string['january'] = 'Ιανουάριος';
-$string['february'] = 'Φεβρουάριος';
-$string['march'] = 'Μάρτιος';
-$string['april'] = 'Απρίλιος';
-$string['may'] = 'Μάιος';
-$string['june'] = 'Ιούνιος';
-$string['july'] = 'Ιούλιος';
-$string['august'] = 'Αύγουστος';
-$string['september'] = 'Σεπτέμβριος';
-$string['october'] = 'Οκτώβριος';
-$string['november'] = 'Νοέμβριος';
-$string['december'] = 'Δεκέμβριος';
-$string['save'] = 'Αποθήκευση';
 $string['cancel'] = 'Ακύρωση';
+$string['counttool'] = 'Αρίθμηση εργαλείων';
+$string['december'] = 'Δεκέμβριος';
+$string['delete'] = 'Διαγραφή';
+$string['designsection'] = 'Σχεδιασμός και διαχείριση του εργαλείου αξιολόγησης';
+$string['details'] = 'Λεπτομέρειες';
+$string['differential'] = 'Σημασιολογική διαφοροποίηση';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix:edit'] = 'Επεξεργασία EvalCOMIX';
+$string['evalcomix:view'] = 'Προβολή EvalCOMIX';
+$string['evalcomixgrade'] = 'Βαθμολογία EvalCOMIX';
+$string['evalcomixgrade_help'] = 'Μέσος όρος βαρύτητας από την αξιολόγηση του EVALCOMIX';
 $string['evaluate'] = 'Αξιολογήστε';
-$string['scale'] = 'Κλίμακα';
+$string['evaluation'] = 'Αξιολόγηση Δραστηριοτήτων';
+$string['february'] = 'Φεβρουάριος';
+$string['finalgrade'] = 'Τελικός βαθμός';
+$string['finalgrade_help'] = 'Αριθμητικός μέσος όρος στον τελικό βαθμό του EvalCOMIX και τελικός βαθμός στο Moodle';
+$string['gradeof'] = 'Βαθμολογία του';
+$string['grades'] = 'Βαθμολογία: ';
+$string['graphics'] = 'Γραφήματα';
+$string['instruments'] = 'Διαχείριση εργαλείου';
+$string['january'] = 'Ιανουάριος';
+$string['july'] = 'Ιούλιος';
+$string['june'] = 'Ιούνιος';
 $string['list'] = 'Λίστα ελέγχου';
 $string['listscale'] = 'Κλίμακα λίστας';
-$string['rubric'] = 'Ρουμπρίκα';
+$string['march'] = 'Μάρτιος';
+$string['may'] = 'Μάιος';
 $string['mixed'] = 'Μικτή';
-$string['differential'] = 'Σημασιολογική διαφοροποίηση';
-$string['argumentset'] = 'Αξιολόγηση με κείμενα πειθούς';
-$string['whatis'] = 'Διαχείριση εργαλείων αξιολόγησης';
-$string['gradeof'] = 'Βαθμολογία του';
-/* ----------------------------- ΒΟΗΘΕΙΑ ----------------------------- */
-$string['timeopen_help'] = 'Η αξιολόγηση από ισότιμους δεν περιλαμβάνεται στο βαθμολόγιο του EvalCOMIX γιατί η περίοδος αξιολόγησης δεν τέλειωσε ακόμη.';
-$string['evalcomixgrade_help'] = 'Μέσος όρος βαρύτητας από την αξιολόγηση του EVALCOMIX';
+$string['modality'] = 'Μορφή';
+$string['moodlegrade'] = 'Βαθμολογία Moodle';
 $string['moodlegrade_help'] = 'Βαθμολογία από το Moodle';
-$string['finalgrade_help'] = 'Αριθμητικός μέσος όρος στον τελικό βαθμό του EvalCOMIX και τελικός βαθμός στο Moodle';
-$string['teachermodality_help'] = 'Αυτό το εργαλείο θα είναι το εργαλείο αξιολόγησης που θα χρησιμοποιηθεί από τους εκπαιδευτικούς για να αξιολογήσουν τους μαθητές σε αυτήν τη δραστηριότητα.';
-$string['pon_EP_help'] = 'Είναι το ποσοστό της βαθμολογίας του εργαλείου αξιολόγησης του εκπαιδευτικού στην τελική βαθμολογία.';
-$string['selfmodality_help'] = 'Είναι το εργαλείο αυτοαξιολόγησης που χρησιμοποιείται από τους μαθητές για να ελέγξουν και να αξιολογήσουν τις δραστηριότητές τους.';
-$string['pon_AE_help'] = 'Είναι το ποσοστό της βαθμολογίας από το εργαλείο αυτοαξιολόγησης στην τελική βαθμολογία.';
+$string['newtool'] = 'Νέο εργαλείο';
+$string['november'] = 'Νοέμβριος';
+$string['nuloption'] = 'Επιλογή εργαλείου αξιολόγησης';
+$string['october'] = 'Οκτώβριος';
+$string['open'] = 'Άνοιγμα';
+$string['peermod'] = 'Αξιολόγηση από ισότιμους';
+$string['peermodality'] = 'Αξιολόγηση από Ισότιμους - ΑΙ ';
 $string['peermodality_help'] = 'Είναι το εργαλείο αξιολόγησης που χρησιμοποιήθηκε από τους μαθητές για να αξιολογήσουν τη δραστηριότητα των συμμαθητών τους.';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['pon_AE'] = 'Βαρύτητα - ΑΑ';
+$string['pon_AE_help'] = 'Είναι το ποσοστό της βαθμολογίας από το εργαλείο αυτοαξιολόγησης στην τελική βαθμολογία.';
+$string['pon_EI'] = 'Βαρύτητα - ΑΙ';
 $string['pon_EI_help'] = 'Είναι το ποσοστό της βαθμολογίας από το εργαλείο αξιολόγησης ισότιμων στην τελική βαθμολογία.';
-$string['availabledate_AE_help'] = '';
-$string['timedue_AE_help'] = '';
-$string['availabledate_EI_help'] = '';
-$string['timedue_EI_help'] = '';
-$string['anonymous_EI_help'] = 'Δείχνει αν οι μαθητές θα γνωρίζουν ποιοι συμμαθητές τους, τους αξιολόγησαν.';
-$string['whatis_help'] = 'Το EvalCOMIX επιτρέπει το σχεδιασμό και τη διαχείριση εργαλείων αξιολόγησης (βαθμολογικές κλίμακες, ρουμπρικές, κ.λπ.) που μπορούν να χρησιμοποηθούν για την πρόσβαση σε μία ομάδα συζήτησης (forum), για γλωσσάρια, βάσεις δεδομένων, wiki και δραστηριότητες.<br>Η αξιολόγηση με αυτά τα εργαλεία μπορεί να λάβει χώρα από εκπαιδευτικούς (αξιολόγηση από τον εκπαιδευτικό), ή τους μαθητές students (αυτοαξιολόγηση, αξιολόγηση από ισότιμους). Για περισσότερες πληροφορίες, συμβουλευτείτε το Εγχειρίδιο. Μπορείτε να το βρείτε εδώ Manual';
+$string['pon_EP'] = 'Βαρύτητα - ΑΕ';
+$string['pon_EP_help'] = 'Είναι το ποσοστό της βαθμολογίας του εργαλείου αξιολόγησης του εκπαιδευτικού στην τελική βαθμολογία.';
+$string['ratingsforitem'] = 'Βαθμολογίες';
+$string['save'] = 'Αποθήκευση';
+$string['scale'] = 'Κλίμακα';
+$string['selfmod'] = 'Αυτοαξιολόγηση';
+$string['selfmodality'] = 'Αυτοαξιολόγηση - ΑΑ ';
+$string['selfmodality_help'] = 'Είναι το εργαλείο αυτοαξιολόγησης που χρησιμοποιείται από τους μαθητές για να ελέγξουν και να αξιολογήσουν τις δραστηριότητές τους.';
+$string['selinstrument'] = 'Σχεδιασμός αξιολόγησης';
 $string['selinstrument_help'] = 'Δείτε το Manual για περισσότερες πληροφορίες για τη δημιουργία μίας δραστηριότητας στο EvalCOMIX.';
+$string['september'] = 'Σεπτέμβριος';
+$string['set'] = 'Καθορισμός';
+$string['teachermod'] = 'Αξιολόγηση από εκπαιδευτικούς';
+$string['teachermodality'] = 'Αξιολόγηση από Εκπαιδευτικούς - ΑΕ';
+$string['teachermodality_help'] = 'Αυτό το εργαλείο θα είναι το εργαλείο αξιολόγησης που θα χρησιμοποιηθεί από τους εκπαιδευτικούς για να αξιολογήσουν τους μαθητές σε αυτήν τη δραστηριότητα.';
+$string['timedue_AE'] = 'ΑΑ - καταληκτική ημερομηνία';
+$string['timedue_AE_help'] = '';
+$string['timedue_EI'] = 'ΑΙ - καταληκτική ημερομηνία';
+$string['timedue_EI_help'] = '';
+$string['timeopen'] = 'Η περίοδος της αξιολόγησης δεν τελείωσε.';
+$string['timeopen_help'] = 'Η αξιολόγηση από ισότιμους δεν περιλαμβάνεται στο βαθμολόγιο του EvalCOMIX γιατί η περίοδος αξιολόγησης δεν τέλειωσε ακόμη.';
+$string['type'] = 'Είδος';
+$string['view'] = 'Προβολή';
+$string['weighingfinalgrade'] = 'Βαρύτητα της τελικής βαθμολογίας';
+$string['whatis'] = 'Το EvalCOMIX επιτρέπει τον σχεδιασμό και τη διαχείριση εργαλείων αξιολόγησης (κλίμακες αξιολόγησης, ρουμπρίκες, κ.λπ.) που θα χρησιμοποιηθούν για την αξιολόγηση ομάδων συζήτησης (forum), για γλωσσάρια, βάσεις δεδομένων, wikis και δραστηριότητες.<br> Η αξιολόγηση με τη χρήση αυτών των εργαλείων μπορεί να λάβει χώρα από εκπαιδευτικούς (Αξιολόγηση εκπαιδευτικού), ή μαθητές (αυτοαξιολόγηση, αξιολόγηση από ομότιμους). Για περισσότερες πληροφορίες, παρακαλήστε να συμβουλευτείτε τον Οδηγό Χρήσης. Περισσότερες πληροφορίες για βρείτε στο Manual';
+$string['whatis_help'] = 'Το EvalCOMIX επιτρέπει το σχεδιασμό και τη διαχείριση εργαλείων αξιολόγησης (βαθμολογικές κλίμακες, ρουμπρικές, κ.λπ.) που μπορούν να χρησιμοποηθούν για την πρόσβαση σε μία ομάδα συζήτησης (forum), για γλωσσάρια, βάσεις δεδομένων, wiki και δραστηριότητες.<br>Η αξιολόγηση με αυτά τα εργαλεία μπορεί να λάβει χώρα από εκπαιδευτικούς (αξιολόγηση από τον εκπαιδευτικό), ή τους μαθητές students (αυτοαξιολόγηση, αξιολόγηση από ισότιμους). Για περισσότερες πληροφορίες, συμβουλευτείτε το Εγχειρίδιο. Μπορείτε να το βρείτε εδώ Manual';
 /* --------------------------- ΤΕΛΟΣ ΒΟΗΘΕΙΑΣ --------------------------- */
 $string['profile_task_by_student'] = 'Γράφημα δραστηριοτήτων ανά μαθητή';
 $string['profile_task_by_group'] = 'Γράφημα δραστηριοτήτων ανά ομάδα';
@@ -178,7 +170,6 @@ $string['whoassesses_EI'] = 'Ποιος αξιολογεί';
 $string['anystudent_EI'] = 'Οποιοσδήποτε μαθητής';
 $string['groups_EI'] = 'Ομάδες';
 $string['specificstudents_EI'] = 'Συγκεκριμένοι μαθητές';
-$string['whoassesses_EI_help'] = '';
 $string['assignstudents_EI'] = 'Αναθέστε μαθητές';
 $string['assess_students'] = 'Αξιολόγηση των μαθητών';
 $string['studentstoassess'] = 'Αξιολόγηση από τους μαθητές';
@@ -249,12 +240,10 @@ $string['titlevalue'] = 'Μεταβλητή';
 $string['no'] = 'Όχι';
 $string['yes'] = 'Ναι';
 $string['observation'] = 'Σχόλια';
-$string['view'] = 'Κλείστε το προηγούμενο παράθυρο';
 
 $string['windowselection'] = 'Παράθυρο επιλογής';
 $string['selectfile'] = 'Επιλέξτε ένα αρχείο';
 $string['upfile'] = 'Ανεβάστε το αρχείο';
-$string['cancel'] = 'Ακύρωση';
 
 $string['savedsaccessfully'] = 'Αυτό το εργαλείο έχει αποθηκευτεί επιτυχώς';
 $string['ADimension'] = 'Αυτό το πεδίο δεν μπορεί να είναι κενό.\"Nº Διαστάσεων\" θα πρέπει να είναι ένας αριθμός μεγαλύτερος από 0 και \"Nº Μεταβλητών\" αριθμός μεγαλύτερος από το Ο και ίσος με 2';
@@ -301,8 +290,8 @@ $string['uploadcompetencies_help'] = 'Οι ικανότητες και τα μα
 * Η πρώτη εγγραφή περιέχει μια λίστα με ονόματα πεδίων που καθορίζουν τη μορφή του υπόλοιπου αρχείου
 * Τα υποχρεωτικά ονόματα πεδίων είναι idnumber, shortname, result';
 $string['idnumberduplicate'] = 'Διπλότυπο τιμής idnumber';
-$string['invalidoutcome'] = 'Μη έγκυρη τιμή αποτελέσματος. Πρέπει να είναι 0 ή 1'.
-$string['invalididnumberupload'] = 'Μη έγκυρη τιμή idnumber. Το μέγεθος πρέπει να είναι μικρότερο από 100'.
+$string['invalidoutcome'] = 'Μη έγκυρη τιμή αποτελέσματος. Πρέπει να είναι 0 ή 1' .
+$string['invalididnumberupload'] = 'Μη έγκυρη τιμή idnumber. Το μέγεθος πρέπει να είναι μικρότερο από 100' .
 $string['missingidnumber'] = 'Λείπει το idnumber της στήλης';
 $string['missingshortname'] = 'Λείπει το σύντομο όνομα της στήλης';
 $string['missingoutcome'] = 'Η στήλη του αποτελέσματος λείπει';
@@ -326,7 +315,7 @@ $string['workteamsassessments_help'] = 'Εάν ενεργοποιήσετε αυ
 
 Εάν υπάρχει **Αυτοαξιολόγηση – ΑΕ**, μόνο ο συντονιστής μπορεί να αυτοαξιολογηθεί και η αξιολόγησή του θα ανατεθεί σε κάθε μέλος της ομάδας του.
 
-Εάν υπάρχει **Αξιολόγηση από ομοτίμους – *EI**, οι μαθητές θα μπορούν να αξιολογήσουν μόνο τους συντονιστές κάθε ομάδας και κάθε αξιολόγηση θα ανατεθεί σε κάθε μέλος της ομάδας.
+Εάν υπάρχει **Αξιολόγηση από ομοτίμους – *EI**, οι μαθητές θα μπορούν να αξιολογήσουν μόνο τους συντονιστές κάθε ομάδας και κάθε αξιολόγηση θα ανατεθεί σε κάθε μέλος της ομάδας. Αυτή η συμπεριφορά μπορεί να τροποποιηθεί επιλέγοντας την επιλογή "Συγκεκριμένοι Μαθητές" και αναθέτοντας ποιος αξιολογεί ποιον.
 
 Οι μαθητές που δεν ανήκουν σε καμία ομάδα δεν θα λάβουν αξιολόγηση. Ομάδες που δεν έχουν διορισμένο συντονιστή δεν θα λάβουν καμία αξιολόγηση και δεν θα μπορούν να αξιολογήσουν.';
 $string['selectcoordinator'] = 'επιλέξτε συντονιστή';

@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Process actions related to work teams
+ *
  * @package       block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license       http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -21,15 +24,18 @@
  */
 
 require_once('../../../config.php');
+
 $courseid = required_param('id', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
+
 $studentid = required_param('stu', PARAM_INT);
-$newassessedid = required_param('newstu', PARAM_INT);
+
 $cmid = required_param('cma', PARAM_INT);
-$student = $DB->get_record('user', array('id' => $studentid), '*', MUST_EXIST);
-$newassessed = $DB->get_record('user', array('id' => $newassessedid), '*', MUST_EXIST);
-$cm = $DB->get_record('course_modules', array('id' => $cmid), '*', MUST_EXIST);
+$student = $DB->get_record('user', ['id' => $studentid], '*', MUST_EXIST);
+$cm = $DB->get_record('course_modules', ['id' => $cmid], '*', MUST_EXIST);
+$teamraw = required_param('team', PARAM_TEXT);
+$team = explode(',', $teamraw);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
@@ -38,154 +44,164 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
 
 $context = context_course::instance($courseid);
+
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 try {
-    $reportevalcomix->process_data(array('stu' => $studentid, 'cma' => $cmid));
+    $reportevalcomix->process_data(['stu' => $studentid, 'cma' => $cmid]);
 } catch (Exception $e) {
     // Processed on a previous call.
     echo '';
 }
 
-$lms = BLOCK_EVALCOMIX_MOODLE_NAME;
-$module = block_evalcomix_tasks::get_type_task($cmid);
+$transaction = $DB->start_delegated_transaction();
+try {
+    $lms = BLOCK_EVALCOMIX_MOODLE_NAME;
+    $module = block_evalcomix_tasks::get_type_task($cmid);
+    $assessorid = $USER->id;
+    $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
+    $event = \block_evalcomix\event\student_assessed::create(['objectid' => $cmid,
+            'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid]);
+    $event->trigger();
 
-$assessorid = $USER->id;
-$mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
-$event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
-        'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid));
-$event->trigger();
-$memberid = $newassessedid;
-if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cmid))) {
+    $task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cmid], '*', MUST_EXIST);
+
     $taskid = $task->id;
     $configured = $reportevalcomix->configured_activity($cmid);
-    $mode = block_evalcomix_grade_report::get_type_evaluation($studentid, $courseid);
-    $tools = array();
-    if ($modeobject = $DB->get_record('block_evalcomix_modes', array('taskid' => $taskid, 'modality' => $mode))) {
-        if ($tool = $DB->get_record('block_evalcomix_tools', array('id' => $modeobject->toolid))) {
+    $now = time();
+
+    $wsduplicate = false;
+    $wsdelete = false;
+    $assessments = [];
+    $deletableassessments = [];
+    $tools = [];
+    if ($modeobject = $DB->get_record('block_evalcomix_modes', ['taskid' => $taskid, 'modality' => $mode])) {
+        if ($tool = $DB->get_record('block_evalcomix_tools', ['id' => $modeobject->toolid])) {
             $object = new stdClass();
             $object->oldid = $tool->idtool;
             $object->newid = $tool->idtool;
             $tools[] = $object;
         }
     }
-    if ($assessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $taskid, 'assessorid' => $assessorid,
-            'studentid' => $studentid))) {
-        $assessmentid = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
-        'studentid' => $studentid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
 
-        if ($mode == 'self') {
-            $assessorid = $memberid;
-        }
+    // Si se ha guardado una evaluación (nueva o modificada).
+    if (
+        $assessment = $DB->get_record('block_evalcomix_assessments', ['taskid' => $taskid, 'assessorid' => $assessorid,
+            'studentid' => $studentid])
+    ) {
+        $assessmentid = block_evalcomix_get_assessmentid(['courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
+        'studentid' => $studentid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms]);
 
-        $newassessmentid = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module,
-        'cmid' => $cmid, 'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
-        $object = new stdClass();
-        $object->oldid = $assessmentid;
-        $object->newid = $newassessmentid;
-        $assessments = array($object);
+        foreach ($team as $memberid) {
+            if ($mode == 'self') {
+                $assessorid = $memberid;
+            }
+            $newassessmentid = block_evalcomix_get_assessmentid(['courseid' => $courseid, 'module' => $module,
+            'cmid' => $cmid, 'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms]);
+            $object = new stdClass();
+            $object->oldid = $assessmentid;
+            $object->newid = $newassessmentid;
 
-        $now = time();
-        if ($duplicateassessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $taskid,
-                'assessorid' => $assessorid, 'studentid' => $memberid))) {
-            if ($assessment->grade != $duplicateassessment->grade) {
-                if ($DB->update_record('block_evalcomix_assessments', array('id' => $duplicateassessment->id,
-                        'taskid' => $duplicateassessment->taskid, 'assessorid' => $assessorid,
-                        'studentid' => $duplicateassessment->studentid,
-                        'grade' => $assessment->grade, 'timemodified' => $now))) {
-                    block_evalcomix_webservice_client::delete_ws_assessment($duplicateassessment);
-                    block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
-                    $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
+            if (
+                $duplicateassessment = $DB->get_record('block_evalcomix_assessments', ['taskid' => $taskid,
+                    'assessorid' => $assessorid, 'studentid' => $memberid])
+            ) {
+                if ($assessment->grade != $duplicateassessment->grade) {
+                    if (
+                        $DB->update_record('block_evalcomix_assessments', ['id' => $duplicateassessment->id,
+                            'taskid' => $duplicateassessment->taskid, 'assessorid' => $assessorid,
+                            'studentid' => $duplicateassessment->studentid,
+                            'grade' => $assessment->grade, 'timemodified' => $now])
+                    ) {
+                        $wsdelete = true;
+                        $wsduplicate = true;
+                        $deletableassessments[] = $duplicateassessment;
+                        $assessments[] = $object;
+
+                        $params = ['cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid];
+                        $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
+                        if ($finalgrade !== null) {
+                            if (
+                                $grade = $DB->get_record('block_evalcomix_grades', ['userid' => $memberid, 'cmid' => $cmid,
+                                    'courseid' => $courseid])
+                            ) {
+                                $DB->update_record('block_evalcomix_grades', ['id' => $grade->id, 'userid' => $grade->userid,
+                                    'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid]);
+                            } else {
+                                $DB->insert_record('block_evalcomix_grades', ['userid' => $memberid,
+                                    'cmid' => $cmid, 'finalgrade' => $finalgrade, 'courseid' => $courseid]);
+                            }
+                        }
+                        if ($mode == 'teacher') {
+                            require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+                            block_evalcomix_insert_teacher_pending(['task' => $task, 'assessmentid' => $duplicateassessment->id,
+                                'mode' => $mode, 'cmid' => $cmid, 'courseid' => $courseid]);
+                        }
+                        $event = \block_evalcomix\event\student_assessed::create(['objectid' => $cmid,
+                        'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid]);
+                        $event->trigger();
+                    }
+                }
+            } else {
+                $idassessment = block_evalcomix_get_assessmentid(['courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
+                    'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms]);
+                if (
+                    $newassessmentid = $DB->insert_record('block_evalcomix_assessments', ['taskid' => $taskid,
+                        'assessorid' => $assessorid, 'studentid' => $memberid, 'grade' => $assessment->grade,
+                        'timemodified' => $now, 'idassessment' => $idassessment, 'modeid' => $modeobject->id])
+                ) {
+                    $wsduplicate = true;
+                    $assessments[] = $object;
+                    $params = ['cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid];
                     $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
                     if ($finalgrade !== null) {
-                        if ($grade = $DB->get_record('block_evalcomix_grades', array('userid' => $memberid, 'cmid' => $cmid,
-                                'courseid' => $courseid))) {
-                            $DB->update_record('block_evalcomix_grades', array('id' => $grade->id, 'userid' => $grade->userid,
-                                'cmid' => $grade->cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid));
+                        if (
+                            $grade = $DB->get_record('block_evalcomix_grades', ['userid' => $memberid, 'cmid' => $cmid,
+                                'courseid' => $courseid])
+                        ) {
+                            $DB->update_record('block_evalcomix_grades', ['id' => $grade->id, 'userid' => $memberid,
+                            'cmid' => $cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid]);
                         } else {
-                            $DB->insert_record('block_evalcomix_grades', array('userid' => $memberid,
-                                'cmid' => $cmid, 'finalgrade' => $finalgrade, 'courseid' => $courseid));
+                            $DB->insert_record('block_evalcomix_grades', ['userid' => $memberid, 'cmid' => $cmid,
+                            'finalgrade' => $finalgrade, 'courseid' => $courseid]);
                         }
+                        $event = \block_evalcomix\event\student_assessed::create(['objectid' => $cmid,
+                        'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid]);
+                        $event->trigger();
                     }
-                    if ($mode == 'teacher') {
-                        require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
-                        block_evalcomix_insert_teacher_pending(array('task' => $task, 'assessmentid' => $duplicateassessment->id,
-                            'mode' => $mode, 'cmid' => $cmid, 'courseid' => $courseid));
-                    }
-                    $event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
-                    'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid));
-                    $event->trigger();
+                    require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
+                    block_evalcomix_insert_teacher_pending(['task' => $task, 'assessmentid' => $newassessmentid, 'mode' => $mode,
+                        'cmid' => $cmid, 'courseid' => $courseid]);
                 }
-            }
-        } else {
-            $idassessment = block_evalcomix_get_assessmentid(array('courseid' => $courseid, 'module' => $module, 'cmid' => $cmid,
-                'studentid' => $memberid, 'assessorid' => $assessorid, 'mode' => $mode, 'lms' => $lms));
-            if ($newassessmentid = $DB->insert_record('block_evalcomix_assessments', array('taskid' => $taskid,
-                    'assessorid' => $assessorid, 'studentid' => $memberid, 'grade' => $assessment->grade,
-                    'timemodified' => $now, 'idassessment' => $idassessment, 'modeid' => $modeobject->id))) {
-                block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
-                $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
-                $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-                if ($finalgrade !== null) {
-                    if ($grade = $DB->get_record('block_evalcomix_grades', array('userid' => $memberid, 'cmid' => $cmid,
-                            'courseid' => $courseid))) {
-                        $DB->update_record('block_evalcomix_grades', array('id' => $grade->id, 'userid' => $memberid,
-                        'cmid' => $cmid, 'finalgrade' => $finalgrade, 'courseid' => $grade->courseid));
-                    } else {
-                        $DB->insert_record('block_evalcomix_grades', array('userid' => $memberid, 'cmid' => $cmid,
-                        'finalgrade' => $finalgrade, 'courseid' => $courseid));
-                    }
-                    $event = \block_evalcomix\event\student_assessed::create(array('objectid' => $cmid,
-                    'courseid' => $courseid, 'context' => $context, 'userid' => $assessorid, 'relateduserid' => $studentid));
-                    $event->trigger();
-                }
-                require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
-                block_evalcomix_insert_teacher_pending(array('task' => $task, 'assessmentid' => $newassessmentid, 'mode' => $mode,
-                    'cmid' => $cmid, 'courseid' => $courseid));
             }
         }
     } else {
-        if ($mode == 'self') {
-            $assessorid = $memberid;
-        }
-        if ($duplicateassessment = $DB->get_record('block_evalcomix_assessments', array('taskid' => $taskid,
-                'assessorid' => $assessorid, 'studentid' => $memberid))) {
-            block_evalcomix_assessments::delete_assessment(array('where' => array('id' => $duplicateassessment->id),
-                    'courseid' => $courseid, 'cmid' => $task->instanceid));
-        }
-    }
-    $showdetails = true;
-    $params = array('cmid' => $task->instanceid, 'userid' => $memberid, 'courseid' => $courseid);
-    $finalgrade = block_evalcomix_grades::get_finalgrade_user_task($params);
-    // Only show the grade of users or all grades if the USER is a teacher or admin.
-    if ((has_capability('moodle/grade:viewhidden', $context, $USER->id)
-        || $memberid == $USER->id) && isset($finalgrade)) {
-        if ($finalgrade != -1) {
-            echo format_float($finalgrade, 2);
-        } else {
-            echo '-';
-        }
-    } else { // There is not grade.
-        if ($configured) {
-            echo '-';
-        } else {
-            echo '<span class="text-danger font-italic">'.get_string('noconfigured', 'block_evalcomix').'</span>';
-        }
-        $showdetails = false;
-    }
-
-    if ($configured) {
-        $details = '';
-        if ($showdetails) {
-            $details = '<input type="image" value="'.get_string('details', 'block_evalcomix').'"
-            class="block_evalcomix_w_16" title='.
-            get_string('details', 'block_evalcomix').' src="../images/lupa.png"
-            onclick="javascript:urlDetalles(\''. $CFG->wwwroot.
-            '/blocks/evalcomix/assessment/details.php?cid=' . $context->id . '&itemid=' .
-            $task->id . '&userid=' . $memberid . '&popup=1\');"/>';
-        }
-
-        if ($mode == 'teacher') {
-            echo $details;
+        // Si tras ejecutar el process_data no se encuentra el $assessment significa que se ha borrado la evaluación.
+        foreach ($team as $memberid) {
+            if ($mode == 'self') {
+                $assessorid = $memberid;
+            }
+            if (
+                $duplicateassessment = $DB->get_record('block_evalcomix_assessments', ['taskid' => $taskid,
+                    'assessorid' => $assessorid, 'studentid' => $memberid])
+            ) {
+                $wsdelete = true;
+                $deletableassessments[] = $duplicateassessment;
+                block_evalcomix_assessments::delete_assessment(['where' => ['id' => $duplicateassessment->id],
+                        'courseid' => $courseid, 'cmid' => $task->instanceid, 'ws' => false]);
+            }
         }
     }
+    $transaction->allow_commit();
+} catch (Exception $e) {
+    $transaction->rollback($e);
+    throw $e;
 }
+
+if ($wsdelete) {
+    block_evalcomix_webservice_client::delete_ws_assessments($deletableassessments);
+}
+if ($wsduplicate) {
+    block_evalcomix_webservice_client::duplicate_course($assessments, $tools);
+}
+
+echo $reportevalcomix->create_grade_table();

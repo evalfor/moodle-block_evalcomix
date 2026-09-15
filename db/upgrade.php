@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * upgrade.php
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -22,6 +23,7 @@
  */
 
 /**
+ * upgrade
  * @param int $oldversion
  */
 function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
@@ -32,7 +34,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
 
     // Add a new column newcol to the mdl_question_myqtype.
     if ($oldversion < 2012013003) {
-
         // Define table block_evalcomix to be created.
         $table = new xmldb_table('block_evalcomix');
 
@@ -43,7 +44,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('sendgradebook', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, null, null, '0');
 
         // Adding keys to table block_evalcomix.
-        $table->add_key('id', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('id', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix.
         if (!$dbman->table_exists($table)) {
@@ -66,7 +67,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_evalcomix_tasks.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_tasks.
         if (!$dbman->table_exists($table)) {
@@ -89,7 +90,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('weighing', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_evalcomix_modes.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_modes.
         if (!$dbman->table_exists($table)) {
@@ -101,7 +102,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2012013006) {
-
         // Define table block_evalcomix_modes_time to be created.
         $table = new xmldb_table('block_evalcomix_modes_time');
 
@@ -112,7 +112,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('timedue', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
 
         // Adding keys to table block_evalcomix_modes_time.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_modes_time.
         if (!$dbman->table_exists($table)) {
@@ -124,7 +124,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2012013007) {
-
         // Define table block_evalcomix_modes_extra to be created.
         $table = new xmldb_table('block_evalcomix_modes_extra');
 
@@ -134,7 +133,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('modeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_evalcomix_modes_extra.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_modes_extra.
         if (!$dbman->table_exists($table)) {
@@ -146,7 +145,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2012013008) {
-
         // Define table block_evalcomix_tools to be created.
         $table = new xmldb_table('block_evalcomix_tools');
 
@@ -160,7 +158,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('idtool', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_evalcomix_tools.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_tools.
         if (!$dbman->table_exists($table)) {
@@ -172,7 +170,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2013102505) {
-
         // Define table block_evalcomix_grades to be created.
         $table = new xmldb_table('block_evalcomix_grades');
 
@@ -184,7 +181,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table block_evalcomix_grades.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_grades.
         if (!$dbman->table_exists($table)) {
@@ -201,15 +198,15 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_extra.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes_time.php');
 
-        if ($tasks = evalcomix_tasks::fetch_all(array())) {
+        if ($tasks = evalcomix_tasks::fetch_all([])) {
             foreach ($tasks as $task) {
                 echo '<br><br><br>Procesando task: ' . $task->id . '<br>';
                 echo 'Finalgrades asociados: <br>';
-                if ($cm = $DB->get_record('course_modules', array('id' => $task->instanceid))) {
+                if ($cm = $DB->get_record('course_modules', ['id' => $task->instanceid])) {
                     $courseid = $cm->course;
-                    if ($assessments = $DB->get_records('block_evalcomix_assessments', array('taskid' => $task->id))) {
+                    if ($assessments = $DB->get_records('block_evalcomix_assessments', ['taskid' => $task->id])) {
                         foreach ($assessments as $assessment) {
-                            $params = array();
+                            $params = [];
 
                             $params['cmid'] = $task->instanceid;
                             $params['userid'] = $assessment->studentid;
@@ -248,7 +245,7 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
         $table->add_field('studentid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table block_evalcomix_allowedusers.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for block_evalcomix_allowedusers.
         if (!$dbman->table_exists($table)) {
@@ -260,7 +257,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2013111802) {
-
         // Define field whoassesses to be added to block_evalcomix_modes_extra.
         $table = new xmldb_table('block_evalcomix_modes_extra');
         $field1 = new xmldb_field('visible', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
@@ -279,7 +275,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2013121700) {
-
         // Define field visible to be added to block_evalcomix_tasks.
         $table = new xmldb_table('block_evalcomix_tasks');
         $field = new xmldb_field('visible', XMLDB_TYPE_INTEGER, '1', null, null, null, '1', 'timemodified');
@@ -294,7 +289,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2014040716) {
-
         // Define field idtool to be added to block_evalcomix_tools.
         $table = new xmldb_table('block_evalcomix_tools');
         $field = new xmldb_field('idtool', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL, null, '0', 'timemodified');
@@ -309,7 +303,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2021081102) {
-
         // Define field grademethod to be added to block_evalcomix_tasks.
         $table = new xmldb_table('block_evalcomix_tasks');
         $field = new xmldb_field('grademethod', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'visible');
@@ -324,7 +317,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2022010401) {
-
         // Define table block_evalcomix_competencies to be created.
         $table = new xmldb_table('block_evalcomix_competencies');
 
@@ -387,7 +379,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2022033100) {
-
          // Define field threshold to be added to block_evalcomix_tasks.
         $table = new xmldb_table('block_evalcomix_tasks');
         $field = new xmldb_field('threshold', XMLDB_TYPE_INTEGER, '10', null, null, null, '15', 'grademethod');
@@ -402,7 +393,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2022051600) {
-
         // Define field workteams to be added to block_evalcomix_tasks.
         $table = new xmldb_table('block_evalcomix_tasks');
         $field = new xmldb_field('workteams', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'threshold');
@@ -434,7 +424,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2022112802) {
-
         // Define field idassessment to be added to block_evalcomix_assessments.
         $table = new xmldb_table('block_evalcomix_assessments');
         $field = new xmldb_field('idassessment', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, '0', 'timemodified');
@@ -449,7 +438,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2023031800) {
-
         // Define table block_evalcomix_dr_pending to be created.
         $table = new xmldb_table('block_evalcomix_dr_pending');
 
@@ -504,7 +492,6 @@ function xmldb_block_evalcomix_upgrade($oldversion = 201111802) {
     }
 
     if ($oldversion < 2023042400) {
-
         // Define field modeid to be added to block_evalcomix_assessments.
         $table = new xmldb_table('block_evalcomix_assessments');
         $field = new xmldb_field('modeid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'taskid');

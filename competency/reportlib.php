@@ -13,7 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Reportlib
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,19 +27,22 @@ define('BLOCK_EVALCOMIX_OUTCOME', 1);
 define('BLOCK_EVALCOMIX_DR_REQUEST', 150);
 define('BLOCK_EVALCOMIX_DR_PENDING', 5000);
 
+/**
+ * block_evalcomix_get_development_datas
+ */
 function block_evalcomix_get_development_datas($courseid, $groupid = 0, $studentid = 0, $grades = true) {
     global $DB;
     $result = new stdClass();
     $result->competency = new stdClass();
-    $result->competency->xdatas = array();
-    $result->competency->ydatas = array();
-    $result->competency->title = array();
+    $result->competency->xdatas = [];
+    $result->competency->ydatas = [];
+    $result->competency->title = [];
     $result->outcome = new stdClass();
-    $result->outcome->xdatas = array();
-    $result->outcome->ydatas = array();
-    $result->outcome->title = array();
+    $result->outcome->xdatas = [];
+    $result->outcome->ydatas = [];
+    $result->outcome->title = [];
 
-    if ($competencies = $DB->get_records('block_evalcomix_competencies', array('courseid' => $courseid))) {
+    if ($competencies = $DB->get_records('block_evalcomix_competencies', ['courseid' => $courseid])) {
         if ($grades) {
             $datas = block_evalcomix_get_competency_grade($courseid, array_keys($competencies), $groupid, $studentid);
         }
@@ -47,7 +52,7 @@ function block_evalcomix_get_development_datas($courseid, $groupid = 0, $student
             if ($competency->outcome) {
                 $result->outcome->ydatas[$idnumber] = $idnumber;
                 $result->outcome->xdatas[$idnumber] = 0;
-                $result->outcome->gradebytask[$idnumber] = array();
+                $result->outcome->gradebytask[$idnumber] = [];
                 if ($grades) {
                     if (isset($datas[$compid]) && isset($datas[$compid]->grade)) {
                         $result->outcome->xdatas[$idnumber] = $datas[$compid]->grade;
@@ -59,7 +64,7 @@ function block_evalcomix_get_development_datas($courseid, $groupid = 0, $student
             } else {
                 $result->competency->ydatas[$idnumber] = $idnumber;
                 $result->competency->xdatas[$idnumber] = 0;
-                $result->competency->gradebytask[$idnumber] = array();
+                $result->competency->gradebytask[$idnumber] = [];
                 if ($grades) {
                     if (isset($datas[$compid]) && isset($datas[$compid]->grade)) {
                         $result->competency->xdatas[$idnumber] = $datas[$compid]->grade;
@@ -75,14 +80,17 @@ function block_evalcomix_get_development_datas($courseid, $groupid = 0, $student
     return $result;
 }
 
-function block_evalcomix_get_competency_grade($courseid, $competencyid = array(), $groupid = 0, $studentid = 0) {
+/**
+ * block_evalcomix_get_competency_grade
+ */
+function block_evalcomix_get_competency_grade($courseid, $competencyid = [], $groupid = 0, $studentid = 0) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
-    $result = array();
-    $gradebytask = array();
+    $result = [];
+    $gradebytask = [];
 
-    $datas = block_evalcomix_get_skill_development_data(array('courseid' => $courseid,
-        'competencyid' => $competencyid, 'groupid' => $groupid, 'studentid' => $studentid));
+    $datas = block_evalcomix_get_skill_development_data(['courseid' => $courseid,
+        'competencyid' => $competencyid, 'groupid' => $groupid, 'studentid' => $studentid]);
 
     foreach ($datas as $compid => $item1) {
         foreach ($item1 as $subdimensionid => $item2) {
@@ -96,12 +104,12 @@ function block_evalcomix_get_competency_grade($courseid, $competencyid = array()
         }
         $result[$compid] = new stdClass();
         $result[$compid]->grade = 0;
-        $result[$compid]->gradebytask = array();
+        $result[$compid]->gradebytask = [];
     }
 
     if (!empty($gradebytask)) {
         foreach ($gradebytask as $compid => $item1) {
-            $rawgrades = array();
+            $rawgrades = [];
             foreach ($item1 as $cmid => $grades) {
                 if (!empty($grades)) {
                     $countgrades = count($grades);
@@ -125,48 +133,51 @@ function block_evalcomix_get_competency_grade($courseid, $competencyid = array()
     return $result;
 }
 
-function block_evalcomix_get_skill_development_data($params = array()) {
+/**
+ * block_evalcomix_get_skill_development_data
+ */
+function block_evalcomix_get_skill_development_data($params = []) {
     global $CFG, $DB;
     $courseid = $params['courseid'];
     $competencyid = $params['competencyid'];
     $studentid = (isset($params['studentid'])) ? (int)$params['studentid'] : 0;
     $groupid = (isset($params['groupid'])) ? (int)$params['groupid'] : 0;
-    $datas = array();
-    $result = array();
-    $students = array();
+    $datas = [];
+    $result = [];
+    $students = [];
 
     $sql = '
         SELECT bes.*
         FROM {block_evalcomix_subdimension} bes
         WHERE bes.courseid = :courseid
-            AND competencyid IN ('.implode(',', $competencyid).')
+            AND competencyid IN (' . implode(',', $competencyid) . ')
             AND bes.toolid IN (
                 SELECT bem.toolid
                 FROM {block_evalcomix_modes} bem
                 )
     ';
 
-    $studentbyassessment = array();
-    if ($student = $DB->get_record('user', array('id' => $studentid, 'deleted' => 0))) {
+    $studentbyassessment = [];
+    if ($student = $DB->get_record('user', ['id' => $studentid, 'deleted' => 0])) {
         $students[$studentid] = $student;
     } else {
         $students = block_evalcomix_get_members_course($courseid, $groupid);
     }
     $xml = '';
-    $assbytool = array();
-    $toolhash = array();
-    if (!empty($students) && $subdimensions = $DB->get_records_sql($sql, array('courseid' => $courseid))) {
+    $assbytool = [];
+    $toolhash = [];
+    if (!empty($students) && $subdimensions = $DB->get_records_sql($sql, ['courseid' => $courseid])) {
         foreach ($subdimensions as $subdimension) {
             $subdimensionid = $subdimension->subdimensionid;
             $subdimensionhash[$subdimensionid][] = $subdimension->id;
             $subtoolid = $subdimension->toolid;
             $toolhash[$subdimensionid] = $subtoolid;
             if (!isset($assbytool[$subtoolid])) {
-                $assbytool[$subtoolid] = block_evalcomix_get_student_assessments_by_tool(array('courseid' => $courseid,
-                    'toolid' => $subdimension->toolid, 'students' => $students));
+                $assbytool[$subtoolid] = block_evalcomix_get_student_assessments_by_tool(['courseid' => $courseid,
+                    'toolid' => $subdimension->toolid, 'students' => $students]);
             }
             if (!empty($assbytool[$subtoolid])) {
-                $allassessments = array();
+                $allassessments = [];
 
                 foreach ($assbytool[$subtoolid] as $assessmentid => $value) {
                     $allassessments[$assessmentid] = $assessmentid;
@@ -175,9 +186,9 @@ function block_evalcomix_get_skill_development_data($params = array()) {
                     $sql = "
                     SELECT *
                     FROM {block_evalcomix_dr_grade}
-                    WHERE idsubdimension = '".$subdimensionid."' AND idassessment IN ('" .
+                    WHERE idsubdimension = '" . $subdimensionid . "' AND idassessment IN ('" .
                         implode("','", $allassessments) . "')";
-                    $result[$subdimensionid] = $DB->get_records_sql($sql, array());
+                    $result[$subdimensionid] = $DB->get_records_sql($sql, []);
                 }
             }
         }
@@ -207,7 +218,7 @@ function block_evalcomix_get_skill_development_data($params = array()) {
 /**
  * Get datas from ws and save them in db
  */
-function block_evalcomix_get_skill_development_data_ws($params = array()) {
+function block_evalcomix_get_skill_development_data_ws($params = []) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
 
@@ -246,7 +257,7 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
         }
 
         $contextcourse = context_course::instance($courseid);
-        if (!$DB->get_record('block_instances', array('parentcontextid' => $contextcourse->id, 'blockname' => 'evalcomix'))) {
+        if (!$DB->get_record('block_instances', ['parentcontextid' => $contextcourse->id, 'blockname' => 'evalcomix'])) {
             if ($verbosity) {
                 echo "It is not processed because the course does not have the EvalCOMIX block installed
 
@@ -264,7 +275,7 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
             continue;
         }
 
-        if (!$competencies = $DB->get_records('block_evalcomix_competencies', array('courseid' => $courseid))) {
+        if (!$competencies = $DB->get_records('block_evalcomix_competencies', ['courseid' => $courseid])) {
             if ($verbosity) {
                 echo "It is not processed because there are no competencies or outcomes
 
@@ -273,7 +284,7 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
             continue;
         }
 
-        $cm = $DB->get_records('course_modules', array('course' => $courseid, 'deletioninprogress' => '0'));
+        $cm = $DB->get_records('course_modules', ['course' => $courseid, 'deletioninprogress' => '0']);
         foreach ($cm as $value) {
             $cmids[] = $value->id;
         }
@@ -304,13 +315,13 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
         }
         $now = time();
         if ($modes = $DB->get_records_sql($sqlmodes)) {
-            $activities = array();
+            $activities = [];
             foreach ($modes as $mode) {
                 $taskid = $mode->taskid;
                 if (!isset($activities[$taskid])) {
                     $activities[$taskid] = new stdClass();
                     $activities[$taskid]->open = false;
-                    $activities[$taskid]->toolid = array();
+                    $activities[$taskid]->toolid = [];
                 }
                 $toolid = $mode->toolid;
                 $activities[$taskid]->toolid[$toolid] = $toolid;
@@ -326,10 +337,10 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
                     break;
                 }
                 $cmid = $tasks[$taskid]->instanceid;
-                $pending = $DB->get_records('block_evalcomix_dr_pending', array('cmid' => $cmid));
-                $grades = $DB->get_records('block_evalcomix_dr_grade', array('cmid' => $cmid));
-                $assbytool = array();
-                $pendingdatas = array();
+                $pending = $DB->get_records('block_evalcomix_dr_pending', ['cmid' => $cmid]);
+                $grades = $DB->get_records('block_evalcomix_dr_grade', ['cmid' => $cmid]);
+                $assbytool = [];
+                $pendingdatas = [];
                 if ($activity->open === false) {
                     if (!$pending && !$grades) {
                         $compids = array_keys($competencies);
@@ -337,12 +348,12 @@ function block_evalcomix_get_skill_development_data_ws($params = array()) {
                                 SELECT bes.*
                                 FROM {block_evalcomix_subdimension} bes
                                 WHERE bes.courseid = :courseid
-                                    AND bes.competencyid IN ('.implode(',', $compids).')
-                                    AND bes.toolid IN ('.implode(',', $activity->toolid).')
+                                    AND bes.competencyid IN (' . implode(',', $compids) . ')
+                                    AND bes.toolid IN (' . implode(',', $activity->toolid) . ')
                         ';
 
-                        if ($subdimensions = $DB->get_records_sql($sql, array('courseid' => $courseid))) {
-                            $tools = array();
+                        if ($subdimensions = $DB->get_records_sql($sql, ['courseid' => $courseid])) {
+                            $tools = [];
                             foreach ($subdimensions as $subdimension) {
                                 if ($verbosity) {
                                     echo "Processing the subdimension: $subdimension->subdimensionid
@@ -358,12 +369,13 @@ of the tool $subdimension->toolid
 ";
                                         }
                                         $assbytool[$subtoolid] = block_evalcomix_get_student_assessments_by_tool(
-                                            array('courseid' => $courseid, 'toolid' => $subtoolid, 'students' => $students,
-                                            'cmid' => $cmid));
+                                            ['courseid' => $courseid, 'toolid' => $subtoolid, 'students' => $students,
+                                            'cmid' => $cmid]
+                                        );
                                     }
 
                                     if (!empty($assbytool[$subtoolid]) && !isset($pendingdatas[$subdimensionid])) {
-                                        $allassessments = array();
+                                        $allassessments = [];
 
                                         foreach ($assbytool[$subtoolid] as $assessmentid => $value) {
                                             $allassessments[$assessmentid] = $value;
@@ -379,9 +391,9 @@ of the tool $subdimension->toolid
                                 $i = 0;
                                 foreach ($pendingdatas as $subdimensionid => $assessments) {
                                     foreach ($assessments as $assessmentid => $assessment) {
-                                        $params = array('courseid' => $courseid,
+                                        $params = ['courseid' => $courseid,
                                             'cmid' => $assessment->cmid, 'idsubdimension' => $subdimensionid,
-                                            'idassessment' => $assessmentid, 'modeid' => $assessment->modeid);
+                                            'idassessment' => $assessmentid, 'modeid' => $assessment->modeid];
                                         if (!$DB->get_record('block_evalcomix_dr_pending', $params)) {
                                             $DB->insert_record('block_evalcomix_dr_pending', $params);
                                             $i++;
@@ -399,10 +411,10 @@ of the tool $subdimension->toolid
                     }
                 } else {
                     if ($pending) {
-                        $DB->delete_records('block_evalcomix_dr_pending', array('cmid' => $cmid));
+                        $DB->delete_records('block_evalcomix_dr_pending', ['cmid' => $cmid]);
                     }
                     if ($grades) {
-                        $DB->delete_records('block_evalcomix_dr_grade', array('cmid' => $cmid));
+                        $DB->delete_records('block_evalcomix_dr_grade', ['cmid' => $cmid]);
                     }
                 }
             }
@@ -418,7 +430,7 @@ Managing grades
     FROM {block_evalcomix_dr_pending}
     LIMIT " . $maxrequests;
     if ($requests = $DB->get_records_sql($sqlgrade)) {
-        $pendingdatas = array();
+        $pendingdatas = [];
         foreach ($requests as $request) {
             $idsubdimension = $request->idsubdimension;
             $idassessment = $request->idassessment;
@@ -434,11 +446,15 @@ Managing grades
             $i = 0;
             $j = 0;
             foreach ($datas as $data) {
-                if (!empty($data['cmid']) && !empty($data['idsubdimension'])
-                        && !empty($data['idassessment']) && !empty($data['modeid'])) {
+                if (
+                    !empty($data['cmid']) && !empty($data['idsubdimension'])
+                        && !empty($data['idassessment']) && !empty($data['modeid'])
+                ) {
                     if (is_numeric($data['grade'])) {
-                        if (!$grade = $DB->get_record('block_evalcomix_dr_grade', array('idassessment' => $data['idassessment'],
-                                'idsubdimension' => $data['idsubdimension']))) {
+                        if (
+                            !$grade = $DB->get_record('block_evalcomix_dr_grade', ['idassessment' => $data['idassessment'],
+                                'idsubdimension' => $data['idsubdimension']])
+                        ) {
                             $data['grade'] = round($data['grade']);
                             $DB->insert_record('block_evalcomix_dr_grade', $data);
                             $i++;
@@ -450,8 +466,8 @@ Managing grades
                             }
                         }
                     }
-                    $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $data['idassessment'],
-                        'idsubdimension' => $data['idsubdimension']));
+                    $DB->delete_records('block_evalcomix_dr_pending', ['idassessment' => $data['idassessment'],
+                        'idsubdimension' => $data['idsubdimension']]);
                 }
             }
             if ($verbosity) {
@@ -463,21 +479,24 @@ Managing grades
     }
 }
 
-function block_evalcomix_get_student_assessments_by_tool($params = array()) {
+/**
+ * block_evalcomix_get_student_assessments_by_tool
+ */
+function block_evalcomix_get_student_assessments_by_tool($params = []) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-    $result = array();
+    $result = [];
 
     $courseid = (isset($params['courseid'])) ? $params['courseid'] : 0;
     $toolid = (isset($params['toolid'])) ? $params['toolid'] : 0;
-    $students = (isset($params['students'])) ? $params['students'] : array();
+    $students = (isset($params['students'])) ? $params['students'] : [];
     $cmid = (isset($params['cmid'])) ? $params['cmid'] : 0;
 
-    $cmids = array();
+    $cmids = [];
     if (!empty($cmid)) {
         $cmids[] = $cmid;
     } else {
-        $cm = $DB->get_records('course_modules', array('course' => $courseid, 'deletioninprogress' => '0'));
+        $cm = $DB->get_records('course_modules', ['course' => $courseid, 'deletioninprogress' => '0']);
         foreach ($cm as $value) {
             $cmids[] = $value->id;
         }
@@ -494,7 +513,7 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
         $sql = '
         SELECT s.*
         FROM {block_evalcomix_assessments} s
-        WHERE s.studentid IN ('.implode(',', $studentids).') AND s.taskid IN ('.implode(',', $tasksids).')
+        WHERE s.studentid IN (' . implode(',', $studentids) . ') AND s.taskid IN (' . implode(',', $tasksids) . ')
         ORDER BY s.id ASC
         ';
 
@@ -502,11 +521,11 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
             $sqlmode = '
             SELECT *
             FROM {block_evalcomix_modes}
-            WHERE toolid = :toolid AND taskid IN ('.implode(',', $tasksids).')';
-            $modeparams = array('toolid' => $toolid);
+            WHERE toolid = :toolid AND taskid IN (' . implode(',', $tasksids) . ')';
+            $modeparams = ['toolid' => $toolid];
 
             if ($modes = $DB->get_records_sql($sqlmode, $modeparams)) {
-                $modestr = array();
+                $modestr = [];
                 foreach ($modes as $mode) {
                     $modality = $mode->modality;
                     $modesstr[$modality] = $mode->id;
@@ -543,6 +562,9 @@ function block_evalcomix_get_student_assessments_by_tool($params = array()) {
     return $result;
 }
 
+/**
+ * block_evalcomix_get_development_datas
+ */
 function block_evalcomix_get_remaining_download_time($courseid) {
     global $DB;
 
@@ -594,7 +616,10 @@ function block_evalcomix_get_remaining_download_time($courseid) {
     return 'indeterminate';
 }
 
-function block_evalcomix_insert_teacher_pending($params = array()) {
+/**
+ * block_evalcomix_insert_teacher_pending
+ */
+function block_evalcomix_insert_teacher_pending($params = []) {
     global $DB;
     $result = false;
 
@@ -609,10 +634,10 @@ function block_evalcomix_insert_teacher_pending($params = array()) {
             FROM {block_evalcomix_modes} m LEFT JOIN {block_evalcomix_modes_time} mt
             ON m.id = mt.modeid
             WHERE m.taskid = :taskid";
-        if ($modes = $DB->get_records_sql($sqlmodes, array('taskid' => $task->id))) {
+        if ($modes = $DB->get_records_sql($sqlmodes, ['taskid' => $task->id])) {
             $open = false;
             $teachermode = false;
-            $activities = array();
+            $activities = [];
             $now = time();
             $modeid = 0;
             $aeorei = true;
@@ -630,28 +655,34 @@ function block_evalcomix_insert_teacher_pending($params = array()) {
                 }
             }
             if (!$open && $teachermode) {
-                $pending = $DB->get_records('block_evalcomix_dr_pending', array('cmid' => $cmid));
-                $grades = $DB->get_records('block_evalcomix_dr_grade', array('cmid' => $cmid));
+                $pending = $DB->get_records('block_evalcomix_dr_pending', ['cmid' => $cmid]);
+                $grades = $DB->get_records('block_evalcomix_dr_grade', ['cmid' => $cmid]);
                 if ($pending || $grades || $aeorei) {
-                    if ($assessment = $DB->get_record('block_evalcomix_assessments', array('id' => $assessmentid))) {
+                    if ($assessment = $DB->get_record('block_evalcomix_assessments', ['id' => $assessmentid])) {
                         $idass = $assessment->idassessment;
-                        if ($subdimensions = $DB->get_records('block_evalcomix_subdimension', array('toolid' => $mode->toolid))) {
-                            $idsubs = array();
+                        if ($subdimensions = $DB->get_records('block_evalcomix_subdimension', ['toolid' => $mode->toolid])) {
+                            $idsubs = [];
                             foreach ($subdimensions as $subdimension) {
                                 $idsub = $subdimension->subdimensionid;
                                 $idsubs[$idsub] = $idsub;
                             }
-                            if ($pending = $DB->get_records('block_evalcomix_dr_pending', array('cmid' => $cmid,
-                                    'idassessment' => $idass))) {
-                                $DB->delete_records('block_evalcomix_dr_pending', array('idassessment' => $idass));
+                            if (
+                                $pending = $DB->get_records('block_evalcomix_dr_pending', ['cmid' => $cmid,
+                                    'idassessment' => $idass])
+                            ) {
+                                $DB->delete_records('block_evalcomix_dr_pending', ['idassessment' => $idass]);
                             }
 
                             foreach ($idsubs as $subid) {
-                                if (!$DB->get_record('block_evalcomix_dr_pending', array('idsubdimension' => $subid,
-                                        'idassessment' => $idass))) {
-                                    if ($DB->insert_record('block_evalcomix_dr_pending', array('courseid' => $courseid,
+                                if (
+                                    !$DB->get_record('block_evalcomix_dr_pending', ['idsubdimension' => $subid,
+                                        'idassessment' => $idass])
+                                ) {
+                                    if (
+                                        $DB->insert_record('block_evalcomix_dr_pending', ['courseid' => $courseid,
                                         'cmid' => $cmid, 'idsubdimension' => $subid,
-                                        'idassessment' => $idass, 'modeid' => $modeid))) {
+                                        'idassessment' => $idass, 'modeid' => $modeid])
+                                    ) {
                                         $result = true;
                                     }
                                 }

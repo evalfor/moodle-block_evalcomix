@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * access.php
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -23,59 +24,59 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'block/evalcomix:myaddinstance' => array(
+$capabilities = [
+    'block/evalcomix:myaddinstance' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW,
-        ),
+        ],
 
         'clonepermissionsfrom' => 'moodle/my:manageblocks',
-    ),
+    ],
 
-    'block/evalcomix:view' => array(
+    'block/evalcomix:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
         'editingteacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
-        ),
-    ),
+        ],
+    ],
 
-    'block/evalcomix:assessed' => array(
+    'block/evalcomix:assessed' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
             'student' => CAP_ALLOW,
-        ),
-    ),
+        ],
+    ],
 
-    'block/evalcomix:edit' => array(
+    'block/evalcomix:edit' => [
     'captype' => 'read',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
         'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
-        ),
-    ),
+        ],
+    ],
 
-    'block/evalcomix:addinstance' => array(
+    'block/evalcomix:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-        ),
+        ],
 
         'clonepermissionsfrom' => 'moodle/site:manageblocks',
-    ),
+    ],
 
-);
+];

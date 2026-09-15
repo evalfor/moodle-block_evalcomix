@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Selection
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -23,7 +24,7 @@
 
 require_once('../../../../config.php');
 $courseid = required_param('courseid', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($courseid);
 $type = required_param('type', PARAM_ALPHA);
@@ -34,22 +35,24 @@ unset($SESSION->tool);
 
 if ($type == 'new') {
     $environmentid = 0;
-    if (!$environment = $DB->get_record('block_evalcomix', array('courseid' => $courseid))) {
-        $environmentid = $DB->insert_record('block_evalcomix', array('courseid' => $courseid, 'viewmode' => 'evalcomix',
-            'sendgradebook' => '0'));
+    if (!$environment = $DB->get_record('block_evalcomix', ['courseid' => $courseid])) {
+        $environmentid = $DB->insert_record('block_evalcomix', ['courseid' => $courseid, 'viewmode' => 'evalcomix',
+            'sendgradebook' => '0']);
     } else {
         $environmentid = $environment->id;
     }
-    if (!empty($environmentid) && !$DB->get_record('block_evalcomix_tools', array('evxid' => $environmentid,
-        'idtool' => $id))) {
+    if (
+        !empty($environmentid) && !$DB->get_record('block_evalcomix_tools', ['evxid' => $environmentid,
+        'idtool' => $id])
+    ) {
         $now = time();
-        $DB->insert_record('block_evalcomix_tools', array('evxid' => $environmentid, 'title' => '-000_1', 'type' => 'tmp',
-            'idtool' => $id, 'timecreated' => $now, 'timemodified' => $now));
+        $DB->insert_record('block_evalcomix_tools', ['evxid' => $environmentid, 'title' => '-000_1', 'type' => 'tmp',
+            'idtool' => $id, 'timecreated' => $now, 'timemodified' => $now]);
     }
     $SESSION->id = $id;
     unset($SESSION->open);
-    $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/editor/selection.php', array('id' => $id, 'type' => $type,
-        'courseid' => $courseid)));
+    $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/editor/selection.php', ['id' => $id, 'type' => $type,
+        'courseid' => $courseid]));
     $PAGE->set_pagelayout('popup');
     // Print the header.
     $PAGE->set_context($context);
@@ -60,54 +63,55 @@ if ($type == 'new') {
     echo $OUTPUT->header();
     echo '
 <div id="bgmenu">
-    <div>'. get_string('selecttool', 'block_evalcomix') . '</div>
-    <div class="text-center bg-white"><img src="'.$CFG->wwwroot.'/blocks/evalcomix/images/logoevalcomix.png"
+    <div>' . get_string('selecttool', 'block_evalcomix') . '</div>
+    <div class="text-center bg-white"><img src="' . $CFG->wwwroot . '/blocks/evalcomix/images/logoevalcomix.png"
     alt="EvalCOMIX" width="100" class="my-1"></div>
     <form action="generator.php" method="post">
-        <input type="hidden" name="courseid" value="'.$courseid.'">
-        <input type="hidden" name="identifier" value="'.$id.'">
+        <input type="hidden" name="courseid" value="' . $courseid . '">
+        <input type="hidden" name="identifier" value="' . $id . '">
         <div id="menu">
                 <ul class="list-group m-1">
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="escala" checked value="escala"/> <label
-                        class="w-75 h-100" for="escala">'.
-                            get_string('ratescale', 'block_evalcomix').'</label>
+                        class="w-75 h-100" for="escala">' .
+                            get_string('ratescale', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="listaescala" value="listaescala"/> <label class="w-75 h-100"
-                        for="listaescala">'. get_string('listrate', 'block_evalcomix').'</label>
+                        for="listaescala">' . get_string('listrate', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
-                        <input type="radio" name="type" id="lista" value="lista"/> <label class="w-75 h-100" for="lista">'.
-                            get_string('checklist', 'block_evalcomix').'</label>
+                        <input type="radio" name="type" id="lista" value="lista"/> <label class="w-75 h-100" for="lista">' .
+                            get_string('checklist', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
-                        <input type="radio" name="type" id="rubrica" value="rubrica"/> <label class="w-75 h-100" for="rubrica">'.
-                            get_string('rubric', 'block_evalcomix').'</label>
+                        <input type="radio" name="type" id="rubrica" value="rubrica"/> <label class="w-75 h-100" for="rubrica">' .
+                            get_string('rubric', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="diferencial" value="diferencial"/> <label class="w-75 h-100"
-                        for="diferencial">'. get_string('differentail', 'block_evalcomix').'</label>
+                        for="diferencial">' . get_string('differentail', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="mixta" value="mixta"/> <label class="w-75 h-100" for="mixta">'
-                            .get_string('mix', 'block_evalcomix').'</label>
+                            . get_string('mix', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
                         <input type="radio" name="type" id="argumentario" value="argumentario"/> <label class="w-75 h-100"
-                        for="argumentario">'. get_string('argument', 'block_evalcomix').'</label>
+                        for="argumentario">' . get_string('argument', 'block_evalcomix') . '</label>
                     </li>
                     <li class="list-group-item pt-0 pb-0">
-                        <input type="radio" name="type" id="importar" value="importar"/> <label class="w-75 h-100" for="importar">'.
-                            get_string('import', 'block_evalcomix').'</label>
+                        <input type="radio" name="type" id="importar" value="importar"/> <label class="w-75 h-100"
+                        for="importar">' .
+                            get_string('import', 'block_evalcomix') . '</label>
                     </li>
                 </ul>
             </div>
-            <center><input type="button" name="submit" id="submit" value="'.get_string('accept', 'block_evalcomix').
+            <center><input type="button" name="submit" id="submit" value="' . get_string('accept', 'block_evalcomix') .
                 '" onclick=\'javascript:var valores=document.getElementsByName("type");
                 for(var i=0; i<valores.length; i++){
-                    if(valores[i].checked){tipo=valores[i].id;location.replace("generator.php?identifier='.
-                    $id.'&courseid='.$courseid.'&type="+tipo)}}\'/>
+                    if(valores[i].checked){tipo=valores[i].id;location.replace("generator.php?identifier=' .
+                    $id . '&courseid=' . $courseid . '&type="+tipo)}}\'/>
         </form>
     </div>
 ';
@@ -120,8 +124,8 @@ if ($type == 'new') {
         $xml = simplexml_load_string($toolxml);
         require('inicio.php');
         $tool->import($xml, $id);
-        $tool->display_header(array('courseid' => $courseid));
-        $tool->display_body(array('courseid' => $courseid));
+        $tool->display_header(['courseid' => $courseid]);
+        $tool->display_body(['courseid' => $courseid]);
         $tool->display_footer();
         $toolobj = serialize($tool);
         $SESSION->tool = $toolobj;

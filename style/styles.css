@@ -1,3 +1,7 @@
+/* ==========================================
+   EvalCOMIX Graphic Tab
+   ========================================== */
+
 .block_evalcomix_graphic_tab {
     padding: 0.1em 1rem;
     border-top: 1px solid #c0c0c0;
@@ -8,6 +12,11 @@
 .block_evalcomix_tab_selected {
     background-color: #c0c0c0;
 }
+
+
+/* ==========================================
+   Table and filter blocks
+   ========================================== */
 
 .block_evalcomix_table_filter {
     width: 20%;
@@ -24,6 +33,11 @@
     background-color: #fefefe;
     border: 1px solid #c0c0c0;
 }
+
+
+/* ==========================================
+   Utility classes
+   ========================================== */
 
 .block_evalcomix_display_none {
     display: none;
@@ -58,6 +72,11 @@
     font-size: 0.8em;
 }
 
+
+/* ==========================================
+   Table row styles
+   ========================================== */
+
 .background-color-tr {
     background-color: #ededed;
 }
@@ -71,28 +90,138 @@
     padding: 3px;
 }
 
+
+/* ==========================================
+   Horizontal scrolling containers
+   ========================================== */
+
+/*
+   wrapper1 creates the top horizontal scrollbar.
+   wrapper2 contains the real table and provides
+   horizontal and vertical scrolling.
+*/
+
 .wrapper1,
 .wrapper2 {
     width: 100%;
-    border: none 0 RED;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 }
 
+
+/* Top horizontal scrollbar */
 .wrapper1 {
     height: 20px;
 }
 
+
+/*
+   Invisible element used to create the same width
+   as the table and generate the top scrollbar.
+*/
 #div1 {
-    width: 500px;
-    height: 10px;
+    height: 1px;
 }
 
-#div2 {
-    width: 500px;
+
+/* Main table container */
+.wrapper2 {
+    max-height: 80vh;
     overflow: auto;
 }
 
+
+/*
+   The inner container must be able to grow
+   according to the table width.
+*/
+#div2 {
+    width: max-content;
+}
+
+
+/* Main page container */
 #div {
     width: 100%;
+}
+
+
+/* ==========================================
+   Table configuration
+   ========================================== */
+
+#user-grades {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+
+/* ==========================================
+   Sticky table header
+   ========================================== */
+
+/*
+   Keeps the table header visible while
+   scrolling vertically.
+*/
+
+#user-grades thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 20;
+}
+
+
+/* ==========================================
+   Sticky first column
+   ========================================== */
+
+/*
+   First column remains fixed while
+   scrolling horizontally.
+*/
+
+#user-grades th:first-child,
+#user-grades td:first-child {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 30;
+}
+
+
+/* ==========================================
+   Sticky second column
+   ========================================== */
+
+/*
+   Second column remains fixed.
+   Left value must match the width
+   of the first column.
+*/
+
+#user-grades th:nth-child(2),
+#user-grades td:nth-child(2) {
+    position: sticky;
+    left: 65px;
+    background: white;
+    z-index: 30;
+}
+
+
+/* ==========================================
+   Top-left sticky header corner
+   ========================================== */
+
+#user-grades thead th:first-child,
+#user-grades thead th:nth-child(2) {
+    z-index: 40;
+}
+
+
+/* Avoid visual issues with sticky cells */
+#user-grades th,
+#user-grades td {
+    background-clip: padding-box;
 }

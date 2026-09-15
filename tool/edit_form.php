@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Edit form
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -30,24 +31,24 @@ require_course_login($courseid);
 
 require_capability('moodle/block:edit', $context, $USER->id);
 
-require_once($CFG->dirroot .'/blocks/evalcomix/configeval.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_modes.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
 
-$url = new moodle_url('/blocks/evalcomix/tool/edit_form.php', array('courseid' => $courseid, 't' => $toolid));
+$url = new moodle_url('/blocks/evalcomix/tool/edit_form.php', ['courseid' => $courseid, 't' => $toolid]);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('popup');
 
-if (!$tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $toolid))) {
+if (!$tool = $DB->get_record('block_evalcomix_tools', ['idtool' => $toolid])) {
     throw new \moodle_exception('EvalCOMIX: No tool enabled');
 }
 
 $lang = current_language();
-$url = block_evalcomix_webservice_client::get_ws_createtool($toolid, $courseid, $lang.'_utf8', 'open');
+$url = block_evalcomix_webservice_client::get_ws_createtool($toolid, $courseid, $lang . '_utf8', 'open');
 
 $vars = explode('?', $url->serverurl);
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/curl.class.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/curl.class.php');
 
 $curl = new block_evalcomix_curl();
 $response = $curl->post($vars[0], $vars[1]);

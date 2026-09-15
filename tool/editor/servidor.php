@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Controller
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -22,7 +23,7 @@
  */
 require_once('../../../../config.php');
 $courseid = required_param('courseid', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($courseid);
 require_capability('moodle/grade:viewhidden', $context);
@@ -39,11 +40,11 @@ if (isset($print)) {
         $id = $postcleaned['id'];
     }
 
-    $tool->display_header(array('courseid' => $courseid));
+    $tool->display_header(['courseid' => $courseid]);
     $tool->view_tool('..');
     $tool->display_footer();
 } else if (isset($_FILES['Filetype']['name'])) { // After selecting the import file.
-    $tool->display_header(array('courseid' => $courseid));
+    $tool->display_header(['courseid' => $courseid]);
     $namefile = 'Filetype';
     $extension = explode(".", $_FILES[$namefile]['name']);
     $num = count($extension) - 1;
@@ -59,13 +60,13 @@ if (isset($print)) {
         exit;
     }
     $tool->import($xml);
-    $tool->display_body(array('courseid' => $courseid));
+    $tool->display_body(['courseid' => $courseid]);
     $tool->display_footer();
 } else if (isset($postcleaned['mix']) && $postcleaned['mix'] != '') {
     $id = $postcleaned['mix'];
     $instrument = $tool->get_tool($id);
 
-    if (isset($postcleaned['addDim']) || isset($postcleaned['addtool'.$id])) {
+    if (isset($postcleaned['addDim']) || isset($postcleaned['addtool' . $id])) {
         $instrument->display_body($postcleaned, $id);
     } else if (isset($postcleaned['addSubDim'])) {
         $dim = $postcleaned['addSubDim'];
@@ -92,7 +93,7 @@ if (isset($print)) {
         $instrument->display_subdimension($dim, $subdim, $postcleaned, null, $id);
     } else if (isset($postcleaned['modalAddComp']) && isset($postcleaned['modalCompSel'])) {
         $value = explode('_', $postcleaned['modalAddComp']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $instrument->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalAddOut']) && isset($postcleaned['modalOutSel'])) {
         $value = explode('_', $postcleaned['modalAddOut']);
@@ -120,13 +121,15 @@ if (isset($print)) {
     if (isset($postcleaned['id'])) {
         $id = $postcleaned['id'];
     }
-    if (isset($postcleaned['save']) && (isset($postcleaned['addtool'.$id]) || isset($postcleaned['addDim'])
-            || isset($postcleaned['addtool']))) {
+    if (
+        isset($postcleaned['save']) && (isset($postcleaned['addtool' . $id]) || isset($postcleaned['addDim'])
+            || isset($postcleaned['addtool']))
+    ) {
         $tool->display_header($postcleaned);
         $tool->display_body($postcleaned);
         $id = $SESSION->id;
         if (isset($id)) {
-            $get = '&id='.$id;
+            $get = '&id=' . $id;
         }
         $componentid = '';
         if (isset($postcleaned['id'])) {
@@ -134,16 +137,18 @@ if (isset($print)) {
         }
 
         $error = false;
-        if (!isset($postcleaned['titulo'.$componentid]) || trim($postcleaned['titulo'.$componentid]) == '') {
-            echo "<script type='text/javascript'>alert('". get_string('ErrorSaveTitle', 'block_evalcomix') ."');</script>";
-            echo "<script type='text/javascript'>location.href = 'generator.php';</script>";$tool->display_footer();
+        if (!isset($postcleaned['titulo' . $componentid]) || trim($postcleaned['titulo' . $componentid]) == '') {
+            echo "<script type='text/javascript'>alert('" . get_string('ErrorSaveTitle', 'block_evalcomix') . "');</script>";
+            echo "<script type='text/javascript'>location.href = 'generator.php';</script>";
+            $tool->display_footer();
             $error = true;
         }
         if (isset($postcleaned['seltool'])) {
             $numtool = $tool->get_numtool();
             if ($numtool == 0) {
-                echo "<script type='text/javascript'>alert('". get_string('ErrorSaveTools', 'block_evalcomix') ."');</script>";
-                echo "<script type='text/javascript'>location.href = 'generator.php';</script>";$tool->display_footer();
+                echo "<script type='text/javascript'>alert('" . get_string('ErrorSaveTools', 'block_evalcomix') . "');</script>";
+                echo "<script type='text/javascript'>location.href = 'generator.php';</script>";
+                $tool->display_footer();
                 $error = true;
             }
         }
@@ -151,15 +156,36 @@ if (isset($print)) {
         if ($error == false) {
             $xmlstring = $tool->export();
             $xml = simplexml_load_string($xmlstring);
-            $toolaux = new block_evalcomix_editor_tool('es_utf8', '', '', '', '', '', '', '', '', '', '', ''
-            , '', '', '', '', '', '', '', '', '');
+            $toolaux = new block_evalcomix_editor_tool(
+                'es_utf8',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+            );
             $toolaux->import($xml);
             try {
                 $resultparams = $toolaux->save($id);
                 if ($tool->type == 'mixta') {
                     $toolauxplantillasid = $toolaux->get_plantillasid();
                     $toolauxplantillas = $toolaux->get_tools();
-                    $plantillasid = array();
+                    $plantillasid = [];
 
                     if (isset($toolplantillas) && isset($toolauxplantillasid)) {
                         foreach ($toolplantillas as $pid => $plantilla) {
@@ -180,8 +206,9 @@ if (isset($print)) {
                     block_evalcomix_response_tool($tool, $toolaux);
                     $tool->save_competencies($id, $courseid);
                 }
-                echo "<script type='text/javascript'>location.href = 'generator.php?courseid=".
-                $postcleaned['courseid']."&save=1';</script>";$tool->display_footer();
+                echo "<script type='text/javascript'>location.href = 'generator.php?courseid=" .
+                $postcleaned['courseid'] . "&save=1';</script>";
+                $tool->display_footer();
             } catch (Exception $e) {
                 var_dump($e);
                 echo "<script type='text/javascript'>alert('There is a problem. Tool is not saved');</script>";
@@ -189,8 +216,7 @@ if (isset($print)) {
         }
 
         $tool->display_footer();
-
-    } else if (isset($postcleaned['addtool'.$id]) || isset($postcleaned['addtool']) || isset($postcleaned['moveTool'])) {
+    } else if (isset($postcleaned['addtool' . $id]) || isset($postcleaned['addtool']) || isset($postcleaned['moveTool'])) {
         $tool->display_header($postcleaned);
         $tool->display_body($postcleaned);
         $tool->display_footer();
@@ -226,15 +252,15 @@ if (isset($print)) {
         $tool->display_subdimension($dim, $subdim, $postcleaned, $id);
     } else if (isset($postcleaned['modalAddComp']) && isset($postcleaned['modalCompSel']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalAddComp']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalAddOut']) && isset($postcleaned['modalOutSel']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalAddOut']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalDelComp']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalDelComp']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalDelCompSub']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalDelCompSub']);
@@ -242,22 +268,22 @@ if (isset($print)) {
         $tool->display_subdimension($value[0], $value[1], $postcleaned, $id, $postcleaned['mix']);
     } else if (isset($postcleaned['modalDelOut']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalDelOut']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalDelOutSub']) && isset($postcleaned['mix'])) {
         $value = explode('_', $postcleaned['modalDelOutSub']);
         $id = $postcleaned['id'];
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_subdimension($value[0], $value[1], $postcleaned, $id);
     } else if (isset($postcleaned['modalclose'])) {
         $tool->display_body($postcleaned);
     } else if (isset($postcleaned['modalcreatecomp'])) {
         $value = explode('_', $postcleaned['modalcreatecomp']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     } else if (isset($postcleaned['modalcreateout'])) {
         $value = explode('_', $postcleaned['modalcreateout']);
-        $label = (!empty($postcleaned['modaltitle'.$id])) ? 'title' : 'subdimension';
+        $label = (!empty($postcleaned['modaltitle' . $id])) ? 'title' : 'subdimension';
         $tool->display_competencies_modal($id, $value[0], $value[1], $postcleaned['mix'], $label);
     }
 }
@@ -266,11 +292,18 @@ $toolobj = serialize($tool);
 $SESSION->tool = $toolobj;
 $SESSION->secuencia = $secuencia;
 
+/**
+ * block_evalcomix_response_tool
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 function block_evalcomix_response_tool($tool, $toolaux) {
     $type = '';
     if (!isset($tool->type)) {
         $classtype = get_class($tool);
-        switch($classtype) {
+        switch ($classtype) {
             case 'toollist':
                 $type = 'lista';
                 break;
@@ -299,22 +332,21 @@ function block_evalcomix_response_tool($tool, $toolaux) {
     $toolauxatributosid = $toolaux->get_atributosid();
     $toolauxvaloresid = $toolaux->get_valoresid();
     $toolauxvalorestotalesid = $toolaux->get_valorestotalesid();
-    $toolauxvaloreslistaid = array();
-    $toolauxrangoid = array();
-    $toolauxdescriptionsid = array();
-    $toolauxatributosposid = array();
+    $toolauxvaloreslistaid = [];
+    $toolauxrangoid = [];
+    $toolauxdescriptionsid = [];
+    $toolauxatributosposid = [];
 
-    switch($type) {
-        case 'rubrica':{
+    switch ($type) {
+        case 'rubrica':
             $toolauxrangoid = $toolaux->get_rangoid();
             $toolauxdescriptionsid = $toolaux->get_descriptionsid();
-        } break;
-        case 'listaescala':{
+            break;
+        case 'listaescala':
             $toolauxvaloreslistaid = $toolaux->get_valoreslistaid();
-        } break;
-        case 'diferencial':{
+            break;
+        case 'diferencial':
             $toolauxatributosposid = $toolaux->get_atributosposid();
-        }
     }
 
     $tooldimensions = $tool->get_dimension('');
@@ -322,31 +354,30 @@ function block_evalcomix_response_tool($tool, $toolaux) {
     $toolatributos = $tool->get_atributo('');
     $toolvalores = $tool->get_valores('');
     $toolvalorestotales = $tool->get_valorestotal('');
-    $toolrango = array();
-    $tooldescription = array();
-    $toolvaloreslista = array();
-    $toolatributospos = array();
-    switch($type) {
-        case 'rubrica':{
+    $toolrango = [];
+    $tooldescription = [];
+    $toolvaloreslista = [];
+    $toolatributospos = [];
+    switch ($type) {
+        case 'rubrica':
             $toolrango = $tool->get_rango('');
             $tooldescription = $tool->get_description('');
-        }break;
-        case 'listaescala':{
+            break;
+        case 'listaescala':
             $toolvaloreslista = $tool->get_valoreslista();
-        }break;
-        case 'diferencial':{
+            break;
+        case 'diferencial':
             $toolatributospos = $tool->get_atributopos('');
-        }
     }
 
-    $dimensionsid = array();
-    $subdimensionsid = array();
-    $atributosid = array();
-    $valoreslistaid = array();
-    $valoresid = array();
-    $rangoid = array();
-    $descriptionsid = array();
-    $atributosposid = array();
+    $dimensionsid = [];
+    $subdimensionsid = [];
+    $atributosid = [];
+    $valoreslistaid = [];
+    $valoresid = [];
+    $rangoid = [];
+    $descriptionsid = [];
+    $atributosposid = [];
     if (isset($toolauxdimensionsid) && isset($toolauxsubdimensionsid) && isset($toolauxatributosid)) {
         foreach ($tooldimensions as $dim => $valuedimensions) {
             $key2 = null;
@@ -401,8 +432,10 @@ function block_evalcomix_response_tool($tool, $toolaux) {
 
                     if ($type == 'rubrica') {
                         foreach ($tooldescription[$dim][$subdim][$atrib] as $gradod => $valuedescription) {
-                            if ($key2 !== null && $key3 !== null && $key4 !== null
-                                    && $data5 = current($toolauxdescriptionsid[$key2][$key3][$key4])) {
+                            if (
+                                $key2 !== null && $key3 !== null && $key4 !== null
+                                    && $data5 = current($toolauxdescriptionsid[$key2][$key3][$key4])
+                            ) {
                                 $key5 = key($toolauxdescriptionsid[$key2][$key3][$key4]);
                                 $descriptionsid[$dim][$subdim][$atrib][$gradod] = $data5;
                                 next($toolauxdescriptionsid[$key2][$key3][$key4]);
@@ -437,11 +470,13 @@ function block_evalcomix_response_tool($tool, $toolaux) {
             $tool->set_atributosposid($atributosposid, '');
         }
     }
-    $valorestotalesid = array();
+    $valorestotalesid = [];
     if (!empty($toolauxvalorestotalesid)) {
         foreach ($toolvalorestotales as $grade => $value) {
-            if ($key7 = key($toolauxvalorestotalesid)
-                    && $data7 = current($toolauxvalorestotalesid)) {
+            if (
+                $key7 = key($toolauxvalorestotalesid)
+                    && $data7 = current($toolauxvalorestotalesid)
+            ) {
                 $valorestotalesid[$grade] = $data7;
                 next($toolauxvalorestotalesid);
             }

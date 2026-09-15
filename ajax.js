@@ -70,6 +70,10 @@ function ajax(servidor, tag = '', method = 'get', parameters = {}, script = ''){
 		data: parameters,
 		url: servidor, 
 		type: method,
+        beforeSend: function () {
+            // mostrar loader
+            $(tag).html('<center><div><img src="../images/ajax-loader.gif" alt="Cargando..." align="center"></div>Por favor, no recargue la página hasta que no se complete el proceso</div></center>');
+        },
 		success: function(result){
                 $(tag).html(result);
 				eval(script);

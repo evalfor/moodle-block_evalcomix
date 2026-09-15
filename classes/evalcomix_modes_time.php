@@ -20,25 +20,30 @@ require_once('evalcomix_object.php');
 require_once('evalcomix_modes.php');
 
 /**
+ * block_evalcomix_modes_time
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 class block_evalcomix_modes_time extends block_evalcomix_modes {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix_modes_time';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'modeid', 'timeavailable', 'timedue');
+    public $requiredfields = ['id', 'modeid', 'timeavailable', 'timedue'];
 
     /**
      * Array of optional table fields.
      * @var array $optionalfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * Mode ID associated
@@ -69,7 +74,7 @@ class block_evalcomix_modes_time extends block_evalcomix_modes {
             global $DB;
             $this->id = intval($id);
             // Añadido comprobación.
-            $modesobject = $DB->get_record('block_evalcomix_modes', array('id' => $modeid), '*', MUST_EXIST);
+            $modesobject = $DB->get_record('block_evalcomix_modes', ['id' => $modeid], '*', MUST_EXIST);
             $this->modeid = $modesobject->id;
             // Fin añadido, si no funciona, comentar lo anterior y descomentar siguiente línea.
             $this->timeavailable = intval($timeavailable);

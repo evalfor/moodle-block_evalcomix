@@ -14,11 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * loadcron.php
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ */
+
 require_once('../../../config.php');
 $courseid = required_param('id', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($course->id);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
-block_evalcomix_get_skill_development_data_ws(array('courses' => array($course), 'individual' => true));
+block_evalcomix_get_skill_development_data_ws(['courses' => [$course], 'individual' => true]);

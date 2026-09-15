@@ -25,11 +25,29 @@
 
 namespace block_evalcomix\task;
 
+/**
+ * Class for cron
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>
+ */
 class cron_task extends \core\task\scheduled_task {
+    /**
+     * Get name
+     *
+     * @return string name
+     */
     public function get_name() {
         return get_string('crontask', 'block_evalcomix');
     }
 
+    /**
+     * Execute
+     *
+     * @return void
+     */
     public function execute() {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');

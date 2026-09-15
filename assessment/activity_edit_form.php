@@ -27,7 +27,7 @@
 
 require_once('../../../config.php');
 $courseid = required_param('id', PARAM_INT);        // Course id.
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+if (!$course = $DB->get_record('course', ['id' => $courseid])) {
     throw new \moodle_exception('nocourseid');
 }
 require_course_login($course);
@@ -39,9 +39,9 @@ $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tasks.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_tool.php');
-require_once($CFG->dirroot .'/blocks/evalcomix/classes/evalcomix_grades.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
+require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_grades.php');
 
 $tools = block_evalcomix_tool::get_tools($courseid);
 $activity = block_evalcomix_get_activity_data($cm);
@@ -125,19 +125,27 @@ if (!empty($toolep) || !empty($toolae) || !empty($toolei)) {
 
 $checkcalc1 = 'selected';
 $checkcalc2 = '';
+$checkcalc3 = '';
 $thresholddisabled = 'style="display:none"';
-if (isset($datas['grademethod']) && $datas['grademethod'] == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
-    $checkcalc1 = '';
-    $checkcalc2 = 'selected';
-    $thresholddisabled = 'style="display:table-row"';
+if (isset($datas['grademethod'])) {
+    if ($datas['grademethod'] == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART) {
+        $checkcalc1 = '';
+        $checkcalc2 = 'selected';
+        $checkcalc3 = '';
+        $thresholddisabled = 'style="display:table-row"';
+    } else if ($datas['grademethod'] == BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART_WITH_REDUCTION) {
+        $checkcalc1 = '';
+        $checkcalc2 = '';
+        $checkcalc3 = 'selected';
+        $thresholddisabled = 'style="display:table-row"';
+    }
 }
 $threshold = (isset($datas['threshold'])) ? $datas['threshold'] : 15;
 
 $wtchecked = (!empty($datas['workteams'])) ? 'checked' : '';
-$disabledss = (!empty($datas['workteams'])) ? 'disabled' : '';
 $groups = groups_get_all_groups($courseid);
 $atcdisabled = (empty($wtchecked)) ? 'disabled' : '';
-$coordinators = (isset($datas['coordinators'])) ? $datas['coordinators'] : array();
+$coordinators = (isset($datas['coordinators'])) ? $datas['coordinators'] : [];
 $wtdisabled = '';
 $activityassessed = false;
 if (empty($wtchecked)) {
@@ -148,22 +156,22 @@ if (empty($wtchecked)) {
 }
 $coordinatorsassessed = (!empty($coordinators)) ? block_evalcomix_activity_assessed($cm, $coordinators) : false;
 
-$PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', array('id' => $courseid, 'a' => $id)));
+$PAGE->set_url(new moodle_url('/blocks/evalcomix/assessment/activity_edit_form.php', ['id' => $courseid, 'a' => $id]));
 $PAGE->set_context($context);
 $PAGE->set_pagetype('course');
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot .'/course');
-$PAGE->navbar->add($course->shortname, $CFG->wwwroot .'/course/view.php?id=' . $courseid);
-$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add(get_string('courses'), $CFG->wwwroot . '/course');
+$PAGE->navbar->add($course->shortname, $CFG->wwwroot . '/course/view.php?id=' . $courseid);
+$PAGE->navbar->add(get_string('pluginname', 'block_evalcomix'), new moodle_url('../assessment/index.php?id=' . $courseid));
 $PAGE->set_pagelayout('report');
 $PAGE->requires->css('/blocks/evalcomix/style/styles.css');
 
 echo $OUTPUT->header();
 echo '<center>
-<div><img src="'. $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT .'" width="230" alt="EvalCOMIX"/></div>
-<div><input type="button" value="'.get_string('designsection', 'block_evalcomix').'"
-onclick="location.href=\''. $CFG->wwwroot .'/blocks/evalcomix/tool/index.php?id='.$courseid .'\'"/></div>
+<div><img src="' . $CFG->wwwroot . BLOCK_EVALCOMIX_EVXLOGOROOT . '" width="230" alt="EvalCOMIX"/></div>
+<div><input type="button" value="' . get_string('designsection', 'block_evalcomix') . '"
+onclick="location.href=\'' . $CFG->wwwroot . '/blocks/evalcomix/tool/index.php?id=' . $courseid . '\'"/></div>
 </center>';
 
 echo '
@@ -268,27 +276,27 @@ echo '
 
         </script>
         <div>
-            <h1 class="text-center">'. $activity->name .'</h1>
-            <form method="post" action="index.php?id='.$courseid.'">
-                <input type="hidden" id="cmid" name="cmid" value='.$cm->id.'>
+            <h1 class="text-center">' . $activity->name . '</h1>
+            <form method="post" action="index.php?id=' . $courseid . '">
+                <input type="hidden" id="cmid" name="cmid" value=' . $cm->id . '>
                 <input type="hidden" id="maxgrade" name="maxgrade" value="100">
-                <input type="hidden" id="sesskey" name="sesskey" value="'.sesskey().'">
-                <fieldset class="clearfix border border-secondary" id="Instrument">
-                <legend class="ftoggler font-weight-bold">'.
-                get_string('selinstrument', 'block_evalcomix'). $OUTPUT->help_icon('selinstrument', 'block_evalcomix').'</legend>
+                <input type="hidden" id="sesskey" name="sesskey" value="' . sesskey() . '">
+                <fieldset class="clearfix" id="Instrument">
+                <legend class="ftoggler font-weight-bold">' .
+                get_string('selinstrument', 'block_evalcomix') . $OUTPUT->help_icon('selinstrument', 'block_evalcomix') . '</legend>
                     <div class="p-3">
-                        <table class="w-100">';
+                        <table class="table">';
 if (empty($tools)) {
     echo '
                         <tr>
                             <td colspan=2 class="text-center text-primary">
-                                '. get_string('alertnotools', 'block_evalcomix').'
-                                <br><a class="text-primary font-weight-bold" href="'.$CFG->wwwroot.
-                                '/blocks/evalcomix/tool/index.php?id='.
-                                $courseid.'">'.
-                                 get_string('designsection', 'block_evalcomix').'</a>";
-                                </td>
-                            </tr>';
+                                ' . get_string('alertnotools', 'block_evalcomix') . '
+                                <br><a class="text-primary font-weight-bold" href="' . $CFG->wwwroot .
+                                '/blocks/evalcomix/tool/index.php?id=' .
+                                $courseid . '">' .
+                                 get_string('designsection', 'block_evalcomix') . '</a>";
+                            </td>
+                        </tr>';
 }
 echo '
 
@@ -296,11 +304,11 @@ echo '
 <!--TEACHER-ASSESSMENT-------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
                             <tr class="border">
-                                <td colspan="2" class="pl-3 font-weight-bold text-secondary">'.
-                                get_string('teachermodality', 'block_evalcomix').'</td>
+                                <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
+                                get_string('teachermodality', 'block_evalcomix') . '</td>
                             </tr>
                             <tr>
-                                <td class="pt-3 text-right">' . get_string('teachermodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('teachermodality', 'block_evalcomix') .
                                 $OUTPUT->help_icon('teachermodality', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
                                     <select class="form-control" name="toolEP" id="id_toolEP"
@@ -317,7 +325,7 @@ foreach ($tools as $idtool => $titletool) {
         $checkedeptool = 'selected = "selected"';
     }
     echo '
-                                        <option value="'. $idtool .'" '. $checkedeptool .'>'. $titletool .'</option>
+                                        <option value="' . $idtool . '" ' . $checkedeptool . '>' . $titletool . '</option>
     ';
 }
 
@@ -327,7 +335,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="pb-3 text-right">' . get_string('pon_EP', 'block_evalcomix').
+                                <td class="pb-3 text-right">' . get_string('pon_EP', 'block_evalcomix') .
                                 $OUTPUT->help_icon('pon_EP', 'block_evalcomix') . '</td>
                                 <td class="pb-3">
 ';
@@ -343,10 +351,10 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
                             <tr class="border">
                                 <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
-                                get_string('selfmodality', 'block_evalcomix').'</td>
+                                get_string('selfmodality', 'block_evalcomix') . '</td>
                             </tr>
                             <tr>
-                                <td class="pt-3 text-right">' . get_string('selfmodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('selfmodality', 'block_evalcomix') .
                                  $OUTPUT->help_icon('selfmodality', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
                                     <select class="form-control" name="toolAE" id="id_toolAE"
@@ -365,7 +373,7 @@ foreach ($tools as $idtool => $titletool) {
         $checkedaetool = 'selected = "selected"';
     }
     echo '
-                                        <option value="'. $idtool .'" '.$checkedaetool.'>'. $titletool .'</option>
+                                        <option value="' . $idtool . '" ' . $checkedaetool . '>' . $titletool . '</option>
     ';
 }
 
@@ -375,7 +383,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('pon_AE', 'block_evalcomix').
+                                <td class="text-right">' . get_string('pon_AE', 'block_evalcomix') .
                                 $OUTPUT->help_icon('pon_AE', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -389,7 +397,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('availabledate_AE', 'block_evalcomix').
+                                <td class="text-right">' . get_string('availabledate_AE', 'block_evalcomix') .
                                 $OUTPUT->help_icon('availabledate_AE', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -401,7 +409,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right pb-3">' . get_string('timedue_AE', 'block_evalcomix').
+                                <td class="text-right pb-3">' . get_string('timedue_AE', 'block_evalcomix') .
                                 $OUTPUT->help_icon('timedue_AE', 'block_evalcomix') . '</td>
                                 <td class="pb-3">
 ';
@@ -417,10 +425,10 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
                             <tr class="border">
                                 <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
-                                get_string('peermodality', 'block_evalcomix').'</td>
+                                get_string('peermodality', 'block_evalcomix') . '</td>
                             </tr>
                             <tr>
-                                <td class="pt-3 text-right">' . get_string('peermodality', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('peermodality', 'block_evalcomix') .
                                 $OUTPUT->help_icon('peermodality', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
                                     <select class="form-control" name="toolEI" id="toolEI"
@@ -442,7 +450,7 @@ foreach ($tools as $idtool => $titletool) {
         $checkedeitool = 'selected = "selected"';
     }
     echo '
-                                        <option value="'. $idtool .'" '.$checkedeitool.'>'. $titletool .'</option>
+                                        <option value="' . $idtool . '" ' . $checkedeitool . '>' . $titletool . '</option>
     ';
 }
 
@@ -452,7 +460,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('pon_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('pon_EI', 'block_evalcomix') .
                                 $OUTPUT->help_icon('pon_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -466,7 +474,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('anonymous_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('anonymous_EI', 'block_evalcomix') .
                                 $OUTPUT->help_icon('anonymous_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -476,14 +484,14 @@ if ($anonymousei == 1) {
 }
 
 echo '
-                                    <input type="checkbox" ' . $checked . ' '. $disabledei.'
+                                    <input type="checkbox" ' . $checked . ' ' . $disabledei . '
                                     id="anonymousEI" name="anonymousEI">
                                 </td>
                             </tr>
 
 
                             <tr>
-                                <td class="text-right">' . get_string('availabledate_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('availabledate_EI', 'block_evalcomix') .
                                 $OUTPUT->help_icon('availabledate_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -495,7 +503,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('timedue_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('timedue_EI', 'block_evalcomix') .
                                 $OUTPUT->help_icon('timedue_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -507,7 +515,7 @@ echo '
                             </tr>
 
                             <tr>
-                                <td class="text-right">' . get_string('alwaysvisible_EI', 'block_evalcomix').
+                                <td class="text-right">' . get_string('alwaysvisible_EI', 'block_evalcomix') .
                                 $OUTPUT->help_icon('alwaysvisible_EI', 'block_evalcomix') . '</td>
                                 <td>
 ';
@@ -516,14 +524,14 @@ if ($alwaysvisibleei == 1) {
     $checked = 'checked';
 }
 echo '
-                                    <input type="checkbox" ' . $checked . ' '. $disabledei . '
+                                    <input type="checkbox" ' . $checked . ' ' . $disabledei . '
                                     id="alwaysvisibleEI" name="alwaysvisibleEI">
                                 </td>
                             </tr>
 
                             <tr>
                                 <td class="pb-3 text-right align-top">'
-                               .get_string('whoassesses_EI', 'block_evalcomix') .
+                               . get_string('whoassesses_EI', 'block_evalcomix') .
                                $OUTPUT->help_icon('whoassesses_EI', 'block_evalcomix') . '</td>
                                 <td class="pb-3">
 ';
@@ -533,34 +541,37 @@ $checked1 = '';
 $checked2 = '';
 $disabled2 = 'disabled';
 switch ($whoassessesei) {
-    case '0': $checked0 = 'checked';
-    break;
-    case '1': $checked1 = 'checked';
-    break;
-    case '2': $checked2 = 'checked';$disabled2 = '';
-    break;
+    case '0':
+        $checked0 = 'checked';
+        break;
+    case '1':
+        $checked1 = 'checked';
+        break;
+    case '2':
+        $checked2 = 'checked';
+        $disabled2 = '';
+        break;
 }
-if (!empty($wtchecked)) {
-    $disabled2 = 'disabled';
-}
+
 echo '
-                        <div><input type="radio" '.$checked0.' id="anystudent_EI" '. $disabledei .'
+                        <div><input type="radio" ' . $checked0 . ' id="anystudent_EI" ' . $disabledei . '
                         name="whoassessesEI" value="0"
-                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="anystudent_EI">'.
-                        get_string('anystudent_EI', 'block_evalcomix').'</label>
+                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="anystudent_EI">' .
+                        get_string('anystudent_EI', 'block_evalcomix') . '</label>
                         </div>
-                        <div><input type="radio" '.$checked1.' id="groups_EI" '. $disabledei .'
+                        <div><input type="radio" ' . $checked1 . ' id="groups_EI" ' . $disabledei . '
                         name="whoassessesEI" value="1"
-                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="groups_EI">'.
-                        get_string('groups_EI', 'block_evalcomix').'</label></div>
-                        <div><input type="radio" '.$checked2.' id="specificstudents_EI" '. $disabledei .' '.$disabledss.'
+                        onclick="document.getElementById(\'assignstudents\').disabled = true;"> <label for="groups_EI">' .
+                        get_string('groups_EI', 'block_evalcomix') . '</label></div>
+                        <div><input type="radio" ' . $checked2 . ' id="specificstudents_EI" ' . $disabledei . '
                         name="whoassessesEI" value="2"
-                        onclick="document.getElementById(\'assignstudents\').disabled = false;"> <label for="specificstudents_EI">'.
-                        get_string('specificstudents_EI', 'block_evalcomix').'</label></div>
-                        <div><input type="button" '.$disabled2.' id="assignstudents"
-                        onclick="window.open(\'users_form.php?id='.$courseid.'&a='.$cm->id.'\', \'popup\',
+                        onclick="document.getElementById(\'assignstudents\').disabled = false;"> <label
+                        for="specificstudents_EI">' .
+                        get_string('specificstudents_EI', 'block_evalcomix') . '</label></div>
+                        <div><input type="button" ' . $disabled2 . ' id="assignstudents"
+                        onclick="window.open(\'users_form.php?id=' . $courseid . '&a=' . $cm->id . '\', \'popup\',
                         \'scrollbars,resizable,width=780,height=500\'); return false;"
-                        value="' . get_string('assignstudents_EI', 'block_evalcomix') .'"></div>
+                        value="' . get_string('assignstudents_EI', 'block_evalcomix') . '"></div>
                          </td>
                         </tr>
 
@@ -569,17 +580,15 @@ echo '
 <!---------------------------------------------------------------------------------------------------->
                         <tr class="border">
                             <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
-                            get_string('workteams', 'block_evalcomix').'</td>
+                            get_string('workteams', 'block_evalcomix') . '</td>
                         </tr>
                         <tr>
-                            <td class="pt-3 text-right">' . get_string('workteamsassessments', 'block_evalcomix').
+                            <td class="pt-3 text-right">' . get_string('workteamsassessments', 'block_evalcomix') .
                                 $OUTPUT->help_icon('workteamsassessments', 'block_evalcomix') . '</td>
                             <td class="pt-3">
-                                <input type="checkbox" ' . $wtchecked . ' '.$wtdisabled.' '.$gmdisabled. ' onchange="
+                                <input type="checkbox" ' . $wtchecked . ' ' . $wtdisabled . ' ' . $gmdisabled . ' onchange="
                                     if (this.checked == true) {
                                         document.getElementById(\'assigncoordinators\').disabled=false;
-                                        document.getElementById(\'specificstudents_EI\').disabled = true;
-                                        document.getElementById(\'assignstudents\').disabled = true;
                                     } else {
                                         var coordinatorassessed = false;
 ';
@@ -587,7 +596,7 @@ if ($coordinatorsassessed) {
     echo 'coordinatorassessed = true;';
 }
 echo '                                  if (coordinatorassessed) {
-                                            if (!confirm(\''.get_string('confirmdisabledworkteams', 'block_evalcomix').'\')) {
+                                            if (!confirm(\'' . get_string('confirmdisabledworkteams', 'block_evalcomix') . '\')) {
                                                 this.checked = true;
                                                 exit;
                                             }
@@ -607,18 +616,19 @@ echo '                                  if (coordinatorassessed) {
                         <tr>
                             <td class="text-right"></td>
                             <td class="pb-3">
-                                <input type="button" id="assigncoordinators" name="assigncoordinators" value="'.
-                                get_string('assignteamcoordinators', 'block_evalcomix').'" '.$atcdisabled.'
-                                data-toggle="modal" data-target="#exampleModal">
+                                <input type="button" id="assigncoordinators" name="assigncoordinators" value="' .
+                                get_string('assignteamcoordinators', 'block_evalcomix') . '" ' . $atcdisabled . '
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">
 
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
                                     <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">'.
-                                                get_string('assignteamcoordinators', 'block_evalcomix').'</h5>
-                                                <button type="button" class="close border" data-dismiss="modal" aria-label="Close">
+                                                <h5 class="modal-title" id="exampleModalLabel">' .
+                                                get_string('assignteamcoordinators', 'block_evalcomix') . '</h5>
+                                                <button type="button" class="close border" data-bs-dismiss="modal"
+                                                aria-label="Close">
                                                   <span aria-hidden="true">OK</span>
                                                 </button>
                                             </div>
@@ -627,7 +637,8 @@ echo '                                  if (coordinatorassessed) {
 
 if ($coordinatorsassessed) {
     echo '
-                                                <div class="text-info mb-2">'.get_string('coordinatorassessed', 'block_evalcomix').
+                                                <div class="text-info mb-2">' .
+                                                get_string('coordinatorassessed', 'block_evalcomix') .
                                                 '</div>
     ';
 }
@@ -642,16 +653,16 @@ if ($groups) {
         ';
         echo $group->name;
         $coordinatorid = (isset($coordinators[$gcgroupid])) ? $coordinators[$gcgroupid] : 0;
-        $disableselect = (block_evalcomix_activity_assessed($cm, array($coordinatorid))) ? true : false;
+        $disableselect = (block_evalcomix_activity_assessed($cm, [$coordinatorid])) ? true : false;
         if ($disableselect) {
-            echo '<div><input type="text" class="form-control" readonly value="'.fullname($members[$coordinatorid]).
-            '"><input type="hidden" name="coordinator-'.$gcgroupid.'" value="'.$coordinatorid.'"></div>';
+            echo '<div><input type="text" class="form-control" readonly value="' . fullname($members[$coordinatorid]) .
+            '"><input type="hidden" name="coordinator-' . $gcgroupid . '" value="' . $coordinatorid . '"></div>';
         } else {
-            echo '<div><select class="form-control" name="coordinator-'.$gcgroupid.'" '.$disableselect.'>';
-            echo '<option value="0">'.get_string('selectcoordinator', 'block_evalcomix').'</option>';
+            echo '<div><select class="form-control" name="coordinator-' . $gcgroupid . '" ' . $disableselect . '>';
+            echo '<option value="0">' . get_string('selectcoordinator', 'block_evalcomix') . '</option>';
             foreach ($members as $member) {
                 $selected = ($coordinatorid == $member->id) ? 'selected' : '';
-                echo '<option '.$selected.' value="'.$member->id.'">'.fullname($member).'</option>';
+                echo '<option ' . $selected . ' value="' . $member->id . '">' . fullname($member) . '</option>';
             }
             echo '
                     </select></div>
@@ -660,9 +671,9 @@ if ($groups) {
         echo '</div>';
     }
 } else {
-    echo '<h5 class="p-3">'.get_string('alertnogroup', 'block_evalcomix').' <b><a target="_blank" href="'.$CFG->wwwroot.
-    '/group/index.php?id='.$course->id.'">'.
-    get_string('groups').'</a></b></h5>';
+    echo '<h5 class="p-3">' . get_string('alertnogroup', 'block_evalcomix') . ' <b><a target="_blank" href="' . $CFG->wwwroot .
+    '/group/index.php?id=' . $course->id . '">' .
+    get_string('groups') . '</a></b></h5>';
 }
 
 echo '
@@ -670,49 +681,54 @@ echo '
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>';
+if ($activityassessed) {
+    echo '<div class="text-secondary"><i>' . get_string('activityassessed', 'block_evalcomix') . '</i></div>
+    </tr>';
+}
+echo '
                             </td>
                         </tr>
 ';
-if ($activityassessed) {
-    echo '<tr>
-        <td></td>
-        <td class="text-secondary"><i>'.get_string('activityassessed', 'block_evalcomix').'</i></td>
-    </tr>';
-}
+
 echo '
 <!---------------------------------------------------------------------------------------------------->
 <!--CALCULATION-OF-THE-FINAL-GRADE-------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------->
                         <tr class="border">
                             <td colspan="2" class="pl-3 font-weight-bold text-secondary">' .
-                            get_string('finalgradecalculation', 'block_evalcomix').'</td>
+                            get_string('finalgradecalculation', 'block_evalcomix') . '</td>
                         </tr>
 
                             <tr>
-                                <td class="pt-3 text-right">' . get_string('method', 'block_evalcomix').
+                                <td class="pt-3 text-right">' . get_string('method', 'block_evalcomix') .
                                 $OUTPUT->help_icon('method', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
-                                    <select class="form-control" name="grademethod" id="grademethod" '.$gmdisabled.
+                                    <select class="form-control" name="grademethod" id="grademethod" ' . $gmdisabled .
                                     ' onchange="
-                                            if (this.value == '.BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL.') {
+                                            if (this.value == ' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL . ') {
                                                 document.getElementById(\'trthreshold\').style.display = \'none\';
-                                            } else if (this.value == '.BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART.') {
+                                            } else if (this.value == ' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART . '
+                                               || this.value == ' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART_WITH_REDUCTION . ') {
                                                 document.getElementById(\'trthreshold\').style.display = \'table-row\';
                                             }
                                             ">
-                                        <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL.'" '.$checkcalc1.'>'.
+                                        <option value="' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_ALL . '" ' . $checkcalc1 . '>' .
                                         get_string('weightedaveragewithallvalues', 'block_evalcomix') . '</option>
-                                        <option value="'.BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART.'" '.$checkcalc2.'>'.
+                                        <option value="' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART . '" ' . $checkcalc2 . '>' .
                                         get_string('weightedaveragesmart', 'block_evalcomix') . '</option>
+                                        <option value="' . BLOCK_EVALCOMIX_GRADE_METHOD_WA_SMART_WITH_REDUCTION . '" ' .
+                                        $checkcalc3 . '>' .
+                                        get_string('weightedaveragesmartwithreduction', 'block_evalcomix') . '</option>
                                     </select>
                                 </td>
                             </tr>
-                            <tr id="trthreshold" '.$thresholddisabled.'>
-                                <td class="pt-3 text-right">' . get_string('threshold', 'block_evalcomix').
+                            <tr id="trthreshold" ' . $thresholddisabled . '>
+                                <td class="pt-3 text-right">' . get_string('threshold', 'block_evalcomix') .
                                 $OUTPUT->help_icon('threshold', 'block_evalcomix') . '</td>
                                 <td class="pt-3">
-                                    <input type="number" min="1" max="99" id="threshold" name="threshold" value="'.$threshold.'">
+                                    <input type="number" min="1" max="99" id="threshold" name="threshold" value="' .
+                                    $threshold . '">
                                 </td>
                             </tr>
                         </table>
@@ -725,9 +741,9 @@ echo '
                     </div>
                     <br>
                     <div class="text-center">
-                        <input type="submit" id="save" name="save" value="'. get_string('save', 'block_evalcomix') .'"
+                        <input type="submit" id="save" name="save" value="' . get_string('save', 'block_evalcomix') . '"
                         onclick="return check_weighing();">
-                        <input type="submit" id="cancel" name="cancel" value="'. get_string('cancel', 'block_evalcomix') .'">
+                        <input type="submit" id="cancel" name="cancel" value="' . get_string('cancel', 'block_evalcomix') . '">
                     </div>
                 </fieldset>
             </form>

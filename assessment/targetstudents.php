@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Display target students
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -33,7 +36,7 @@ require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
 
 $id = required_param('a', PARAM_INT);
 $assessorid = required_param('u', PARAM_INT);
-if (!$user = $DB->get_record('user', array('id' => $assessorid))) {
+if (!$user = $DB->get_record('user', ['id' => $assessorid])) {
     throw new \moodle_exception('Wrong user');
 }
 
@@ -42,10 +45,10 @@ $users = $reportevalcomix->load_users(false);
 
 echo '<select class="block_evalcomix_w_20" size="20">';
 
-if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', array('cmid' => $id, 'assessorid' => $assessorid))) {
+if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', ['cmid' => $id, 'assessorid' => $assessorid])) {
     foreach ($allowedusers as $alloweduser) {
         $userid = $alloweduser->studentid;
-        echo '<option>'.fullname($users[$userid]).'</option>';
+        echo '<option>' . fullname($users[$userid]) . '</option>';
     }
 }
 

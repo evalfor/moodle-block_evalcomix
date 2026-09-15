@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Generator
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,7 +26,7 @@ require_once('../../../../config.php');
 $courseid = required_param('courseid', PARAM_INT);
 $type = optional_param('type', '', PARAM_ALPHA);
 $identifier = optional_param('identifier', '', PARAM_ALPHANUM);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($courseid);
 require_capability('moodle/grade:viewhidden', $context);
@@ -36,7 +37,7 @@ $data = clean_param_array($data, PARAM_RAW);
 $data['courseid'] = $courseid;
 
 if ($type == 'importar') {
-    $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/editor/generator.php', array('courseid' => $courseid, 'type' => $type)));
+    $PAGE->set_url(new moodle_url('/blocks/evalcomix/tool/editor/generator.php', ['courseid' => $courseid, 'type' => $type]));
     $PAGE->set_pagelayout('popup');
     $PAGE->set_context($context);
     $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));

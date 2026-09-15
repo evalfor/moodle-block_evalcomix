@@ -14,31 +14,46 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * File for managing block_evalcomix_modes_extra table
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once('evalcomix_object.php');
 require_once('evalcomix_modes.php');
 
 /**
+ * Class for managing block_evalcomix_modes_extra table
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 class block_evalcomix_modes_extra extends block_evalcomix_modes {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix_modes_extra';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'modeid', 'anonymous', 'visible', 'whoassesses');
+    public $requiredfields = ['id', 'modeid', 'anonymous', 'visible', 'whoassesses'];
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * Mode ID associated
@@ -77,7 +92,7 @@ class block_evalcomix_modes_extra extends block_evalcomix_modes {
             $this->id = intval($id);
             $this->anonymous = intval($anonymous);
             $this->visible = intval($visible);
-            $modesobject = $DB->get_record('block_evalcomix_modes', array('id' => $modeid), '*', MUST_EXIST);
+            $modesobject = $DB->get_record('block_evalcomix_modes', ['id' => $modeid], '*', MUST_EXIST);
             $this->modeid = $modesobject->id;
             $this->whoassesses = intval($whoassesses);
         }

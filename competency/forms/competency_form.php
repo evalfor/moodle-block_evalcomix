@@ -16,10 +16,20 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
-require_once($CFG->libdir.'/datalib.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/datalib.php');
 
+/**
+ * competency_form
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ */
 class competency_form extends moodleform {
+    /**
+     * definition
+     */
     public function definition() {
         global $CFG;
 
@@ -54,29 +64,41 @@ class competency_form extends moodleform {
         $mform->addElement('select', 'type', get_string('comptype', 'block_evalcomix'), $types);
         $mform->setDefault('type', $type);
 
-        $objs = array();
+        $objs = [];
         $objs[] =& $mform->createElement('submit', 'send', get_string('save'));
         $objs[] =& $mform->createElement('cancel');
-        $grp =& $mform->addElement('group', 'buttonsgrp', '', $objs,
-               array(' ', '<br />'), false);
+        $grp =& $mform->addElement(
+            'group',
+            'buttonsgrp',
+            '',
+            $objs,
+            [' ', '<br />'],
+            false
+        );
     }
 
-    // Custom validation.
+    /**
+     * Custom validation.
+     */
     public function validation($data, $files) {
         global $DB, $COURSE;
-        $error = array('code' => get_string('duplicatevalue', 'block_evalcomix'));
-        if (empty($data['itemid']) && $item = $DB->get_record('block_evalcomix_competencies', array('courseid' => $COURSE->id,
-                'idnumber' => $data['code'], 'outcome' => '0'))) {
+        $error = ['code' => get_string('duplicatevalue', 'block_evalcomix')];
+        if (
+            empty($data['itemid']) && $item = $DB->get_record('block_evalcomix_competencies', ['courseid' => $COURSE->id,
+                'idnumber' => $data['code'], 'outcome' => '0'])
+        ) {
             return $error;
         } else if (!empty($data['itemid'])) {
             $sql = 'SELECT *
                     FROM {block_evalcomix_competencies} c
                     WHERE c.id != :itemid AND courseid = :courseid AND c.idnumber = :idnumber AND outcome = 0';
-            if ($DB->get_records_sql($sql, array('itemid' => $data['itemid'], 'courseid' => $COURSE->id,
-                    'idnumber' => $data['code']))) {
+            if (
+                $DB->get_records_sql($sql, ['itemid' => $data['itemid'], 'courseid' => $COURSE->id,
+                    'idnumber' => $data['code']])
+            ) {
                 return $error;
             }
         }
-        return array();
+        return [];
     }
 }

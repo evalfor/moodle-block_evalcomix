@@ -13,48 +13,67 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Define all the backup steps that will be used by the backup_evalcomix_block_task
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
+/**
+ * Define the complete choice structure for backup, with file and id annotations
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 class backup_evalcomix_block_structure_step extends backup_block_structure_step {
-
+    /**
+     * Define structure
+     */
     protected function define_structure() {
 
         // Define each element separated.
-        $evalcomix = new backup_nested_element('evalcomix', array('id'), array('viewmode'));
-        $evalcomixenvironment = new backup_nested_element('environment', null, array('courseid', 'moodlename'));
+        $evalcomix = new backup_nested_element('evalcomix', ['id'], ['viewmode']);
+        $evalcomixenvironment = new backup_nested_element('environment', null, ['courseid', 'moodlename']);
         $evalcomixtools = new backup_nested_element('tools');
-        $evalcomixtool = new backup_nested_element('tool', array('id'), array('title', 'type', 'timecreated',
-            'timemodified', 'idtool', 'code'));
+        $evalcomixtool = new backup_nested_element('tool', ['id'], ['title', 'type', 'timecreated',
+            'timemodified', 'idtool', 'code']);
         $evalcomixtasks = new backup_nested_element('tasks');
-        $evalcomixtask = new backup_nested_element('task', array('id'),
-            array('instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod', 'workteams'));
+        $evalcomixtask = new backup_nested_element(
+            'task',
+            ['id'],
+            ['instanceid', 'maxgrade', 'weighing', 'timemodified', 'visible', 'grademethod', 'workteams']
+        );
         $evalcomixassessments = new backup_nested_element('assessments');
-        $evalcomixassessment = new backup_nested_element('assessment', array('id'),
-            array('assessorid', 'studentid', 'grade', 'timemodified', 'idassessment'));
+        $evalcomixassessment = new backup_nested_element(
+            'assessment',
+            ['id'],
+            ['assessorid', 'studentid', 'grade', 'timemodified', 'idassessment']
+        );
         $evalcomixmodes = new backup_nested_element('modes');
-        $evalcomixmode = new backup_nested_element('mode', array('id'), array('toolid', 'modality', 'weighing'));
-        $evalcomixmodestime = new backup_nested_element('mode_time', array('id'), array('timeavailable', 'timedue'));
-        $evalcomixmodesextra = new backup_nested_element('mode_extra', array('id'), array('anonymous', 'visible', 'whoassesses'));
+        $evalcomixmode = new backup_nested_element('mode', ['id'], ['toolid', 'modality', 'weighing']);
+        $evalcomixmodestime = new backup_nested_element('mode_time', ['id'], ['timeavailable', 'timedue']);
+        $evalcomixmodesextra = new backup_nested_element('mode_extra', ['id'], ['anonymous', 'visible', 'whoassesses']);
         $evalcomixcoordinators = new backup_nested_element('coordinators');
-        $evalcomixcoordinator = new backup_nested_element('coordinator', array('id'), array('groupid', 'userid'));
+        $evalcomixcoordinator = new backup_nested_element('coordinator', ['id'], ['groupid', 'userid']);
         $evalcomixgrades = new backup_nested_element('grades');
-        $evalcomixgrade = new backup_nested_element('grade', array('id'), array('userid', 'cmid', 'finalgrade', 'courseid'));
+        $evalcomixgrade = new backup_nested_element('grade', ['id'], ['userid', 'cmid', 'finalgrade', 'courseid']);
         $evalcomixallowedusers = new backup_nested_element('allowedusers');
-        $evalcomixalloweduser = new backup_nested_element('alloweduser', array('id'), array('cmid', 'assessorid', 'studentid'));
+        $evalcomixalloweduser = new backup_nested_element('alloweduser', ['id'], ['cmid', 'assessorid', 'studentid']);
         $evalcomixcompetencysection = new backup_nested_element('competencysection');
         $evalcomixcomptypes = new backup_nested_element('competencytypes');
-        $evalcomixcomptype = new backup_nested_element('competencytype', array('id'), array('shortname', 'description'));
+        $evalcomixcomptype = new backup_nested_element('competencytype', ['id'], ['shortname', 'description']);
         $evalcomixcompetencies = new backup_nested_element('competencies');
-        $evalcomixcompetency = new backup_nested_element('competency', array('id'), array('idnumber', 'shortname',
-            'description', 'typeid', 'outcome'));
+        $evalcomixcompetency = new backup_nested_element('competency', ['id'], ['idnumber', 'shortname',
+            'description', 'typeid', 'outcome']);
         $evalcomixsubdimensions = new backup_nested_element('subdimensions');
-        $evalcomixsubdimension = new backup_nested_element('subdimension', array('id'), array('toolid', 'competencyid',
-            'subdimensionid'));
+        $evalcomixsubdimension = new backup_nested_element('subdimension', ['id'], ['toolid', 'competencyid',
+            'subdimensionid']);
 
         // Build the tree.
         $evalcomix->add_child($evalcomixtools);
@@ -85,46 +104,46 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
         // Define sources.
         global $DB, $COURSE, $CFG;
         $courseid = $this->get_courseid();
-        $cms = $DB->get_records('course_modules', array('course' => $courseid));
-        $items = array();
+        $cms = $DB->get_records('course_modules', ['course' => $courseid]);
+        $items = [];
         foreach ($cms as $cm) {
             $items[] = $cm->id;
         }
-        $inparams = array();
+        $inparams = [];
         if (!empty($items)) {
-            list($insql, $inparams) = $DB->get_in_or_equal($items);
+            [$insql, $inparams] = $DB->get_in_or_equal($items);
             foreach ($inparams as $key => $value) {
                 $inparams[$key] = backup_helper::is_sqlparam($value);
             }
         }
 
-        if ($block = $DB->get_record('block_evalcomix', array('courseid' => $courseid))) {
-            $evalcomix->set_source_table('block_evalcomix', array('id' => backup_helper::is_sqlparam($block->id)));
+        if ($block = $DB->get_record('block_evalcomix', ['courseid' => $courseid])) {
+            $evalcomix->set_source_table('block_evalcomix', ['id' => backup_helper::is_sqlparam($block->id)]);
         }
 
         require_once($CFG->dirroot . '/blocks/evalcomix/configeval.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tasks.php');
-        $evalcomixenvironment->set_source_array(array((object)array('courseid' => $COURSE->id,
-            'moodlename' => BLOCK_EVALCOMIX_MOODLE_NAME)));
+        $evalcomixenvironment->set_source_array([(object)['courseid' => $COURSE->id,
+            'moodlename' => BLOCK_EVALCOMIX_MOODLE_NAME]]);
 
         try {
-            $arrayxmltool = array();
-            $xml = block_evalcomix_webservice_client::get_ws_xml_tools2(array('courseid' => $courseid));
+            $arrayxmltool = [];
+            $xml = block_evalcomix_webservice_client::get_ws_xml_tools2(['courseid' => $courseid]);
             foreach ($xml as $toolxml) {
                 $id = (string)$toolxml['id'];
                 foreach ($toolxml as $txml) {
                     $arrayxmltool[$id] = $txml->asXML();
                 }
             }
-            if ($tools = $DB->get_records('block_evalcomix_tools', array('evxid' => $block->id))) {
-                $array = array();
+            if ($tools = $DB->get_records('block_evalcomix_tools', ['evxid' => $block->id])) {
+                $array = [];
                 foreach ($tools as $tool) {
                     $time = time();
                     $idtool = $tool->idtool;
                     if (isset($arrayxmltool[$idtool])) {
-                        $array[] = (object)array('id' => $tool->id, 'title' => $tool->title, 'type' => $tool->type,
-                            'timecreated' => $time, 'timemodified' => $time, 'idtool' => $idtool, 'code' => $arrayxmltool[$idtool]);
+                        $array[] = (object)['id' => $tool->id, 'title' => $tool->title, 'type' => $tool->type,
+                            'timecreated' => $time, 'timemodified' => $time, 'idtool' => $idtool, 'code' => $arrayxmltool[$idtool]];
                     }
                 }
                 $evalcomixtool->set_source_array($array);
@@ -151,14 +170,14 @@ class backup_evalcomix_block_structure_step extends backup_block_structure_step 
                  WHERE cmid $insql", $inparams);
         }
 
-        $evalcomixassessment->set_source_table('block_evalcomix_assessments', array('taskid' => backup::VAR_PARENTID));
-        $evalcomixmode->set_source_table('block_evalcomix_modes', array('taskid' => backup::VAR_PARENTID));
-        $evalcomixmodestime->set_source_table('block_evalcomix_modes_time', array('modeid' => backup::VAR_PARENTID));
-        $evalcomixmodesextra->set_source_table('block_evalcomix_modes_extra', array('modeid' => backup::VAR_PARENTID));
-        $evalcomixcomptype->set_source_table('block_evalcomix_comptype', array('courseid' => backup::VAR_COURSEID));
-        $evalcomixcompetency->set_source_table('block_evalcomix_competencies', array('courseid' => backup::VAR_COURSEID));
-        $evalcomixsubdimension->set_source_table('block_evalcomix_subdimension', array('courseid' => backup::VAR_COURSEID));
-        $evalcomixcoordinator->set_source_table('block_evalcomix_coordinators', array('taskid' => backup::VAR_PARENTID));
+        $evalcomixassessment->set_source_table('block_evalcomix_assessments', ['taskid' => backup::VAR_PARENTID]);
+        $evalcomixmode->set_source_table('block_evalcomix_modes', ['taskid' => backup::VAR_PARENTID]);
+        $evalcomixmodestime->set_source_table('block_evalcomix_modes_time', ['modeid' => backup::VAR_PARENTID]);
+        $evalcomixmodesextra->set_source_table('block_evalcomix_modes_extra', ['modeid' => backup::VAR_PARENTID]);
+        $evalcomixcomptype->set_source_table('block_evalcomix_comptype', ['courseid' => backup::VAR_COURSEID]);
+        $evalcomixcompetency->set_source_table('block_evalcomix_competencies', ['courseid' => backup::VAR_COURSEID]);
+        $evalcomixsubdimension->set_source_table('block_evalcomix_subdimension', ['courseid' => backup::VAR_COURSEID]);
+        $evalcomixcoordinator->set_source_table('block_evalcomix_coordinators', ['taskid' => backup::VAR_PARENTID]);
 
         // Define annotations.
         $evalcomixtask->annotate_ids('course_modules', 'instanceid');

@@ -27,7 +27,6 @@
  * Event observer for block_evalcomix.
  */
 class block_evalcomix_observer {
-
     /**
      * Triggered via group_member_removed event.
      *
@@ -38,20 +37,28 @@ class block_evalcomix_observer {
 
         $userid = $event->relateduserid;
         $groupid = $event->objectid;
-        if ($coordinators = $DB->get_records('block_evalcomix_coordinators', array('groupid' => $groupid, 'userid' => $userid))) {
-            $DB->delete_records('block_evalcomix_coordinators', array('groupid' => $groupid, 'userid' => $userid));
+        if ($coordinators = $DB->get_records('block_evalcomix_coordinators', ['groupid' => $groupid, 'userid' => $userid])) {
+            $DB->delete_records('block_evalcomix_coordinators', ['groupid' => $groupid, 'userid' => $userid]);
         }
     }
 
+    /**
+     * Triggered via group_deleted event.
+     * @param \core\event\group_deleted $event
+     */
     public static function group_deleted(\core\event\group_deleted $event) {
         global $DB;
 
         $groupid = $event->objectid;
-        if ($coordinators = $DB->get_records('block_evalcomix_coordinators', array('groupid' => $groupid))) {
-            $DB->delete_records('block_evalcomix_coordinators', array('groupid' => $groupid));
+        if ($coordinators = $DB->get_records('block_evalcomix_coordinators', ['groupid' => $groupid])) {
+            $DB->delete_records('block_evalcomix_coordinators', ['groupid' => $groupid]);
         }
     }
 
+    /**
+     * Triggered via user_deleted event.
+     * @param \core\event\user_deleted $event
+     */
     public static function student_deleted(\core\event\user_deleted $event) {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/lib.php');

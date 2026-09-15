@@ -16,10 +16,20 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
-require_once($CFG->libdir.'/datalib.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/datalib.php');
 
+/**
+ * type_form
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <info@ansaner.net>
+ */
 class type_form extends moodleform {
+    /**
+     * definition
+     */
     public function definition() {
         global $CFG;
 
@@ -43,29 +53,43 @@ class type_form extends moodleform {
         $mform->setDefault('description', $description);
         $mform->setType('description', PARAM_TEXT);
 
-        $objs = array();
+        $objs = [];
         $objs[] =& $mform->createElement('submit', 'send', get_string('save'));
         $objs[] =& $mform->createElement('cancel');
-        $grp =& $mform->addElement('group', 'buttonsgrp', '', $objs,
-               array(' ', '<br />'), false);
+        $grp =& $mform->addElement(
+            'group',
+            'buttonsgrp',
+            '',
+            $objs,
+            [' ', '<br />'],
+            false
+        );
     }
 
-    // Custom validation.
+    /**
+     * custom validation
+     */
     public function validation($data, $files) {
         global $DB, $COURSE;
-        $error = array('shortname' => get_string('duplicatevalue', 'block_evalcomix'));
-        if (empty($data['itemid']) && $item = $DB->get_record('block_evalcomix_comptype',
-                array('courseid' => $COURSE->id, 'shortname' => $data['shortname']))) {
+        $error = ['shortname' => get_string('duplicatevalue', 'block_evalcomix')];
+        if (
+            empty($data['itemid']) && $item = $DB->get_record(
+                'block_evalcomix_comptype',
+                ['courseid' => $COURSE->id, 'shortname' => $data['shortname']]
+            )
+        ) {
             return $error;
         } else if (!empty($data['itemid'])) {
             $sql = 'SELECT *
                     FROM {block_evalcomix_comptype} ct
                     WHERE ct.id != :itemid AND ct.courseid = :courseid AND ct.shortname = :shortname';
-            if ($DB->get_records_sql($sql, array('itemid' => $data['itemid'], 'courseid' => $COURSE->id,
-                    'shortname' => $data['shortname']))) {
+            if (
+                $DB->get_records_sql($sql, ['itemid' => $data['itemid'], 'courseid' => $COURSE->id,
+                    'shortname' => $data['shortname']])
+            ) {
                 return $error;
             }
         }
-        return array();
+        return [];
     }
 }

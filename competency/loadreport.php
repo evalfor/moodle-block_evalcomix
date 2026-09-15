@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * loadreport
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,13 +28,13 @@ $courseid = required_param('id', PARAM_INT);
 $studentid = optional_param('u', 0, PARAM_INT);
 $groupid = optional_param('g', 0, PARAM_INT);
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/grade:viewhidden', $context);
 
-$competencydatas = array();
-$outcomedatas = array();
+$competencydatas = [];
+$outcomedatas = [];
 if ($studentid >= 0) {
     require_once($CFG->dirroot . '/blocks/evalcomix/competency/reportlib.php');
     $datas = block_evalcomix_get_development_datas($courseid, $groupid, $studentid);
@@ -43,7 +44,7 @@ if ($studentid >= 0) {
 
 require_once($CFG->dirroot . '/blocks/evalcomix/locallib.php');
 $students = block_evalcomix_get_members_course($courseid, $groupid);
-$groups = $DB->get_records('groups', array('courseid' => $courseid));
+$groups = $DB->get_records('groups', ['courseid' => $courseid]);
 
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/renderer.php');
 $renderer = $PAGE->get_renderer('block_evalcomix', 'competency');

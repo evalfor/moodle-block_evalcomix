@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * provider
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,13 +31,26 @@ use core_privacy\local\request\transform;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\approved_contextlist;
 
+/**
+ * class provider
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
-
-    public static function get_metadata(collection $collection) : collection {
+    /**
+     * Get meta data
+     *
+     * @param object $collection
+     * @return object $collection
+     */
+    public static function get_metadata(collection $collection): collection {
 
         $collection->add_database_table(
             'block_evalcomix_allowedusers',
-             [
+            [
                 'assessorid' => 'privacy:metadata:block_evalcomix_allowedusers:assessorid',
                 'studentid' => 'privacy:metadata:block_evalcomix_allowedusers:studentid',
              ],
@@ -44,7 +59,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
         $collection->add_database_table(
             'block_evalcomix_assessments',
-             [
+            [
                 'assessorid' => 'privacy:metadata:block_evalcomix_assessments:assessorid',
                 'studentid' => 'privacy:metadata:block_evalcomix_assessments:studentid',
                 'grade' => 'privacy:metadata:block_evalcomix_assessments:grade',
@@ -55,7 +70,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
         $collection->add_database_table(
             'block_evalcomix_grades',
-             [
+            [
                 'userid' => 'privacy:metadata:block_evalcomix_grades:userid',
                 'finalgrade' => 'privacy:metadata:block_evalcomix_grades:finalgrade',
              ],
@@ -71,7 +86,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * @param   int           $userid       The user to search.
      * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $sql = "SELECT ctx.id
                 FROM {block_evalcomix_tasks} bet
                 JOIN {block_evalcomix_grades} beg
@@ -144,7 +159,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             return;
         }
 
-        $recordobj = new stdclass;
+        $recordobj = new stdclass();
         foreach ($record as $rec) {
             $recordobj->assessorid = $rec->assessorid;
             $recordobj->studentid = $rec->studentid;
@@ -188,7 +203,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             return;
         }
 
-        $recordobj = new stdclass;
+        $recordobj = new stdclass();
         foreach ($record as $rec) {
             $recordobj->assessorid = $rec->assessorid;
             $recordobj->studentid = $rec->studentid;
@@ -206,6 +221,14 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         writer::with_context($context)->export_data([$recordobj->id], (object)$data);
     }
 
+    /**
+     * Export grades
+     *
+     * @param object $context
+     * @param object $user
+     * @param object $recordobj
+     * @return void
+     */
     protected static function export_block_evalcomix_grades($context, $user, $recordobj) {
         global $DB;
         $sql = "SELECT beg.*
@@ -228,7 +251,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         if (!$record = $DB->get_records_sql($sql, $params)) {
             return;
         }
-        $recordobj = new stdclass;
+        $recordobj = new stdclass();
         foreach ($record as $rec) {
             $recordobj->grade = $rec->grade;
             $recordobj->userid = $rec->userid;
@@ -250,13 +273,13 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
         if ($context instanceof \context_user) {
-            $DB->delete_records('block_evalcomix_allowedusers', array('studentid' => $context->instanceid));
-            $DB->delete_records('block_evalcomix_allowedusers', array('assessorid' => $context->instanceid));
+            $DB->delete_records('block_evalcomix_allowedusers', ['studentid' => $context->instanceid]);
+            $DB->delete_records('block_evalcomix_allowedusers', ['assessorid' => $context->instanceid]);
 
-            $DB->delete_records('block_evalcomix_assessments', array('studentid' => $context->instanceid));
-            $DB->delete_records('block_evalcomix_assessments', array('assessorid' => $context->instanceid));
+            $DB->delete_records('block_evalcomix_assessments', ['studentid' => $context->instanceid]);
+            $DB->delete_records('block_evalcomix_assessments', ['assessorid' => $context->instanceid]);
 
-            $DB->delete_records('block_evalcomix_grades', array('userid' => $context->instanceid));
+            $DB->delete_records('block_evalcomix_grades', ['userid' => $context->instanceid]);
         }
     }
 
@@ -268,12 +291,12 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
         $userid = $contextlist->get_user()->id;
-        $DB->delete_records('block_evalcomix_allowedusers', array('studentid' => $userid));
-        $DB->delete_records('block_evalcomix_allowedusers', array('assessorid' => $userid));
+        $DB->delete_records('block_evalcomix_allowedusers', ['studentid' => $userid]);
+        $DB->delete_records('block_evalcomix_allowedusers', ['assessorid' => $userid]);
 
-        $DB->delete_records('block_evalcomix_assessments', array('studentid' => $userid));
-        $DB->delete_records('block_evalcomix_assessments', array('assessorid' => $userid));
+        $DB->delete_records('block_evalcomix_assessments', ['studentid' => $userid]);
+        $DB->delete_records('block_evalcomix_assessments', ['assessorid' => $userid]);
 
-        $DB->delete_records('block_evalcomix_grades', array('userid' => $userid));
+        $DB->delete_records('block_evalcomix_grades', ['userid' => $userid]);
     }
 }

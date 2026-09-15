@@ -15,119 +15,109 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * GL
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX';
-$string['evalcomix'] = 'EvalCOMIX';
+$string['anonymous_EI'] = 'Anónima - AI';
+$string['anonymous_EI_help'] = 'Indica se o estudantado poderá coñecer os compañeiros e compañeiras que o cualificaron.';
+$string['april'] = 'Abril';
+$string['argumentset'] = 'Argumentario';
+$string['assess'] = 'Avaliar';
+$string['assesssection'] = 'Avaliar Actividades';
+$string['august'] = 'Agosto';
+$string['availabledate_AE'] = 'AE - dispoñible a partir de: ';
+$string['availabledate_AE_help'] = 'Data a partir da cal os e as estudantes poderán avaliar a súa actividade.';
+$string['availabledate_EI'] = 'AI - dispoñible a partir de: ';
+$string['availabledate_EI_help'] = 'Data a partir da cal os e as estudantes poderán avaliar a actividade realizada polos compañeiros e polas compañeiras.';
 $string['blocksettings'] = 'Configuración';
 $string['blockstring'] = 'Contido de EvalCOMIX';
-$string['instruments'] = 'Xestión de instrumentos';
-$string['evaluation'] = 'Avaliación de actividades';
-$string['evalcomix:view'] = 'Consulta EvalCOMIX';
-$string['evalcomix:edit'] = 'Edición EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o Manual.';
-$string['selfmodality'] = 'Autoavaliación do/a Estudante - AE ';
-$string['peermodality'] = 'Avaliación entre Iguais - AI ';
-$string['teachermodality'] = 'Avaliación do Profesorado - AP';
-$string['selfmod'] = 'Autoavaliación';
-$string['peermod'] = 'Avaliación entre Iguais';
-$string['teachermod'] = 'Avaliación do Profesorado';
-$string['nuloption'] = 'Seleccione un instrumento';
-$string['grades'] = 'Notas: ';
-$string['selinstrument'] = 'Planificación da Avaliación';
-$string['pon_EP'] = 'Ponderación - AP';
-$string['pon_AE'] = 'Ponderación - AE';
-$string['pon_EI'] = 'Ponderación - AI';
-$string['availabledate_EI'] = 'AI - dispoñible a partir de: ';
-$string['availabledate_AE'] = 'AE - dispoñible a partir de: ';
-$string['ratingsforitem'] = 'Desagregación da Cualificación';
-$string['modality'] = 'Modalidade';
-$string['grade'] = 'Cualificación';
-$string['weighingfinalgrade'] = 'Peso na nota final';
-$string['finalgrade'] = 'Nota Final';
-$string['nograde'] = 'Sen cualificar';
-$string['timeopen'] = 'Período de cualificación aberto';
-$string['designsection'] = 'Deseño e Xestión de Instrumentos de Avaliación';
-$string['assesssection'] = 'Avaliar Actividades';
-$string['counttool'] = 'Nº total de instrumentos';
-$string['newtool'] = 'Novo Instrumento';
-$string['open'] = 'Abrir';
-$string['view'] = 'Consultar';
-$string['delete'] = 'Eliminar';
-$string['title'] = 'Título';
-$string['type'] = 'Tipo';
-$string['anonymous_EI'] = 'Anónima - AI';
-$string['details'] = 'Detalles';
-$string['assess'] = 'Avaliar';
-$string['set'] = 'Configurar';
-$string['grade'] = 'Nota';
-$string['weighingfinalgrade'] = 'Peso na nota final';
-$string['evalcomixgrade'] = 'Cualificación de EvalCOMIX';
-$string['moodlegrade'] = 'Cualificación de Moodle';
-$string['nograde'] = 'Sen Cualificar';
-$string['graphics'] = 'Gráficos';
-$string['timedue_AE'] = 'AE - Data límite';
-$string['timedue_EI'] = 'AI - Data límite';
-$string['january'] = 'Xaneiro';
-$string['february'] = 'Febreiro';
-$string['march'] = 'Marzo';
-$string['april'] = 'Abril';
-$string['may'] = 'Maio';
-$string['june'] = 'Xuño';
-$string['july'] = 'Xullo';
-$string['august'] = 'Agosto';
-$string['september'] = 'Setembro';
-$string['october'] = 'Outubro';
-$string['november'] = 'Novembro';
-$string['december'] = 'Decembro';
-$string['save'] = 'Gardar';
 $string['cancel'] = 'Cancelar';
-$string['evaluate'] = 'Avaliar';
-$string['scale'] = 'Escala';
-$string['list'] = 'Listaxe de Control';
-$string['listscale'] = 'Listaxe + Escala';
-$string['rubric'] = 'Rúbrica';
-$string['mixed'] = 'Mixto';
-$string['differential'] = 'Diferencial';
-$string['argumentset'] = 'Argumentario';
-
-$string['whatis'] = 'Xestión de instrumentos de avaliación';
-$string['gradeof'] = 'Nota de ';
-$string['confirmdeletetool'] = 'Está seguro/a que desexa eliminar o instrumento?';
-$string['finalgradecalculation'] = 'Cálculo da nota final';
-$string['method'] = 'Método';
-$string['weightedaveragewithallvalues'] = 'Media ponderada de todas as cualificacións';
-$string['weightedaveragesmart'] = 'Media ponderada de cualificacións non extremas';
 $string['confirmdeleteassessment'] = 'Está seguro/a de que desexa eliminar la avaliación?';
-
-$string['mildoutlier'] = 'Valor atípico leve';
-$string['extremeoutlier'] = 'Valor atípico extremo';
-$string['overvaluation'] = 'Sobrevaloración';
-$string['undervaluation'] = 'Infravaloración';
-/* ----------------------------- HELP ----------------------------- */
-$string['method_help'] = 'Esta opción permite establecer o xeito de calcular a nota final da actividade. Se se selecciona a opción "Media ponderada de todas as cualificacións", a cualificación final calcularase realizando a media ponderada das cualificacións outorgadas en cada modalidade de avaliación, sen ignorar ningunha. En cambio, de seleccionarse a opción "Media ponderada de valores non extremos", eliminaranse do cálculo aquelas cualificacións que se consideran extremas por superar determinadas cotas. Para obter máis información, lea o manual de EvalCOMIX.';
-$string['timeopen_help'] = 'A Avaliación entre Iguais non se inclúe na nota actual de EvalCOMIX xa que aínda se atopa en período de avaliación.';
+$string['confirmdeletetool'] = 'Está seguro/a que desexa eliminar o instrumento?';
+$string['counttool'] = 'Nº total de instrumentos';
+$string['december'] = 'Decembro';
+$string['delete'] = 'Eliminar';
+$string['designsection'] = 'Deseño e Xestión de Instrumentos de Avaliación';
+$string['details'] = 'Detalles';
+$string['differential'] = 'Diferencial';
+$string['evalcomix'] = 'EvalCOMIX';
+$string['evalcomix:edit'] = 'Edición EvalCOMIX';
+$string['evalcomix:view'] = 'Consulta EvalCOMIX';
+$string['evalcomixgrade'] = 'Cualificación de EvalCOMIX';
 $string['evalcomixgrade_help'] = 'Media ponderada das cualificacións de EvalCOMIX';
 $string['evalcomixgradesmart_help'] = 'Media ponderada das cualificacións de EvalCOMIX ignorando as sobrevaloracións, infravaloracións e valores atípicos extremos.';
-$string['moodlegrade_help'] = 'Media ponderada das cualificacións de EvalCOMIX';
+$string['evaluate'] = 'Avaliar';
+$string['evaluation'] = 'Avaliación de actividades';
+$string['extremeoutlier'] = 'Valor atípico extremo';
+$string['february'] = 'Febreiro';
+$string['finalgrade'] = 'Nota Final';
 $string['finalgrade_help'] = 'Media aritmética da cualificación final de EvalCOMIX e a cualificación final de Moodle';
-$string['teachermodality_help'] = 'Velaquí o instrumento de avaliación utilizado polo profesorado para cualificar esta actividade do seu alumnado.';
-$string['pon_EP_help'] = 'É a porcentaxe que a cualificación obtida polo instrumento de avaliación do/a profesor/a ten na nota final.';
-$string['selfmodality_help'] = 'Velaquí o instrumento de autoavaliación utilizado polo estudantado para cualificar o traballo que realizou nesta actividade.';
-$string['pon_AE_help'] = 'É a porcentaxe que a cualificación obtida polo instrumento de autoavaliación do/a estudante ten na nota final.';
+$string['finalgradecalculation'] = 'Cálculo da nota final';
+$string['gradeof'] = 'Nota de ';
+$string['grades'] = 'Notas: ';
+$string['graphics'] = 'Gráficos';
+$string['instruments'] = 'Xestión de instrumentos';
+$string['january'] = 'Xaneiro';
+$string['july'] = 'Xullo';
+$string['june'] = 'Xuño';
+$string['list'] = 'Listaxe de Control';
+$string['listscale'] = 'Listaxe + Escala';
+$string['march'] = 'Marzo';
+$string['may'] = 'Maio';
+$string['method'] = 'Método';
+$string['method_help'] = 'Esta opción permite establecer o xeito de calcular a nota final da actividade. Se se selecciona a opción "Media ponderada de todas as cualificacións", a cualificación final calcularase realizando a media ponderada das cualificacións outorgadas en cada modalidade de avaliación, sen ignorar ningunha. En cambio, de seleccionarse a opción "Media ponderada de valores non extremos", eliminaranse do cálculo aquelas cualificacións que se consideran extremas por superar determinadas cotas. Para obter máis información, lea o manual de EvalCOMIX.';
+$string['mildoutlier'] = 'Valor atípico leve';
+$string['mixed'] = 'Mixto';
+$string['modality'] = 'Modalidade';
+$string['moodlegrade'] = 'Cualificación de Moodle';
+$string['moodlegrade_help'] = 'Media ponderada das cualificacións de EvalCOMIX';
+$string['newtool'] = 'Novo Instrumento';
+$string['november'] = 'Novembro';
+$string['nuloption'] = 'Seleccione un instrumento';
+$string['october'] = 'Outubro';
+$string['open'] = 'Abrir';
+$string['overvaluation'] = 'Sobrevaloración';
+$string['peermod'] = 'Avaliación entre Iguais';
+$string['peermodality'] = 'Avaliación entre Iguais - AI ';
 $string['peermodality_help'] = 'Velaquí o instrumento de avaliación utilizado polo alumnado para avaliar esta actividade dos compañeiros e compañeiras.';
+$string['pluginname'] = 'EvalCOMIX';
+$string['pon_AE'] = 'Ponderación - AE';
+$string['pon_AE_help'] = 'É a porcentaxe que a cualificación obtida polo instrumento de autoavaliación do/a estudante ten na nota final.';
+$string['pon_EI'] = 'Ponderación - AI';
 $string['pon_EI_help'] = 'É a porcentaxe que a cualificación obtida polo instrumento de avaliación entre iguais ten sobre na nota final.';
-$string['availabledate_AE_help'] = 'Data a partir da cal os e as estudantes poderán avaliar a súa actividade.';
-$string['timedue_AE_help'] = 'Data límite até a cal os e as estudantes poderán avaliar a súa actividade.';
-$string['availabledate_EI_help'] = 'Data a partir da cal os e as estudantes poderán avaliar a actividade realizada polos compañeiros e polas compañeiras.';
-$string['timedue_EI_help'] = 'Data límite ata a cal os e as estudantes poderán avaliar os compañeiros e compañeiras.';
-$string['anonymous_EI_help'] = 'Indica se o estudantado poderá coñecer os compañeiros e compañeiras que o cualificaron.';
-$string['whatis_help'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o manual.';
+$string['pon_EP'] = 'Ponderación - AP';
+$string['pon_EP_help'] = 'É a porcentaxe que a cualificación obtida polo instrumento de avaliación do/a profesor/a ten na nota final.';
+$string['ratingsforitem'] = 'Desagregación da Cualificación';
+$string['save'] = 'Gardar';
+$string['scale'] = 'Escala';
+$string['selfmod'] = 'Autoavaliación';
+$string['selfmodality'] = 'Autoavaliación do/a Estudante - AE ';
+$string['selfmodality_help'] = 'Velaquí o instrumento de autoavaliación utilizado polo estudantado para cualificar o traballo que realizou nesta actividade.';
+$string['selinstrument'] = 'Planificación da Avaliación';
 $string['selinstrument_help'] = 'Consulte o manual para obter unha maior información sobre como configurar unha actividade de EvalCOMIX.';
+$string['september'] = 'Setembro';
+$string['set'] = 'Configurar';
+$string['teachermod'] = 'Avaliación do Profesorado';
+$string['teachermodality'] = 'Avaliación do Profesorado - AP';
+$string['teachermodality_help'] = 'Velaquí o instrumento de avaliación utilizado polo profesorado para cualificar esta actividade do seu alumnado.';
+$string['timedue_AE'] = 'AE - Data límite';
+$string['timedue_AE_help'] = 'Data límite até a cal os e as estudantes poderán avaliar a súa actividade.';
+$string['timedue_EI'] = 'AI - Data límite';
+$string['timedue_EI_help'] = 'Data límite ata a cal os e as estudantes poderán avaliar os compañeiros e compañeiras.';
+$string['timeopen'] = 'Período de cualificación aberto';
+$string['timeopen_help'] = 'A Avaliación entre Iguais non se inclúe na nota actual de EvalCOMIX xa que aínda se atopa en período de avaliación.';
+$string['type'] = 'Tipo';
+$string['undervaluation'] = 'Infravaloración';
+$string['view'] = 'Consultar';
+$string['weighingfinalgrade'] = 'Peso na nota final';
+$string['weightedaveragesmart'] = 'Media ponderada de cualificacións non extremas';
+$string['weightedaveragewithallvalues'] = 'Media ponderada de todas as cualificacións';
+$string['whatis'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o Manual.';
+$string['whatis_help'] = 'EvalCOMIX permite crear e xestionar instrumentos de avaliación (listaxes de control, escalas de valoración, diferencial semántico e rúbricas) que poden ser empregados para avaliar Foros, Glosarios, Base de datos, Wiki e Tarefas. <br>A avaliación con estes instrumentos pode ser realizada polo persoal docente (avaliación do profesorado) e o propio estudantado (autoavaliación), amais de ter lugar entre estudantes (avaliación entre iguais). Para obter unha maior información pódese consultar o manual.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Gráfica tarefa por alumno/a';
 $string['profile_task_by_group'] = 'Gráfica tarefa por grupo';
@@ -194,11 +184,11 @@ $string['groups_EI'] = 'Grupos';
 $string['specificstudents_EI'] = 'Estudantes específicos/as';
 $string['whoassesses_EI_help'] = 'Esta opción permite controlar o estudantado que participará na avaliación entre iguais.
 
-Si se selecciona la opción **'.$string['anystudent_EI'].'** cada estudante poderá avaluiar a calquera deos seus compañeiros e compañeiras.
+Si se selecciona la opción **' . $string['anystudent_EI'] . '** cada estudante poderá avaluiar a calquera deos seus compañeiros e compañeiras.
 
-Si se selecciona la opción **'.$string['groups_EI'].'**, respectarase a configuración dos grupos e agrupamentos da actividade.
+Si se selecciona la opción **' . $string['groups_EI'] . '**, respectarase a configuración dos grupos e agrupamentos da actividade.
 
-Si se selecciona la opción **'.$string['specificstudents_EI'].'** poderase indicar quen avaliará e quen será avaliado/a. Esta opción desactivarase de seleccionarse "Avaliación de equipos de traballo"';
+Si se selecciona la opción **' . $string['specificstudents_EI'] . '** poderase indicar quen avaliará e quen será avaliado/a. Non obstante, se tamén se selecciona a opción "Equipos de traballo", aplicaranse as seguintes restricións: 1) Un membro do equipo non pode avaliar a outro membro do mesmo equipo e 2) os coordinadores do equipo de traballo non se mostrarán na sección de Estudantes avaliadores, pero si na sección de Estudantes candidatos.';
 $string['assignstudents_EI'] = 'Asignar estudantes';
 $string['assess_students'] = 'Estudantes avaliadores';
 $string['studentstoassess'] = 'Estudantes que serán avaliados/as';
@@ -288,12 +278,10 @@ $string['titlevalue'] = 'Valor';
 $string['no'] = 'Non';
 $string['yes'] = 'Si';
 $string['observation'] = 'Comentarios';
-$string['view'] = 'Pechar Vista Previa';
 
 $string['windowselection'] = 'Xanela de selección';
 $string['selectfile'] = 'Seleccione o fichero';
 $string['upfile'] = 'Subir ficheiro';
-$string['cancel'] = 'Cancelar';
 
 $string['savedsaccessfully'] = 'O instrumento gardouse satisfactoriamente';
 $string['ADimension'] = 'Este campo non pode estar baleiro. \"Nº de Dimensións\" debe ser un número maior que 0 e \"Valoración Global\" un número maior ou igual que 2';
@@ -379,7 +367,7 @@ Se hai **Avaliación do Profesorado - AP**, o profesorado só poderán avaliar o
 
 Se hai **Autoavaliación – AE**, só o/a coordinador/a poderá autoavaliarse, e a súa avaliación seralle asignada a cada membro do grupo.
 
-Se hai **Avaliación entre Iguais – AI**, o alumnado só poderán avaliar aos coordinadores e ás coordinadoras de cada grupo, e cada avaliación seralle asignada a cada membro do grupo.
+Se hai **Avaliación entre Iguais – AI**, o alumnado só poderán avaliar aos coordinadores e ás coordinadoras de cada grupo, e cada avaliación seralle asignada a cada membro do grupo. Este comportamento pódese modificar seleccionando a opción "Estudantes específicos" e asignando quen avalía a quen.
 
 O alumnado que non estea en ningún grupo non recibirá avaliación. Os grupos que non teñan asignada unha persoa coordinadora non recibirán ningunha avaliación e tampouco poderán avaliar.';
 $string['selectcoordinator'] = 'Elixe coordinador/a';

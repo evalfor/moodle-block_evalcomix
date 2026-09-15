@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Download files
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -32,7 +34,7 @@ if (count($args) < 3) { // Always at least context, component and filearea.
 
 $contextid = (int)array_shift($args);
 $component = clean_param(array_shift($args), PARAM_COMPONENT);
-list($context, $course, $cm) = get_context_info_array($contextid);
+[$context, $course, $cm] = get_context_info_array($contextid);
 
 require_course_login($course);
 require_capability('block/evalcomix:view', $context);
@@ -44,7 +46,7 @@ if ($mode == 'teacher' || (($mode == 'self' || $mode == 'peer'))) {
     $canseeactivity = $gradereport->student_can_assess($USER, $cm);
     if ($canseeactivity) {
         $fs = get_file_storage();
-        if ($task = $DB->get_record('block_evalcomix_tasks', array('instanceid' => $cm->id))) {
+        if ($task = $DB->get_record('block_evalcomix_tasks', ['instanceid' => $cm->id])) {
             if ($component == 'assignsubmission_file' || $component == 'mod_workshop') {
                 $dir = core_component::get_component_directory($component);
                 if (!file_exists("$dir/lib.php")) {

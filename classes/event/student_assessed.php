@@ -17,7 +17,8 @@
 /**
  * The block fundae viewed event.
  *
- * @package   block_fundae
+ * @package   block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Daniel Cabeza <info@ansaner.com>
  */
@@ -25,11 +26,12 @@
 namespace block_evalcomix\event;
 
 /**
+ * Class for student assessed event
+ *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Daniel Cabeza <info@ansaner.com>
  */
 class student_assessed extends \core\event\base {
-
     /**
      * Init method.
      *

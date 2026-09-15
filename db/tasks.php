@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         'classname' => 'block_evalcomix\task\cron_task',
         'blocking' => 0,
         'minute' => '*/15',
@@ -34,8 +34,8 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*',
-    ),
-    array(
+    ],
+    [
         'classname' => 'block_evalcomix\task\get_skill_develpment_data',
         'blocking' => 0,
         'minute' => '*/5',
@@ -43,5 +43,5 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*',
-    ),
-);
+    ],
+];

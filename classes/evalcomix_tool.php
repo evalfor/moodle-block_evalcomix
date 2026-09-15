@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Class for tools
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -33,19 +35,23 @@ require_once('webservice_evalcomix_client.php');
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  */
 class block_evalcomix_tool extends block_evalcomix_object {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix_tools';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'evxid', 'title', 'type', 'idtool', 'timecreated', 'timemodified');
+    public $requiredfields = ['id', 'evxid', 'title', 'type', 'idtool', 'timecreated', 'timemodified'];
 
     /**
      * Array of optional table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * evalcomix ID associated
@@ -92,8 +98,15 @@ class block_evalcomix_tool extends block_evalcomix_object {
      * @param string $title Tool Title
      * @param string $type Tool type. Can be: scale, list, listscale, rubric, differential, mixed
      */
-    public function __construct($id = '', $evxid = '0', $title = '', $type = '', $idtool = '0',
-        $timecreated = '0', $timemodified = '0') {
+    public function __construct(
+        $id = '',
+        $evxid = '0',
+        $title = '',
+        $type = '',
+        $idtool = '0',
+        $timecreated = '0',
+        $timemodified = '0'
+    ) {
         if ($evxid != 0) {
             global $DB;
             $this->id = intval($id);
@@ -107,10 +120,12 @@ class block_evalcomix_tool extends block_evalcomix_object {
             }
             $this->timecreated = 0;
             $this->timemodified = 0;
-            $course = $DB->get_record('block_evalcomix', array('id' => $evxid), '*', MUST_EXIST);
-            if ($this->type != 'scale' && $this->type != 'list' && $this->type != 'listscale' && $this->type != 'rubric'
+            $course = $DB->get_record('block_evalcomix', ['id' => $evxid], '*', MUST_EXIST);
+            if (
+                $this->type != 'scale' && $this->type != 'list' && $this->type != 'listscale' && $this->type != 'rubric'
                 && $this->type != 'mixed' && $this->type != 'differential' && $this->type != 'argumentset'
-                && $this->type != 'tmp') {
+                && $this->type != 'tmp'
+            ) {
                 throw new \moodle_exception('The type assessment tool is wrong');
             }
         }
@@ -118,7 +133,7 @@ class block_evalcomix_tool extends block_evalcomix_object {
 
     /**
      * Finds and returns all evalcomix_tool instances.
-     * @static abstract
+     * @param array $params
      *
      * @return array array of evalcomix_tool instances or false if none found.
      */
@@ -128,7 +143,6 @@ class block_evalcomix_tool extends block_evalcomix_object {
 
     /**
      * Finds and returns a evalcomix_tool instance based on params.
-     * @static
      *
      * @param array $params associative arrays varname=>value
      * @return object grade_item instance or false if none found.
@@ -138,6 +152,8 @@ class block_evalcomix_tool extends block_evalcomix_object {
     }
 
     /**
+     * Get tools
+     *
      * @param int $courseid
      * @return array of tools. Key of array is 'id' and value of array is 'title' tool
      */
@@ -145,18 +161,18 @@ class block_evalcomix_tool extends block_evalcomix_object {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_tool.php');
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix.php');
-        $result = array();
+        $result = [];
 
-        $params = array('courseid' => $courseid);
+        $params = ['courseid' => $courseid];
         if (!$environment = $DB->get_record('block_evalcomix', $params)) {
             return $result;
         }
 
         $evxid = $environment->id;
-        $params = array('evxid' => $evxid);
+        $params = ['evxid' => $evxid];
         $tools = $DB->get_records('block_evalcomix_tools', $params);
         if (!is_array($tools)) {
-            $tools = array();
+            $tools = [];
         }
         foreach ($tools as $key => $value) {
             if ($value->type != 'tmp') {
@@ -166,18 +182,24 @@ class block_evalcomix_tool extends block_evalcomix_object {
         return $result;
     }
 
+    /**
+     * Delete tool
+     *
+     * @param int $id
+     * @return bool result
+     */
     public static function delete_tool($id) {
         global $CFG, $DB;
         $result = false;
-        if ($DB->get_record('block_evalcomix_tools', array('id' => $id))) {
-            $DB->delete_records('block_evalcomix_subdimension', array('toolid' => $id));
-            if ($modes = $DB->get_records('block_evalcomix_modes', array('toolid' => $id))) {
+        if ($DB->get_record('block_evalcomix_tools', ['id' => $id])) {
+            $DB->delete_records('block_evalcomix_subdimension', ['toolid' => $id]);
+            if ($modes = $DB->get_records('block_evalcomix_modes', ['toolid' => $id])) {
                 require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_modes.php');
                 foreach ($modes as $mode) {
                     block_evalcomix_modes::delete_mode($mode->id);
                 }
             }
-            $result = $DB->delete_records('block_evalcomix_tools', array('id' => $id));
+            $result = $DB->delete_records('block_evalcomix_tools', ['id' => $id]);
         }
         return $result;
     }

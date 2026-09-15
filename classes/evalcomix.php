@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Definitions of EvalCOMIX object class
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once('evalcomix_object.php');
@@ -25,21 +33,24 @@ require_once('evalcomix_object.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
-
 class block_evalcomix_class extends block_evalcomix_object {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix';
 
      /**
       * Array of required table fields, must start with 'id'.
       * @var array $requiredfields
       */
-    public $requiredfields = array('id', 'courseid', 'viewmode', 'sendgradebook');
+    public $requiredfields = ['id', 'courseid', 'viewmode', 'sendgradebook'];
 
     /**
      * Array of optional table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * Course ID associated
@@ -73,7 +84,7 @@ class block_evalcomix_class extends block_evalcomix_object {
             $this->courseid = intval($courseid);
             $this->viewmode = $viewmode;
             $this->sendgradebook = $sendgradebook;
-            $course = $DB->get_record('course', array('id' => $this->courseid), '*', MUST_EXIST);
+            $course = $DB->get_record('course', ['id' => $this->courseid], '*', MUST_EXIST);
             // Adding to control viewmode.
             if ($this->viewmode != 'evalcomix' && $this->viewmode != 'evalmoodle') {
                 throw new \moodle_exception('The view mode is wrong');
@@ -83,7 +94,6 @@ class block_evalcomix_class extends block_evalcomix_object {
 
     /**
      * Finds and returns a evalcomix instance based on params.
-     * @static
      *
      * @param array $params associative arrays varname=>value
      * @return object grade_item instance or false if none found.

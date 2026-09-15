@@ -13,107 +13,100 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * PL
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX - FLOASS';
-$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['anonymous_EI'] = 'Anonimowa ocena - OR';
+$string['anonymous_EI_help'] = 'To wskazuje czy ocena jest anonimowa.';
+$string['april'] = 'Kwiecień';
+$string['argumentset'] = 'Ocena argumentacyjna';
+$string['assess'] = 'Ocena';
+$string['assesssection'] = 'Ocena zajęć';
+$string['august'] = 'Sierpień';
+$string['availabledate_AE'] = 'SO - dostępna od: ';
+$string['availabledate_AE_help'] = '';
+$string['availabledate_EI'] = 'OR - dostępna od: ';
+$string['availabledate_EI_help'] = '';
 $string['blocksettings'] = 'Konfiguracja';
 $string['blockstring'] = 'Zawartość EvalCOMIX';
-$string['instruments'] = 'Narzędzia';
-$string['evaluation'] = 'Ocena Zajęć';
-$string['evalcomix:view'] = 'Podgląd EvalCOMIX';
-$string['evalcomix:edit'] = 'Edytuj EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX pozwala na projektowanie i zarządzanie narzędziami oceny (punktowanie, rubryki itd.) do oceniania forum, słowników, bazy danych, wiki i zadań. <br>Ocena za pomocą tych narzędzi może być dokonana przez nauczycieli (ocena nauczycieli) lub studentów (samo-ocena, ocena rówieśnicza). Więcej informacji dostępne w Manualu.';
-$string['selfmodality'] = 'Samo-ocena - SO ';
-$string['peermodality'] = 'Ocena rówieśnicza - OR ';
-$string['teachermodality'] = 'Ocena Nauczyciela - ON ';
-$string['selfmod'] = 'Samo-ocena';
-$string['peermod'] = 'Ocena rówieśnicza';
-$string['teachermod'] = 'Ocena nauczyciela';
-$string['nuloption'] = 'Wybór narzędzi oceny';
-$string['grades'] = 'Stopnie: ';
-$string['selinstrument'] = 'Planowanie oceny';
-$string['pon_EP'] = 'System ważenia - NA';
-$string['pon_AE'] = 'System ważenia - SO';
-$string['pon_EI'] = 'System ważenia - OR';
-$string['availabledate_EI'] = 'OR - dostępna od: ';
-$string['availabledate_AE'] = 'SO - dostępna od: ';
-$string['ratingsforitem'] = 'Podział ocen';
-$string['modality'] = 'Modalność';
-$string['grade'] = 'Oceny';
-$string['weighingfinalgrade'] = 'Ważenie w finalnej ocenie';
-$string['finalgrade'] = 'Finalna ocena';
-$string['nograde'] = 'Brak oceny';
-$string['timeopen'] = 'Okres oceny się nie zakończył';
-$string['designsection'] = 'Projektowanie i zarządzanie narzędziami oceny';
-$string['assesssection'] = 'Ocena zajęć';
-$string['counttool'] = 'Zbiór narzędzi';
-$string['newtool'] = 'Nowe narzędzie';
-$string['open'] = 'Otwórz';
-$string['view'] = 'Podgląd';
-$string['delete'] = 'Usuń';
-$string['title'] = 'Tytuł';
-$string['type'] = 'Typ';
-$string['anonymous_EI'] = 'Anonimowa ocena - OR';
-$string['details'] = 'Szczegóły';
-$string['assess'] = 'Ocena';
-$string['set'] = 'Ustaw';
-$string['ratingsforitem'] = 'Punktowanie';
-$string['modality'] = 'Modalność';
-$string['grade'] = 'Stopień';
-$string['weighingfinalgrade'] = 'Ważenie finalnej oceny';
-$string['evalcomixgrade'] = 'Ocena EvalCOMIX';
-$string['moodlegrade'] = 'Ocena Moodle';
-$string['graphics'] = 'Grafika';
-$string['timedue_AE'] = 'SO - deadline';
-$string['timedue_EI'] = 'OR - deadline';
-$string['january'] = 'Styczeń';
-$string['february'] = 'Luty';
-$string['march'] = 'Marzec';
-$string['april'] = 'Kwiecień';
-$string['may'] = 'Maj';
-$string['june'] = 'Czerwiec';
-$string['july'] = 'Lipiec';
-$string['august'] = 'Sierpień';
-$string['september'] = 'Wrzesień';
-$string['october'] = 'Październik';
-$string['november'] = 'Listopad';
-$string['december'] = 'Grudzień';
-$string['save'] = 'Zapisz';
 $string['cancel'] = 'Anuluj';
+$string['counttool'] = 'Zbiór narzędzi';
+$string['december'] = 'Grudzień';
+$string['delete'] = 'Usuń';
+$string['designsection'] = 'Projektowanie i zarządzanie narzędziami oceny';
+$string['details'] = 'Szczegóły';
+$string['differential'] = 'Różnicowy';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix:edit'] = 'Edytuj EvalCOMIX';
+$string['evalcomix:view'] = 'Podgląd EvalCOMIX';
+$string['evalcomixgrade'] = 'Ocena EvalCOMIX';
+$string['evalcomixgrade_help'] = 'Średnia ważona oceny evalcomix';
 $string['evaluate'] = 'Oceń';
-$string['scale'] = 'Skala';
+$string['evaluation'] = 'Ocena Zajęć';
+$string['february'] = 'Luty';
+$string['finalgrade'] = 'Finalna ocena';
+$string['finalgrade_help'] = 'Średnia arytmetyczna oceny końcowej EvalCOMIX i Moodle';
+$string['gradeof'] = 'Ocena... ';
+$string['grades'] = 'Stopnie: ';
+$string['graphics'] = 'Grafika';
+$string['instruments'] = 'Narzędzia';
+$string['january'] = 'Styczeń';
+$string['july'] = 'Lipiec';
+$string['june'] = 'Czerwiec';
 $string['list'] = 'Check-Lista';
 $string['listscale'] = 'Listscale';
-$string['rubric'] = 'Rubryka';
+$string['march'] = 'Marzec';
+$string['may'] = 'Maj';
 $string['mixed'] = 'Mieszany';
-$string['differential'] = 'Różnicowy';
-$string['argumentset'] = 'Ocena argumentacyjna';
-$string['whatis'] = 'Zarządzanie narzędziami oceny';
-$string['gradeof'] = 'Ocena... ';
-/* ----------------------------- HELP ----------------------------- */
-$string['timeopen_help'] = 'Ocena rówieśnicza nie jest włączona w system ocen EvalCOMIX ponieważ okres oceny nie zakończył się jeszcze.';
-$string['evalcomixgrade_help'] = 'Średnia ważona oceny evalcomix';
+$string['modality'] = 'Modalność';
+$string['moodlegrade'] = 'Ocena Moodle';
 $string['moodlegrade_help'] = 'Ocena przepisana z Moodle';
-$string['finalgrade_help'] = 'Średnia arytmetyczna oceny końcowej EvalCOMIX i Moodle';
-$string['teachermodality_help'] = 'To narzędzie oceny będzie wykorzystywane przez nauczycilie do oceny uczniów na tych zajęciach.';
-$string['pon_EP_help'] = 'Jest to procent oceny przyznanej przez narzędzie oceny nauczyciela w ocenie końcowej.';
-$string['selfmodality_help'] = 'Jest to narzędzie samo-oseny wykorzystywane przez uczniów do oceny ich własnych zadań.';
-$string['pon_AE_help'] = 'Jest to procent oceny przyznanej przez narzędzie samo-oceny w ocenie końcowej.';
+$string['newtool'] = 'Nowe narzędzie';
+$string['november'] = 'Listopad';
+$string['nuloption'] = 'Wybór narzędzi oceny';
+$string['october'] = 'Październik';
+$string['open'] = 'Otwórz';
+$string['peermod'] = 'Ocena rówieśnicza';
+$string['peermodality'] = 'Ocena rówieśnicza - OR ';
 $string['peermodality_help'] = 'Jest to narzędzie oceny wykorzystywane przez uczniów do oceny rówieśniczej.';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['pon_AE'] = 'System ważenia - SO';
+$string['pon_AE_help'] = 'Jest to procent oceny przyznanej przez narzędzie samo-oceny w ocenie końcowej.';
+$string['pon_EI'] = 'System ważenia - OR';
 $string['pon_EI_help'] = 'Jest to procent oceny przyznanen przez narzędzie oceny rówieśniczej w ocenie końcowej.';
-$string['availabledate_AE_help'] = '';
-$string['timedue_AE_help'] = '';
-$string['availabledate_EI_help'] = '';
-$string['timedue_EI_help'] = '';
-$string['anonymous_EI_help'] = 'To wskazuje czy ocena jest anonimowa.';
-$string['whatis_help'] = 'EvalCOMIX pozwala na projektowanie i zarządzanie narzędziami oceny (punktowanie, rubryki itd.) do oceniania forum, słowników, bazy danych, wiki i zadań. <br>Ocena za pomocą tych narzędzi może być dokonana przez nauczycieli (ocena nauczycieli) lub studentów (samo-ocena, ocena rówieśnicza). Więcej informacji dostępne w Manualu. Więcej informacji dostępne tutaj Manualu';
+$string['pon_EP'] = 'System ważenia - NA';
+$string['pon_EP_help'] = 'Jest to procent oceny przyznanej przez narzędzie oceny nauczyciela w ocenie końcowej.';
+$string['ratingsforitem'] = 'Punktowanie';
+$string['save'] = 'Zapisz';
+$string['scale'] = 'Skala';
+$string['selfmod'] = 'Samo-ocena';
+$string['selfmodality'] = 'Samo-ocena - SO ';
+$string['selfmodality_help'] = 'Jest to narzędzie samo-oseny wykorzystywane przez uczniów do oceny ich własnych zadań.';
+$string['selinstrument'] = 'Planowanie oceny';
 $string['selinstrument_help'] = 'Refer to the Manualu aby uzyskać więcej informacji o ustawieniach zajć EvalCOMIX.';
+$string['september'] = 'Wrzesień';
+$string['set'] = 'Ustaw';
+$string['teachermod'] = 'Ocena nauczyciela';
+$string['teachermodality'] = 'Ocena Nauczyciela - ON ';
+$string['teachermodality_help'] = 'To narzędzie oceny będzie wykorzystywane przez nauczycilie do oceny uczniów na tych zajęciach.';
+$string['timedue_AE'] = 'SO - deadline';
+$string['timedue_AE_help'] = '';
+$string['timedue_EI'] = 'OR - deadline';
+$string['timedue_EI_help'] = '';
+$string['timeopen'] = 'Okres oceny się nie zakończył';
+$string['timeopen_help'] = 'Ocena rówieśnicza nie jest włączona w system ocen EvalCOMIX ponieważ okres oceny nie zakończył się jeszcze.';
+$string['title'] = 'Tytuł';
+$string['type'] = 'Typ';
+$string['view'] = 'Podgląd';
+$string['weighingfinalgrade'] = 'Ważenie finalnej oceny';
+$string['whatis'] = 'EvalCOMIX pozwala na projektowanie i zarządzanie narzędziami oceny (punktowanie, rubryki itd.) do oceniania forum, słowników, bazy danych, wiki i zadań. <br>Ocena za pomocą tych narzędzi może być dokonana przez nauczycieli (ocena nauczycieli) lub studentów (samo-ocena, ocena rówieśnicza). Więcej informacji dostępne w Manualu.';
+$string['whatis_help'] = 'EvalCOMIX pozwala na projektowanie i zarządzanie narzędziami oceny (punktowanie, rubryki itd.) do oceniania forum, słowników, bazy danych, wiki i zadań. <br>Ocena za pomocą tych narzędzi może być dokonana przez nauczycieli (ocena nauczycieli) lub studentów (samo-ocena, ocena rówieśnicza). Więcej informacji dostępne w Manualu. Więcej informacji dostępne tutaj Manualu';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Karta zadań - uczeń';
 $string['profile_task_by_group'] = 'Karta zadań - grupa';
@@ -178,7 +171,6 @@ $string['whoassesses_EI'] = 'Osoba oceniająca';
 $string['anystudent_EI'] = 'Każdy uczeń';
 $string['groups_EI'] = 'Grupy';
 $string['specificstudents_EI'] = 'Określeni uczniowie';
-$string['whoassesses_EI_help'] = '';
 $string['assignstudents_EI'] = 'Przydziel uczniów';
 $string['assess_students'] = 'Oceń uczniów';
 $string['studentstoassess'] = 'Uczniowie do oceny';
@@ -241,7 +233,6 @@ $string['translation'] = 'TŁUMACZENIE';
 $string['colaboration'] = 'WSPÓŁPRACA';
 $string['license'] = 'LICENCJA';
 $string['addtool'] = 'Dodaj narzędzie oceny';
-$string['title'] = 'Tytuł';
 $string['titledim'] = 'Wymiar';
 $string['titlesubdim'] = 'Podwymiar';
 $string['titleatrib'] = 'Atrybut';
@@ -249,12 +240,10 @@ $string['titlevalue'] = 'Wartość';
 $string['no'] = 'Nie';
 $string['yes'] = 'Tak';
 $string['observation'] = 'Komentarze';
-$string['view'] = 'Zamknij poprzednie okno';
 
 $string['windowselection'] = 'Wybór okna';
 $string['selectfile'] = 'Wybierz plik';
 $string['upfile'] = 'Załaduj plik';
-$string['cancel'] = 'Anuluj';
 
 $string['savedsaccessfully'] = 'Plik został pomyślnie zapisany';
 $string['ADimension'] = 'Pole nie może być unieważnione. \"Nr Wymiarów\" wartość musi być większa niż zero \"Nr Wartości\" wartość musi być większa lub równa 2';
@@ -326,7 +315,7 @@ Jeśli jest **Ocena Nauczyciela - PE**, nauczyciele będą mogli oceniać tylko 
 
 Jeśli jest **Samoocena – AE**, tylko koordynator może dokonać samooceny i jego ocena zostanie przypisana każdemu członkowi jego grupy.
 
-W przypadku **Oceny koleżeńskiej – EI**, studenci będą mogli oceniać tylko koordynatorów każdej grupy, a każda ocena zostanie przypisana każdemu członkowi grupy.
+W przypadku **Oceny koleżeńskiej – EI**, studenci będą mogli oceniać tylko koordynatorów każdej grupy, a każda ocena zostanie przypisana każdemu członkowi grupy. Można to zmienić, wybierając opcję „Konkretni uczniowie” i przypisując, kto kogo ocenia.
 
 Uczniowie, którzy nie należą do żadnej grupy, nie otrzymają oceny. Grupy, które nie mają przypisanego koordynatora, nie otrzymają żadnej oceny i nie będą mogły oceniać.';
 $string['selectcoordinator'] = 'wybierz koordynatora';

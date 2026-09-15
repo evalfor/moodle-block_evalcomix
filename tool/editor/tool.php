@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * Class
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -32,52 +33,193 @@ require_once('toolrubric.php');
 require_once('toolmix.php');
 require_once('toolargument.php');
 
+/**
+ * Class
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
+ */
 class block_evalcomix_editor_tool {
+    /** @var object*/
     private $object;
+    /** @var string*/
     public $language;
+    /** @var string*/
     public $type;
 
-    public function __construct($language, $type, $titulo, $dimension, $numdim, $subdimension, $numsubdim, $atributo,
-            $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal, $valglobalpor, $dimpor,
-            $subdimpor, $atribpor, $commentatr, $commentdim) {
-        switch($type) {
-            case 'lista':{
-                $this->object = new block_evalcomix_editor_toollist($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr);
-            }break;
-            case 'escala':{
-                $this->object = new block_evalcomix_editor_toolscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim);
-            }break;
-            case 'listaescala':{
-                $this->object = new block_evalcomix_editor_toollistscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim);
-            }break;
-            case 'diferencial':{
-                $this->object = new block_evalcomix_editor_tooldifferential($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr);
-            }break;
-            case 'rubrica':{
-                $this->object = new block_evalcomix_editor_toolrubric($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim);
-            }break;
-            case 'mixta':{
+    /**
+     * Method
+     */
+    public function __construct(
+        $language,
+        $type,
+        $titulo,
+        $dimension,
+        $numdim,
+        $subdimension,
+        $numsubdim,
+        $atributo,
+        $numatr,
+        $valores,
+        $numvalores,
+        $valtotal,
+        $numtotal,
+        $valorestotal,
+        $valglobal,
+        $valglobalpor,
+        $dimpor,
+        $subdimpor,
+        $atribpor,
+        $commentatr,
+        $commentdim
+    ) {
+        switch ($type) {
+            case 'lista':
+                $this->object = new block_evalcomix_editor_toollist(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr
+                );
+                break;
+            case 'escala':
+                $this->object = new block_evalcomix_editor_toolscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim
+                );
+                break;
+            case 'listaescala':
+                $this->object = new block_evalcomix_editor_toollistscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim
+                );
+                break;
+            case 'diferencial':
+                $this->object = new block_evalcomix_editor_tooldifferential(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr
+                );
+                break;
+            case 'rubrica':
+                $this->object = new block_evalcomix_editor_toolrubric(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim
+                );
+                break;
+            case 'mixta':
                 $this->object = new block_evalcomix_editor_toolmix($language, $titulo);
-            }break;
-            case 'argumentario':{
-                $this->object = new block_evalcomix_editor_toolargument($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $dimpor, $subdimpor, $atribpor, $commentatr);
-            }break;
+                break;
+            case 'argumentario':
+                $this->object = new block_evalcomix_editor_toolargument(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr
+                );
+                break;
         }
         $this->language = $language;
         $this->type = $type;
     }
 
+    /**
+     * Method
+     */
     public function display_header($data = '') {
         global $CFG;
 
@@ -85,12 +227,13 @@ class block_evalcomix_editor_tool {
             <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
             <html>
                 <head>
-                    <title>'.get_string('pluginname', 'block_evalcomix').'</title>
+                    <title>' . get_string('pluginname', 'block_evalcomix') . '</title>
 
                     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
                     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-                    <link href="'. $CFG->wwwroot . '/blocks/evalcomix/style/copia.css" type="text/css" rel="stylesheet" media="all">
+                    <link href="' . $CFG->wwwroot . '/blocks/evalcomix/style/copia.css" type="text/css" rel="stylesheet"
+                        media="all">
                     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
                     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
                     crossorigin="anonymous"></script>
@@ -214,44 +357,44 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         if (document.getElementById("cuerpomix")) {
             cadena="addtool=1&titulo="+document.getElementById("titulo").value+""}
         else {cadena="id=0&addDim=1&titulo0="+document.getElementById("titulo0").value+"";}
-        sendPost("html","courseid='.$data['courseid'].'&amp;save=1&amp;"+cadena+"","mainform0");\'>
-        <img id="guardar" src="'. $CFG->wwwroot . '/blocks/evalcomix/images/guardar.png"
-        onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/guardarhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/guardar.png\');" alt="' .
+        sendPost("html","courseid=' . $data['courseid'] . '&amp;save=1&amp;"+cadena+"","mainform0");\'>
+        <img id="guardar" src="' . $CFG->wwwroot . '/blocks/evalcomix/images/guardar.png"
+        onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/guardarhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/guardar.png\');" alt="' .
         get_string('TSave', 'block_evalcomix') . '" title="' . get_string('TSave', 'block_evalcomix') . '"/></a>
 
-        <a href="generator.php?op=export&courseid='.$data['courseid'].'" onclick=\'javascript:
+        <a href="generator.php?op=export&courseid=' . $data['courseid'] . '" onclick=\'javascript:
         var r=confirm("         Estás a punto de exportar el instrumento.
         \n\nAsegúrate de haber GUARDADO todos los cambios realizados\n");
-        if (r==true) {return true;}return false;\'><img id="exportar" src="'.
+        if (r==true) {return true;}return false;\'><img id="exportar" src="' .
         $CFG->wwwroot . '/blocks/evalcomix/images/exportar.png" alt="' .
         get_string('TExport', 'block_evalcomix') . '" title="' . get_string('TExport', 'block_evalcomix') .
-        '" onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/exportarhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/exportar.png\');"/></a>
+        '" onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/exportarhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/exportar.png\');"/></a>
 
-        <a onClick="MasTxt(\'mainform0\');" href=#><img id="aumentar" src="'.
+        <a onClick="MasTxt(\'mainform0\');" href=#><img id="aumentar" src="' .
         $CFG->wwwroot . '/blocks/evalcomix/images/aumentar.png" alt="Aumentar" title="' .
         get_string('TAumentar', 'block_evalcomix') . '"
-        onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/aumentarhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/aumentar.png\');"/></a>
+        onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/aumentarhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/aumentar.png\');"/></a>
 
-        <a onClick="MenosTxt(\'mainform0\');" href=#><img id="disminuir" src="'.
-        $CFG->wwwroot .'/blocks/evalcomix/images/disminuir.png"
-        alt="Disminuir" title="'.
+        <a onClick="MenosTxt(\'mainform0\');" href=#><img id="disminuir" src="' .
+        $CFG->wwwroot . '/blocks/evalcomix/images/disminuir.png"
+        alt="Disminuir" title="' .
         get_string('TDisminuir', 'block_evalcomix') . '"
-        onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/disminuirhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/disminuir.png\');"/></a>
+        onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/disminuirhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/disminuir.png\');"/></a>
 
-        <a href="generator.php?op=view&courseid='.$data['courseid'].'"><img id="visualizar"
-        src="'. $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png" alt="Ver" title="'.
+        <a href="generator.php?op=view&courseid=' . $data['courseid'] . '"><img id="visualizar"
+        src="' . $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png" alt="Ver" title="' .
         get_string('TView', 'block_evalcomix') . '"
-        onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/visualizarhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png\');"/></a>
-        <a href="servidor.php?op=imprimir&courseid='.$data['courseid'].'"><img id="imprimir" src="'.
-        $CFG->wwwroot . '/blocks/evalcomix/images/imprimir.png" alt="'.
+        onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/visualizarhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/visualizar.png\');"/></a>
+        <a href="servidor.php?op=imprimir&courseid=' . $data['courseid'] . '"><img id="imprimir" src="' .
+        $CFG->wwwroot . '/blocks/evalcomix/images/imprimir.png" alt="' .
         get_string('TPrint', 'block_evalcomix') . '" title="' . get_string('TPrint', 'block_evalcomix') .
-        '" onmouseover="javascript:cAmbiaOver(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/imprimirhover.png\');"
-        onmouseout="javascript:cAmbiaOut(this.id, \''. $CFG->wwwroot . '/blocks/evalcomix/images/imprimir.png\');"/></a>
+        '" onmouseover="javascript:cAmbiaOver(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/imprimirhover.png\');"
+        onmouseout="javascript:cAmbiaOut(this.id, \'' . $CFG->wwwroot . '/blocks/evalcomix/images/imprimir.png\');"/></a>
         ';
 
         $lang = 'es_ES';
@@ -263,38 +406,38 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             $id = null;
         }
         echo '
-                            <a  href="http://avanza.uca.es/assessmentservice/help/'.$lang.
-                            '/" target="_blank"><img id="ayuda" src="'.
+                            <a  href="http://avanza.uca.es/assessmentservice/help/' . $lang .
+                            '/" target="_blank"><img id="ayuda" src="' .
                             $CFG->wwwroot . '/blocks/evalcomix/images/ayuda.png" alt="' .
                             get_string('THelp', 'block_evalcomix') . '" title="' . get_string('THelp', 'block_evalcomix') . '"
-                            onmouseover="javascript:cAmbiaOver(this.id, \''.
+                            onmouseover="javascript:cAmbiaOver(this.id, \'' .
                             $CFG->wwwroot . '/blocks/evalcomix/images/ayudahover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \''.
+                            onmouseout="javascript:cAmbiaOut(this.id, \'' .
                             $CFG->wwwroot . '/blocks/evalcomix/images/ayuda.png\');"/></a>
                             <a  href=\'javascript:mostrar("about")\'><img id="acerca"
-                            src="'. $CFG->wwwroot . '/blocks/evalcomix/images/acerca.png" alt="'
+                            src="' . $CFG->wwwroot . '/blocks/evalcomix/images/acerca.png" alt="'
                             . get_string('TAbout', 'block_evalcomix') . '"
                             title="' . get_string('TAbout', 'block_evalcomix') .
-                            '" onmouseover="javascript:cAmbiaOver(this.id, \''.
+                            '" onmouseover="javascript:cAmbiaOver(this.id, \'' .
                             $CFG->wwwroot . '/blocks/evalcomix/images/acercahover.png\');"
-                            onmouseout="javascript:cAmbiaOut(this.id, \''.
+                            onmouseout="javascript:cAmbiaOut(this.id, \'' .
                             $CFG->wwwroot . '/blocks/evalcomix/images/acerca.png\');"/></a>
                         </div>
                     </div>
                     <div id="about">
                         <div style="margin:10px">Acerca de</div>
-                        <div id="about_white">
-                            '.get_string('idea', 'block_evalcomix').'<BR>
+                        <div id="about_white" class="pt-3">
+                            ' . get_string('idea', 'block_evalcomix') . '<BR>
                             <div class="about_linea">María Soledad Ibarra Sáiz</div>
                             <div class="about_linea">Gregorio Rodríguez Gómez</div>
-                            '.get_string('design', 'block_evalcomix').'<BR>
+                            ' . get_string('design', 'block_evalcomix') . '<BR>
                             <div class="about_linea">Álvaro Martínez Del Val</div>
                             <div class="about_linea">Daniel Cabeza Sánchez</div>
-                            '.get_string('develop', 'block_evalcomix').'<BR>
+                            ' . get_string('develop', 'block_evalcomix') . '<BR>
                             <div class="about_linea">Daniel Cabeza Sánchez</div>
-                            '.get_string('translation', 'block_evalcomix').'<BR>
+                            ' . get_string('translation', 'block_evalcomix') . '<BR>
                             <div class="about_linea">Daniel Cabeza Sánchez</div>
-                            '.get_string('colaboration', 'block_evalcomix').'<BR>
+                            ' . get_string('colaboration', 'block_evalcomix') . '<BR>
                             <div class="about_linea">Juan A. Caballero Hernández</div>
                             <div class="about_linea">Claudia Ortega Gómez</div>
                             <div class="about_linea">Álvaro Martínez Del Val</div>
@@ -302,45 +445,66 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                             <div class="about_linea">Miguel A. Gómez Ruiz</div>
                             <div class="about_linea">Álvaro R. León Rodríguez</div>
                             <div class="about_linea">Antonio Gámez Mellado</div>
-                            '.get_string('license', 'block_evalcomix').'<BR>
+                            ' . get_string('license', 'block_evalcomix') . '<BR>
                             <div class="about_linea">GNU GPL v2</div><br>
                             <input type="button" style="margin-left:4em;width:5em;" onclick=\'javascript:mostrar("about");\'
                             value="Cerrar"/>
                         </div>
                     </div>
                     <div id="loader" style="text-align:center"></div>
-                    <form id="mainform0" name="mainform'.$id.'" method="POST" action="generator.php">
+                    <form id="mainform0" name="mainform' . $id . '" method="POST" action="generator.php">
                     ';
 
             flush();
     }
 
+    /**
+     * Method
+     */
     public function export() {
         return $this->object->export();
     }
 
+    /**
+     * Method
+     */
     public function display_tool($data, $id) {
         return $this->object->display_tool($data, $id);
     }
 
+    /**
+     * Method
+     */
     public function display_body($data) {
         $html = $this->object->display_body($data);
 
         return $html;
     }
 
+    /**
+     * Method
+     */
     public function display_dimension($dim, $data, $id) {
         return $this->object->display_dimension($dim, $data, $id);
     }
 
+    /**
+     * Method
+     */
     public function display_subdimension($dim, $subdim, $data, $id) {
         return $this->object->display_subdimension($dim, $subdim, $data, $id);
     }
 
+    /**
+     * Method
+     */
     public function display_competencies_modal($id, $dim, $subdim, $mix = '', $label = 'subdimension') {
         return $this->object->display_competencies_modal($id, $dim, $subdim, $mix, $label);
     }
 
+    /**
+     * Method
+     */
     public function display_footer() {
         echo '      </form>
                 </body>
@@ -348,6 +512,9 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             flush();
     }
 
+    /**
+     * Method
+     */
     public function display_dialog() {
         global $CFG;
         $type = required_param('type', PARAM_ALPHA);
@@ -355,20 +522,20 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         $courseid = required_param('courseid', PARAM_INT);
         echo '
         <div id="bgmenu">
-            <div class="text-center bg-white"><img src="'.$CFG->wwwroot.'/blocks/evalcomix/images/evalcomix.jpg"
+            <div class="text-center bg-white"><img src="' . $CFG->wwwroot . '/blocks/evalcomix/images/evalcomix.jpg"
             alt="EvalCOMIX"></div>
             <div id="menu">
-                <div class="mb-3 ml-1"><b>'.get_string('importfile', 'block_evalcomix').'</b></div>
+                <div class="mb-3 ml-1"><b>' . get_string('importfile', 'block_evalcomix') . '</b></div>
                     <form name="formimport" enctype="multipart/form-data" action="servidor.php" method=post>
-                        <input type="hidden" name="courseid" value="'.$courseid.'">
+                        <input type="hidden" name="courseid" value="' . $courseid . '">
                         <label for="Filetype">' . get_string('selectfile', 'block_evalcomix') . ':</label><br>
                         <input type="file" name="Filetype" id="Filetype"><br><br><br>
                         <input type="submit" value="' . get_string('upfile', 'block_evalcomix') . '"
                         onclick=\'javascript:if (document.formimport.Filetype.value.lastIndexOf(".evx") == -1) {
                             alert("' . get_string('ErrorExtension', 'block_evalcomix') . '");return false;}\'>
-                        <input type="button" value="'.get_string('cancel').'"
-    onclick="location.href=\''.$CFG->wwwroot .'/blocks/evalcomix/tool/editor/selection.php?type=new&courseid='.
-        $courseid.'&identifier='.$identifier.'\'">
+                        <input type="button" value="' . get_string('cancel') . '"
+    onclick="location.href=\'' . $CFG->wwwroot . '/blocks/evalcomix/tool/editor/selection.php?type=new&courseid=' .
+        $courseid . '&identifier=' . $identifier . '\'">
                     </form>
                 </div>
             </div>
@@ -378,388 +545,681 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         ';
     }
 
+    /**
+     * Method
+     */
     public function add_dimension($dim, $key, $id = 0) {
         $this->object->add_dimension($dim, $key, $id);
     }
-    public function add_subdimension($dim, $subdim, $key, $id=0) {
+
+    /**
+     * Method
+     */
+    public function add_subdimension($dim, $subdim, $key, $id = 0) {
         return $this->object->add_subdimension($dim, $subdim, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function up_block($params) {
         return $this->object->up_block($params);
     }
+
+    /**
+     * Method
+     */
     public function down_block($params) {
         return $this->object->down_block($params);
     }
 
-    public function add_attribute($dim, $subdim, $atrib, $key, $id=0) {
+    /**
+     * Method
+     */
+    public function add_attribute($dim, $subdim, $atrib, $key, $id = 0) {
         return $this->object->add_attribute($dim, $subdim, $atrib, $key, $id);
     }
 
-    public function add_values($dim, $key, $id=0) {
+    /**
+     * Method
+     */
+    public function add_values($dim, $key, $id = 0) {
         return $this->object->add_values($dim, $key, $id);
     }
 
-    public function add_total_values($key, $id=0) {
+    /**
+     * Method
+     */
+    public function add_total_values($key, $id = 0) {
         return $this->object->add_total_values($key, $id);
     }
 
-    public function remove_total_values($grado, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_total_values($grado, $id = 0) {
         return $this->object->remove_total_values($grado, $id);
     }
 
-    public function remove_dimension($dim, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_dimension($dim, $id = 0) {
         return $this->object->remove_dimension($dim, $id);
     }
 
-    public function remove_subdimension($dim, $subdim, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_subdimension($dim, $subdim, $id = 0) {
         return $this->object->remove_subdimension($dim, $subdim, $id);
     }
 
-    public function remove_attribute($dim, $subdim, $atrib, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_attribute($dim, $subdim, $atrib, $id = 0) {
         return $this->object->remove_attribute($dim, $subdim, $atrib, $id);
     }
 
-    public function remove_values($dim, $grado, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_values($dim, $grado, $id = 0) {
         return $this->object->remove_values($dim, $grado, $id);
     }
 
-    public function add_range($dim, $grado, $key, $id=0) {
+    /**
+     * Method
+     */
+    public function add_range($dim, $grado, $key, $id = 0) {
         return $this->object->add_range($dim, $grado, $key, $id);
     }
 
-    public function remove_range($dim, $grado, $key, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_range($dim, $grado, $key, $id = 0) {
         return $this->object->remove_range($dim, $grado, $key, $id);
     }
 
+    /**
+     * Method
+     */
     public function add($type, $index = null) {
         return $this->object->add($type, $index);
     }
 
+    /**
+     * Method
+     */
     public function remove($index) {
         return $this->object->remove($index);
     }
 
+    /**
+     * Method
+     */
     public function get_numtool() {
         return $this->object->get_numtool();
     }
 
+    /**
+     * Method
+     */
     public function get_toolpor() {
         return $this->object->get_toolpor();
     }
 
+    /**
+     * Method
+     */
     public function get_tools() {
         return $this->object->get_tools();
     }
 
+    /**
+     * Method
+     */
     public function get_tool($id) {
         return $this->object->get_tool($id);
     }
 
+    /**
+     * Method
+     */
     public function get_titulo($id) {
         return $this->object->get_titulo($id);
     }
 
+    /**
+     * Method
+     */
     public function get_dimension($id) {
         return $this->object->get_dimension($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numdim($id) {
         return $this->object->get_numdim($id);
     }
 
+    /**
+     * Method
+     */
     public function get_subdimension($id) {
         return $this->object->get_subdimension($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numsubdim($id) {
         return $this->object->get_numsubdim($id);
     }
 
+    /**
+     * Method
+     */
     public function get_atributo($id) {
         return $this->object->get_atributo($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numatr($id) {
         return $this->object->get_numatr($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valores($id) {
         return $this->object->get_valores($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numvalores($id) {
         return $this->object->get_numvalores($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valtotal($id) {
         return $this->object->get_valtotal($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numtotal($id = null) {
         return $this->object->get_numtotal($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valtotalpor($id) {
         return $this->object->get_valtotalpor($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valorestotal($id) {
         return $this->object->get_valorestotal($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valglobal($id) {
         return $this->object->get_valglobal($id);
     }
 
+    /**
+     * Method
+     */
     public function get_valglobalpor($id) {
         return $this->object->get_valglobalpor($id);
     }
 
+    /**
+     * Method
+     */
     public function get_dimpor($id) {
         return $this->object->get_dimpor($id);
     }
 
+    /**
+     * Method
+     */
     public function get_subdimpor($id) {
         return $this->object->get_subdimpor($id);
     }
 
+    /**
+     * Method
+     */
     public function get_atribpor($id) {
         return $this->object->get_atribpor($id);
     }
 
+    /**
+     * Method
+     */
     public function get_numrango($id) {
         return $this->object->get_numrango($id);
     }
 
+    /**
+     * Method
+     */
     public function get_rango($id) {
         return $this->object->get_rango($id);
     }
 
+    /**
+     * Method
+     */
     public function get_description($id) {
         return $this->object->get_description($id);
     }
 
+    /**
+     * Method
+     */
     public function get_commentatr($id) {
         return $this->object->get_commentatr($id);
     }
 
+    /**
+     * Method
+     */
     public function get_porcentage() {
         return $this->object->get_porcentage();
     }
 
+    /**
+     * Method
+     */
     public function get_dimensionsid() {
         return $this->object->get_dimensionsid();
     }
 
+    /**
+     * Method
+     */
     public function get_subdimensionsid() {
         return $this->object->get_subdimensionsid();
     }
 
+    /**
+     * Method
+     */
     public function get_atributosid() {
         return $this->object->get_atributosid();
     }
 
+    /**
+     * Method
+     */
     public function get_valoresid() {
         return $this->object->get_valoresid();
     }
 
+    /**
+     * Method
+     */
     public function get_valorestotalesid() {
         return $this->object->get_valorestotalesid();
     }
 
+    /**
+     * Method
+     */
     public function get_valoreslistaid() {
         return $this->object->get_valoreslistaid();
     }
 
+    /**
+     * Method
+     */
     public function get_rangoid() {
         return $this->object->get_rangoid();
     }
 
+    /**
+     * Method
+     */
     public function get_descriptionsid() {
         return $this->object->get_descriptionsid();
     }
 
+    /**
+     * Method
+     */
     public function get_atributopos() {
         return $this->object->get_atributopos();
     }
 
+    /**
+     * Method
+     */
     public function get_atributosposid() {
         return $this->object->get_atributosposid();
     }
 
+    /**
+     * Method
+     */
     public function get_plantillasid() {
         return $this->object->get_plantillasid();
     }
 
+    /**
+     * Method
+     */
     public function get_valoreslista() {
         return $this->object->get_valoreslista();
     }
 
+    /**
+     * Method
+     */
     public function get_competency() {
         return $this->object->get_competency();
     }
 
+    /**
+     * Method
+     */
     public function get_outcome() {
         return $this->object->get_outcome();
     }
 
+    /**
+     * Method
+     */
     public function get_competency_string($id, $dim, $subdim) {
         return $this->object->get_competency_string($id, $dim, $subdim);
     }
 
+    /**
+     * Method
+     */
     public function set_id($id) {
         $this->object->set_id($id);
     }
 
+    /**
+     * Method
+     */
     public function set_titulo($titulo, $id) {
         $this->object->set_titulo($titulo, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_dimension($dimension, $id) {
         $this->object->set_dimension($dimension, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_numdim($numdim, $id) {
         $this->object->set_numdim($numdim, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_subdimension($subdimension, $id) {
         $this->object->set_subdimension($subdimension, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_numsubdim($numsubdim, $id) {
         $this->object->set_numsubdim($numsubdim, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_atributo($atributo, $id) {
         $this->object->set_atributo($atributo, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_numatr($numatr, $id) {
         $this->object->set_numatr($numatr, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valores($valores, $id) {
         $this->object->set_valores($valores, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_numvalores($numvalores, $id) {
         $this->object->set_numvalores($numvalores, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valtotal($valtotal, $id) {
         $this->object->set_valtotal($valtotal, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_numtotal($numtotal, $id) {
         $this->object->set_numtotal($numtotal, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valtotalpor($valtotalpor, $id) {
         $this->object->set_valtotalpor($valtotalpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valorestotal($valorestotal, $id) {
         $this->object->set_valorestotal($valorestotal, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valglobal($valglobal, $id) {
         $this->object->set_valglobal($valglobal, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valglobalpor($valglobalpor, $id) {
         $this->object->set_valglobalpor($valglobalpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_dimpor($dimpor, $id) {
         $this->object->set_dimpor($dimpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_subdimpor($subdimpor, $id) {
         $this->object->set_subdimpor($subdimpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_atribpor($atribpor, $id) {
         $this->object->set_atribpor($atribpor, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_rango($rango, $id) {
         $this->object->set_rango($rango, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_toolpor($porcentage) {
         $this->object->set_toolpor($porcentage);
     }
 
+    /**
+     * Method
+     */
     public function set_view($view, $id) {
         $this->object->set_view($view, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_commentatr($comment) {
         $this->object->set_commentatr($comment);
     }
 
+    /**
+     * Method
+     */
     public function set_dimensionsid($dimensionsid, $id) {
         $this->object->set_dimensionsid($dimensionsid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_subdimensionsid($subdimensionsid, $id) {
         $this->object->set_subdimensionsid($subdimensionsid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_atributosid($atributosid, $id) {
         $this->object->set_atributosid($atributosid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valoresid($valoresid, $id) {
         $this->object->set_valoresid($valoresid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valorestotalesid($valoresid, $id) {
         $this->object->set_valorestotalesid($valoresid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_valoreslistaid($valoresid, $id) {
         $this->object->set_valoreslistaid($valoresid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_rangoid($valoresid, $id) {
         $this->object->set_rangoid($valoresid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_descriptionsid($valoresid, $id) {
         $this->object->set_descriptionsid($valoresid, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_atributopos($atributo, $id) {
         $this->object->set_atributopos($atributo, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_atributosposid($atributo, $id) {
         $this->object->set_atributosposid($atributo, $id);
     }
 
+    /**
+     * Method
+     */
     public function set_plantillasid($plantillas, $id) {
         $this->object->set_plantillasid($plantillas, $id);
     }
 
+    /**
+     * Method
+     */
     public function add_outcome($id, $dimkey, $subdimkey, $newoutkey, $shortname, $outkey = null) {
         $this->object->add_outcome($id, $dimkey, $subdimkey, $newoutkey, $shortname, $outkey);
     }
 
+    /**
+     * Method
+     */
     public function add_competency($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey = null) {
         $this->object->add_competency($id, $dimkey, $subdimkey, $newcompkey, $shortname, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function remove_competency($id, $dimkey, $subdimkey, $compkey) {
         $this->object->remove_competency($id, $dimkey, $subdimkey, $compkey);
     }
 
+    /**
+     * Method
+     */
     public function remove_outcome($id, $dimkey, $subdimkey, $outkey) {
         $this->object->remove_outcome($id, $dimkey, $subdimkey, $outkey);
     }
 
+    /**
+     * Method
+     */
     public function import($xml, $toolid = '') {
         global $DB;
 
@@ -769,14 +1229,14 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         if ($typeevx3 == 'mt:MixTool' || $typeevx3 == 'MixTool') {
             $this->type = 'mixta';
             $this->object = new block_evalcomix_editor_toolmix($this->language, (string)$xml['name'], (string)$xml->Description);
-            $tools = array();
+            $tools = [];
 
             $index = 1;
             if (isset($xml->Description)) {
                 $index = 0;
             }
 
-            $plantillasid = array();
+            $plantillasid = [];
             $i = 0;
             foreach ($xml as $valor) {
                 if ($index == 0) {
@@ -810,7 +1270,7 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             }
 
             $type = '';
-            switch($typetool) {
+            switch ($typetool) {
                 case 'ControlList':
                     $type = 'lista';
                     break;
@@ -834,6 +1294,9 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         }
     }
 
+    /**
+     * Method
+     */
     public function import_simple_tool($xml, $id = 0) {
         $language = $this->language;
         $dimension;
@@ -868,7 +1331,7 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         }
 
         $type = '';
-        switch($typetool) {
+        switch ($typetool) {
             case 'ControlList':
                 $type = 'lista';
                 break;
@@ -908,12 +1371,12 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             $subdimpor[$id][$dim][$subdim] = 100;
             $numatr[$id][$dim][$subdim] = (string)$xml['attributes'];
             $percentage = (string)$xml['percentage'];
-            $valuecommentatr = array();
+            $valuecommentatr = [];
             $observation[$id] = (string)$xml->Description;
 
-            $atributosid = array();
-            $atributosposid = array();
-            $valoresid = array();
+            $atributosid = [];
+            $atributosposid = [];
+            $valoresid = [];
 
             $j = 0;
             foreach ($xml->Values[0] as $values) {
@@ -964,23 +1427,23 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             $observation[$id] = (string)$xml->Description;
             $percentage = (string)$xml['percentage'];
             $numdim[$id] = (string)$xml['dimensions'];
-            $valglobal = $valglobalpor = $commentdim = array();
+            $valglobal = $valglobalpor = $commentdim = [];
 
             // For form filled.
-            $valueattribute = array();
-            $valueglobaldim = array();
-            $valuecommentatr = array();
-            $valuecommentdim = array();
-            $dimensionsid = array();
-            $subdimensionsid = array();
-            $atributosid = array();
-            $valoresid = array();
-            $valoreslistaid = array();
-            $valoreslista = array();
-            $rangoid = array();
-            $descriptionsid = array();
-            $competency = array();
-            $outcome = array();
+            $valueattribute = [];
+            $valueglobaldim = [];
+            $valuecommentatr = [];
+            $valuecommentdim = [];
+            $dimensionsid = [];
+            $subdimensionsid = [];
+            $atributosid = [];
+            $valoresid = [];
+            $valoreslistaid = [];
+            $valoreslista = [];
+            $rangoid = [];
+            $descriptionsid = [];
+            $competency = [];
+            $outcome = [];
 
             // Datas of dimensions.
             $dim = 0;
@@ -996,8 +1459,10 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                     if ((string)$dimen->DimensionAssessment[0]->Attribute['comment'] == '1') {
                             $commentdim[$id][$dim] = 'visible';
                     }
-                    if ((string)$dimen->DimensionAssessment[0]->Attribute['comment'] != '1'
-                            && (string)$dimen->DimensionAssessment[0]->Attribute['comment'] != '') {
+                    if (
+                        (string)$dimen->DimensionAssessment[0]->Attribute['comment'] != '1'
+                            && (string)$dimen->DimensionAssessment[0]->Attribute['comment'] != ''
+                    ) {
                         $commentdim[$id][$dim] = 'visible';
                         $valuecommentdim[$id][$dim] = (string)$dimen->DimensionAssessment[0]->Attribute['comment'];
                     }
@@ -1047,8 +1512,8 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                     $subdimpor[$id][$dim][$subdim] = (string)$subdimen['percentage'];
                     $numatr[$id][$dim][$subdim] = (string)$subdimen['attributes'];
                     $subdimensionsid[$id][$dim][$subdim] = (string)$subdimen['id'];
-                    $competency[$id][$dim][$subdim] = array();
-                    $outcome[$id][$dim][$subdim] = array();
+                    $competency[$id][$dim][$subdim] = [];
+                    $outcome[$id][$dim][$subdim] = [];
 
                     // Datas of attributes.
                     $atrib = 0;
@@ -1103,7 +1568,7 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
             // Datas of total values.
             $numtotal = $valtotalpor = $valorestotal = null;
             if (isset($xml->GlobalAssessment[0]->Values[0]->Value)) {
-                $valorestotalesid = array();
+                $valorestotalesid = [];
                 $numtotal[$id] = (string)$xml->GlobalAssessment['values'];
                 $valtotalpor[$id] = (string)$xml->GlobalAssessment['percentage'];
                 $grado = 0;
@@ -1121,53 +1586,206 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
         $params['competency'] = (!empty($subdimensionsid)) ?
             $this->set_competency_from_origen($id, $toolid, $subdimensionsid) : $competency;
         $instrument;
-        switch($type) {
-            case 'lista':{
-                $instrument = new block_evalcomix_editor_toollist($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $id, $observation, $percentage, $valueattribute,
-                    $valuecommentatr, $params);
-            }break;
-            case 'escala':{
-                $instrument = new block_evalcomix_editor_toolscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id, $observation, $percentage,
-                    $valtotalpor, $valueattribute, $valueglobaldim, $valuetotalvalue, $valuecommentatr, $valuecommentdim,
-                    $params);
-            }break;
-            case 'lista+escala':{
-                $instrument = new block_evalcomix_editor_toollistscale($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id, $observation, $percentage,
-                    $valtotalpor, $valueattribute, $valueglobaldim, $valuetotalvalue, $valuecommentatr, $valuecommentdim,
-                    $params);
-            }break;
-            case 'rubrica':{
-                $instrument = new block_evalcomix_editor_toolrubric($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal, $valglobal,
-                    $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $commentdim, $id, $observation, $percentage,
-                    $valtotalpor, $rango, $numrango, $description, $valueattribute, $valueglobaldim, $valuetotalvalue,
-                    $valuecommentatr, $valuecommentdim, $params);
-            }break;
-            case 'diferencial':{
-                $instrument = new block_evalcomix_editor_tooldifferential($language, $titulo, $dimension, $numdim,
-                    $subdimension, $numsubdim, $atributo, $numatr, $valores, $numvalores, $valtotal, $numtotal, $valorestotal,
-                    $valglobal, $valglobalpor, $dimpor, $subdimpor, $atribpor, $commentatr, $id, $observation, $percentage,
-                    $atributopos, $valueattribute, $valuecommentatr, $params);
-            }break;
-            case 'argumentario':{
-                $instrument = new block_evalcomix_editor_toolargument($language, $titulo, $dimension, $numdim, $subdimension,
-                    $numsubdim, $atributo, $numatr, $dimpor, $subdimpor, $atribpor, $commentatr, $id, $observation,
-                    $percentage, $valuecommentatr, $params);
-            }break;
+        switch ($type) {
+            case 'lista':
+                $instrument = new block_evalcomix_editor_toollist(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $valueattribute,
+                    $valuecommentatr,
+                    $params
+                );
+                break;
+            case 'escala':
+                $instrument = new block_evalcomix_editor_toolscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $valtotalpor,
+                    $valueattribute,
+                    $valueglobaldim,
+                    $valuetotalvalue,
+                    $valuecommentatr,
+                    $valuecommentdim,
+                    $params
+                );
+                break;
+            case 'lista+escala':
+                $instrument = new block_evalcomix_editor_toollistscale(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $valtotalpor,
+                    $valueattribute,
+                    $valueglobaldim,
+                    $valuetotalvalue,
+                    $valuecommentatr,
+                    $valuecommentdim,
+                    $params
+                );
+                break;
+            case 'rubrica':
+                $instrument = new block_evalcomix_editor_toolrubric(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $commentdim,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $valtotalpor,
+                    $rango,
+                    $numrango,
+                    $description,
+                    $valueattribute,
+                    $valueglobaldim,
+                    $valuetotalvalue,
+                    $valuecommentatr,
+                    $valuecommentdim,
+                    $params
+                );
+                break;
+            case 'diferencial':
+                $instrument = new block_evalcomix_editor_tooldifferential(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $valores,
+                    $numvalores,
+                    $valtotal,
+                    $numtotal,
+                    $valorestotal,
+                    $valglobal,
+                    $valglobalpor,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $atributopos,
+                    $valueattribute,
+                    $valuecommentatr,
+                    $params
+                );
+                break;
+            case 'argumentario':
+                $instrument = new block_evalcomix_editor_toolargument(
+                    $language,
+                    $titulo,
+                    $dimension,
+                    $numdim,
+                    $subdimension,
+                    $numsubdim,
+                    $atributo,
+                    $numatr,
+                    $dimpor,
+                    $subdimpor,
+                    $atribpor,
+                    $commentatr,
+                    $id,
+                    $observation,
+                    $percentage,
+                    $valuecommentatr,
+                    $params
+                );
+                break;
         }
         return $instrument;
     }
 
+    /**
+     * Method
+     */
     public function print_tool() {
         return $this->object->print_tool();
     }
 
+    /**
+     * Method
+     */
     public function view_assessment_header() {
         echo '
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -1176,10 +1794,12 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                     <head>
                         <title>EVALCOMIX</title>
                         ';
-
     }
 
-    public function view_tool($root = '', $grade = '', $print='view', $title = '') {
+    /**
+     * Method
+     */
+    public function view_tool($root = '', $grade = '', $print = 'view', $title = '') {
         global $COURSE;
 
         $wprint = '';
@@ -1224,12 +1844,12 @@ integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEUL
                         }
                     </script>
                 </head>
-                    <body '. $wprint .'>
+                    <body ' . $wprint . '>
                     <div class="clear"></div>
                     <div class="boton" style="margin-right: 1em;">
-                        <input type="button" style="width:10em" value="'.get_string('back', 'block_evalcomix').
-            '" onclick=\'javascript:location.href="generator.php?op=design&courseid='.$COURSE->id.'"\'>
-                        <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
+                        <input type="button" style="width:10em" value="' . get_string('back', 'block_evalcomix') .
+            '" onclick=\'javascript:location.href="generator.php?op=design&courseid=' . $COURSE->id . '"\'>
+                        <input type="button" name="imprimir" value="' . get_string('TPrint', 'block_evalcomix') . '"
                         style="width:8em" onclick="javascript:imprSelec(\'evalid\')">
                     </div>
                     <div class="eval" id="evalid">
@@ -1261,7 +1881,7 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
 .showcomment:hover{     border: 2px solid #0076C1; }
 .custom-radio{width:15px;height:15px;cursor: pointer;}
                      </style>
-                    <h2>'.$title.'</h2>
+                    <h2>' . $title . '</h2>
                         <form name="mainform" method="post" action="">
         ';
         echo '
@@ -1287,7 +1907,7 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
         ';
 
         if ($grade != '') {
-            echo "<div style='text-align:right;font-size:1.7em'><span>".get_string('grade', 'block_evalcomix').": " .
+            echo "<div style='text-align:right;font-size:1.7em'><span>" . get_string('grade', 'block_evalcomix') . ": " .
             $grade . "</span></div>";
         }
 
@@ -1298,7 +1918,7 @@ background-color:#fff;  background-repeat: no-repeat; }  .showcomment{  border: 
 <!--                         <input type="button" name="imprimir" value="Imprimir" onclick="window.focus();
 window.print().window.close();"> -->
 
-                            <input type="button" name="imprimir" value="'.get_string('TPrint', 'block_evalcomix').'"
+                            <input type="button" name="imprimir" value="' . get_string('TPrint', 'block_evalcomix') . '"
                             style="width:8em" onclick="javascript:imprSelec(\'evalid\')">
 
                 </div>
@@ -1312,34 +1932,42 @@ window.print().window.close();"> -->
         ';
     }
 
+    /**
+     * Method
+     */
     public function save($id = '') {
         global $CFG;
         require_once($CFG->dirroot . '/blocks/evalcomix/classes/webservice_evalcomix_client.php');
-        $xml = $this->object->export((array('mixed' => '1', 'id' => $id)));
+        $xml = $this->object->export((['mixed' => '1', 'id' => $id]));
 
-        if ($result = block_evalcomix_webservice_client::post_ws_xml_tools(array('toolxml' => $xml, 'id' => $id))) {
-            return array('xml' => $xml);
+        if ($result = block_evalcomix_webservice_client::post_ws_xml_tools(['toolxml' => $xml, 'id' => $id])) {
+            return ['xml' => $xml];
         }
         return false;
     }
 
+    /**
+     * Method
+     */
     public function save_competencies($id, $courseid) {
         global $DB;
         $subdimensionsid = $this->object->get_subdimensionid_from_xml($id);
         $competency = $this->get_competency();
         $outcome = $this->get_outcome();
 
-        $hashsavedcompetencies = array();
-        if ($savedcompetencies = $DB->get_records('block_evalcomix_competencies', array('courseid' => $courseid))) {
+        $hashsavedcompetencies = [];
+        if ($savedcompetencies = $DB->get_records('block_evalcomix_competencies', ['courseid' => $courseid])) {
             foreach ($savedcompetencies as $c) {
                 $hashsavedcompetencies[$c->idnumber] = $c;
             }
         }
 
-        if ($tool = $DB->get_record('block_evalcomix_tools', array('idtool' => $id))) {
-            $hashsavedsubdimensions = array();
-            if ($savedsubdimensions = $DB->get_records('block_evalcomix_subdimension', array('courseid' => $courseid,
-                    'toolid' => $tool->id))) {
+        if ($tool = $DB->get_record('block_evalcomix_tools', ['idtool' => $id])) {
+            $hashsavedsubdimensions = [];
+            if (
+                $savedsubdimensions = $DB->get_records('block_evalcomix_subdimension', ['courseid' => $courseid,
+                    'toolid' => $tool->id])
+            ) {
                 foreach ($savedsubdimensions as $item) {
                     $subid = $item->subdimensionid;
                     $cid = $item->competencyid;
@@ -1357,9 +1985,9 @@ window.print().window.close();"> -->
                                     $comp = $hashsavedcompetencies[$keycomp];
                                     $compid = $comp->id;
                                     if (!isset($hashsavedsubdimensions[$subdimensionid][$compid])) {
-                                        $DB->insert_record('block_evalcomix_subdimension', array('courseid' => $courseid,
+                                        $DB->insert_record('block_evalcomix_subdimension', ['courseid' => $courseid,
                                         'toolid' => $tool->id, 'subdimensionid' => $subdimensionid,
-                                        'competencyid' => $compid));
+                                        'competencyid' => $compid]);
                                     } else {
                                         unset($hashsavedsubdimensions[$subdimensionid][$compid]);
                                     }
@@ -1380,9 +2008,9 @@ window.print().window.close();"> -->
                                     $comp = $hashsavedcompetencies[$keycomp];
                                     $compid = $comp->id;
                                     if (!isset($hashsavedsubdimensions[$subdimensionid][$compid])) {
-                                        $DB->insert_record('block_evalcomix_subdimension', array('courseid' => $courseid,
+                                        $DB->insert_record('block_evalcomix_subdimension', ['courseid' => $courseid,
                                         'toolid' => $tool->id, 'subdimensionid' => $subdimensionid,
-                                        'competencyid' => $compid));
+                                        'competencyid' => $compid]);
                                     } else {
                                         unset($hashsavedsubdimensions[$subdimensionid][$compid]);
                                     }
@@ -1396,46 +2024,62 @@ window.print().window.close();"> -->
             if (!empty($hashsavedsubdimensions)) {
                 foreach ($hashsavedsubdimensions as $subid => $item1) {
                     foreach ($item1 as $cid => $item2) {
-                        $DB->delete_records('block_evalcomix_subdimension', array('id' => $item2->id));
+                        $DB->delete_records('block_evalcomix_subdimension', ['id' => $item2->id]);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Method
+     */
     public static function get_course_competencies() {
         global $DB, $COURSE;
 
-        return $DB->get_records('block_evalcomix_competencies', array('courseid' => $COURSE->id, 'outcome' => 0));
+        return $DB->get_records('block_evalcomix_competencies', ['courseid' => $COURSE->id, 'outcome' => 0]);
     }
 
+    /**
+     * Method
+     */
     public static function get_course_outcomes() {
         global $DB, $COURSE;
 
-        return $DB->get_records('block_evalcomix_competencies', array('courseid' => $COURSE->id, 'outcome' => 1));
+        return $DB->get_records('block_evalcomix_competencies', ['courseid' => $COURSE->id, 'outcome' => 1]);
     }
 
+    /**
+     * Method
+     */
     public static function get_course_comptypes() {
         global $DB, $COURSE;
 
-        return $DB->get_records('block_evalcomix_comptype', array('courseid' => $COURSE->id));
+        return $DB->get_records('block_evalcomix_comptype', ['courseid' => $COURSE->id]);
     }
 
+    /**
+     * Method
+     */
     public static function create_competency($idnumber, $shortname, $description, $comptype) {
         global $DB, $COURSE;
 
         if (isset($idnumber) && isset($shortname)) {
-            if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $COURSE->id, 'idnumber' => $idnumber,
-                    'outcome' => 0))) {
-                $params = array();
+            if (
+                !$DB->get_record('block_evalcomix_competencies', ['courseid' => $COURSE->id, 'idnumber' => $idnumber,
+                    'outcome' => 0])
+            ) {
+                $params = [];
                 $params['courseid'] = $COURSE->id;
                 $params['idnumber'] = $idnumber;
                 $params['shortname'] = $shortname;
                 $params['outcome'] = 0;
                 $params['description'] = (string)$description;
                 $params['timecreated'] = time();
-                if ($ct = $DB->get_record('block_evalcomix_comptype', array('courseid' => $COURSE->id,
-                        'shortname' => $comptype))) {
+                if (
+                    $ct = $DB->get_record('block_evalcomix_comptype', ['courseid' => $COURSE->id,
+                        'shortname' => $comptype])
+                ) {
                     $params['typeid'] = $ct->id;
                 }
                 $id = $DB->insert_record('block_evalcomix_competencies', $params);
@@ -1445,13 +2089,18 @@ window.print().window.close();"> -->
         return 0;
     }
 
+    /**
+     * Method
+     */
     public static function create_outcome($idnumber, $shortname, $description) {
         global $DB, $COURSE;
 
         if (isset($idnumber) && isset($shortname)) {
-            if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $COURSE->id, 'idnumber' => $idnumber,
-                    'outcome' => 1))) {
-                $params = array();
+            if (
+                !$DB->get_record('block_evalcomix_competencies', ['courseid' => $COURSE->id, 'idnumber' => $idnumber,
+                    'outcome' => 1])
+            ) {
+                $params = [];
                 $params['courseid'] = $COURSE->id;
                 $params['idnumber'] = $idnumber;
                 $params['shortname'] = $shortname;
@@ -1465,9 +2114,12 @@ window.print().window.close();"> -->
         return 0;
     }
 
+    /**
+     * Method
+     */
     public function set_competency_from_origen($id, $toolid, $subdimensionsid, $outcome = 0) {
         global $DB, $COURSE;
-        $result = array();
+        $result = [];
 
         $sql = '
         SELECT bes.*, bec.idnumber, bec.shortname
@@ -1478,9 +2130,11 @@ window.print().window.close();"> -->
             AND bes.courseid = :courseid
             AND bet.idtool = :toolid
         ';
-        if ($subcomp = $DB->get_records_sql($sql, array('outcome' => $outcome, 'courseid' => $COURSE->id,
-                'toolid' => $toolid))) {
-            $hashsubdimensions = array();
+        if (
+            $subcomp = $DB->get_records_sql($sql, ['outcome' => $outcome, 'courseid' => $COURSE->id,
+                'toolid' => $toolid])
+        ) {
+            $hashsubdimensions = [];
             foreach ($subcomp as $data) {
                 $subid = $data->subdimensionid;
                 $cid = $data->idnumber;
@@ -1503,12 +2157,20 @@ window.print().window.close();"> -->
         return $result;
     }
 
-    public function edit_competencies_in_label($id, $dimkey, $subdimkey, $label,
-            $previouscompetencystring) {
+    /**
+     * Method
+     */
+    public function edit_competencies_in_label(
+        $id,
+        $dimkey,
+        $subdimkey,
+        $label,
+        $previouscompetencystring
+    ) {
         $latercompetencystring = $this->get_competency_string($id, $dimkey, $subdimkey);
         if ($label === 'subdimension') {
             $subdimensions = $this->get_subdimension($id);
-            $subdimensionnamemainform = optional_param('subdimension'.$id.'_'.$dimkey.'_'.$subdimkey, '', PARAM_RAW);
+            $subdimensionnamemainform = optional_param('subdimension' . $id . '_' . $dimkey . '_' . $subdimkey, '', PARAM_RAW);
             $subdimensionname = $subdimensions[$dimkey][$subdimkey]['nombre'];
             if ($subdimensionnamemainform !== '') {
                 $pos = strpos($subdimensionname, $subdimensionnamemainform);
@@ -1524,15 +2186,18 @@ window.print().window.close();"> -->
                     $subdimensionname = $this->competency_strpos($latercompetencystring, $subdimensionname);
                     $subdimensions[$dimkey][$subdimkey]['nombre'] = $subdimensionname . ' ' . $latercompetencystring;
                 } else {
-                    $subdimensions[$dimkey][$subdimkey]['nombre'] = str_replace($previouscompetencystring,
-                    $latercompetencystring, $subdimensionname);
+                    $subdimensions[$dimkey][$subdimkey]['nombre'] = str_replace(
+                        $previouscompetencystring,
+                        $latercompetencystring,
+                        $subdimensionname
+                    );
                 }
             }
 
             $this->set_subdimension($subdimensions, $id);
         } else if ($label = 'title') {
             $titlename = $this->get_titulo($id);
-            $titlemainform = optional_param('titulo'.$id, '', PARAM_RAW);
+            $titlemainform = optional_param('titulo' . $id, '', PARAM_RAW);
             if ($titlemainform !== '') {
                 $pos = strpos($titlename, $titlemainform);
                 $titlename = ($pos === false) ? $titlemainform : $titlename;
@@ -1546,8 +2211,11 @@ window.print().window.close();"> -->
                     $titlename = $this->competency_strpos($latercompetencystring, $titlename);
                     $titlename = $titlename . ' ' . $latercompetencystring;
                 } else {
-                    $titlename = str_replace($previouscompetencystring,
-                    $latercompetencystring, $titlename);
+                    $titlename = str_replace(
+                        $previouscompetencystring,
+                        $latercompetencystring,
+                        $titlename
+                    );
                 }
             }
 
@@ -1555,6 +2223,9 @@ window.print().window.close();"> -->
         }
     }
 
+    /**
+     * Method
+     */
     public function competency_strpos($haystack, $needle) {
         $mainhaystack = $this->get_content_in_brackets($haystack);
         $mainneedle = $this->get_content_in_brackets($needle);
@@ -1576,13 +2247,15 @@ window.print().window.close();"> -->
         if ($flag === false) {
             return $needle;
         }
-        return str_replace('('.$previouscompetenciesstring.')', '', $needle);
-
+        return str_replace('(' . $previouscompetenciesstring . ')', '', $needle);
     }
 
+    /**
+     * Method
+     */
     public function get_content_in_brackets($string) {
         $length = strlen($string);
-        $result = array();
+        $result = [];
         $content = '';
         $char = '';
         for ($i = 0; $i < $length; $i++) {

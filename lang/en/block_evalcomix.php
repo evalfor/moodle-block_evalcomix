@@ -15,122 +15,116 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * EN
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
-$string['pluginname'] = 'EvalCOMIX - FLOASS';
-$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['anonymous_EI'] = 'Anonymous - PA';
+$string['anonymous_EI_help'] = 'It indicates if the students will can know which peers have assess them.';
+$string['april'] = 'April';
+$string['argumentset'] = 'Argumentative Assessment';
+$string['assess'] = 'Assess';
+$string['assesssection'] = 'Assess Activities';
+$string['august'] = 'August';
+$string['availabledate_AE'] = 'SA - available from: ';
+$string['availabledate_AE_help'] = 'Date from which students can evaluate their activity.';
+$string['availabledate_EI'] = 'PA - available from: ';
+$string['availabledate_EI_help'] = 'Date from which students can evaluate the activity carried out by their classmates.';
 $string['blocksettings'] = 'Configuration';
 $string['blockstring'] = 'Content of EvalCOMIX';
-$string['instruments'] = 'Tool Management';
-$string['evaluation'] = 'Assess Activities';
-$string['evalcomix:view'] = 'View EvalCOMIX';
-$string['evalcomix:edit'] = 'Edit EvalCOMIX';
-$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.';
-$string['selfmodality'] = 'Self Assessment - SA ';
-$string['peermodality'] = 'Peer Assessment - PA ';
-$string['teachermodality'] = 'Teacher Assessment - TA ';
-$string['selfmod'] = 'Self Assessment';
-$string['peermod'] = 'Peer Assessment';
-$string['teachermod'] = 'Teacher Assessment';
-$string['nuloption'] = 'Selection of Assessment Tool';
-$string['grades'] = 'Grades: ';
-$string['selinstrument'] = 'Assessment Planning';
-$string['pon_EP'] = 'Weigthting - TA';
-$string['pon_AE'] = 'Weigthting - SA';
-$string['pon_EI'] = 'Weigthting - PA';
-$string['availabledate_EI'] = 'PA - available from: ';
-$string['availabledate_AE'] = 'SA - available from: ';
-$string['ratingsforitem'] = 'Breakdown of calification';
-$string['modality'] = 'Modality';
-$string['grade'] = 'Calification';
-$string['weighingfinalgrade'] = 'Weight in the final grade';
-$string['finalgrade'] = 'Final grade';
-$string['nograde'] = 'No Grade';
-$string['timeopen'] = 'Period of assessment has not ended';
-$string['designsection'] = 'Design and management of assessment tool';
-$string['assesssection'] = 'Assess Activities';
-$string['counttool'] = 'Count of tools';
-$string['newtool'] = 'New Tool';
-$string['open'] = 'Open';
-$string['view'] = 'View';
-$string['delete'] = 'Delete';
-$string['title'] = 'Title';
-$string['type'] = 'Type';
-$string['anonymous_EI'] = 'Anonymous - PA';
-$string['details'] = 'Details';
-$string['assess'] = 'Assess';
-$string['set'] = 'Set';
-$string['ratingsforitem'] = 'Ratings';
-$string['modality'] = 'Modality';
-$string['grade'] = 'Grade';
-$string['weighingfinalgrade'] = 'Weighing on final grade';
-$string['evalcomixgrade'] = 'EvalCOMIX grade';
-$string['evalcomixgradesmart'] = 'EvalCOMIX grade';
-$string['moodlegrade'] = 'Moodle grade';
-$string['graphics'] = 'Graphics';
-$string['timedue_AE'] = 'SA - deadline';
-$string['timedue_EI'] = 'PA - deadline';
-$string['january'] = 'January';
-$string['february'] = 'February';
-$string['march'] = 'March';
-$string['april'] = 'April';
-$string['may'] = 'May';
-$string['june'] = 'June';
-$string['july'] = 'July';
-$string['august'] = 'August';
-$string['september'] = 'September';
-$string['october'] = 'October';
-$string['november'] = 'November';
-$string['december'] = 'December';
-$string['save'] = 'Save';
 $string['cancel'] = 'Cancel';
+$string['closeview'] = 'Close preview';
+$string['confirmdeleteassessment'] = 'Are you sure you want to delete the assessment?';
+$string['confirmdeletetool'] = 'Are you sure you want to delete the assessment tool?';
+$string['counttool'] = 'Count of tools';
+$string['december'] = 'December';
+$string['delete'] = 'Delete';
+$string['designsection'] = 'Design and management of assessment tool';
+$string['details'] = 'Details';
+$string['differential'] = 'Differential';
+$string['evalcomix'] = 'EvalCOMIX - FLOASS';
+$string['evalcomix:edit'] = 'Edit EvalCOMIX';
+$string['evalcomix:view'] = 'View EvalCOMIX';
+$string['evalcomixgrade'] = 'EvalCOMIX grade';
+$string['evalcomixgrade_help'] = 'Weighted average of evalcomix assessments';
+$string['evalcomixgradesmart'] = 'EvalCOMIX grade';
+$string['evalcomixgradesmart_help'] = 'Weighted average of evalcomix assessments';
 $string['evaluate'] = 'Assess';
-$string['scale'] = 'Scale';
+$string['evaluation'] = 'Assess Activities';
+$string['extremeoutlier'] = 'Extreme outlier';
+$string['february'] = 'February';
+$string['finalgrade'] = 'Final grade';
+$string['finalgrade_help'] = 'Arithmetic average of EvalCOMIX final grade and Moodle final grade';
+$string['finalgradecalculation'] = 'Calculation of the final grade';
+$string['gradeof'] = 'Grade of ';
+$string['grades'] = 'Grades: ';
+$string['graphics'] = 'Graphics';
+$string['instruments'] = 'Tool Management';
+$string['january'] = 'January';
+$string['july'] = 'July';
+$string['june'] = 'June';
 $string['list'] = 'CheckList';
 $string['listscale'] = 'Listscale';
-$string['rubric'] = 'Rubric';
-$string['mixed'] = 'Mixed';
-$string['differential'] = 'Differential';
-$string['argumentset'] = 'Argumentative Assessment';
-$string['whatis'] = 'Management of assessment tools';
-$string['gradeof'] = 'Grade of ';
-$string['confirmdeletetool'] = 'Are you sure you want to delete the assessment tool?';
-$string['finalgradecalculation'] = 'Calculation of the final grade';
+$string['march'] = 'March';
+$string['may'] = 'May';
 $string['method'] = 'Method';
-$string['weightedaveragewithallvalues'] = 'Weighted average of all grades';
-$string['weightedaveragesmart'] = 'Weighted average of non-extreme grades';
-$string['confirmdeleteassessment'] = 'Are you sure you want to delete the assessment?';
-$string['mildoutlier'] = 'Mild outlier';
-$string['extremeoutlier'] = 'Extreme outlier';
-$string['overvaluation'] = 'Overvaluation';
-$string['undervaluation'] = 'Undervaluation';
-
-/* ----------------------------- HELP ----------------------------- */
 $string['method_help'] = 'This option allows you to set how the final grade for the activity will be calculated. If the option "Weighted average of all grades" is selected, the final grade will be calculated by taking the weighted average of the grades awarded in each evaluation modality without ignoring any. On the other hand, if the "Weighted average of non-extreme values" option is selected, those ratings that are considered extreme will be eliminated from the calculation because they exceed certain levels. For more information read the EvalCOMIX manual';
-$string['timeopen_help'] = 'Peer Assessment is not included actually in EvalCOMIX grade because the period of assessment has not ended yet.';
-$string['evalcomixgrade_help'] = 'Weighted average of evalcomix assessments';
-$string['evalcomixgradesmart_help'] = 'Weighted average of evalcomix assessments';
+$string['mildoutlier'] = 'Mild outlier';
+$string['mixed'] = 'Mixed';
+$string['modality'] = 'Modality';
+$string['moodlegrade'] = 'Moodle grade';
 $string['moodlegrade_help'] = 'Grade assigned from Moodle';
-$string['finalgrade_help'] = 'Arithmetic average of EvalCOMIX final grade and Moodle final grade';
-$string['teachermodality_help'] = 'This tool will be the assessment tool used by teachers to grade students in this activity.';
-$string['pon_EP_help'] = 'It is the percentage that the grade obtained by the teacher assessment tool on the final grade.';
-$string['selfmodality_help'] = 'It is the self-assessment tool used by students to review and grade their own task.';
-$string['pon_AE_help'] = 'It is the percentage of the mark obtained by the self-assessment tool has on the final grade.';
+$string['newtool'] = 'New Tool';
+$string['november'] = 'November';
+$string['nuloption'] = 'Selection of Assessment Tool';
+$string['october'] = 'October';
+$string['open'] = 'Open';
+$string['overvaluation'] = 'Overvaluation';
+$string['peermod'] = 'Peer Assessment';
+$string['peermodality'] = 'Peer Assessment - PA ';
 $string['peermodality_help'] = 'This is the assessment tool used by students to assess their peers’ activity.';
+$string['pluginname'] = 'EvalCOMIX - FLOASS';
+$string['pon_AE'] = 'Weigthting - SA';
+$string['pon_AE_help'] = 'It is the percentage of the mark obtained by the self-assessment tool has on the final grade.';
+$string['pon_EI'] = 'Weigthting - PA';
 $string['pon_EI_help'] = 'It is the percentage of the mark obtained by the peer assessment tool on the final grade.';
-$string['availabledate_AE_help'] = 'Date from which students can evaluate their activity.';
+$string['pon_EP'] = 'Weigthting - TA';
+$string['pon_EP_help'] = 'It is the percentage that the grade obtained by the teacher assessment tool on the final grade.';
+$string['ratingsforitem'] = 'Ratings';
+$string['rubric'] = 'Rubric';
+$string['save'] = 'Save';
+$string['scale'] = 'Scale';
+$string['selfmod'] = 'Self Assessment';
+$string['selfmodality'] = 'Self Assessment - SA ';
+$string['selfmodality_help'] = 'It is the self-assessment tool used by students to review and grade their own task.';
+$string['selinstrument'] = 'Assessment Planning';
+$string['selinstrument_help'] = 'Refer to the Manual for more information about setting an EvalCOMIX activity.';
+$string['september'] = 'September';
+$string['set'] = 'Set';
+$string['teachermod'] = 'Teacher Assessment';
+$string['teachermodality'] = 'Teacher Assessment - TA ';
+$string['teachermodality_help'] = 'This tool will be the assessment tool used by teachers to grade students in this activity.';
+$string['timedue_AE'] = 'SA - deadline';
 $string['timedue_AE_help'] = 'Deadline until which students can evaluate their activity.';
-$string['availabledate_EI_help'] = 'Date from which students can evaluate the activity carried out by their classmates.';
+$string['timedue_EI'] = 'PA - deadline';
 $string['timedue_EI_help'] = 'Deadline until which students will be able to evaluate their classmates.';
-$string['anonymous_EI_help'] = 'It indicates if the students will can know which peers have assess them.';
+$string['timeopen'] = 'Period of assessment has not ended';
+$string['timeopen_help'] = 'Peer Assessment is not included actually in EvalCOMIX grade because the period of assessment has not ended yet.';
+$string['type'] = 'Type';
+$string['undervaluation'] = 'Undervaluation';
+$string['view'] = 'View';
+$string['weighingfinalgrade'] = 'Weighing on final grade';
+$string['weightedaveragesmart'] = 'Weighted average of non-extreme grades';
+$string['weightedaveragesmartwithreduction'] = 'Weighted average of non-extreme grades with reduction';
+$string['weightedaveragewithallvalues'] = 'Weighted average of all grades';
+$string['whatis'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.';
+
 $string['whatis_help'] = 'EvalCOMIX allows the design and management of assessment tools (rating scales, rubrics, etc) to be used to assess forum, glossaries, database, wiki and tasks.<br>
 The assessment with these tools can be carried out by teachers (teacher assessment), or students (self-assessment, peer-assessment). For more information, please consult the Manual.
 For more information you can consult the Manual';
-$string['selinstrument_help'] = 'Refer to the Manual for more information about setting an EvalCOMIX activity.';
 /* --------------------------- END HELP --------------------------- */
 $string['profile_task_by_student'] = 'Chart task by student';
 $string['profile_task_by_group'] = 'Chart task by group';
@@ -199,11 +193,11 @@ $string['groups_EI'] = 'Groups';
 $string['specificstudents_EI'] = 'Specific students';
 $string['whoassesses_EI_help'] = 'This option allows you to control which students will participate in the peer evaluation.
 
-If the option "'. $string['anystudent_EI'].'" Is selected, each student will be able to evaluate any of their classmates.
+If the option "' . $string['anystudent_EI'] . '" Is selected, each student will be able to evaluate any of their classmates.
 
-If the option "'. $string['groups_EI'].'" Is selected, the configuration of groups and groupings of the activity will be respected.
+If the option "' . $string['groups_EI'] . '" Is selected, the configuration of groups and groupings of the activity will be respected.
 
-If you select the option "'. $string['specificstudents_EI'].'" You can indicate who will evaluate and who will be evaluated. This option will be disabled if "Evaluation of work teams" is selected';
+If you select the option "' . $string['specificstudents_EI'] . '" You can indicate who will evaluate and who will be evaluated. However, if the "Work Teams" option is also selected, the following restrictions will apply: 1) A team member cannot evaluate another member of the same team, and 2) work team coordinators will not be shown in the Student Evaluators section, but they will be shown in the Student Candidates section.';
 $string['assignstudents_EI'] = 'Assign students';
 $string['assess_students'] = 'Assess students';
 $string['studentstoassess'] = 'Students to assess';
@@ -273,7 +267,6 @@ $string['add_comments'] = 'Turn Comments';
 $string['checklist'] = 'Check List';
 $string['ratescale'] = 'Rating Scale';
 $string['listrate'] = 'Check List + Rating Scale';
-$string['rubric'] = 'Rubric';
 $string['differentail'] = 'Semantic Differential';
 $string['mix'] = 'Mixed Tool';
 $string['argument'] = 'Argumentative Assessment';
@@ -307,12 +300,10 @@ $string['titlevalue'] = 'Value';
 $string['no'] = 'No';
 $string['yes'] = 'Yes';
 $string['observation'] = 'Comments';
-$string['view'] = 'Close Previous View';
 
 $string['windowselection'] = 'Selection Window';
 $string['selectfile'] = 'Select the file';
 $string['upfile'] = 'Upload file';
-$string['cancel'] = 'Cancel';
 
 $string['savedsaccessfully'] = 'This tool has been saved successfully';
 $string['ADimension'] = 'This field cannot be void. \"Nº of Dimensions\" must be a number greater than 0 and \"Nº of Values\" a number greater than o equal to 2';
@@ -398,7 +389,7 @@ If there is a **Teacher Assessment - TA**, the teachers will only be able to eva
 
 If there is a **Self-Assessment – SA**, only the coordinator can self-assess and his evaluation will be assigned to each member of his group.
 
-If there is **Peer Assessment – PA**, students will only be able to evaluate the coordinators of each group and each evaluation will be assigned to each member of the group.
+If there is **Peer Assessment – PA**, students will only be able to evaluate the coordinators of each group and each evaluation will be assigned to each member of the group. This behavior can be modified by selecting the "Specific Students" option and assigning who evaluates whom.
 
 Students who are not in any group will not receive an assessment. Groups that do not have a coordinator assigned will not receive any evaluation and will not be able to evaluate';
 $string['selectcoordinator'] = 'Select coordinator';

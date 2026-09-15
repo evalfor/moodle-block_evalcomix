@@ -13,7 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Search students
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -35,10 +38,10 @@ $assessorid = optional_param('as', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 }
 
-if (!empty($assessorid) && !$assessor = $DB->get_record('user', array('id' => $assessorid))) {
+if (!empty($assessorid) && !$assessor = $DB->get_record('user', ['id' => $assessorid])) {
     throw new \moodle_exception('Wrong user');
 }
 
@@ -46,14 +49,14 @@ $context = context_course::instance($courseid);
 
 $reportevalcomix = new block_evalcomix_grade_report($courseid, null, $context);
 $users = $reportevalcomix->load_users(false);
-$allowedusershash = array();
+$allowedusershash = [];
 
 $output = '<select id="assessorid" name="assessorid" class="block_evalcomix_w_20" size="20"
 onclick="document.getElementById(\'submit\').disabled =
-false;doWork(\'targetstudents\', \'targetstudents.php\', \'u=\'+this.value+\'&id='.$courseid.'&a='.$cm->id.'\');">';
+false;doWork(\'targetstudents\', \'targetstudents.php\', \'u=\'+this.value+\'&id=' . $courseid . '&a=' . $cm->id . '\');">';
 if ($type == 'potential' && $assessorid > 0) {
     $allowedusershash[$assessorid] = true;
-    if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', array('cmid' => $id, 'assessorid' => $assessorid))) {
+    if ($allowedusers = $DB->get_records('block_evalcomix_allowedusers', ['cmid' => $id, 'assessorid' => $assessorid])) {
         foreach ($allowedusers as $alloweduser) {
             $userid = $alloweduser->studentid;
             $allowedusershash[$userid] = true;
@@ -70,13 +73,13 @@ foreach ($users as $user) {
         $userid = $user->id;
         if (!isset($allowedusershash[$userid])) {
             if ($pos1 !== false || $pos2 !== false) {
-                $output .= '<option value="'.$userid.'">'.fullname($user).'</option>';
+                $output .= '<option value="' . $userid . '">' . fullname($user) . '</option>';
             }
         }
     } else {
         $userid = $user->id;
         if (!isset($allowedusershash[$userid])) {
-            $output .= '<option value="'.$user->id.'">'.fullname($user).'</option>';
+            $output .= '<option value="' . $user->id . '">' . fullname($user) . '</option>';
         }
     }
 }

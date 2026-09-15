@@ -14,114 +14,189 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * block_evalcomix_editor_toolscale
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, <info@ansaner.net>
  */
-
 class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
+    /** @var string */
     private $titulo;
+    /** @var array */
     private $valtotal;
+    /** @var array */
     private $numtotal;
+    /** @var array */
     private $valorestotal;
+    /** @var array */
     private $valtotalpor;
+    /** @var array */
     private $valglobal;
+    /** @var array */
     private $valglobalpor;
+    /** @var string */
     private $filediccionario;
+    /** @var array */
     private $dimpor;
+    /** @var array */
     private $porcentage;
+    /** @var array */
     private $observation;
+    /** @var array */
     private $view;
+    /** @var array */
     private $commentatr;
+    /** @var array */
     private $commentdim;
+    /** @var array */
     private $valuecommentatr;
+    /** @var array */
     private $valuecommentdim;
+    /** @var array */
     private $dimensionsid;
+    /** @var array */
     private $atributosid;
+    /** @var array */
     private $valoresid;
+    /** @var array */
     private $valorestotalesid;
-	private $valueglobaldim;
-	private $valuetotalvalue;
+    /** @var array */
+    private $valueglobaldim;
+    /** @var array */
+    private $valuetotalvalue;
 
+    /**
+     * Method
+     */
     public function get_tool($id) {
     }
 
+    /**
+     * Method
+     */
     public function get_titulo() {
         return $this->titulo;
     }
 
+    /**
+     * Method
+     */
     public function get_dimension() {
         return $this->dimension[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_subdimension() {
         return $this->subdimension[$this->id];
-
     }
 
+    /**
+     * Method
+     */
     public function get_valtotal() {
-        $valtotal = (isset($this->valtotal[$this->id])) ? $this->valtotal[$this->id] : null;return $valtotal;
-
+        $valtotal = (isset($this->valtotal[$this->id])) ? $this->valtotal[$this->id] : null;
+        return $valtotal;
     }
 
+    /**
+     * Method
+     */
     public function get_numtotal($id = 0) {
         if (isset($this->numtotal[$this->id])) {
             return $this->numtotal[$this->id];
         }
     }
 
+    /**
+     * Method
+     */
     public function get_valtotalpor() {
         return $this->valtotalpor[$this->id];
     }
 
-    public function get_valorestotal($id=0) {
+    /**
+     * Method
+     */
+    public function get_valorestotal($id = 0) {
         if (isset($this->valorestotal[$this->id])) {
             return $this->valorestotal[$this->id];
         }
     }
 
+    /**
+     * Method
+     */
     public function get_valglobal() {
         if (isset($this->valglobal[$this->id])) {
             return $this->valglobal[$this->id];
         }
     }
 
+    /**
+     * Method
+     */
     public function get_valglobalpor() {
         if (isset($this->valglobalpor[$this->id])) {
             return $this->valglobalpor[$this->id];
         }
     }
 
+    /**
+     * Method
+     */
     public function get_dimpor() {
         return $this->dimpor[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_commentatr($id = 0) {
         return $this->commentatr[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_commentdim($id = 0) {
         return $this->commentdim[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_porcentage() {
         return $this->porcentage;
     }
 
+    /**
+     * Method
+     */
     public function get_dimensionsid() {
         return $this->dimensionsid[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_atributosid() {
         return $this->atributosid[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_valoresid() {
         return $this->valoresid[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function get_valorestotalesid() {
         if (isset($this->valorestotalesid[$this->id])) {
             return $this->valorestotalesid[$this->id];
@@ -129,79 +204,156 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         return null;
     }
 
+    /**
+     * Method
+     */
     public function set_titulo($titulo) {
         $this->titulo = $titulo;
     }
 
+    /**
+     * Method
+     */
     public function set_dimension($dimension) {
         $this->dimension[$this->id] = $dimension;
     }
 
+    /**
+     * Method
+     */
     public function set_valtotal($valtotal) {
         $this->valtotal[$this->id] = $valtotal;
     }
 
+    /**
+     * Method
+     */
     public function set_numtotal($numtotal) {
         $this->numtotal[$this->id] = $numtotal;
     }
 
+    /**
+     * Method
+     */
     public function set_valtotalpor($valtotalpor) {
         $this->valtotalpor[$this->id] = $valtotalpor;
     }
 
+    /**
+     * Method
+     */
     public function set_valorestotal($valorestotal) {
         $this->valorestotal[$this->id] = $valorestotal;
     }
 
+    /**
+     * Method
+     */
     public function set_valglobal($valglobal) {
         $this->valglobal[$this->id] = $valglobal;
     }
 
-    public function set_valglobalpor($valglobalpor, $id=0) {
+    /**
+     * Method
+     */
+    public function set_valglobalpor($valglobalpor, $id = 0) {
         $this->valglobalpor[$this->id] = $valglobalpor;
     }
 
-    public function set_dimpor($dimpor, $id=0) {
+    /**
+     * Method
+     */
+    public function set_dimpor($dimpor, $id = 0) {
         $this->dimpor[$this->id] = $dimpor;
     }
 
-    public function set_view($view, $id='') {
+    /**
+     * Method
+     */
+    public function set_view($view, $id = '') {
         $this->view = $view;
     }
 
+    /**
+     * Method
+     */
     public function set_commentatr($comment) {
         $this->commentatr[$this->id] = $comment;
     }
 
+    /**
+     * Method
+     */
     public function set_commentdim($comment) {
         $this->commentdim[$this->id] = $comment;
     }
 
+    /**
+     * Method
+     */
     public function set_dimensionsid($dimensionsid, $id = '') {
         $this->dimensionsid[$this->id] = $dimensionsid;
     }
 
+    /**
+     * Method
+     */
     public function set_atributosid($atributosid, $id = '') {
         $this->atributosid[$this->id] = $atributosid;
     }
 
+    /**
+     * Method
+     */
     public function set_valoresid($valoresid, $id = '') {
         $this->valoresid[$this->id] = $valoresid;
     }
 
+    /**
+     * Method
+     */
     public function set_valorestotalesid($valoresid, $id = '') {
         $this->valorestotalesid[$this->id] = $valoresid;
     }
 
 
-    public function __construct ($lang='es_utf8', $titulo = '', $dimension = array(), $numdim = 1, $subdimension = array(),
-            $numsubdim = 1, $atributo = array(), $numatr = 1, $valores = array(), $numvalores = 2, $valtotal = array(),
-            $numtotal = 0, $valorestotal = array(), $valglobal = false, $valglobalpor = array(), $dimpor = array(),
-            $subdimpor = array(), $atribpor = array(), $commentatr = array(), $commentdim = array(), $id=0, $observation = '',
-            $porcentage = 0, $valtotalpor = array(), $valueattribute = array(), $valueglobaldim = array(),
-            $valuetotalvalue = '', $valuecommentatr = '', $valuecommentdim = '', $params = array()) {
+    /**
+     * Method
+     */
+    public function __construct(
+        $lang = 'es_utf8',
+        $titulo = '',
+        $dimension = [],
+        $numdim = 1,
+        $subdimension = [],
+        $numsubdim = 1,
+        $atributo = [],
+        $numatr = 1,
+        $valores = [],
+        $numvalores = 2,
+        $valtotal = [],
+        $numtotal = 0,
+        $valorestotal = [],
+        $valglobal = false,
+        $valglobalpor = [],
+        $dimpor = [],
+        $subdimpor = [],
+        $atribpor = [],
+        $commentatr = [],
+        $commentdim = [],
+        $id = 0,
+        $observation = '',
+        $porcentage = 0,
+        $valtotalpor = [],
+        $valueattribute = [],
+        $valueglobaldim = [],
+        $valuetotalvalue = '',
+        $valuecommentatr = '',
+        $valuecommentdim = '',
+        $params = []
+    ) {
 
-        $this->filediccionario = 'lang/'.$lang.'/evalcomix.php';
+        $this->filediccionario = 'lang/' . $lang . '/evalcomix.php';
         $this->titulo = $titulo;
         $this->valtotal = $valtotal;
         $this->numtotal = $numtotal;
@@ -210,7 +362,7 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         $this->valglobalpor = $valglobalpor;
         $this->dimpor = $dimpor;
         $this->id = $id;
-        $this->observation = (is_array($observation)) ? $observation : array($id => $observation);
+        $this->observation = (is_array($observation)) ? $observation : [$id => $observation];
         $this->porcentage = $porcentage;
         $this->valtotalpor = $valtotalpor;
         $this->view = 'design';
@@ -248,6 +400,9 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         parent::__construct($params);
     }
 
+    /**
+     * Method
+     */
     public function add_dimension($dim, $key) {
         $dimen;
         $id = $this->id;
@@ -256,11 +411,11 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             $dim = $key;
             $dimen = $dim;
             $key++;
-            $this->dimension[$id][$dim]['nombre'] = get_string('titledim', 'block_evalcomix').$this->numdim[$id];
+            $this->dimension[$id][$dim]['nombre'] = get_string('titledim', 'block_evalcomix') . $this->numdim[$id];
         } else {
             $newindex = $key;
             $dimen = $newindex;
-            $elem['nombre'] = get_string('titledim', 'block_evalcomix').$this->numdim[$id];
+            $elem['nombre'] = get_string('titledim', 'block_evalcomix') . $this->numdim[$id];
             $this->dimension[$id] = $this->array_add($this->dimension[$id], $dim, $elem, $newindex);
             $this->commentdim[$id][$newindex] = 'hidden';
         }
@@ -269,50 +424,62 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         $key++;
         $this->numatr[$id][$dimen][$subdim] = 1;
         $this->numsubdim[$id][$dimen] = 1;
-        $this->atributo[$id][$dimen][$subdim][0]['nombre'] = get_string('titleatrib', 'block_evalcomix').
+        $this->atributo[$id][$dimen][$subdim][0]['nombre'] = get_string('titleatrib', 'block_evalcomix') .
             $this->numatr[$id][$dimen][$subdim];
         $this->atribpor[$id][$dimen][$subdim][0] = 100;
-        $this->subdimension[$id][$dimen][$subdim]['nombre'] = get_string('titlesubdim', 'block_evalcomix').
+        $this->subdimension[$id][$dimen][$subdim]['nombre'] = get_string('titlesubdim', 'block_evalcomix') .
             $this->numsubdim[$id][$dimen];
         $this->subdimpor[$id][$dimen][$subdim] = 100;
-        $this->valores[$id][$dimen][0]['nombre'] = get_string('titlevalue', 'block_evalcomix').'1';
-        $this->valores[$id][$dimen][1]['nombre'] = get_string('titlevalue', 'block_evalcomix').'2';
+        $this->valores[$id][$dimen][0]['nombre'] = get_string('titlevalue', 'block_evalcomix') . '1';
+        $this->valores[$id][$dimen][1]['nombre'] = get_string('titlevalue', 'block_evalcomix') . '2';
         $this->numvalores[$id][$dimen] = 2;
-        $this->competency[$id][$dim][$subdim] = array();
-        $this->outcome[$id][$dim][$subdim] = array();
+        $this->competency[$id][$dim][$subdim] = [];
+        $this->outcome[$id][$dim][$subdim] = [];
     }
 
+    /**
+     * Method
+     */
     public function add_attribute($dim, $subdim, $atrib, $key) {
         $id = $this->id;
         $this->numatr[$id][$dim][$subdim]++;
 
         if (!isset($atrib)) {
             $atrib = $key;
-            $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] = get_string('titleatrib', 'block_evalcomix').
+            $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] = get_string('titleatrib', 'block_evalcomix') .
                 $this->numatr[$id][$dim][$subdim];
         } else {
             $newindex = $key;
-            $elem['nombre'] = get_string('titleatrib', 'block_evalcomix').$this->numatr[$id][$dim][$subdim];
+            $elem['nombre'] = get_string('titleatrib', 'block_evalcomix') . $this->numatr[$id][$dim][$subdim];
             $this->atributo[$id][$dim][$subdim] = $this->array_add($this->atributo[$id][$dim][$subdim], $atrib, $elem, $newindex);
             $this->commentatr[$id][$dim][$subdim][$newindex] = 'hidden';
         }
     }
 
-    public function add_values($dim, $key, $id=0) {
+    /**
+     * Method
+     */
+    public function add_values($dim, $key, $id = 0) {
         $id = $this->id;
         $this->numvalores[$id][$dim]++;
-        $this->valores[$id][$dim][$key]['nombre'] = get_string('titlevalue', 'block_evalcomix').$this->numvalores[$id][$dim];
+        $this->valores[$id][$dim][$key]['nombre'] = get_string('titlevalue', 'block_evalcomix') . $this->numvalores[$id][$dim];
     }
 
+    /**
+     * Method
+     */
     public function add_total_values($key, $id) {
         if (isset($this->numtotal[$this->id])) {
             $this->numtotal[$this->id]++;
         } else {
             $this->numtotal[$this->id] = 1;
         }
-        $this->valorestotal[$this->id][$key]['nombre'] = get_string('titlevalue', 'block_evalcomix').$this->numtotal[$this->id];
+        $this->valorestotal[$this->id][$key]['nombre'] = get_string('titlevalue', 'block_evalcomix') . $this->numtotal[$this->id];
     }
 
+    /**
+     * Method
+     */
     public function remove_total_values($grado, $id) {
         if ($this->numtotal[$this->id] > 2) {
             $this->numtotal[$this->id]--;
@@ -320,7 +487,10 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         }
     }
 
-    public function remove_values($dim, $grado, $id=0) {
+    /**
+     * Method
+     */
+    public function remove_values($dim, $grado, $id = 0) {
         $id = $this->id;
         if ($this->numvalores[$id][$dim] > 2) {
             $this->numvalores[$id][$dim]--;
@@ -328,19 +498,22 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         }
     }
 
-    public function display_body($data, $mix='', $porcentage='') {
+    /**
+     * Method
+     */
+    public function display_body($data, $mix = '', $porcentage = '') {
         if ($porcentage != '') {
             $this->porcentage = $porcentage;
         }
-        if (isset($data['titulo'.$this->id])) {
-            $this->titulo = stripslashes($data['titulo'.$this->id]);
+        if (isset($data['titulo' . $this->id])) {
+            $this->titulo = stripslashes($data['titulo' . $this->id]);
         }
-        if (isset($data['valtotal'.$this->id])) {
-            $this->valtotal[$this->id] = stripslashes($data['valtotal'.$this->id]);
+        if (isset($data['valtotal' . $this->id])) {
+            $this->valtotal[$this->id] = stripslashes($data['valtotal' . $this->id]);
         }
 
-        if (isset($data['numvalores'.$this->id]) && $data['numvalores'.$this->id] >= 2) {
-            $this->numtotal[$this->id] = stripslashes($data['numvalores'.$this->id]);
+        if (isset($data['numvalores' . $this->id]) && $data['numvalores' . $this->id] >= 2) {
+            $this->numtotal[$this->id] = stripslashes($data['numvalores' . $this->id]);
         }
 
         $checked = '';
@@ -351,19 +524,19 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         }
 
         if ($this->view == 'view' && !is_numeric($mix)) {
-            echo '<input type="button" style="width:10em" value="'.get_string('view', 'block_evalcomix').
-            '" onclick=\'javascript:location.href="generator.php?op=design&courseid='.$data['courseid'].'"\'><br>';
+            echo '<input type="button" style="width:10em" value="' . get_string('closeview', 'block_evalcomix') .
+            '" onclick=\'javascript:location.href="generator.php?op=design&courseid=' . $data['courseid'] . '"\'><br>';
         }
 
         $numdimen = count($this->dimension[$this->id]);
 
         $id = $this->id;
             echo '
-        <div id="cuerpo'.$id.'" class="cuerpo">
+        <div id="cuerpo' . $id . '" class="cuerpo">
             <br>
-            <label for="titulo'.$id.'" style="margin-left:1em">'.get_string('ratescale', 'block_evalcomix').':</label>
+            <label for="titulo' . $id . '" style="margin-left:1em">' . get_string('ratescale', 'block_evalcomix') . ':</label>
             <span class="labelcampo">
-                <textarea class="width" id="titulo'.$id.'" name="titulo'.$id.'">'.$this->titulo.'</textarea>
+                <textarea class="width" id="titulo' . $id . '" name="titulo' . $id . '">' . $this->titulo . '</textarea>
             </span>';
 
         if (isset($this->numtotal[$this->id])) {
@@ -374,30 +547,30 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
 
         if ($this->view == 'design') {
             echo '
-            <label for="numdimensiones'.$id.'">'.get_string('numdimensions', 'block_evalcomix').'</label>
+            <label for="numdimensiones' . $id . '">' . get_string('numdimensions', 'block_evalcomix') . '</label>
             <span class="labelcampo">
-                <input type="text" id="numdimensiones'.$id.'" name="numdimensiones'.$id.'" value="'.$this->numdim[$this->id].
+                <input type="text" id="numdimensiones' . $id . '" name="numdimensiones' . $id . '" value="' . $this->numdim[$this->id] .
                 '" maxlength=2 onkeypress=\'javascript:return validar(event);\'/>
             </span>
-            <label for="valtotal'.$id.'">'.get_string('totalvalue', 'block_evalcomix').'</label>
-            <input type="checkbox" id="valtotal'.$id.'" name="valtotal'.$id.'" '.$checked.
-            ' onclick="javascript:if (this.checked)document.getElementById(\'numvalores'.$id.
-            '\').disabled=false;else document.getElementById(\'numvalores'.$id.'\').disabled=true;"/>
+            <label for="valtotal' . $id . '">' . get_string('totalvalue', 'block_evalcomix') . '</label>
+            <input type="checkbox" id="valtotal' . $id . '" name="valtotal' . $id . '" ' . $checked .
+            ' onclick="javascript:if (this.checked)document.getElementById(\'numvalores' . $id .
+            '\').disabled=false;else document.getElementById(\'numvalores' . $id . '\').disabled=true;"/>
 
-            <label for="numvalores'.$id.'">'.get_string('numvalues', 'block_evalcomix').'</label>
+            <label for="numvalores' . $id . '">' . get_string('numvalues', 'block_evalcomix') . '</label>
             <span class="labelcampo">
-                <input type="text" id="numvalores'.$id.'" name="numvalores'.$id.'" '.$disabled.' value="'.
-                $thisnumtotal.'" maxlength=2 onkeypress=\'javascript:return validar(event);\'/>
+                <input type="text" id="numvalores' . $id . '" name="numvalores' . $id . '" ' . $disabled . ' value="' .
+                $thisnumtotal . '" maxlength=2 onkeypress=\'javascript:return validar(event);\'/>
             </span>
             <input class="flecha" type="button" id="addDim" onclick=\'javascript:
-            if (!validarEntero(document.getElementById("numdimensiones'.$id.
-                '").value) || (document.getElementById("valtotal'.$id.
-                '").checked && !validarEntero(document.getElementById("numvalores'.$id.
-                '").value))) {alert("' . get_string('ADimension', 'block_evalcomix').
-                '"); return false;} sendPost("cuerpo'.$id.'", "mix='.$mix.'&id='.$id.
-                '&addDim=1&valtotal=false&numvalores="+document.getElementById("numvalores'.$id.
-                '").value + "&titulo'.$id.'="+document.getElementById("titulo'.$id.
-                '").value+"&numdimensiones="+ document.getElementById("numdimensiones'.$id.
+            if (!validarEntero(document.getElementById("numdimensiones' . $id .
+                '").value) || (document.getElementById("valtotal' . $id .
+                '").checked && !validarEntero(document.getElementById("numvalores' . $id .
+                '").value))) {alert("' . get_string('ADimension', 'block_evalcomix') .
+                '"); return false;} sendPost("cuerpo' . $id . '", "mix=' . $mix . '&id=' . $id .
+                '&addDim=1&valtotal=false&numvalores="+document.getElementById("numvalores' . $id .
+                '").value + "&titulo' . $id . '="+document.getElementById("titulo' . $id .
+                '").value+"&numdimensiones="+ document.getElementById("numdimensiones' . $id .
                 '").value +"", "mainform0");\' name="addDim" value=""/>
         ';
         }
@@ -405,14 +578,14 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         if (isset($mix) && is_numeric($mix)) {
             echo '
             <span class="labelcampo">
-                <label for="toolpor_'.$id.'">'.get_string('porvalue', 'block_evalcomix').'</label>
-                <input class="porcentaje" type="text" name="toolpor_'.$id.'" id="toolpor_'.$id.'" value="'.
-                $this->porcentage.'" onchange=\'document.getElementById("sumpor").value += this.id + "-";\'
-                onkeyup=\'javascript:if (document.getElementById("toolpor_'.$id.'").value > 100)
-                    document.getElementById("toolpor_'.$id.'").value = 100;\'
+                <label for="toolpor_' . $id . '">' . get_string('porvalue', 'block_evalcomix') . '</label>
+                <input class="porcentaje" type="text" name="toolpor_' . $id . '" id="toolpor_' . $id . '" value="' .
+                $this->porcentage . '" onchange=\'document.getElementById("sumpor").value += this.id + "-";\'
+                onkeyup=\'javascript:if (document.getElementById("toolpor_' . $id . '").value > 100)
+                    document.getElementById("toolpor_' . $id . '").value = 100;\'
                 onkeypress=\'javascript:return validar(event);\'/></span>
-                <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("body", "id='.
-                $id.'&toolpor_'.$id.'="+document.getElementById("toolpor_'.$id.'").value+"&addtool'.$id.'=1", "mainform0");\'>
+                <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("body", "id=' .
+                $id . '&toolpor_' . $id . '="+document.getElementById("toolpor_' . $id . '").value+"&addtool' . $id . '=1", "mainform0");\'>
             </span>';
         }
 
@@ -420,7 +593,7 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         ';
         flush();
         foreach ($this->dimension[$id] as $dim => $value) {
-            echo '<div class="dimension" id="dimensiontag'.$id.'_'.$dim.'">';
+            echo '<div class="dimension" id="dimensiontag' . $id . '_' . $dim . '">';
             $this->display_dimension($dim, $data, $id, $mix);
             echo '</div>';
         }
@@ -430,43 +603,43 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             ';
             if ($this->view == 'design') {
                 echo '
-                    <input type="button" class="delete" onclick=\'javascript:document.getElementById("valtotal'.
-                    $id.'").checked=false;sendPost("cuerpo'.$id.'", "mix='.$mix.'&id='.$id.
+                    <input type="button" class="delete" onclick=\'javascript:document.getElementById("valtotal' .
+                    $id . '").checked=false;sendPost("cuerpo' . $id . '", "mix=' . $mix . '&id=' . $id .
                     '&addDim=1&valtotal=false", "mainform0");\'>
                 ';
             }
             echo '
                     <div class="margin">
-                        <label>'.    (get_string('totalvalue', 'block_evalcomix')).':</label>
+                        <label>' .    (get_string('totalvalue', 'block_evalcomix')) . ':</label>
                         <span class="labelcampo"></span>
                         ';
             if ($this->view == 'design') {
                 echo '
-                        <label for="numvalores'.$id.'">'.get_string('numvalues', 'block_evalcomix').'</label>
+                        <label for="numvalores' . $id . '">' . get_string('numvalues', 'block_evalcomix') . '</label>
                         <span class="labelcampo">
-                        <input type="text" id="numvalores_'.$id.'" name="numvalores'.$id.'" value="'.
-                        $this->numtotal[$id].'" maxlength=2 onkeyup=\'
-                        javascript:var valores=document.getElementsByName("numvalores'.$id.
+                        <input type="text" id="numvalores_' . $id . '" name="numvalores' . $id . '" value="' .
+                        $this->numtotal[$id] . '" maxlength=2 onkeyup=\'
+                        javascript:var valores=document.getElementsByName("numvalores' . $id .
                         '");for (var i=0; i<valores.length; i++) {valores[i].value=this.value;}\'
                         onkeypress=\'javascript:return validar(event);\'/>
                         <input class="flecha" type="button" id="addDim" onclick=\'
-                        javascript:if (!validarEntero(document.getElementById("numvalores_'.$id.'").value)) {
-                            alert("' . get_string('ATotal', 'block_evalcomix'). '"); return false;}
-                            sendPost("cuerpo'.$id.'", "mix='.$mix.'&id='.$id.
-                            '&addDim=1&numvalores="+document.getElementById("numvalores_'.$id.
+                        javascript:if (!validarEntero(document.getElementById("numvalores_' . $id . '").value)) {
+                            alert("' . get_string('ATotal', 'block_evalcomix') . '"); return false;}
+                            sendPost("cuerpo' . $id . '", "mix=' . $mix . '&id=' . $id .
+                            '&addDim=1&numvalores="+document.getElementById("numvalores_' . $id .
                             '").value + "", "mainform0");\' name="addDim" value=""/>
                 ';
             }
             echo '
-                        <span class="labelcampo"><label for="dimpor">'.get_string('porvalue', 'block_evalcomix').
+                        <span class="labelcampo"><label for="dimpor">' . get_string('porvalue', 'block_evalcomix') .
                         ':</label><span class="labelcampo">
-                        <input class="porcentaje" type="text" name="valtotalpor'.$id.'" id="valtotalpor'.$id.
-                        '" value="'.$this->valtotalpor[$id].'" onchange=\'document.getElementById("sumpor3'.$id.
-                        '").value += this.id + "-";\' onkeyup=\'javascript:if (document.getElementById("valtotalpor'.$id.
-                        '").value > 100)document.getElementById("valtotalpor'.$id.
+                        <input class="porcentaje" type="text" name="valtotalpor' . $id . '" id="valtotalpor' . $id .
+                        '" value="' . $this->valtotalpor[$id] . '" onchange=\'document.getElementById("sumpor3' . $id .
+                        '").value += this.id + "-";\' onkeyup=\'javascript:if (document.getElementById("valtotalpor' . $id .
+                        '").value > 100)document.getElementById("valtotalpor' . $id .
                         '").value = 100;\' onkeypress=\'javascript:return validar(event);\'/></span>
-                        <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("cuerpo'.$id.
-                        '", "mix='.$mix.'&id='.$id.'&dimpor'.$id.'="+document.getElementById("valtotalpor'.$id.
+                        <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("cuerpo' . $id .
+                        '", "mix=' . $mix . '&id=' . $id . '&dimpor' . $id . '="+document.getElementById("valtotalpor' . $id .
                         '").value+"&dpi=vt&addDim=1", "mainform0");\'></span>
 
                         <table class="maintable">
@@ -474,12 +647,12 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
 
             if (isset($this->valorestotal[$id])) {
                 foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
-                    if (isset($data['valor'.$id.'_'.$grado])) {
-                        $this->valorestotal[$id][$grado]['nombre'] = stripslashes($data['valor'.$id.'_'.$grado]);
+                    if (isset($data['valor' . $id . '_' . $grado])) {
+                        $this->valorestotal[$id][$grado]['nombre'] = stripslashes($data['valor' . $id . '_' . $grado]);
                     }
-                    echo '<th class="grado"><input class="valores" type="text" id="valor'.$id.'_'.$grado.
-                    '" name="valor'.$id.'_'.$grado.'" value="'.
-                    htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES).
+                    echo '<th class="grado"><input class="valores" type="text" id="valor' . $id . '_' . $grado .
+                    '" name="valor' . $id . '_' . $grado . '" value="' .
+                    htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES) .
                     '"/></th>
                     ';
                 }
@@ -494,8 +667,8 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             </div>';
         }
         if (!is_numeric($mix)) {
-            if (isset($data['observation'.$id]) && trim($data['observation'.$id]) != '') {
-                $this->observation[$id] = stripslashes($data['observation'.$id]);
+            if (isset($data['observation' . $id]) && trim($data['observation' . $id]) != '') {
+                $this->observation[$id] = stripslashes($data['observation' . $id]);
             } else if (isset($data['save']) && $data['save'] == '1') {
                 $this->observation[$id] = '';
             }
@@ -507,31 +680,34 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             echo '
             <div id="comentario">
                 <div id="marco">
-                    <label for="observation'.$id.'">' . get_string('observation', 'block_evalcomix'). ':</label>
-                    <textarea id="observation'.$id.'" style="width:100%" rows="4" cols="200">' . $thisobservationid . '</textarea>
+                    <label for="observation' . $id . '">' . get_string('observation', 'block_evalcomix') . ':</label>
+                    <textarea id="observation' . $id . '" style="width:100%" rows="4" cols="200">' . $thisobservationid . '</textarea>
                 </div>
             </div>
             ';
         }
         echo '
-            <input type="hidden" name="courseid" id="courseid" value="'.$data['courseid'].'">
-            <input type="hidden" id="sumpor3'.$id.'" value=""/>
+            <input type="hidden" name="courseid" id="courseid" value="' . $data['courseid'] . '">
+            <input type="hidden" id="sumpor3' . $id . '" value=""/>
         </div>
         ';
 
         flush();
     }
 
-    public function display_dimension($dim, $data, $id=0, $mix='') {
+    /**
+     * Method
+     */
+    public function display_dimension($dim, $data, $id = 0, $mix = '') {
         $id = $this->id;
-        if (isset($data['dimension'.$id.'_'.$dim])) {
-            $this->dimension[$id][$dim]['nombre'] = stripslashes($data['dimension'.$id.'_'.$dim]);
+        if (isset($data['dimension' . $id . '_' . $dim])) {
+            $this->dimension[$id][$dim]['nombre'] = stripslashes($data['dimension' . $id . '_' . $dim]);
         }
-        if (isset($data['numvalores'.$id.'_'.$dim]) && $data['numvalores'.$id.'_'.$dim] > 1) {
-            $this->numvalores[$id][$dim] = stripslashes($data['numvalores'.$id.'_'.$dim]);
+        if (isset($data['numvalores' . $id . '_' . $dim]) && $data['numvalores' . $id . '_' . $dim] > 1) {
+            $this->numvalores[$id][$dim] = stripslashes($data['numvalores' . $id . '_' . $dim]);
         }
-        if (isset($data['valglobal'.$id.'_'.$dim])) {
-            $this->valglobal[$id][$dim] = stripslashes($data['valglobal'.$id.'_'.$dim]);
+        if (isset($data['valglobal' . $id . '_' . $dim])) {
+            $this->valglobal[$id][$dim] = stripslashes($data['valglobal' . $id . '_' . $dim]);
         }
         $checked = '';
         $globalchecked = '';
@@ -548,65 +724,65 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         if ($this->view == 'design') {
             echo '
                 <div>
-                    <input type="button" class="delete" onclick=\'javascript:sendPost("cuerpo'.$id.'","mix='.$mix.'&id='.$id.
-                    '&titulo'.$id.'="+document.getElementById("titulo'.$id.'").value+"&addDim=1&numvalores='.$thisnumtotal.
-                    '&dd='.$dim.'", "mainform0");\'>
-                    <input type="button" class="up" onclick=\'javascript:sendPost("cuerpo'.$id.'","mix='.$mix.'&id='.$id.
-                    '&titulo'.$id.'="+document.getElementById("titulo'.$id.'").value+"&moveDim=1&numvalores='.
-                    $thisnumtotal.'&dUp='.$dim.'", "mainform0");\'>
+                    <input type="button" class="delete" onclick=\'javascript:sendPost("cuerpo' . $id . '","mix=' . $mix . '&id=' . $id .
+                    '&titulo' . $id . '="+document.getElementById("titulo' . $id . '").value+"&addDim=1&numvalores=' . $thisnumtotal .
+                    '&dd=' . $dim . '", "mainform0");\'>
+                    <input type="button" class="up" onclick=\'javascript:sendPost("cuerpo' . $id . '","mix=' . $mix . '&id=' . $id .
+                    '&titulo' . $id . '="+document.getElementById("titulo' . $id . '").value+"&moveDim=1&numvalores=' .
+                    $thisnumtotal . '&dUp=' . $dim . '", "mainform0");\'>
                     <br><br>
                 </div>
             ';
         }
 
-        echo '<input type="hidden" id="sumpor2'.$id.'_'.$dim.'" value=""/>
+        echo '<input type="hidden" id="sumpor2' . $id . '_' . $dim . '" value=""/>
         <div class="margin">
-            <label for="dimension'.$id.'_'.$dim.'">'.get_string('dimension', 'block_evalcomix').'</label>
+            <label for="dimension' . $id . '_' . $dim . '">' . get_string('dimension', 'block_evalcomix') . '</label>
             <span class="labelcampo">
-                <textarea class="width" id="dimension'.$id.'_'.$dim.'" name="dimension'.$id.'_'.$dim.'">'.
-                $this->dimension[$id][$dim]['nombre'] .'</textarea>
+                <textarea class="width" id="dimension' . $id . '_' . $dim . '" name="dimension' . $id . '_' . $dim . '">' .
+                $this->dimension[$id][$dim]['nombre'] . '</textarea>
             </span>
         ';
         if ($this->view == 'design') {
             echo '
-            <label for="numsubdimensiones'.$id.'_'.$dim.'">'.get_string('numsubdimension', 'block_evalcomix').'</label>
-            <span class="labelcampo"><input type="text" id="numsubdimensiones'.$id.'_'.$dim.'" name="numsubdimensiones'.$id.
-            '_'.$dim.'" value="'.$this->numsubdim[$id][$dim].
+            <label for="numsubdimensiones' . $id . '_' . $dim . '">' . get_string('numsubdimension', 'block_evalcomix') . '</label>
+            <span class="labelcampo"><input type="text" id="numsubdimensiones' . $id . '_' . $dim . '" name="numsubdimensiones' . $id .
+            '_' . $dim . '" value="' . $this->numsubdim[$id][$dim] .
             '" maxlength=2 onkeypress=\'javascript:return validar(event);\'/></span>
 
-            <label for="numvalores'.$id.'_'.$dim.'">'.get_string('numvalues', 'block_evalcomix').'</label>
-            <span class="labelcampo"><input type="text" id="numvalores'.$id.'_'.$dim.'" name="numvalores'.$id.'_'.$dim.
-            '" value="'.$this->numvalores[$id][$dim].'" maxlength=2 onkeypress=\'javascript:return validar(event);\'/></span>
-            <label for="valtotal">'.get_string('totalvalue', 'block_evalcomix').'</label>
-            <input type="checkbox" id="valglobal'.$id.'_'.$dim.'" name="valglobal'.$id.'_'.$dim.'" '.$globalchecked.' />
+            <label for="numvalores' . $id . '_' . $dim . '">' . get_string('numvalues', 'block_evalcomix') . '</label>
+            <span class="labelcampo"><input type="text" id="numvalores' . $id . '_' . $dim . '" name="numvalores' . $id . '_' . $dim .
+            '" value="' . $this->numvalores[$id][$dim] . '" maxlength=2 onkeypress=\'javascript:return validar(event);\'/></span>
+            <label for="valtotal">' . get_string('totalvalue', 'block_evalcomix') . '</label>
+            <input type="checkbox" id="valglobal' . $id . '_' . $dim . '" name="valglobal' . $id . '_' . $dim . '" ' . $globalchecked . ' />
 
-            <input class="flecha" type="button" id="addSubDim'.$id.'" name="addSubDim'.$id.
-            '" onclick=\'javascript:if (!validarEntero(document.getElementById("numvalores'.$id.'_'.$dim.
-            '").value) || !validarEntero(document.getElementById("numsubdimensiones'.$id.'_'.$dim.'").value)) {alert("'.
-            get_string('ASubdimension', 'block_evalcomix'). '"); return false;}sendPost("dimensiontag'.$id.'_'.$dim.
-            '", "mix='.$mix.'&id='.$id.'&addSubDim="+this.value+"&numvalores'.$id.'_'.$dim.
-            '="+ document.getElementById("numvalores'.$id.'_'.$dim.'").value +"&numsubdimensiones'.$id.'_'.$dim.
-            '="+ document.getElementById("numsubdimensiones'.$id.'_'.$dim.
-            '").value +"", "mainform0");\' style="font-size:1px" value="'.$dim.'"/>
+            <input class="flecha" type="button" id="addSubDim' . $id . '" name="addSubDim' . $id .
+            '" onclick=\'javascript:if (!validarEntero(document.getElementById("numvalores' . $id . '_' . $dim .
+            '").value) || !validarEntero(document.getElementById("numsubdimensiones' . $id . '_' . $dim . '").value)) {alert("' .
+            get_string('ASubdimension', 'block_evalcomix') . '"); return false;}sendPost("dimensiontag' . $id . '_' . $dim .
+            '", "mix=' . $mix . '&id=' . $id . '&addSubDim="+this.value+"&numvalores' . $id . '_' . $dim .
+            '="+ document.getElementById("numvalores' . $id . '_' . $dim . '").value +"&numsubdimensiones' . $id . '_' . $dim .
+            '="+ document.getElementById("numsubdimensiones' . $id . '_' . $dim .
+            '").value +"", "mainform0");\' style="font-size:1px" value="' . $dim . '"/>
             ';
         }
 
         echo '
-            <span class="labelcampo"><label for="dimpor'.$id.'_'.$dim.'">'.get_string('porvalue', 'block_evalcomix').
+            <span class="labelcampo"><label for="dimpor' . $id . '_' . $dim . '">' . get_string('porvalue', 'block_evalcomix') .
             '</label><span class="labelcampo">
-            <input class="porcentaje" type="text" maxlength="3" name="dimpor'.$id.'_'.$dim.'" id="dimpor'.$id.'_'.$dim.
-            '" value="'.$this->dimpor[$id][$dim].'" onchange=\'javascript:document.getElementById("sumpor3'.$id.
-            '").value += this.id +"-";;\' onkeyup=\'javascript:if (document.getElementById("dimpor'.$id.'_'.$dim.
-            '").value > 100)document.getElementById("dimpor'.$id.'_'.$dim.'").value = 100;\'
+            <input class="porcentaje" type="text" maxlength="3" name="dimpor' . $id . '_' . $dim . '" id="dimpor' . $id . '_' . $dim .
+            '" value="' . $this->dimpor[$id][$dim] . '" onchange=\'javascript:document.getElementById("sumpor3' . $id .
+            '").value += this.id +"-";;\' onkeyup=\'javascript:if (document.getElementById("dimpor' . $id . '_' . $dim .
+            '").value > 100)document.getElementById("dimpor' . $id . '_' . $dim . '").value = 100;\'
             onkeypress=\'javascript:return validar(event);\'/></span>
-            <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("cuerpo'.$id.'", "mix='.$mix.
-            '&id='.$id.'&dimpor'.$id.'="+document.getElementById("dimpor'.$id.'_'.$dim.'").value+"&dpi='.$dim.
+            <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("cuerpo' . $id . '", "mix=' . $mix .
+            '&id=' . $id . '&dimpor' . $id . '="+document.getElementById("dimpor' . $id . '_' . $dim . '").value+"&dpi=' . $dim .
             '&addDim=1", "mainform0");\'></span>';
 
         if (isset($this->subdimension[$id][$dim])) {
             foreach ($this->subdimension[$id][$dim] as $subdim => $elemsubdim) {
                 echo '
-                    <div class="subdimension" id="subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'">
+                    <div class="subdimension" id="subdimensiontag' . $id . '_' . $dim . '_' . $subdim . '">
                 ';
                 $this->display_subdimension($dim, $subdim, $data, $id, $mix);
                 echo '</div>
@@ -619,49 +795,49 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             ';
             if ($this->view == 'design') {
                 echo '
-                    <input type="button" class="delete" onclick=\'javascript:document.getElementById("valglobal'.$id.
-                    '_'.$dim.'").checked=false;sendPost("dimensiontag'.$id.'_'.$dim.'", "mix='.$mix.'&id='.$id.'&addSubDim='.
-                    $dim.'&valglobal'.$id.'_'.$dim.'=false", "mainform0");\'>
+                    <input type="button" class="delete" onclick=\'javascript:document.getElementById("valglobal' . $id .
+                    '_' . $dim . '").checked=false;sendPost("dimensiontag' . $id . '_' . $dim . '", "mix=' . $mix . '&id=' . $id . '&addSubDim=' .
+                    $dim . '&valglobal' . $id . '_' . $dim . '=false", "mainform0");\'>
                 ';
             }
             echo '
                     <div class="margin">
-                        <label>'.get_string('globalvalue', 'block_evalcomix').'</label>
+                        <label>' . get_string('globalvalue', 'block_evalcomix') . '</label>
                         <span class="labelcampo"></span>
-                        <span class="labelcampo"><label for="name="valglobalpor'.$id.'_'.$dim.'">'.
-                        get_string('porvalue', 'block_evalcomix').'</label><span class="labelcampo">
-                        <input class="porcentaje" type="text" maxlength="3"  name="valglobalpor'.$id.'_'.$dim.
-                        '" id="valglobalpor'.$id.'_'.$dim.'" value="'.$this->valglobalpor[$id][$dim].
-                        '" onchange=\'document.getElementById("sumpor2'.$id.'_'.$dim.'").value += this.id + "-";\'
-                        onkeyup=\'javascript:if (document.getElementById("valglobalpor'.$id.'_'.$dim.
-                        '").value > 100)document.getElementById("valglobalpor'.$id.'_'.$dim.
+                        <span class="labelcampo"><label for="name="valglobalpor' . $id . '_' . $dim . '">' .
+                        get_string('porvalue', 'block_evalcomix') . '</label><span class="labelcampo">
+                        <input class="porcentaje" type="text" maxlength="3"  name="valglobalpor' . $id . '_' . $dim .
+                        '" id="valglobalpor' . $id . '_' . $dim . '" value="' . $this->valglobalpor[$id][$dim] .
+                        '" onchange=\'document.getElementById("sumpor2' . $id . '_' . $dim . '").value += this.id + "-";\'
+                        onkeyup=\'javascript:if (document.getElementById("valglobalpor' . $id . '_' . $dim .
+                        '").value > 100)document.getElementById("valglobalpor' . $id . '_' . $dim .
                         '").value = 100;\' onkeypress=\'javascript:return validar(event);\'/></span>
-                        <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("dimensiontag'.$id.
-                        '_'.$dim.'", "mix='.$mix.'&id='.$id.'&subdimpor="+document.getElementById("valglobalpor'.$id.
-                        '_'.$dim.'").value+"&spi=vg&addSubDim='.$dim.'", "mainform0");\'></span>
+                        <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("dimensiontag' . $id .
+                        '_' . $dim . '", "mix=' . $mix . '&id=' . $id . '&subdimpor="+document.getElementById("valglobalpor' . $id .
+                        '_' . $dim . '").value+"&spi=vg&addSubDim=' . $dim . '", "mainform0");\'></span>
 
                         <table class="maintable">
             ';
             foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
-                if (isset($data['valor'.$id.'_'.$dim.'_'.$grado])) {
-                    $this->valores[$id][$dim][$grado]['nombre'] = stripslashes($data['valor'.$id.'_'.$dim.'_'.$grado]);
+                if (isset($data['valor' . $id . '_' . $dim . '_' . $grado])) {
+                    $this->valores[$id][$dim][$grado]['nombre'] = stripslashes($data['valor' . $id . '_' . $dim . '_' . $grado]);
                 }
-                echo '<th class="grado"><input class="valores" type="text" id="valor'.$id.'_'.$dim.'_'.$grado.
-                '" name="valor'.$id.'_'.$dim.'_'.$grado.'" value="'.
-                htmlspecialchars($this->valores[$id][$dim][$grado]['nombre'], ENT_QUOTES).'"/></th>
+                echo '<th class="grado"><input class="valores" type="text" id="valor' . $id . '_' . $dim . '_' . $grado .
+                '" name="valor' . $id . '_' . $dim . '_' . $grado . '" value="' .
+                htmlspecialchars($this->valores[$id][$dim][$grado]['nombre'], ENT_QUOTES) . '"/></th>
                 ';
             }
             echo '<tr>';
             foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
-                echo '<td><input type="radio" name="radio'.$dim.'_'.$subdim.'" /></td>
+                echo '<td><input type="radio" name="radio' . $dim . '_' . $subdim . '" /></td>
                 ';
             }
 
             echo '</tr>';
 
             $visible = null;
-            if (isset($data['commentdim'.$id.'_'.$dim])) {
-                $visible = stripslashes($data['commentdim'.$id.'_'.$dim]);
+            if (isset($data['commentdim' . $id . '_' . $dim])) {
+                $visible = stripslashes($data['commentdim' . $id . '_' . $dim]);
                 $this->commentdim[$id][$dim] = $visible;
             }
 
@@ -674,20 +850,20 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
             }
 
             echo '<tr>
-                <td colspan="'.$this->numvalores[$id][$dim].'">';
+                <td colspan="' . $this->numvalores[$id][$dim] . '">';
 
             if ($this->view == 'design') {
                 echo '
                 <div>
-                    <input type="button" class="showcomment" title="'. get_string('add_comments', 'block_evalcomix').'"
-                        onclick=\'javascript:sendPost("dimensiontag'.$id.'_'.$dim.'", "mix='.$mix.'&id='.$id.'&commentdim'.
-                        $id.'_'.$dim.'='.$novisible.'&comDim='.$dim.'&addSubDim='.$dim.'", "mainform0");\'>
+                    <input type="button" class="showcomment" title="' . get_string('add_comments', 'block_evalcomix') . '"
+                        onclick=\'javascript:sendPost("dimensiontag' . $id . '_' . $dim . '", "mix=' . $mix . '&id=' . $id . '&commentdim' .
+                        $id . '_' . $dim . '=' . $novisible . '&comDim=' . $dim . '&addSubDim=' . $dim . '", "mainform0");\'>
                 </div>';
             }
 
             echo '
                 </td></tr><tr>
-                <td colspan="'.$this->numvalores[$id][$dim].'">';
+                <td colspan="' . $this->numvalores[$id][$dim] . '">';
 
             if ($visible == 'visible') {
                 $divheight = 'height:2.5em';
@@ -696,9 +872,9 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                 $divheight = 'height:0em';
                 $textheight = 'height:0em';
             }
-            echo '<div class="atrcomment" id="atribcomment'.$id.'_'.$dim.'_'.$subdim.'" style="'.$divheight.'">
-            <textarea disabled style="width:97%; visibility:'.$visible.'; '.$textheight.'"  id="atributocomment'.$id.
-            '_'.$dim.'_'.$subdim.'"></textarea>
+            echo '<div class="atrcomment" id="atribcomment' . $id . '_' . $dim . '_' . $subdim . '" style="' . $divheight . '">
+            <textarea disabled style="width:97%; visibility:' . $visible . '; ' . $textheight . '"  id="atributocomment' . $id .
+            '_' . $dim . '_' . $subdim . '"></textarea>
                 </div>
             </td></tr>
             ';
@@ -710,14 +886,14 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         ';
         if ($this->view == 'design') {
             echo '<div>
-                    <input type="button" class="add" onclick=\'javascript:sendPost("cuerpo'.$id.'","mix='.
-                    $mix.'&mix='.$mix.'&id='.$id.'&titulo'.$id.'="+document.getElementById("titulo'.$id.
-                    '").value+"&addDim=1&numvalores="+document.getElementById("numvalores'.$id.'").value + "&ad='.
-                    $dim.'", "mainform0");\'>
-                    <input type="button" class="down" onclick=\'javascript:sendPost("cuerpo'.$id.'","mix='.$mix.
-                    '&mix='.$mix.'&id='.$id.'&titulo'.$id.'="+document.getElementById("titulo'.$id.
-                    '").value+"&moveDim=1&numvalores="+document.getElementById("numvalores'.$id.
-                    '").value + "&dDown='.$dim.'", "mainform0");\'>
+                    <input type="button" class="add" onclick=\'javascript:sendPost("cuerpo' . $id . '","mix=' .
+                    $mix . '&mix=' . $mix . '&id=' . $id . '&titulo' . $id . '="+document.getElementById("titulo' . $id .
+                    '").value+"&addDim=1&numvalores="+document.getElementById("numvalores' . $id . '").value + "&ad=' .
+                    $dim . '", "mainform0");\'>
+                    <input type="button" class="down" onclick=\'javascript:sendPost("cuerpo' . $id . '","mix=' . $mix .
+                    '&mix=' . $mix . '&id=' . $id . '&titulo' . $id . '="+document.getElementById("titulo' . $id .
+                    '").value+"&moveDim=1&numvalores="+document.getElementById("numvalores' . $id .
+                    '").value + "&dDown=' . $dim . '", "mainform0");\'>
                     <br>
                 </div>
             ';
@@ -725,21 +901,24 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         flush();
     }
 
+    /**
+     * Method
+     */
     public function display_subdimension($dim, $subdim, $data, $id = 0, $mix = '') {
         $id = $this->id;
 
-        if (isset($data['subdimension'.$id.'_'.$dim.'_'.$subdim]) && empty($data['modalclose'])) {
-            $this->subdimension[$id][$dim][$subdim]['nombre'] = stripslashes($data['subdimension'.$id.'_'.$dim.'_'.$subdim]);
+        if (isset($data['subdimension' . $id . '_' . $dim . '_' . $subdim]) && empty($data['modalclose'])) {
+            $this->subdimension[$id][$dim][$subdim]['nombre'] = stripslashes($data['subdimension' . $id . '_' . $dim . '_' . $subdim]);
         }
 
         if ($this->view == 'design') {
             echo '
-            <input type="hidden" id="sumpor'.$id.'_'.$dim.'_'.$subdim.'" value=""/>
+            <input type="hidden" id="sumpor' . $id . '_' . $dim . '_' . $subdim . '" value=""/>
             <div>
-                <input type="button" class="delete" onclick=\'javascript:sendPost("dimensiontag'.$id.'_'.$dim.
-                '", "mix='.$mix.'&id='.$id.'&addSubDim='.$dim.'&dS=1&sd='.$subdim.'", "mainform0");\'>
-                <input type="button" class="up" onclick=\'javascript:sendPost("dimensiontag'.$id.'_'.$dim.
-                '", "mix='.$mix.'&id='.$id.'&moveSub='.$dim.'&sUp='.$subdim.'", "mainform0");\'>
+                <input type="button" class="delete" onclick=\'javascript:sendPost("dimensiontag' . $id . '_' . $dim .
+                '", "mix=' . $mix . '&id=' . $id . '&addSubDim=' . $dim . '&dS=1&sd=' . $subdim . '", "mainform0");\'>
+                <input type="button" class="up" onclick=\'javascript:sendPost("dimensiontag' . $id . '_' . $dim .
+                '", "mix=' . $mix . '&id=' . $id . '&moveSub=' . $dim . '&sUp=' . $subdim . '", "mainform0");\'>
                 <br><br>
             </div>
             ';
@@ -747,44 +926,44 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         echo '
                 <div class="margin">
                     <div class="float-md-left">
-                        <label for="subdimension'.$id.'_'.$dim.'_'.$subdim.'">'.
-                        get_string('subdimension', 'block_evalcomix').'</label>
-                        <span class="labelcampo"><textarea  class="width" id="subdimension'.$id.'_'.$dim.'_'.$subdim.
-                        '" name="subdimension'.$id.'_'.$dim.'_'.$subdim.'">'.
-                        $this->subdimension[$id][$dim][$subdim]['nombre'].'</textarea></span>
+                        <label for="subdimension' . $id . '_' . $dim . '_' . $subdim . '">' .
+                        get_string('subdimension', 'block_evalcomix') . '</label>
+                        <span class="labelcampo"><textarea  class="width" id="subdimension' . $id . '_' . $dim . '_' . $subdim .
+                        '" name="subdimension' . $id . '_' . $dim . '_' . $subdim . '">' .
+                        $this->subdimension[$id][$dim][$subdim]['nombre'] . '</textarea></span>
                     </div>
         ';
         if ($this->view == 'design') {
             echo '
                 <div class="float-md-left">
-                    <label for="numatributos'.$id.'_'.$dim.'_'.$subdim.'">'.
-                    get_string('numattributes', 'block_evalcomix').'</label>
-                    <span class="labelcampo"><input type="text" id="numatributos'.$id.'_'.$dim.'_'.$subdim.
-                    '" name="numatributos'.$id.'_'.$dim.'_'.$subdim.'" value="'.$this->numatr[$id][$dim][$subdim].
+                    <label for="numatributos' . $id . '_' . $dim . '_' . $subdim . '">' .
+                    get_string('numattributes', 'block_evalcomix') . '</label>
+                    <span class="labelcampo"><input type="text" id="numatributos' . $id . '_' . $dim . '_' . $subdim .
+                    '" name="numatributos' . $id . '_' . $dim . '_' . $subdim . '" value="' . $this->numatr[$id][$dim][$subdim] .
                     '" maxlength=2 onkeypress=\'javascript:return validar(event);\'/></span>
                     <input class="flecha" type="button" id="addAtr" name="addAtr" style="font-size:1px"
-                    onclick=\'javascript:if (!validarEntero(document.getElementById("numatributos'.$id.'_'.$dim.'_'.$subdim.
-                    '").value)) {alert("' . get_string('AAttribute', 'block_evalcomix'). '");
-                    return false;}sendPost("subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.
-                    '&addAtr="+this.value+"&numatributos'.$id.'_'.$dim.'_'.$subdim.
-                    '="+ document.getElementById("numatributos'.$id.'_'.$dim.'_'.$subdim.
-                    '").value +"", "mainform0");\' value="'.$dim.'_'.$subdim.'"/>
+                    onclick=\'javascript:if (!validarEntero(document.getElementById("numatributos' . $id . '_' . $dim . '_' . $subdim .
+                    '").value)) {alert("' . get_string('AAttribute', 'block_evalcomix') . '");
+                    return false;}sendPost("subdimensiontag' . $id . '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id .
+                    '&addAtr="+this.value+"&numatributos' . $id . '_' . $dim . '_' . $subdim .
+                    '="+ document.getElementById("numatributos' . $id . '_' . $dim . '_' . $subdim .
+                    '").value +"", "mainform0");\' value="' . $dim . '_' . $subdim . '"/>
                 </div>
             ';
         }
         echo '
                 <div class="float-md-left mr-2">
-                    <span class="labelcampo"><label for="subdimpor'.$id.'_'.$dim.'_'.$subdim.'">'.
-                    get_string('porvalue', 'block_evalcomix').'</label><span class="labelcampo">
-                    <input class="porcentaje" type="text" maxlength="3" id="subdimpor'.$id.'_'.$dim.'_'.$subdim.
-                    '" name="subdimpor'.$id.'_'.$dim.'_'.$subdim.'" value="'.$this->subdimpor[$id][$dim][$subdim].
-                    '" onchange=\'document.getElementById("sumpor2'.$id.'_'.$dim.'").value += this.id + "-";\'
-                    onkeyup=\'javascript:if (document.getElementById("subdimpor'.$id.'_'.$dim.'_'.$subdim.
-                    '").value > 100)document.getElementById("subdimpor'.$id.'_'.$dim.'_'.$subdim.'").value = 100;\'
+                    <span class="labelcampo"><label for="subdimpor' . $id . '_' . $dim . '_' . $subdim . '">' .
+                    get_string('porvalue', 'block_evalcomix') . '</label><span class="labelcampo">
+                    <input class="porcentaje" type="text" maxlength="3" id="subdimpor' . $id . '_' . $dim . '_' . $subdim .
+                    '" name="subdimpor' . $id . '_' . $dim . '_' . $subdim . '" value="' . $this->subdimpor[$id][$dim][$subdim] .
+                    '" onchange=\'document.getElementById("sumpor2' . $id . '_' . $dim . '").value += this.id + "-";\'
+                    onkeyup=\'javascript:if (document.getElementById("subdimpor' . $id . '_' . $dim . '_' . $subdim .
+                    '").value > 100)document.getElementById("subdimpor' . $id . '_' . $dim . '_' . $subdim . '").value = 100;\'
                     onkeypress=\'javascript:return validar(event);\'/></span>
-                    <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("dimensiontag'.
-                    $id.'_'.$dim.'", "mix='.$mix.'&id='.$id.'&subdimpor="+document.getElementById("subdimpor'.
-                    $id.'_'.$dim.'_'.$subdim.'").value+"&spi='.$subdim.'&addSubDim='.$dim.'", "mainform0");\'>
+                    <input class="botonporcentaje" type="button" onclick=\'javascript:sendPost("dimensiontag' .
+                    $id . '_' . $dim . '", "mix=' . $mix . '&id=' . $id . '&subdimpor="+document.getElementById("subdimpor' .
+                    $id . '_' . $dim . '_' . $subdim . '").value+"&spi=' . $subdim . '&addSubDim=' . $dim . '", "mainform0");\'>
                     </span>
                 </div>
         ';
@@ -796,29 +975,29 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                 <br>
                     <table class="maintable">
                         <tr><th/><th/><th/>
-                        <th style="text-align:right;"><span class="font">'.get_string('attribute', 'block_evalcomix').
+                        <th style="text-align:right;"><span class="font">' . get_string('attribute', 'block_evalcomix') .
                         '</span>  <span class="atributovalores" style="font-size:1em">/</span> <span
-                        class="atributovalores">'.get_string('values', 'block_evalcomix').'</span></th>
+                        class="atributovalores">' . get_string('values', 'block_evalcomix') . '</span></th>
                     ';
 
         foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
-            if (isset($data['valor'.$id.'_'.$dim.'_'.$grado])) {
-                $this->valores[$id][$dim][$grado]['nombre'] = stripslashes($data['valor'.$id.'_'.$dim.'_'.$grado]);
+            if (isset($data['valor' . $id . '_' . $dim . '_' . $grado])) {
+                $this->valores[$id][$dim][$grado]['nombre'] = stripslashes($data['valor' . $id . '_' . $dim . '_' . $grado]);
             }
             echo '<th class="grado"><input class="valores" onkeyup=\'
-            javascript:var valores=document.getElementsByName("valor'.$id.'_'.$dim.'_'.$grado.
+            javascript:var valores=document.getElementsByName("valor' . $id . '_' . $dim . '_' . $grado .
             '");for (var i=0; i<valores.length; i++) {valores[i].value=this.value;}\' type="text"
-            id="valor'.$id.'_'.$dim.'_'.$grado.'" name="valor'.$id.'_'.$dim.'_'.$grado.'" value="'.
-            htmlspecialchars($this->valores[$id][$dim][$grado]['nombre'], ENT_QUOTES).'"/></th>
+            id="valor' . $id . '_' . $dim . '_' . $grado . '" name="valor' . $id . '_' . $dim . '_' . $grado . '" value="' .
+            htmlspecialchars($this->valores[$id][$dim][$grado]['nombre'], ENT_QUOTES) . '"/></th>
             ';
         }
         echo '</tr>';
         $numattribute = count($this->atributo[$id][$dim][$subdim]);
         if (isset($this->atributo[$id][$dim][$subdim])) {
             foreach ($this->atributo[$id][$dim][$subdim] as $atrib => $elematrib) {
-                if (isset($data['atributo'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib])) {
-                    $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] = stripslashes($data['atributo'.$id.
-                    '_'.$dim.'_'.$subdim.'_'.$atrib]);
+                if (isset($data['atributo' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib])) {
+                    $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] = stripslashes($data['atributo' . $id .
+                    '_' . $dim . '_' . $subdim . '_' . $atrib]);
                 }
                 echo '
                         <tr>
@@ -828,14 +1007,14 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                     echo '
                                 <div style="margin-bottom:2em;">
                                     <input type="button" class="delete" onclick=\'javascript:
-                                    sendPost("subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.
-                                    '&addAtr='.$dim.'_'.$subdim.'&dt='.$atrib.'", "mainform0");\'>
+                                    sendPost("subdimensiontag' . $id . '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id .
+                                    '&addAtr=' . $dim . '_' . $subdim . '&dt=' . $atrib . '", "mainform0");\'>
 
                                 </div>
                                 <div style="margin-top:2em;">
-                                    <input type="button" class="add" onclick=\'javascript:sendPost("subdimensiontag'.$id.
-                                    '_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.'&addAtr='.$dim.'_'.$subdim.'&at='.
-                                    $atrib.'", "mainform0");\'>
+                                    <input type="button" class="add" onclick=\'javascript:sendPost("subdimensiontag' . $id .
+                                    '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id . '&addAtr=' . $dim . '_' . $subdim . '&at=' .
+                                    $atrib . '", "mainform0");\'>
                                 </div>
                     ';
                 }
@@ -848,14 +1027,14 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                     echo '
                             <td style="">
                                 <div style="margin-bottom:2em;">
-                                    <input type="button" class="up" onclick=\'javascript:sendPost("subdimensiontag'.$id.
-                                    '_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.'&moveAtr='.$dim.'_'.$subdim.'&aUp='.
-                                    $atrib.'", "mainform0");\'>
+                                    <input type="button" class="up" onclick=\'javascript:sendPost("subdimensiontag' . $id .
+                                    '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id . '&moveAtr=' . $dim . '_' . $subdim . '&aUp=' .
+                                    $atrib . '", "mainform0");\'>
                                 </div>
                                 <div style="margin-top:2em;">
-                                    <input type="button" class="down" onclick=\'javascript:sendPost("subdimensiontag'.$id.
-                                    '_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.'&moveAtr='.$dim.'_'.$subdim.
-                                    '&aDown='.$atrib.'", "mainform0");\'>
+                                    <input type="button" class="down" onclick=\'javascript:sendPost("subdimensiontag' . $id .
+                                    '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id . '&moveAtr=' . $dim . '_' . $subdim .
+                                    '&aDown=' . $atrib . '", "mainform0");\'>
                                 </div>
                             </td>
                     ';
@@ -864,40 +1043,42 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                 echo '
                                 <td>
                                 <input class="porcentaje" type="text" onchange=\'
-                                document.getElementById("sumpor'.$id.'_'.$dim.'_'.$subdim.
+                                document.getElementById("sumpor' . $id . '_' . $dim . '_' . $subdim .
                                 '").value += this.id + "-";\' onkeyup=\'javascript:if (
-                                document.getElementById("atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.
-                                '").value > 100)document.getElementById("atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.
+                                document.getElementById("atribpor' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib .
+                                '").value > 100)document.getElementById("atribpor' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib .
                                 '").value = 100;\' onkeypress=\'javascript:return validar(event);\'
-                                maxlength="3" name="atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'" id="atribpor'
-                                .$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'" value="'.
-                                $this->atribpor[$id][$dim][$subdim][$atrib].'"/>
+                                maxlength="3" name="atribpor' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib . '" id="atribpor'
+                                . $id . '_' . $dim . '_' . $subdim . '_' . $atrib . '" value="' .
+                                $this->atribpor[$id][$dim][$subdim][$atrib] . '"/>
                                 <input class="botonporcentaje" type="button" onclick=\'javascript:
-                                sendPost("subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.'&id='.$id.
-                                '&atribpor="+document.getElementById("atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.
-                                '").value+"&api='.$atrib.'&addAtr='.$dim.'_'.$subdim.'", "mainform0");\'>
+                                sendPost("subdimensiontag' . $id . '_' . $dim . '_' . $subdim . '", "mix=' . $mix . '&id=' . $id .
+                                '&atribpor="+document.getElementById("atribpor' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib .
+                                '").value+"&api=' . $atrib . '&addAtr=' . $dim . '_' . $subdim . '", "mainform0");\'>
                             </td>
                             <td>
-                                <span class="font"><textarea class="width" id="atributo'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.
-                                '" name="atributo'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'">'.
-                                $this->atributo[$id][$dim][$subdim][$atrib]['nombre'].'</textarea></span>
+                                <span class="font"><textarea class="width" id="atributo' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib .
+                                '" name="atributo' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib . '">' .
+                                $this->atributo[$id][$dim][$subdim][$atrib]['nombre'] . '</textarea></span>
                             </td>
                 ';
 
                 foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
-                    echo '<td><input type="radio" name="radio'.$dim.'_'.$subdim.'_'.$atrib.'" /></td>
+                    echo '<td><input type="radio" name="radio' . $dim . '_' . $subdim . '_' . $atrib . '" /></td>
                     ';
                 }
 
                 echo '</tr>';
                     $visible = null;
-                if (isset($data['commentatr'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib])) {
-                    $visible = stripslashes($data['commentatr'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib]);
+                if (isset($data['commentatr' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib])) {
+                    $visible = stripslashes($data['commentatr' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib]);
                     $this->commentatr[$id][$dim][$subdim][$atrib] = $visible;
                 }
 
-                if (isset($this->commentatr[$id][$dim][$subdim][$atrib])
-                        && $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible') {
+                if (
+                    isset($this->commentatr[$id][$dim][$subdim][$atrib])
+                        && $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible'
+                ) {
                     $visible = 'visible';
                     $novisible = 'hidden';
                 } else {
@@ -912,15 +1093,15 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                 if ($this->view == 'design') {
                     echo '
                     <div style="text-align:right">
-                        <input type="button" class="showcomment" title="'. get_string('add_comments', 'block_evalcomix').'"
-                            onclick=\'javascript:sendPost("subdimensiontag'.$id.'_'.$dim.'_'.$subdim.'", "mix='.$mix.
-                            '&id='.$id.'&commentatr'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'='.$novisible.'&comAtr='.
-                            $atrib.'&addAtr='.$dim.'_'.$subdim.'", "mainform0");\'>
+                        <input type="button" class="showcomment" title="' . get_string('add_comments', 'block_evalcomix') . '"
+                            onclick=\'javascript:sendPost("subdimensiontag' . $id . '_' . $dim . '_' . $subdim . '", "mix=' . $mix .
+                            '&id=' . $id . '&commentatr' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib . '=' . $novisible . '&comAtr=' .
+                            $atrib . '&addAtr=' . $dim . '_' . $subdim . '", "mainform0");\'>
                     </div>';
                 }
                 echo '
                 </td><td/>
-                <td colspan="'.$this->numvalores[$id][$dim].'">';
+                <td colspan="' . $this->numvalores[$id][$dim] . '">';
 
                 if ($visible == 'visible') {
                     $divheight = 'height:2.5em';
@@ -929,10 +1110,10 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
                     $divheight = 'height:0.5em';
                     $textheight = 'height:0.5em';
                 }
-                echo '<div class="atrcomment" id="atribcomment'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.
-                '" style="'.$divheight.'">
-                <textarea disabled style="width:97%; visibility:'.$visible.'; '.$textheight.'"
-                id="atributocomment'.$id.'_'.$dim.'_'.$subdim.'_'.$atrib.'"></textarea>
+                echo '<div class="atrcomment" id="atribcomment' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib .
+                '" style="' . $divheight . '">
+                <textarea disabled style="width:97%; visibility:' . $visible . '; ' . $textheight . '"
+                id="atributocomment' . $id . '_' . $dim . '_' . $subdim . '_' . $atrib . '"></textarea>
                     </div>
                 </td>
                 ';
@@ -946,10 +1127,10 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
         if ($this->view == 'design') {
             echo '
                 <div>
-                    <input type="button" class="add" onclick=\'javascript:sendPost("dimensiontag'.$id.'_'.$dim.
-                    '", "mix='.$mix.'&id='.$id.'&addSubDim='.$dim.'&sd='.$subdim.'&aS=1'.'", "mainform0");\'>
-                    <input type="button" class="down" onclick=\'javascript:sendPost("dimensiontag'.$id.'_'.
-                    $dim.'", "mix='.$mix.'&id='.$id.'&moveSub='.$dim.'&sDown='.$subdim.'", "mainform0");\'>
+                    <input type="button" class="add" onclick=\'javascript:sendPost("dimensiontag' . $id . '_' . $dim .
+                    '", "mix=' . $mix . '&id=' . $id . '&addSubDim=' . $dim . '&sd=' . $subdim . '&aS=1' . '", "mainform0");\'>
+                    <input type="button" class="down" onclick=\'javascript:sendPost("dimensiontag' . $id . '_' .
+                    $dim . '", "mix=' . $mix . '&id=' . $id . '&moveSub=' . $dim . '&sDown=' . $subdim . '", "mainform0");\'>
                     <br>
                 </div>
             ';
@@ -965,7 +1146,7 @@ class block_evalcomix_editor_toolscale extends block_evalcomix_editor {
      * @param string $id
      * @return string XML
      */
-    public function export($params = array()) {
+    public function export($params = []) {
         $id = $this->id;
 
         $mixed = 0;
@@ -992,8 +1173,8 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
             $percentage1 = ' percentage="' . $this->porcentage . '"';
         }
 
-        $xml = $root . ' id="'. $idtool .'" name="' . htmlspecialchars($this->titulo, ENT_QUOTES) .
-        '" dimensions="' . $this->numdim[$id] .'" ' . $percentage1 . '>
+        $xml = $root . ' id="' . $idtool . '" name="' . htmlspecialchars($this->titulo, ENT_QUOTES) .
+        '" dimensions="' . $this->numdim[$id] . '" ' . $percentage1 . '>
 ';
 
         if (isset($this->observation[$id])) {
@@ -1008,7 +1189,7 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
             $numvaloresdim = (isset($this->numvalores[$id][$dim])) ? $this->numvalores[$id][$dim] : 0;
             $dimpor = (isset($this->dimpor[$id][$dim])) ? $this->dimpor[$id][$dim] : '';
             $xml .= '<Dimension id="'
-            . $dimid.'" name="'
+            . $dimid . '" name="'
             . $dimname . '" subdimensions="'
             . $this->numsubdim[$id][$dim]
             . '" values="' . $numvaloresdim
@@ -1018,7 +1199,7 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
 
             foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
                 $valorid = (isset($this->valoresid[$id][$dim][$grado])) ? $this->valoresid[$id][$dim][$grado] : '';
-                $xml .= '<Value id="'.$valorid.'">'
+                $xml .= '<Value id="' . $valorid . '">'
                 . htmlspecialchars($this->valores[$id][$dim][$grado]['nombre'], ENT_QUOTES) . "</Value>\n";
             }
             $xml .= "</Values>\n";
@@ -1029,7 +1210,7 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                     $this->subdimension[$id][$dim][$subdim]['nombre'] : '';
                 $numatr = (isset($this->numatr[$id][$dim][$subdim])) ? $this->numatr[$id][$dim][$subdim] : '';
                 $subdimpor = (isset($this->subdimpor[$id][$dim][$subdim])) ? $this->subdimpor[$id][$dim][$subdim] : '';
-                $xml .= '<Subdimension id="'.$subid
+                $xml .= '<Subdimension id="' . $subid
                 . '" name="' . htmlspecialchars($subname, ENT_QUOTES)
                 . '" attributes="' . $numatr
                 . '" percentage="' . $subdimpor . '">
@@ -1037,8 +1218,10 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
 
                 foreach ($this->atributo[$id][$dim][$subdim] as $atrib => $elematrib) {
                     $comment = '';
-                    if (isset($this->commentatr[$id][$dim][$subdim][$atrib])
-                            && $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible') {
+                    if (
+                        isset($this->commentatr[$id][$dim][$subdim][$atrib])
+                            && $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible'
+                    ) {
                         $comment = '1';
                     }
 
@@ -1049,10 +1232,10 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                     $atrpor = (isset($this->atribpor[$id][$dim][$subdim][$atrib]))
                         ? $this->atribpor[$id][$dim][$subdim][$atrib] : '';
 
-                    $xml .= '<Attribute id="'. $atrid
+                    $xml .= '<Attribute id="' . $atrid
                     . '" name="' . htmlspecialchars($atrname, ENT_QUOTES)
-                    . '" comment="'. $comment
-                    .'" percentage="'
+                    . '" comment="' . $comment
+                    . '" percentage="'
                     . $atrpor . '">0</Attribute>
 ';
                 }
@@ -1060,14 +1243,16 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                 $xml .= "</Subdimension>\n";
             }
 
-            if (isset($this->valglobal[$id][$dim]) && ($this->valglobal[$id][$dim] == 'true'
-                    || $this->valglobal[$id][$dim] == 't')) {
+            if (
+                isset($this->valglobal[$id][$dim]) && ($this->valglobal[$id][$dim] == 'true'
+                    || $this->valglobal[$id][$dim] == 't')
+            ) {
                 $comment = '';
                 if (isset($this->commentdim[$id][$dim]) && $this->commentdim[$id][$dim] == 'visible') {
                     $comment = '1';
                 }
                 $xml .= '<DimensionAssessment percentage="' . $this->valglobalpor[$id][$dim] . '">
-            <Attribute name="Global assessment" comment="'.$comment.'" percentage="0">0</Attribute>
+            <Attribute name="Global assessment" comment="' . $comment . '" percentage="0">0</Attribute>
         </DimensionAssessment>';
             }
             $xml .= "</Dimension>\n";
@@ -1079,8 +1264,8 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
 ';
             foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
                 $totalvalue = (isset($this->valorestotalesid[$id][$grado])) ? $this->valorestotalesid[$id][$grado] : '';
-                $xml .= '<Value id="'.$totalvalue
-                .'">'. htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES)
+                $xml .= '<Value id="' . $totalvalue
+                . '">' . htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES)
                 . "</Value>\n";
             }
             $xml .= '</Values>
@@ -1093,6 +1278,9 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
         return $xml;
     }
 
+    /**
+     * Method
+     */
     public function print_tool($globalcomment = 'global_comment') {
         $id = $this->id;
         $colspan = max($this->numvalores[$id]);
@@ -1105,8 +1293,8 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
         if (is_numeric($this->porcentage)) {
             echo '
                                 <tr>
-                                   <td colspan="'.($colspan + 2) .'">'. get_string('mixed_por', 'block_evalcomix'). ': ' .
-                                   $this->porcentage.'%</td>
+                                   <td colspan="' . ($colspan + 2) . '">' . get_string('mixed_por', 'block_evalcomix') . ': ' .
+                                   $this->porcentage . '%</td>
                                 </tr>
             ';
         }
@@ -1114,11 +1302,11 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
         echo '
 
                                 <tr>
-                                   <th colspan="'.($colspan + 2) .'">'.htmlspecialchars($this->titulo, ENT_QUOTES).'</th>
+                                   <th colspan="' . ($colspan + 2) . '">' . htmlspecialchars($this->titulo, ENT_QUOTES) . '</th>
                                 </tr>
 
                                 <tr>
-                                   <th colspan="'.($colspan + 2) .'"></th>
+                                   <th colspan="' . ($colspan + 2) . '"></th>
                                 </tr>
 
                                 <tr>
@@ -1133,16 +1321,16 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                                 <tr id="dim">
                                     <!--DIMENSIӎ-TITLE----------->
                                     <td class="pordim">
-                                    '.$this->dimpor[$this->id][$dim].'%
+                                    ' . $this->dimpor[$this->id][$dim] . '%
                                     </td>
-                                    <td class="bold" colspan="'.($colspan - $colspandim + 1) .'">
-                                        <span>'.htmlspecialchars($this->dimension[$this->id][$dim]['nombre'], ENT_QUOTES).'</span>
+                                    <td class="bold" colspan="' . ($colspan - $colspandim + 1) . '">
+                                        <span>' . htmlspecialchars($this->dimension[$this->id][$dim]['nombre'], ENT_QUOTES) . '</span>
                                     </td>
             ';
             foreach ($this->valores[$this->id][$dim] as $grado => $elemvalue) {
                 echo '
-                                    <td class="td">'.
-                    htmlspecialchars($this->valores[$this->id][$dim][$grado]['nombre'], ENT_QUOTES).'</td>
+                                    <td class="td">' .
+                    htmlspecialchars($this->valores[$this->id][$dim][$grado]['nombre'], ENT_QUOTES) . '</td>
                     ';
             }
 
@@ -1154,9 +1342,9 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                 echo '
                                 <!--TITULO-SUBDIMENSIӎ------------>
                                 <tr>
-                                    <td class="subdimpor">'.$this->subdimpor[$this->id][$dim][$subdim].'%</td>
-                                    <td class="subdim" colspan="'.($colspan + 1).'">'.
-                                    htmlspecialchars($this->subdimension[$this->id][$dim][$subdim]['nombre'], ENT_QUOTES).
+                                    <td class="subdimpor">' . $this->subdimpor[$this->id][$dim][$subdim] . '%</td>
+                                    <td class="subdim" colspan="' . ($colspan + 1) . '">' .
+                                    htmlspecialchars($this->subdimension[$this->id][$dim][$subdim]['nombre'], ENT_QUOTES) .
                                 '</td></tr>
                 ';
 
@@ -1166,21 +1354,23 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                         echo '
                                 <!--ATRIBUTOS---------------------->
                                 <tr rowspan=0>
-                                    <td class="atribpor">'.$this->atribpor[$this->id][$dim][$subdim][$atrib].'%</td>
-                                    <td colspan="'.($colspan - $colspandim + 1) .'">'.
-                                    htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre'], ENT_QUOTES).
+                                    <td class="atribpor">' . $this->atribpor[$this->id][$dim][$subdim][$atrib] . '%</td>
+                                    <td colspan="' . ($colspan - $colspandim + 1) . '">' .
+                                    htmlspecialchars($this->atributo[$this->id][$dim][$subdim][$atrib]['nombre'], ENT_QUOTES) .
                                     '</td>
                         ';
                         $k = 1;
                         foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
                             $checked = '';
 
-                            if (isset($this->valueattribute[$id][$dim][$subdim][$atrib]) &&
-                            $this->valueattribute[$id][$dim][$subdim][$atrib] == $this->valores[$id][$dim][$grado]['nombre']) {
+                            if (
+                                isset($this->valueattribute[$id][$dim][$subdim][$atrib]) &&
+                                $this->valueattribute[$id][$dim][$subdim][$atrib] == $this->valores[$id][$dim][$grado]['nombre']
+                            ) {
                                 $checked = 'checked';
                             }
                             echo '
-                                <td><input type="radio" class="custom-radio" name="radio'.$i.$l.$j.'" value="'.$k.'" '.$checked.
+                                <td><input type="radio" class="custom-radio" name="radio' . $i . $l . $j . '" value="' . $k . '" ' . $checked .
                                 ' style="width:100%"></td>
                             ';
                             $k++;
@@ -1189,22 +1379,24 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                                 </tr>
                                 <tr>
                                     <!--<td>-->
-                                        <!--<input type="button" class="showcomment" title="'.
-                                        get_string('add_comments', 'block_evalcomix') .'" onclick="muestra_oculta(\'comAtrib'.
-                                        $i.'_'.$l.'_'.$j.'\')" title=""/>-->
+                                        <!--<input type="button" class="showcomment" title="' .
+                                        get_string('add_comments', 'block_evalcomix') . '" onclick="muestra_oculta(\'comAtrib' .
+                                        $i . '_' . $l . '_' . $j . '\')" title=""/>-->
                                     <!-- </td><td/> -->
                         ';
-                        if (isset($this->commentatr[$id][$dim][$subdim][$atrib]) &&
-                                $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible') {
+                        if (
+                            isset($this->commentatr[$id][$dim][$subdim][$atrib]) &&
+                                $this->commentatr[$id][$dim][$subdim][$atrib] == 'visible'
+                        ) {
                             $vcomment = '';
                             if (isset($this->valuecommentAtr[$id][$dim][$subdim][$atrib])) {
                                 $vcomment = $this->valuecommentAtr[$id][$dim][$subdim][$atrib];
                             }
                             echo '
                                     <td/><td/>
-                                    <td colspan="'.($colspandim).'">
-                                        <textarea rows="2" style="height:6em;width:100%" id="observaciones'.$i.'_'.$l.'_'.$j.
-                                        '" name="observaciones'.$i.'_'.$l.'_'.$j.'" style="width:100%">'.$vcomment.'</textarea>
+                                    <td colspan="' . ($colspandim) . '">
+                                        <textarea rows="2" style="height:6em;width:100%" id="observaciones' . $i . '_' . $l . '_' . $j .
+                                        '" name="observaciones' . $i . '_' . $l . '_' . $j . '" style="width:100%">' . $vcomment . '</textarea>
                                     </td>
                             ';
                         }
@@ -1223,20 +1415,22 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
             if (isset($this->valglobal[$id][$dim]) && $this->valglobal[$id][$dim] == 'true') {
                 echo "
                         <tr>
-                            <td class='subdimpor'>".$this->valglobalpor[$id][$dim]."%</td>
-                            <td class='global' colspan='".($colspan - $colspandim + 1) ."'>".
-                            get_string('globalvalue', 'block_evalcomix')."</td>
+                            <td class='subdimpor'>" . $this->valglobalpor[$id][$dim] . "%</td>
+                            <td class='global' colspan='" . ($colspan - $colspandim + 1) . "'>" .
+                            get_string('globalvalue', 'block_evalcomix') . "</td>
                 ";
 
                 $k = 1;
                 foreach ($this->valores[$id][$dim] as $grado => $elemvalue) {
                     $checked = '';
-                    if (isset($this->valueglobaldim[$id][$dim]) &&
-                            $this->valueglobaldim[$id][$dim] == $this->valores[$id][$dim][$grado]['nombre']) {
+                    if (
+                        isset($this->valueglobaldim[$id][$dim]) &&
+                            $this->valueglobaldim[$id][$dim] == $this->valores[$id][$dim][$grado]['nombre']
+                    ) {
                         $checked = 'checked';
                     }
                     echo "
-                            <td class='td'><input type='radio' class='custom-radio' name='radio".$i."' value='".$k."' ". $checked .
+                            <td class='td'><input type='radio' class='custom-radio' name='radio" . $i . "' value='" . $k . "' " . $checked .
                             " style='width:100%'></td>
                     ";
                     ++$k;
@@ -1244,7 +1438,7 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                 echo "
                         </tr>
                         <tr>
-                            <td colspan='".($colspan - $colspandim + 2) ."'></td>
+                            <td colspan='" . ($colspan - $colspandim + 2) . "'></td>
                 ";
                 if (isset($this->commentdim[$id][$dim]) && $this->commentdim[$id][$dim] == 'visible') {
                     $vcomment = '';
@@ -1252,9 +1446,9 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                         $vcomment = htmlspecialchars($this->valuecommentDim[$id][$dim], ENT_QUOTES);
                     }
                     echo "
-                            <td colspan='".$colspandim."'>
-                                <textarea rows='3' style='height:6em;width:100%' id='observaciones".$i."' name='observaciones".$i.
-                                "' style='width:100%'>".$vcomment."</textarea>
+                            <td colspan='" . $colspandim . "'>
+                                <textarea rows='3' style='height:6em;width:100%' id='observaciones" . $i . "' name='observaciones" . $i .
+                                "' style='width:100%'>" . $vcomment . "</textarea>
                             </td>
                     ";
                 }
@@ -1271,12 +1465,12 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
         if (isset($this->valorestotal[$id])) {
             echo '
                     <table class="tabla" border=1 cellpadding=5px >
-                                <tr><td class="pordim">'.$this->valtotalpor[$id].'%</td><td class="global" colspan="1">'.
-                                    (get_string('totalvalue', 'block_evalcomix')).'</td>
+                                <tr><td class="pordim">' . $this->valtotalpor[$id] . '%</td><td class="global" colspan="1">' .
+                                    (get_string('totalvalue', 'block_evalcomix')) . '</td>
             ';
 
             foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
-                echo '<th>'.htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES).'</th>
+                echo '<th>' . htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES) . '</th>
                 ';
             }
 
@@ -1284,13 +1478,15 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
 
             foreach ($this->valorestotal[$id] as $grado => $elemvalue) {
                 $checked = '';
-                if (isset($this->valuetotalvalue[$id]) &&
-                        $this->valuetotalvalue[$id] == $this->valorestotal[$id][$grado]['nombre']) {
+                if (
+                    isset($this->valuetotalvalue[$id]) &&
+                        $this->valuetotalvalue[$id] == $this->valorestotal[$id][$grado]['nombre']
+                ) {
                     $checked = 'checked';
                 }
 
-                echo '<td><input type="radio" class="custom-radio" name="total" value="'.
-                htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES).'" '.$checked.' style="width:100%"/></td>
+                echo '<td><input type="radio" class="custom-radio" name="total" value="' .
+                htmlspecialchars($this->valorestotal[$id][$grado]['nombre'], ENT_QUOTES) . '" ' . $checked . ' style="width:100%"/></td>
                 ';
             }
         }
@@ -1300,9 +1496,9 @@ xsi:schemaLocation="http://avanza.uca.es/assessmentservice/evaluationset http://
                             </table>
         ';
         if ($globalcomment == 'global_comment') {
-            echo "<br><label for='observaciones'>".     (get_string('comments', 'block_evalcomix'))."</label><br>
-                           <textarea name='observaciones' id='observaciones' rows=4 cols=20 style='width:100%'>".
-                           htmlspecialchars($this->observation[$id], ENT_QUOTES)."</textarea>";
+            echo "<br><label for='observaciones'>" .     (get_string('comments', 'block_evalcomix')) . "</label><br>
+                           <textarea name='observaciones' id='observaciones' rows=4 cols=20 style='width:100%'>" .
+                           htmlspecialchars($this->observation[$id], ENT_QUOTES) . "</textarea>";
         }
     }
 }

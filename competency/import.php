@@ -24,8 +24,8 @@
  */
 
 require('../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->libdir.'/csvlib.class.php');
+require_once($CFG->libdir . '/adminlib.php');
+require_once($CFG->libdir . '/csvlib.class.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/forms/csv_form.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/util.php');
 require_once($CFG->dirroot . '/blocks/evalcomix/competency/preview.php');
@@ -38,25 +38,25 @@ $continue = optional_param('continue', 0, PARAM_INT);
 core_php_time_limit::raise(60 * 60); // 1 hour should be enough.
 raise_memory_limit(MEMORY_HUGE);
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_course_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/block:edit', $context);
 
-$url = new moodle_url('/blocks/evalcomix/competency/import.php', array('id' => $courseid));
+$url = new moodle_url('/blocks/evalcomix/competency/import.php', ['id' => $courseid]);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'block_evalcomix'));
 $PAGE->set_heading(get_string('pluginname', 'block_evalcomix'));
-$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id='.$courseid));
+$PAGE->navbar->add('evalcomix', new moodle_url('../assessment/index.php?id=' . $courseid));
 $PAGE->navbar->add(get_string('handlerofco', 'block_evalcomix'));
 $PAGE->set_pagelayout('report');
 $PAGE->requires->jquery();
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/blocks/evalcomix/ajax.js'));
 
 require_once($CFG->dirroot . '/blocks/evalcomix/renderer.php');
-$returnurl = new moodle_url('/blocks/evalcomix/competency/index.php', array('id' => $courseid));
+$returnurl = new moodle_url('/blocks/evalcomix/competency/index.php', ['id' => $courseid]);
 
 if ($continue) {
     $competencies = 0;
@@ -78,14 +78,20 @@ if ($continue) {
             if ($outcome === 0) {
                 $typename = !empty($item['typename']) ? $item['typename'] : null;
                 $typedescription = !empty($item['typedescription']) ? $item['typedescription'] : '';
-                if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $courseid, 'idnumber' => $idnumber,
-                        'outcome' => $outcome))) {
+                if (
+                    !$DB->get_record('block_evalcomix_competencies', ['courseid' => $courseid, 'idnumber' => $idnumber,
+                        'outcome' => $outcome])
+                ) {
                     $typeid = null;
                     if (!empty($typename)) {
-                        if (!$type = $DB->get_record('block_evalcomix_comptype', array('courseid' => $courseid,
-                            'shortname' => $typename))) {
-                            if ($typeid = $DB->insert_record('block_evalcomix_comptype', array('courseid' => $courseid,
-                                'shortname' => $typename, 'description' => $typedescription))) {
+                        if (
+                            !$type = $DB->get_record('block_evalcomix_comptype', ['courseid' => $courseid,
+                            'shortname' => $typename])
+                        ) {
+                            if (
+                                $typeid = $DB->insert_record('block_evalcomix_comptype', ['courseid' => $courseid,
+                                'shortname' => $typename, 'description' => $typedescription])
+                            ) {
                                 $types++;
                             } else {
                                 $errors++;
@@ -94,19 +100,25 @@ if ($continue) {
                             $typeid = $type->id;
                         }
                     }
-                    if ($DB->insert_record('block_evalcomix_competencies', array('courseid' => $courseid, 'idnumber' => $idnumber,
+                    if (
+                        $DB->insert_record('block_evalcomix_competencies', ['courseid' => $courseid, 'idnumber' => $idnumber,
                         'outcome' => $outcome, 'shortname' => $shortname, 'description' => $description, 'timecreated' => $now,
-                        'typeid' => $typeid))) {
+                        'typeid' => $typeid])
+                    ) {
                         $competencies++;
                     } else {
                         $errors++;
                     }
                 }
             } else if ($outcome === 1) {
-                if (!$DB->get_record('block_evalcomix_competencies', array('courseid' => $courseid, 'idnumber' => $idnumber,
-                        'outcome' => $outcome))) {
-                    if ($DB->insert_record('block_evalcomix_competencies', array('courseid' => $courseid, 'idnumber' => $idnumber,
-                        'outcome' => $outcome, 'shortname' => $shortname, 'description' => $description, 'timecreated' => $now))) {
+                if (
+                    !$DB->get_record('block_evalcomix_competencies', ['courseid' => $courseid, 'idnumber' => $idnumber,
+                        'outcome' => $outcome])
+                ) {
+                    if (
+                        $DB->insert_record('block_evalcomix_competencies', ['courseid' => $courseid, 'idnumber' => $idnumber,
+                        'outcome' => $outcome, 'shortname' => $shortname, 'description' => $description, 'timecreated' => $now])
+                    ) {
                         $outcomes++;
                     } else {
                         $errors++;
@@ -132,11 +144,11 @@ if ($continue) {
 }
 
 if (empty($iid)) {
-    $params = array();
+    $params = [];
     $mform1 = new block_evalcomix_uploadcompetence_form1($url, $params);
 
     if ($mform1->is_cancelled()) {
-        redirect($CFG->wwwroot . '/blocks/evalcomix/competency/index.php?id='.$courseid);
+        redirect($CFG->wwwroot . '/blocks/evalcomix/competency/index.php?id=' . $courseid);
     } else if ($formdata = $mform1->get_data()) {
         $iid = csv_import_reader::get_new_iid('uploadcompetence');
         $cir = new csv_import_reader($iid, 'uploadcompetence');
@@ -153,8 +165,11 @@ if (empty($iid)) {
     } else {
         echo $OUTPUT->header();
         echo block_evalcomix_renderer::display_main_menu($courseid, 'competency');
-        echo $OUTPUT->heading_with_help(get_string('uploadcompetencies', 'block_evalcomix'), 'uploadcompetencies',
-        'block_evalcomix');
+        echo $OUTPUT->heading_with_help(
+            get_string('uploadcompetencies', 'block_evalcomix'),
+            'uploadcompetencies',
+            'block_evalcomix'
+        );
 
         $mform1->display();
         echo $OUTPUT->footer();
@@ -180,11 +195,11 @@ echo html_writer::tag('div', html_writer::table($table), ['class' => 'flexible-w
 
 if ($table->get_no_error()) {
     $SESSION->uploadcompetencies = $table->alldatas;
-    echo '<div class="text-center"><button type="button" onclick="location.href=\''.$url.'&op=import\'">'.get_string('back').
-    '</button> <button type="button" onclick="location.href=\''.$url.'&continue=1\'">'.get_string('continue').
+    echo '<div class="text-center"><button type="button" onclick="location.href=\'' . $url . '&op=import\'">' . get_string('back') .
+    '</button> <button type="button" onclick="location.href=\'' . $url . '&continue=1\'">' . get_string('continue') .
     '</button></div>';
 } else {
-    echo '<div class="text-center"><button type="button" onclick="location.href=\''.$returnurl.'\'">'.get_string('back').
+    echo '<div class="text-center"><button type="button" onclick="location.href=\'' . $returnurl . '\'">' . get_string('back') .
     '</button></div>';
 }
 echo $OUTPUT->footer();

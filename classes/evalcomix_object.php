@@ -15,13 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * File for class block_evalcomix_object
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 
+/**
+ * Class block_evalcomix_object
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 class block_evalcomix_object {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table;
 
     /**
@@ -90,9 +102,8 @@ class block_evalcomix_object {
 
         $data = $this->get_record_data();
 
-        if ($DB->delete_records($this->table, array('id' => $this->id))) {
+        if ($DB->delete_records($this->table, ['id' => $this->id])) {
             return true;
-
         } else {
             return false;
         }
@@ -111,7 +122,7 @@ class block_evalcomix_object {
             return false;
         }
         global $DB;
-        if (!$params = $DB->get_record($this->table, array('id' => $this->id))) {
+        if (!$params = $DB->get_record($this->table, ['id' => $this->id])) {
             debugging("Object with this id:{$this->id} does not exist in table:{$this->table}, can not update from db!");
             return false;
         }
@@ -124,7 +135,6 @@ class block_evalcomix_object {
     /**
      * Given an associated array or object, cycles through each key/variable
      * and assigns the value to the corresponding variable in this object.
-     * @static final
      */
     public static function set_properties(&$instance, $params) {
         $params = (array) $params;
@@ -155,7 +165,6 @@ class block_evalcomix_object {
 
     /**
      * Factory method - uses the parameters to retrieve matching instance from the DB.
-     * @static final protected
      * @return mixed object instance or false if not found
      */
     protected static function fetch_helper($table, $classname, $params) {
@@ -172,7 +181,6 @@ class block_evalcomix_object {
 
     /**
      * Factory method - uses the parameters to retrieve all matching instances from the DB.
-     * @static final protected
      * @return mixed array of object instances or false if not found
      */
     public static function fetch_all_helper($table, $classname, $params) {
@@ -182,8 +190,8 @@ class block_evalcomix_object {
         $classvars = (array)$instance;
         $params = (array)$params;
 
-        $wheresql = array();
-        $newparams = array();
+        $wheresql = [];
+        $newparams = [];
 
         foreach ($params as $var => $value) {
             if (!in_array($var, $instance->requiredfields) && !array_key_exists($var, $instance->optionalfields)) {
@@ -212,7 +220,7 @@ class block_evalcomix_object {
             return false;
         }
 
-        $result = array();
+        $result = [];
         foreach ($rs as $data) {
             $instance = new $classname();
             self::set_properties($instance, $data);

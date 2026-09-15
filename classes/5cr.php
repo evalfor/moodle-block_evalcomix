@@ -14,20 +14,65 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-class block_evalcomix_E5CR {
+/**
+ * File for block_evalcomix_E5CR
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
 
-    public $s = array();
+/**
+ * Class for block_evalcomix_E5CR
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
+class block_evalcomix_E5CR {
+    /**
+     * @var array $s
+     */
+    public $s = [];
+
+    /**
+     * @var int $i
+     */
     public $i = 0;
+
+    /**
+     * @var int $j
+     */
     public $j = 0;
+
+    /**
+     * @var string $_key
+     */
     public $_key;
+
+    /**
+     * @var int $bytes
+     */
     public $bytes = 256;
 
+    /**
+     * Construct
+     *
+     * @param $key
+     */
     public function __construct($key = null) {
         if ($key != null) {
             $this->juego_de_llaves($key);
         }
     }
 
+    /**
+     * get key
+     *
+     * @param $key
+     */
     public function juego_de_llaves($key) {
         $strlen = strlen($key);
         if ($strlen > 0) {
@@ -35,6 +80,11 @@ class block_evalcomix_E5CR {
         }
     }
 
+    /**
+     * set key
+     *
+     * @param $key
+     */
     public function llave(&$key) {
         $len = strlen($key);
         for ($this->i = 0; $this->i < $this->bytes; $this->i++) {
@@ -52,14 +102,25 @@ class block_evalcomix_E5CR {
         $this->i = $this->j = 0;
     }
 
+    /**
+     * convert string
+     *
+     * @param $rawinput
+     */
     public function hex2bin(&$rawinput) {
         $binstr = '';
-        for ($i = 0; $i < strlen ($rawinput); $i += 2) {
-            $binstr .= '%'.substr ($rawinput, $i, 2);
+        for ($i = 0; $i < strlen($rawinput); $i += 2) {
+            $binstr .= '%' . substr($rawinput, $i, 2);
         }
         $rawinput = rawurldecode($binstr);
     }
 
+    /**
+     * encriptar
+     *
+     * @param $encript
+     * @param $tipo
+     */
     public function encriptar(&$encript, $tipo) {
         $key = null;
         $this->llave($this->_key);
@@ -80,17 +141,24 @@ class block_evalcomix_E5CR {
         }
 
         // 0 = claves y 1 = url.
-        switch($tipo) {
+        switch ($tipo) {
             case 0:
                 $encript = crc32(sha1(md5(bin2hex($encript))));
                 break;
             case 1:
                 $encript = bin2hex($encript);
+                // Sin break.
             case 2:
                 $encript;
         }
     }
 
+    /**
+     * destrozar
+     *
+     * @param $cadena
+     * @param $num
+     */
     public function destrozar(&$cadena, $num) {
         for ($i = 0; $i < $num; $i++) {
             $pos = strpos($cadena, "="); // Posición del primer =.
@@ -103,11 +171,16 @@ class block_evalcomix_E5CR {
             $contenido = substr($cadena, 0, $pos);
             $cadena = substr($cadena, $pos + 1, strlen($cadena)); // Actualización de la cadena.
             $datos[$campo] = $contenido;
-
         }
         return $datos;
     }
 
+    /**
+     * desencriptar
+     *
+     * @param $desencript
+     * @param $num
+     */
     public function desencriptar(&$desencript, $num) {
         $this->hex2bin($desencript);
         $this->encriptar($desencript, 2);

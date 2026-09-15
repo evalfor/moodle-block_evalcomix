@@ -14,31 +14,46 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Manage block_evalcomix_modes table
+ *
+ * @package    block_evalcomix
+ * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once('evalcomix_object.php');
 require_once('evalcomix_tool.php');
 
 /**
+ * Manage block_evalcomix_modes table
+ *
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Daniel Cabeza Sánchez <daniel.cabeza@uca.es>, Juan Antonio Caballero Hernández <juanantonio.caballero@uca.es>
  */
 class block_evalcomix_modes extends block_evalcomix_object {
+    /**
+     * Table name
+     * @var string $table
+     */
     public $table = 'block_evalcomix_modes';
 
     /**
      * Array of required table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $requiredfields = array('id', 'taskid', 'toolid', 'modality', 'weighing');
+    public $requiredfields = ['id', 'taskid', 'toolid', 'modality', 'weighing'];
 
     /**
      * Array of optional table fields, must start with 'id'.
      * @var array $requiredfields
      */
-    public $optionalfields = array();
+    public $optionalfields = [];
 
     /**
      * Task ID associated
@@ -73,10 +88,8 @@ class block_evalcomix_modes extends block_evalcomix_object {
      * @param string $modality Evaluation modality. Can be: "teacher" | "peer" | "self"
      * @param int $weighing Task weighing. Should be <= 100
      */
-    // This function must be improved in the future.
     public function __construct($id = '', $taskid = '0', $toolid = '0', $modality = 'teacher', $weighing = '0') {
         if (is_numeric($taskid) && !is_float($taskid) && (int)$taskid > 0) {
-
             global $DB;
             $this->id = intval($id);
             $this->modality = addslashes($modality);
@@ -84,11 +97,10 @@ class block_evalcomix_modes extends block_evalcomix_object {
                 throw new \moodle_exception("weighing wrong");
             }
             $this->weighing = $weighing;
-            $taskobject = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid), '*', MUST_EXIST);
+            $taskobject = $DB->get_record('block_evalcomix_tasks', ['id' => $taskid], '*', MUST_EXIST);
             $this->taskid = $taskobject->id;
             if (is_numeric($toolid) && !is_float($toolid) && (int)$toolid > 0) {
-
-                $toolobject = $DB->get_record('block_evalcomix_tools', array('id' => $toolid), '*', MUST_EXIST);
+                $toolobject = $DB->get_record('block_evalcomix_tools', ['id' => $toolid], '*', MUST_EXIST);
                 $this->toolid = $toolobject->id;
             }
             if ($this->modality != 'teacher' && $this->modality != 'peer' && $this->modality != 'self') {
@@ -97,29 +109,35 @@ class block_evalcomix_modes extends block_evalcomix_object {
         }
     }
 
+    /**
+     * Delete a mode
+     *
+     * @param int $id Id
+     * @return bool result
+     */
     public static function delete_mode($id) {
         global $CFG, $DB;
         $result = false;
-        if ($mode = $DB->get_record('block_evalcomix_modes', array('id' => $id))) {
+        if ($mode = $DB->get_record('block_evalcomix_modes', ['id' => $id])) {
             $taskid = $mode->taskid;
             $weighing = $mode->weighing;
             require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
-            if ($DB->get_records('block_evalcomix_modes_extra', array('modeid' => $id))) {
-                $DB->delete_records('block_evalcomix_modes_extra', array('modeid' => $id));
+            if ($DB->get_records('block_evalcomix_modes_extra', ['modeid' => $id])) {
+                $DB->delete_records('block_evalcomix_modes_extra', ['modeid' => $id]);
             }
-            if ($DB->get_record('block_evalcomix_modes_time', array('modeid' => $id))) {
-                $DB->delete_records('block_evalcomix_modes_time', array('modeid' => $id));
+            if ($DB->get_record('block_evalcomix_modes_time', ['modeid' => $id])) {
+                $DB->delete_records('block_evalcomix_modes_time', ['modeid' => $id]);
             }
             block_evalcomix_assessments::delete_assessment_by_modeid($id);
 
-            $result = $DB->delete_records('block_evalcomix_modes', array('id' => $id));
+            $result = $DB->delete_records('block_evalcomix_modes', ['id' => $id]);
 
             // Delete allowedusers.
-            if ($mode->modality == 'peer' && $task = $DB->get_record('block_evalcomix_tasks', array('id' => $taskid))) {
-                $DB->delete_records('block_evalcomix_allowedusers', array('cmid' => $task->instanceid));
+            if ($mode->modality == 'peer' && $task = $DB->get_record('block_evalcomix_tasks', ['id' => $taskid])) {
+                $DB->delete_records('block_evalcomix_allowedusers', ['cmid' => $task->instanceid]);
             }
 
-            if ($restofmodes = $DB->get_records('block_evalcomix_modes', array('taskid' => $taskid))) {
+            if ($restofmodes = $DB->get_records('block_evalcomix_modes', ['taskid' => $taskid])) {
                 // Recalculate the weight of the rest of modalities.
                 if ($weighing > 0) {
                     $count = count($restofmodes);
@@ -130,27 +148,56 @@ class block_evalcomix_modes extends block_evalcomix_object {
                     }
                 }
             } else {
-                $DB->delete_records('block_evalcomix_coordinators', array('taskid' => $taskid));
-                $DB->delete_records('block_evalcomix_tasks', array('id' => $taskid));
+                $DB->delete_records('block_evalcomix_coordinators', ['taskid' => $taskid]);
+                $DB->delete_records('block_evalcomix_tasks', ['id' => $taskid]);
             }
         }
         return $result;
     }
 
+    /**
+     * get a mode
+     *
+     * @param object $assessment
+     * @return int modeid
+     */
     public static function get_mode($assessment) {
         global $CFG, $DB;
         $result = 0;
-        if ($task = $DB->get_record('block_evalcomix_tasks', array('id' => $assessment->taskid))) {
-            if ($cm = $DB->get_record('course_modules', array('id' => $task->instanceid))) {
+        if ($task = $DB->get_record('block_evalcomix_tasks', ['id' => $assessment->taskid])) {
+            if ($cm = $DB->get_record('course_modules', ['id' => $task->instanceid])) {
                 require_once($CFG->dirroot . '/blocks/evalcomix/classes/grade_report.php');
-                $modestring = block_evalcomix_grade_report::get_type_evaluation($assessment->studentid, $cm->course,
-                    $assessment->assessorid);
-                if ($mode = $DB->get_record('block_evalcomix_modes', array('taskid' => $assessment->taskid,
-                        'modality' => $modestring))) {
+                $modestring = block_evalcomix_grade_report::get_type_evaluation(
+                    $assessment->studentid,
+                    $cm->course,
+                    $assessment->assessorid
+                );
+                if (
+                    $mode = $DB->get_record('block_evalcomix_modes', ['taskid' => $assessment->taskid,
+                        'modality' => $modestring])
+                ) {
                     $result = $mode->id;
                 }
             }
         }
         return $result;
+    }
+
+    /**
+     * get_modes_by_courseid
+     *
+     * @param int $courseid
+     * @return array modes
+     */
+    public static function get_modes_by_courseid($courseid) {
+        global $DB;
+        $sql = '
+            SELECT m.*, t.instanceid as cmid
+            FROM {block_evalcomix_modes} m
+            LEFT JOIN {block_evalcomix_tasks} t ON m.taskid = t.id
+            LEFT JOIN {course_modules} cm ON t.instanceid = cm.id
+            WHERE cm.course = ? AND m.modality IN (\'peer\', \'self\')
+        ';
+        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
     }
 }

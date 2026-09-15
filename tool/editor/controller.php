@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * Controller
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -38,28 +39,28 @@ $tool = unserialize($toolobj);
 
 $op = optional_param('op', '', PARAM_ALPHA);
 $courseid = required_param('courseid', PARAM_INT);
-switch($op) {
-    case 'export':{
+switch ($op) {
+    case 'export':
         $xml1 = $tool->export();
         if (isset($xml1)) {
-            $filename = $CFG->tempdir. '/evalcomix_file-'.microtime().'.evx';
+            $filename = $CFG->tempdir . '/evalcomix_file-' . microtime() . '.evx';
             $fp = fopen($filename, 'wb');
             fwrite($fp, $xml1);
-            header("Location: download.php?fic=".$filename.'&courseid='.$courseid);
+            header("Location: download.php?fic=" . $filename . '&courseid=' . $courseid);
         }
-    }break;
-    case 'view':{
+        break;
+    case 'view':
         if (!isset($id)) {
             $id = null;
         }
         $tool->set_view('view', $id);
-    }break;
-    case 'design':{
+        break;
+    case 'design':
         if (!isset($id)) {
             $id = null;
         }
         $tool->set_view('design', $id);
-    }break;
+        break;
 }
 
 if ($secuencia < 100) {
@@ -75,8 +76,8 @@ $deldim = optional_param('dd', null, PARAM_INT);
 $postaddatr = optional_param('addAtr', null, PARAM_RAW);
 $postaddatrib = optional_param('at', null, PARAM_INT);
 $postdelatrib = optional_param('dt', null, PARAM_INT);
-$postnumvalortotal = optional_param('numvalores'.$id, null, PARAM_INT);
-$postvalortotal = optional_param('valtotal'.$id, null, PARAM_ALPHANUM);
+$postnumvalortotal = optional_param('numvalores' . $id, null, PARAM_INT);
+$postvalortotal = optional_param('valtotal' . $id, null, PARAM_ALPHANUM);
 $postmoveatr = optional_param('moveAtr', null, PARAM_RAW);
 $postupatr = optional_param('aUp', null, PARAM_INT);
 $postdownatr = optional_param('aDown', null, PARAM_INT);
@@ -89,7 +90,7 @@ $postdowndim = optional_param('dDown', null, PARAM_INT);
 $postmovetool = optional_param('moveTool', null, PARAM_RAW);
 $postuptool = optional_param('tUp', null, PARAM_INT);
 $postdowntool = optional_param('tDown', null, PARAM_INT);
-$posttypetool = optional_param('addtool'.$id, null, PARAM_RAW);
+$posttypetool = optional_param('addtool' . $id, null, PARAM_RAW);
 $postsaved = optional_param('save', null, PARAM_RAW);
 $postcomatr = optional_param('comAtr', null, PARAM_RAW);
 $postmodaladdcomp = optional_param('modalAddComp', null, PARAM_RAW);
@@ -100,7 +101,7 @@ $postmodaldelcomp = optional_param('modalDelComp', null, PARAM_RAW);
 $postmodaldelcompsub = optional_param('modalDelCompSub', null, PARAM_RAW);
 $postmodaldelout = optional_param('modalDelOut', null, PARAM_RAW);
 $postmodaldeloutsub = optional_param('modalDelOutSub', null, PARAM_RAW);
-$posttitle = optional_param('modaltitle'.$id, 0, PARAM_INT);
+$posttitle = optional_param('modaltitle' . $id, 0, PARAM_INT);
 $postmodalclose = optional_param('modalclose', null, PARAM_RAW);
 $postmodalclosevoid = optional_param('modalclosevoid', null, PARAM_RAW);
 $postmodalcreatecomp = optional_param('modalcreatecomp', null, PARAM_RAW);
@@ -113,10 +114,10 @@ $postmodalcomptype = optional_param('modalcomptype', null, PARAM_RAW);
 // Determination and handling of events.
 // Add/Remove tool event.
 if (isset($posttypetool)) {
-    $posttypetool = optional_param('addtool'.$id, null, PARAM_RAW);
+    $posttypetool = optional_param('addtool' . $id, null, PARAM_RAW);
     $postdeletetool = optional_param('dt', null, PARAM_INT);
     $postaddtool = optional_param('at', null, PARAM_INT);
-    $posttoolpor = optional_param('toolpor_'.$id, null, PARAM_INT); // Tool percentage.
+    $posttoolpor = optional_param('toolpor_' . $id, null, PARAM_INT); // Tool percentage.
     $postitemmod = optional_param('sumpor', null, PARAM_RAW);
     $postnopor = optional_param('nopor', null, PARAM_RAW);
 
@@ -129,8 +130,10 @@ if (isset($posttypetool)) {
     // Dimension percentage.
     $toolpor = $tool->get_toolpor();
 
-    if ((!isset($postnopor) || $postnopor == '') && isset($posttoolpor) && is_numeric($posttoolpor)
-            && $posttoolpor >= 0 && $posttoolpor <= 100 && !isset($postdeletetool)) {
+    if (
+        (!isset($postnopor) || $postnopor == '') && isset($posttoolpor) && is_numeric($posttoolpor)
+            && $posttoolpor >= 0 && $posttoolpor <= 100 && !isset($postdeletetool)
+    ) {
         $portool = $posttoolpor;
         $index = $id;
         $numtool = $tool->get_numtool();
@@ -147,7 +150,7 @@ if (isset($posttypetool)) {
 
         $sumamod = 0;
         $nummod = 0;
-        $poninput = array();
+        $poninput = [];
         // Indicates whether the user who has commanded has pressed a button related to any of the values received or not.
         $samebutton = 1;
         foreach ($iditemmod as $key => $cod) {
@@ -171,7 +174,7 @@ if (isset($posttypetool)) {
         $state = 0;
         if ($nummod == $numtool && $sumamod != 100) {
             $state = 0;
-        } else if ($nummod != $numtool && $sumamod > 100 ) {
+        } else if ($nummod != $numtool && $sumamod > 100) {
             $state = 0;
         } else if ($nummod == $numtool && $sumamod == 100) {
             $state = 2;
@@ -267,9 +270,9 @@ if (isset($postadddim)) {
     }
 
     // Dimension percentage.
-    $postdimpor = optional_param('dimpor'.$id, null, PARAM_INT);
+    $postdimpor = optional_param('dimpor' . $id, null, PARAM_INT);
     $postdimindex = optional_param('dpi', null, PARAM_ALPHANUM);
-    $postitemmod = optional_param('sumpor3'.$id, null, PARAM_RAW);
+    $postitemmod = optional_param('sumpor3' . $id, null, PARAM_RAW);
 
     $dimpor = $tool->get_dimpor($id);
     if (isset($postdimpor) && is_numeric($postdimpor) && $postdimpor >= 0 && $postdimpor <= 100 && isset($postdimindex)) {
@@ -294,7 +297,7 @@ if (isset($postadddim)) {
 
         $sumamod = 0;
         $nummod = 0;
-        $poninput = array();
+        $poninput = [];
         $samebutton = 1; // Indicates if the user has pressed a button related to any of the received values.
         foreach ($iditemmod as $key => $cod) {
             $postpor = optional_param($cod, null, PARAM_RAW);
@@ -302,7 +305,7 @@ if (isset($postadddim)) {
                 $nummod++;
                 $sumamod += $postpor;
                 $aux = explode('_', $cod);
-                if ($aux[0] == 'valtotalpor'.$id) {
+                if ($aux[0] == 'valtotalpor' . $id) {
                     $poninput['vt'] = $postpor;
                     if ($index == 'vt') {
                         $samebutton = 0;
@@ -324,7 +327,7 @@ if (isset($postadddim)) {
         $state = 0;
         if ($nummod == $numdimen && $sumamod != 100) {
             $state = 0;
-        } else if ($nummod != $numdimen && $sumamod > 100 ) {
+        } else if ($nummod != $numdimen && $sumamod > 100) {
             $state = 0;
         } else if ($nummod == $numdimen && $sumamod == 100) {
             $state = 2;
@@ -390,7 +393,7 @@ if (isset($postadddim)) {
         $tool->set_dimpor($dimpor, $id);
     } else if (!isset($postsaved)) {
         $numdimen = $tool->get_numdim($id);
-        $booltotal = optional_param('valtotal'.$id, '', PARAM_ALPHA);
+        $booltotal = optional_param('valtotal' . $id, '', PARAM_ALPHA);
         if ($booltotal == 'true') {
             $numdimen++;
         }
@@ -438,8 +441,8 @@ if (isset($postadddim)) {
     $subdim = optional_param('sd', null, PARAM_RAW);
     $postaddsubdim = optional_param('aS', null, PARAM_RAW);
     $postdelsubdim = optional_param('dS', null, PARAM_RAW);
-    $postnumvalues = optional_param('numvalores'.$id.'_'.$dim, null, PARAM_RAW);
-    $postnumsubdim = optional_param('numsubdimensiones'.$id.'_'.$dim, null, PARAM_RAW);
+    $postnumvalues = optional_param('numvalores' . $id . '_' . $dim, null, PARAM_RAW);
+    $postnumsubdim = optional_param('numsubdimensiones' . $id . '_' . $dim, null, PARAM_RAW);
 
     $numvalores = $tool->get_numvalores($id);
     if (isset($numvalores[$dim]) && $postnumvalues > $numvalores[$dim]) {
@@ -514,7 +517,7 @@ if (isset($postadddim)) {
             $tool->set_rango($rango, $id);
         }
 
-        $postnumrango = optional_param('numrango'.$id.'_'.$dim.'_'.$grado, null, PARAM_RAW);
+        $postnumrango = optional_param('numrango' . $id . '_' . $dim . '_' . $grado, null, PARAM_RAW);
         $numrango = $tool->get_numrango($id);
         if (isset($numrango) && $postnumrango > $numrango[$id][$dim][$grado]) {
             $nvalores = $numrango[$id][$dim][$grado];
@@ -538,11 +541,13 @@ if (isset($postadddim)) {
 
     $postsubdimpor = optional_param('subdimpor', null, PARAM_RAW);
     $postsubdimindex = optional_param('spi', null, PARAM_RAW);
-    $postitemmod = optional_param('sumpor2'.$id.'_'.$dim, null, PARAM_RAW);
+    $postitemmod = optional_param('sumpor2' . $id . '_' . $dim, null, PARAM_RAW);
     $postcomdim = optional_param('comDim', null, PARAM_RAW);
 
-    if (isset($postsubdimpor) && is_numeric($postsubdimpor) && $postsubdimpor >= 0
-            && $postsubdimpor <= 100 && isset($postsubdimindex)) {
+    if (
+        isset($postsubdimpor) && is_numeric($postsubdimpor) && $postsubdimpor >= 0
+            && $postsubdimpor <= 100 && isset($postsubdimindex)
+    ) {
         $porsubdim = $postsubdimpor;
         $subdimpor = $tool->get_subdimpor($id);
         $index = $postsubdimindex;
@@ -562,7 +567,7 @@ if (isset($postadddim)) {
 
         $sumamod = 0;
         $nummod = 0;
-        $poninput = array();
+        $poninput = [];
         // Indicates if the user who has sent has pressed a button related to any of the values received or not.
         $samebutton = 1;
         foreach ($iditemmod as $key => $cod) {
@@ -571,7 +576,7 @@ if (isset($postadddim)) {
                 $nummod++;
                 $sumamod += $postpor;
                 $aux = explode('_', $cod);
-                if ($aux[0] == 'valglobalpor'.$id) {
+                if ($aux[0] == 'valglobalpor' . $id) {
                     $poninput['vg'] = $postpor;
                     if ($index == 'vg') {
                         $samebutton = 0;
@@ -593,7 +598,7 @@ if (isset($postadddim)) {
         $state = 0;
         if ($nummod == $numsubdimen[$dim] && $sumamod != 100) {
             $state = 0;
-        } else if ($nummod != $numsubdimen[$dim] && $sumamod > 100 ) {
+        } else if ($nummod != $numsubdimen[$dim] && $sumamod > 100) {
             $state = 0;
         } else if ($nummod == $numsubdimen[$dim] && $sumamod == 100) {
             $state = 2;
@@ -659,7 +664,7 @@ if (isset($postadddim)) {
     } else if (!isset($postcomdim)) {
         $numsubdim = $tool->get_numsubdim($id);
         $valglobalpor = $tool->get_valglobalpor($id);
-        $postvalglobal = optional_param('valglobal'.$id.'_'.$dim, '', PARAM_RAW);
+        $postvalglobal = optional_param('valglobal' . $id . '_' . $dim, '', PARAM_RAW);
         if ($postvalglobal == 'true') {
             $numsubdim[$dim]++;
         }
@@ -687,7 +692,7 @@ if (isset($postadddim)) {
     $subdim = $data[1];
 
     $numatr = $tool->get_numatr($id);
-    $postnumatr = optional_param('numatributos'.$id.'_'.$dim.'_'.$subdim, null, PARAM_RAW);
+    $postnumatr = optional_param('numatributos' . $id . '_' . $dim . '_' . $subdim, null, PARAM_RAW);
 
     if (!isset($postdelatrib) && !isset($postaddatrib) && isset($postnumatr)) {
         if ($postnumatr > $numatr[$dim][$subdim]) {
@@ -722,7 +727,7 @@ if (isset($postadddim)) {
 
     $postatribpor = optional_param('atribpor', null, PARAM_RAW);
     $postatribindex = optional_param('api', null, PARAM_RAW);
-    $postitemmod = optional_param('sumpor'.$id.'_'.$dim.'_'.$subdim, null, PARAM_RAW);
+    $postitemmod = optional_param('sumpor' . $id . '_' . $dim . '_' . $subdim, null, PARAM_RAW);
 
     $atribpor = $tool->get_atribpor($id);
     if (isset($postatribpor) && is_numeric($postatribpor) && $postatribpor >= 0 && $postatribpor <= 100 && isset($postatribindex)) {
@@ -738,7 +743,7 @@ if (isset($postadddim)) {
         $sumamod = 0;
         $numatribb = $tool->get_numatr($id);
         $nummod = 0;
-        $poninput = array();
+        $poninput = [];
         // Indicates whether the user has pressed a button related to any of the values received or not.
         $samebutton = 1;
         foreach ($iditemmod as $key => $cod) {
@@ -772,7 +777,7 @@ if (isset($postadddim)) {
         $state = 0;
         if ($nummod == $numatribb[$dim][$subdim] && $sumamod != 100) {
             $state = 0;
-        } else if ($nummod != $numatribb[$dim][$subdim] && $sumamod > 100 ) {
+        } else if ($nummod != $numatribb[$dim][$subdim] && $sumamod > 100) {
             $state = 0;
         } else if ($nummod == $numatribb[$dim][$subdim] && $sumamod == 100) {
             $state = 2;
@@ -793,9 +798,9 @@ if (isset($postadddim)) {
                 $atribpor[$dim][$subdim][$index] = 100;
             }
         } else if ($state == 1) {
-            $apor = array(); // Contains the percentage value of each attribute of the subdimension in question.
+            $apor = []; // Contains the percentage value of each attribute of the subdimension in question.
             foreach ($atribpor[$dim][$subdim] as $keypor => $vpor) {
-                $postatribporone = optional_param('atribpor'.$id.'_'.$dim.'_'.$subdim.'_'.$keypor, null, PARAM_RAW);
+                $postatribporone = optional_param('atribpor' . $id . '_' . $dim . '_' . $subdim . '_' . $keypor, null, PARAM_RAW);
                 if (isset($postatribporone)) {
                     $apor[$keypor] = $postatribporone;
                 }
@@ -997,8 +1002,12 @@ if (isset($postmodalclosevoid)) {
 if (isset($postmodalcreatecomp)) {
     if (isset($postmodalidnumber) && isset($postmodalshortname)) {
         $comptype = (isset($postmodalcomptype)) ? $postmodalcomptype : null;
-        block_evalcomix_editor_tool::create_competency($postmodalidnumber, $postmodalshortname, $postmodaldescription,
-        $comptype);
+        block_evalcomix_editor_tool::create_competency(
+            $postmodalidnumber,
+            $postmodalshortname,
+            $postmodaldescription,
+            $comptype
+        );
     }
 }
 

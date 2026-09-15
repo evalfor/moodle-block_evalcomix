@@ -31,18 +31,18 @@
 function get_group_members_evaluated($groupid, $activityid) {
     global $CFG, $DB;
 
-    $students = array();
+    $students = [];
     require_once($CFG->dirroot . '/blocks/evalcomix/classes/evalcomix_assessments.php');
     if ($users = block_evalcomix_assessments::get_students_assessed($activityid)) {
-        if ($groupsmember = $DB->get_records('groups_members', array('groupid' => $groupid))) {
-            $membersids = array();
+        if ($groupsmember = $DB->get_records('groups_members', ['groupid' => $groupid])) {
+            $membersids = [];
             foreach ($groupsmember as $member) {
                 if (in_array($member->userid, $users)) {
                     $membersids[] = $member->userid;
                 }
             }
             foreach ($membersids as $student) {
-                $user = $DB->get_record('user', array('id' => $student));
+                $user = $DB->get_record('user', ['id' => $student]);
                 $students[] = $user;
             }
         }

@@ -13,7 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Preview
  * @package    block_evalcomix
  * @copyright  2010 onwards EVALfor Research Group {@link http://evalfor.net/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -22,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/csvlib.class.php');
-require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/uploaduser/locallib.php');
+require_once($CFG->libdir . '/csvlib.class.php');
+require_once($CFG->dirroot . '/' . $CFG->admin . '/tool/uploaduser/locallib.php');
 
 /**
  * Display the preview of a CSV file
@@ -33,7 +35,6 @@ require_once($CFG->dirroot.'/'.$CFG->admin.'/tool/uploaduser/locallib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class preview extends \html_table {
-
     /** @var \csv_import_reader  */
     protected $cir;
     /** @var array */
@@ -42,7 +43,8 @@ class preview extends \html_table {
     protected $previewrows;
     /** @var bool */
     protected $noerror = true; // Keep status of any error.
-    public $alldatas = array();
+    /** @var array */
+    public $alldatas = [];
     /**
      * preview constructor.
      *
@@ -61,7 +63,7 @@ class preview extends \html_table {
         $this->attributes['class'] = 'generaltable';
         $this->tablealign = 'center';
         $this->summary = get_string('uploaduserspreview', 'tool_uploaduser');
-        $this->head = array();
+        $this->head = [];
         $this->data = $this->read_data();
         $this->alldatas = $this->read_data(false);
 
@@ -83,7 +85,7 @@ class preview extends \html_table {
     protected function read_data($previewrows = true) {
         global $DB, $CFG, $COURSE;
 
-        $data = array();
+        $data = [];
         $this->cir->init();
         $linenum = 1; // Column header is first line.
         while ($fields = $this->cir->next()) {
@@ -91,41 +93,46 @@ class preview extends \html_table {
                 continue;
             }
             $linenum++;
-            $rowcols = array();
+            $rowcols = [];
             $rowcols['line'] = $linenum;
             foreach ($fields as $key => $field) {
                 $rowcols[$this->filecolumns[$key]] = s(trim($field));
             }
-            $rowcols['status'] = array();
+            $rowcols['status'] = [];
 
             $outcome = null;
             if (isset($rowcols['outcome'])) {
                 if (!is_numeric($rowcols['outcome']) || ((int)$rowcols['outcome'] !== 0 && (int)$rowcols['outcome'] !== 1)) {
-                    $rowcols['status'][] = '<span class="text-danger">'.get_string('invalidoutcome', 'block_evalcomix').'</span>';
+                    $rowcols['status'][] = '<span class="text-danger">' . get_string('invalidoutcome', 'block_evalcomix') .
+                        '</span>';
                 } else {
                     $outcome = $rowcols['outcome'];
                 }
             } else {
-                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingoutcome', 'block_evalcomix').'</span>';
+                $rowcols['status'][] = '<span class="text-danger">' . get_string('missingoutcome', 'block_evalcomix') . '</span>';
             }
 
             if (!empty($rowcols['idnumber'])) {
                 if (mb_strlen($rowcols['idnumber']) > 100) {
-                    $rowcols['status'][] = '<span class="text-danger">'.
-                    get_string('invalididnumberupload', 'block_evalcomix').'</span>';
+                    $rowcols['status'][] = '<span class="text-danger">' .
+                    get_string('invalididnumberupload', 'block_evalcomix') . '</span>';
                 }
 
-                if (isset($outcome) && $item = $DB->get_record('block_evalcomix_competencies',
-                        array('idnumber' => $rowcols['idnumber'], 'outcome' => $outcome, 'courseid' => $COURSE->id))) {
-                    $rowcols['status'][] = '<span class="text-danger">'.
-                    get_string('idnumberduplicate', 'block_evalcomix').'</span>';
+                if (
+                    isset($outcome) && $item = $DB->get_record(
+                        'block_evalcomix_competencies',
+                        ['idnumber' => $rowcols['idnumber'], 'outcome' => $outcome, 'courseid' => $COURSE->id]
+                    )
+                ) {
+                    $rowcols['status'][] = '<span class="text-danger">' .
+                    get_string('idnumberduplicate', 'block_evalcomix') . '</span>';
                 }
             } else {
-                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingidnumber', 'block_evalcomix').'</span>';
+                $rowcols['status'][] = '<span class="text-danger">' . get_string('missingidnumber', 'block_evalcomix') . '</span>';
             }
 
             if (empty($rowcols['shortname'])) {
-                $rowcols['status'][] = '<span class="text-danger">'.get_string('missingshortname', 'block_evalcomix').'</span>';
+                $rowcols['status'][] = '<span class="text-danger">' . get_string('missingshortname', 'block_evalcomix') . '</span>';
             }
             $rowcols['status'] = implode('<br />', $rowcols['status']);
             $data[] = $rowcols;
