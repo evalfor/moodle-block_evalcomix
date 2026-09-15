@@ -6,7 +6,7 @@ rubrics.
 2) Use the tools created in the competence assessment process, integrated in Moodle. It
 allows self-assessment and peer-assessment, as well as traditional teacher assessment.
 
-Please, visit http://evalcomix.uca.es to download EvalCOMIX Server.
+Please, visit https://evalcomix-floass.uca.es/ to download EvalCOMIX Server.
 
 INSTALLATION:
 
@@ -25,4 +25,4 @@ As a Teacher, add EvalCOMIX block in a course.
 
 FURTHER INFORMATION:
 
-Please visit http://evalcomix.uca.es/index.php/handbook.html to get the handbook of EvalCOMIX block.
+Please visit https://evalcomix-floass.uca.es/ to get the handbook of EvalCOMIX block.
